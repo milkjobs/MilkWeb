@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core";
+import { Header } from "components/Header";
 import React from "react";
 import { useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
@@ -43,11 +44,14 @@ const HelpCenter: React.FC = () => {
 
   return (
     match && (
-      <div className={classes.container}>
-        <div className={classes.title}>幫助中心</div>
-        <Link to={`${match.path}/privacy-policy`} className={classes.item}>
-          <div>隱私權政策</div>
-        </Link>
+      <div className={classes.root}>
+        <Header />
+        <div className={classes.container}>
+          <div className={classes.title}>幫助中心</div>
+          <Link to={`${match.path}/privacy-policy`} className={classes.item}>
+            <div>隱私權政策</div>
+          </Link>
+        </div>
       </div>
     )
   );

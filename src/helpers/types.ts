@@ -42,7 +42,6 @@ export const InitialUser: User = {
   username: "",
   createdAt: new Date(),
   profileImageUrl: "",
-  idCardVerified: VerificationState.None,
   systemChannelUrl: ""
 };
 

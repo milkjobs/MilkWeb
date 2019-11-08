@@ -15,7 +15,6 @@ import "firebase/auth";
 import { isIntlPhoneNumber, isValidVerificationCode } from "helpers";
 import React, { useCallback, useState } from "react";
 import Countdown from "react-countdown-now";
-import { useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -58,7 +57,6 @@ const LoginDialog: React.FC<Props> = props => {
   const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const { reloadUser } = useAuth();
 
   const [phoneNumber, setPhoneNumber] = useState<string>();
   const [phoneNumberHelperText, setPhoneNumberHelperText] = useState<string>();
@@ -121,7 +119,6 @@ const LoginDialog: React.FC<Props> = props => {
       setCodeHelperText("驗證碼錯誤");
       return;
     }
-    await reloadUser();
     close();
   };
 
@@ -206,7 +203,7 @@ const LoginDialog: React.FC<Props> = props => {
             {codeSent && (
               <>
                 <TextField
-                  value={code}
+                  value={code || ""}
                   autoFocus
                   className={classes.textColumn}
                   error={!!codeHelperText}

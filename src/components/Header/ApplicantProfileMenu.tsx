@@ -6,7 +6,10 @@ import MenuList from "@material-ui/core/MenuList";
 import Paper from "@material-ui/core/Paper";
 import Popper from "@material-ui/core/Popper";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import to from "await-to-js";
 import { DownloadAppDialog, LoginDialog } from "components/Util";
+import firebase from "firebase/app";
+import "firebase/auth";
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "stores";
@@ -27,7 +30,7 @@ interface Props {
 const ApplicantProfileMenu: React.FC<Props> = props => {
   const { isOpen, anchorElement, close } = props;
   const classes = useStyles();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const location = useLocation();
   const [isDownloadAppDialogOpen, setIsDownloadAppDialogOpen] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
@@ -107,7 +110,7 @@ const ApplicantProfileMenu: React.FC<Props> = props => {
                     <MenuItem
                       onClick={async () => {
                         close();
-                        await logout();
+                        await to(firebase.auth().signOut());
                       }}
                     >
                       登出

@@ -5,6 +5,9 @@ import MenuList from "@material-ui/core/MenuList";
 import Paper from "@material-ui/core/Paper";
 import Popper from "@material-ui/core/Popper";
 import { makeStyles } from "@material-ui/core/styles";
+import to from "await-to-js";
+import firebase from "firebase/app";
+import "firebase/auth";
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "stores";
@@ -25,7 +28,7 @@ interface Props {
 const RecruiterProfileMenu: React.FC<Props> = props => {
   const { isOpen, anchorElement, close } = props;
   const classes = useStyles();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
     <Popper open={isOpen} anchorEl={anchorElement} transition disablePortal>
@@ -53,7 +56,7 @@ const RecruiterProfileMenu: React.FC<Props> = props => {
                 <MenuItem
                   onClick={async () => {
                     close();
-                    await logout();
+                    await to(firebase.auth().signOut());
                   }}
                 >
                   登出

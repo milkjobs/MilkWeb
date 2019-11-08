@@ -25,26 +25,27 @@ const DownloadAppDialog: React.FC<Props> = props => {
     <Dialog open={isOpen} onClose={close}>
       <DialogTitle>下載牛奶找工作 APP</DialogTitle>
       <DialogContent>
-        {(!isMobile || !getMobileOS()) && (
+        {isMobile ? (
+          <>
+            {getMobileOS() !== MobileOS.Android && (
+              // TODO: app store link
+              <a href="https://play.google.com/store/apps/details?id=com.milkjobs.app">
+                <img alt="app store" src={appStoreBadge} width="200" />
+              </a>
+            )}
+            {getMobileOS() !== MobileOS.Ios && (
+              <a href="https://play.google.com/store/apps/details?id=com.milkjobs.app">
+                <img alt="google play" src={googlePlayBadge} width="200" />
+              </a>
+            )}
+          </>
+        ) : (
           <QRCode
             size={256}
             level="Q"
             value="https://play.google.com/store/apps/details?id=com.milkjobs.app"
           />
         )}
-        {!isMobile ||
-          (getMobileOS() === MobileOS.Android && (
-            <a href="https://play.google.com/store/apps/details?id=com.milkjobs.app">
-              <img alt="google play badge" src={googlePlayBadge} width="200" />
-            </a>
-          ))}
-        {!isMobile ||
-          (getMobileOS() === MobileOS.Ios && (
-            // TODO: app store link
-            <a href="https://play.google.com/store/apps/details?id=com.milkjobs.app">
-              <img alt="app store badge" src={appStoreBadge} width="200" />
-            </a>
-          ))}
       </DialogContent>
     </Dialog>
   );

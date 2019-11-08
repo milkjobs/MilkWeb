@@ -181,7 +181,6 @@ function AutoSuggestion(props) {
       <Autosuggest
         {...autosuggestProps}
         inputProps={{
-          classes,
           placeholder: placeholder,
           value: value,
           onChange: handleChange,

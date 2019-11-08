@@ -15,7 +15,6 @@ import {
   UserApi,
   VerificationApi
 } from "@frankyjuang/milkapi-client";
-import to from "await-to-js";
 import { apiServiceConfig } from "config";
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -33,7 +32,6 @@ export interface AuthContextProps {
   getApi: <T extends keyof Apis>(type: T) => Promise<ExtractApi<TypedApis, T>>;
   isAuthenticated: boolean;
   loading: boolean;
-  logout: () => Promise<void>;
   reloadUser: () => Promise<void>;
   user: User | null;
   userId: string | null;
@@ -44,7 +42,6 @@ export const AuthContext = createContext<AuthContextProps>({
   getApi: () => undefined as any,
   isAuthenticated: false,
   loading: true,
-  logout: async () => {},
   reloadUser: async () => {},
   user: null,
   userId: null
@@ -103,20 +100,6 @@ export const AuthProvider = ({ children }) => {
     throw new Error(`Unknown api type ${type}`);
   };
 
-  const logout = async () => {
-    setLoading(true);
-    const [err] = await to(firebase.auth().signOut());
-    if (!err) {
-      for (const item in LocalStorageItem) {
-        localStorage.removeItem(item);
-      }
-      setIsAuthenticated(false);
-      setUserId(null);
-      setUser(null);
-    }
-    setLoading(false);
-  };
-
   const reloadUser = useCallback(async () => {
     const firebaseUser = firebase.auth().currentUser;
     if (firebaseUser) {
@@ -130,20 +113,31 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  const reset = useCallback(() => {
+    for (const item in LocalStorageItem) {
+      localStorage.removeItem(item);
+    }
+    setIsAuthenticated(false);
+    setUserId(null);
+    setUser(null);
+  }, []);
+
   useEffect(() => {
-    const init = async () => {
-      setLoading(true);
-      firebase.auth().languageCode = "zh-TW";
-      const firebaseUser = firebase.auth().currentUser;
-      if (firebaseUser) {
-        await reloadUser();
-      } else {
-        // TODO: anonymous login.
-      }
-      setLoading(false);
-    };
-    init();
-  }, [reloadUser]);
+    firebase.auth().languageCode = "zh-TW";
+    const unsubscribe = firebase
+      .auth()
+      .onAuthStateChanged(async firebaseUser => {
+        if (firebaseUser) {
+          await reloadUser();
+        } else {
+          reset();
+          // TODO: anonymous login.
+        }
+        setLoading(false);
+      });
+
+    return unsubscribe;
+  }, [reloadUser, reset]);
 
   return (
     <AuthContext.Provider
@@ -151,7 +145,6 @@ export const AuthProvider = ({ children }) => {
         getApi: getApi,
         isAuthenticated,
         loading,
-        logout,
         reloadUser,
         user,
         userId
