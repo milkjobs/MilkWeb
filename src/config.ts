@@ -15,48 +15,6 @@ const apiServiceConfigs: Config<{ basePath: string }> = {
   }
 };
 
-const auth0Configs: Config<{
-  domain: string;
-  clientID: string;
-  audience: string;
-  realm: string;
-  responseType: string;
-  redirectUri: string;
-  logoutReturnTo: string;
-  scope: string;
-}> = {
-  local: {
-    domain: "milkjobs-staging.auth0.com",
-    clientID: "UBieaJ4Xt4qd5Y8HKDlV45kLlon7MQgJ",
-    audience: "https://api.milkjobs.com",
-    realm: "Username-Password-Authentication",
-    responseType: "token",
-    redirectUri: "http://localhost:3000/auth0-callback",
-    logoutReturnTo: "http://localhost:3000",
-    scope: "openid profile email"
-  },
-  staging: {
-    domain: "milkjobs-staging.auth0.com",
-    clientID: "UBieaJ4Xt4qd5Y8HKDlV45kLlon7MQgJ",
-    audience: "https://api.milkjobs.com",
-    realm: "Username-Password-Authentication",
-    responseType: "token",
-    redirectUri: "https://staging.milkjobs.ga/auth0-callback",
-    logoutReturnTo: "https://staging.milkjobs.ga",
-    scope: "openid profile email"
-  },
-  production: {
-    domain: "milkjobs-production.auth0.com",
-    clientID: "LlBXdybXFK6t2jek01DXV2vk2y1TqZEt",
-    audience: "https://api.milkjobs.com",
-    realm: "Username-Password-Authentication",
-    responseType: "token",
-    redirectUri: "https://milkjobs.ga/auth0-callback",
-    logoutReturnTo: "https://milkjobs.ga",
-    scope: "openid profile email"
-  }
-};
-
 const algoliaConfigs: Config<{ appId: string; index: string }> = {
   local: {
     appId: "690O6NIOLW",
@@ -142,7 +100,6 @@ export const environment = (process.env.REACT_APP_ENV ||
   "local") as Environment;
 
 export const apiServiceConfig = apiServiceConfigs[environment];
-export const auth0Config = auth0Configs[environment];
 export const algoliaConfig = algoliaConfigs[environment];
 export const sentryConfig = sentryConfigs[environment];
 export const googleAnalyticsConfig = googleAnalyticsConfigs[environment];

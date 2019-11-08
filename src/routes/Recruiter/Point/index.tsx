@@ -1,14 +1,13 @@
 import { Membership, PointPlan } from "@frankyjuang/milkapi-client";
 import { makeStyles } from "@material-ui/core/styles";
-import { Header } from "components/Header";
-import React, { useEffect, useState } from "react";
-import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
-import { useAuth, useTheme } from "stores";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
-import Icon from "@mdi/react";
 import { mdiAlphaPCircleOutline } from "@mdi/js";
-import { MemberPlanCard } from "components/Point";
+import Icon from "@mdi/react";
+import { Header } from "components/Header";
+import React, { useEffect, useState } from "react";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { useAuth, useTheme } from "stores";
 import Usage from "./Usage";
 
 const useTabsStyles = makeStyles(theme => ({
@@ -124,7 +123,7 @@ const RecruiterAccount: React.FC = () => {
   const match = useRouteMatch();
   const { getApi, user } = useAuth();
   const { theme } = useTheme();
-  const [pointPlans, setPointPlans] = useState<PointPlan[]>();
+  const [, setPointPlans] = useState<PointPlan[]>();
   const [membership, setMembership] = useState<Membership>();
   const classes = useStyles();
   const [value, setValue] = useState(0);

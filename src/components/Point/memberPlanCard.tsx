@@ -98,7 +98,7 @@ const MemberPlanDialog: React.FC<Props> = props => {
       setFinish(false);
       !paymentUrl && setFinish(true);
     }
-  }, [isOpen]);
+  }, [isOpen, paymentUrl]);
 
   const theme = useTheme();
   const smMatches = useMediaQuery(theme.breakpoints.down("sm"));

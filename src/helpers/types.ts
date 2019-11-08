@@ -11,9 +11,7 @@ import {
 } from "@frankyjuang/milkapi-client";
 
 export enum LocalStorageItem {
-  AccessToken = "AccessToken",
-  AlgoliaCredential = "AlgoliaCredential",
-  RedirectPath = "RedirectPath"
+  AlgoliaCredential = "AlgoliaCredential"
 }
 
 export enum MobileOS {

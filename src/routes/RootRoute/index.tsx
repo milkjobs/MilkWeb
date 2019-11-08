@@ -1,9 +1,8 @@
 import { LoginDialog } from "components/Util";
-import { LocalStorageItem, NotFound } from "helpers";
+import { NotFound } from "helpers";
 import React from "react";
 import { Route, RouteComponentProps, RouteProps, Switch } from "react-router";
 import ApplicantProfile from "routes/ApplicantProfile";
-import Auth0Callback from "routes/Auth0Callback";
 import HelpRoute from "routes/HelpRoute";
 import Job from "routes/Job";
 import JobSearch from "routes/JobSearch";
@@ -31,11 +30,6 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
           return <Component {...props} />;
         }
 
-        localStorage.setItem(
-          LocalStorageItem.RedirectPath,
-          `${props.location.pathname}${props.location.search}${props.location.hash}`
-        );
-
         return <LoginDialog isOpen={true} close={() => {}} />;
       }}
     />
@@ -47,7 +41,6 @@ const RootRoute: React.FC = () => {
     <Switch>
       <Route path="/" exact component={JobSearch} />
       <Route path="/help" component={HelpRoute} />
-      <Route path="/auth0-callback" exact component={Auth0Callback} />
       <Route path="/job/:id" exact component={Job} />
       <Route path="/team/:id" exact component={Team} />
       <PrivateRoute path="/profile" exact component={ApplicantProfile} />

@@ -1,6 +1,5 @@
 export { default as AlgoliaService } from "./AlgoliaService";
 export { default as Apis } from "./ApiService";
-export { default as Auth0Service } from "./Auth0Service";
 export { default as ErrorCatcher } from "./ErrorCatcher";
 export { default as GoogleAnalyticsService } from "./GoogleAnalyticsService";
 export { default as NotFound } from "./NotFound";

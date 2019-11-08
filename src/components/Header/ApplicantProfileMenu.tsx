@@ -6,7 +6,7 @@ import MenuList from "@material-ui/core/MenuList";
 import Paper from "@material-ui/core/Paper";
 import Popper from "@material-ui/core/Popper";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { DownloadAppDialog, LoginDialog, SignUpDialog } from "components/Util";
+import { DownloadAppDialog, LoginDialog } from "components/Util";
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "stores";
@@ -30,7 +30,6 @@ const ApplicantProfileMenu: React.FC<Props> = props => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const [isDownloadAppDialogOpen, setIsDownloadAppDialogOpen] = useState(false);
-  const [isSignUpDialogOpen, setIsSignUpDialogOpen] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -42,14 +41,6 @@ const ApplicantProfileMenu: React.FC<Props> = props => {
 
   const hideDownloadAppDialog = () => {
     setIsDownloadAppDialogOpen(false);
-  };
-
-  const showSignUpDialog = () => {
-    setIsSignUpDialogOpen(true);
-  };
-
-  const hideSignUpDialog = () => {
-    setIsSignUpDialogOpen(false);
   };
 
   const showLoginDialog = () => {
@@ -114,32 +105,22 @@ const ApplicantProfileMenu: React.FC<Props> = props => {
                   )}
                   {user ? (
                     <MenuItem
-                      onClick={() => {
+                      onClick={async () => {
                         close();
-                        logout();
+                        await logout();
                       }}
                     >
                       登出
                     </MenuItem>
                   ) : (
-                    <>
-                      <MenuItem
-                        onClick={() => {
-                          close();
-                          showSignUpDialog();
-                        }}
-                      >
-                        註冊
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => {
-                          close();
-                          showLoginDialog();
-                        }}
-                      >
-                        登入
-                      </MenuItem>
-                    </>
+                    <MenuItem
+                      onClick={() => {
+                        close();
+                        showLoginDialog();
+                      }}
+                    >
+                      登入
+                    </MenuItem>
                   )}
                   {/* <MenuItem onClick={changeTheme}>深色模式</MenuItem> */}
                 </MenuList>
@@ -152,7 +133,6 @@ const ApplicantProfileMenu: React.FC<Props> = props => {
         isOpen={isDownloadAppDialogOpen}
         close={hideDownloadAppDialog}
       />
-      <SignUpDialog isOpen={isSignUpDialogOpen} close={hideSignUpDialog} />
       <LoginDialog isOpen={isLoginDialogOpen} close={hideLoginDialog} />
     </>
   );

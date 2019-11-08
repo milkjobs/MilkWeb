@@ -41,7 +41,6 @@
    - Algolia: 資料檢索服務
    - [Firebase](https://policies.google.com/technologies/partner-sites): 行動服務
    - Amazon Web Services: 雲端系統服務
-   - Auth0: 安全身份驗證服務
    - Mailgun: 電子郵件服務
 2. 為了符合適用法律、法規、法律程式或政府執行命令以及在法律規定或合法範圍內，為了保護本網站、使用者或公眾權利、財產或安全不致遭受危害。
 3. 當您在網站的行為，違反服務條款或可能損害或妨礙網站與其他使用者權益或導致任何人遭受損害時，或法律另有規定，而有必要分享您的個人資料時。

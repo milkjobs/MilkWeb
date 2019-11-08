@@ -1,5 +1,5 @@
 import { LoginDialog } from "components/Util";
-import { LocalStorageItem, NotFound } from "helpers";
+import { NotFound } from "helpers";
 import React from "react";
 import {
   Redirect,
@@ -41,11 +41,6 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
             <Redirect to="/" />
           );
         }
-
-        localStorage.setItem(
-          LocalStorageItem.RedirectPath,
-          `${props.location.pathname}${props.location.search}${props.location.hash}`
-        );
 
         return <LoginDialog isOpen={true} close={() => {}} />;
       }}

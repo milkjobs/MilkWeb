@@ -167,7 +167,7 @@ const Resume: React.FC = () => {
                   component="span"
                   variant="contained"
                 >
-                  上傳
+                  重新上傳
                 </Button>
               </label>
               <Button

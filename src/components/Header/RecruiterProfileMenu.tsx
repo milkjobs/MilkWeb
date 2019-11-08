@@ -51,9 +51,9 @@ const RecruiterProfileMenu: React.FC<Props> = props => {
                   </Link>
                 )}
                 <MenuItem
-                  onClick={() => {
+                  onClick={async () => {
                     close();
-                    logout();
+                    await logout();
                   }}
                 >
                   登出

@@ -1,6 +1,6 @@
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
-import { DownloadAppDialog, LoginDialog, SignUpDialog } from "components/Util";
+import { DownloadAppDialog, LoginDialog } from "components/Util";
 import React, { MouseEvent, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "stores";
@@ -48,7 +48,6 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
   const location = useLocation();
   const { user } = useAuth();
   const [isDownloadAppDialogOpen, setIsDownloadAppDialogOpen] = useState(false);
-  const [isSignUpDialogOpen, setIsSignUpDialogOpen] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const isHome = location.pathname === "/";
 
@@ -58,14 +57,6 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
 
   const hideDownloadAppDialog = () => {
     setIsDownloadAppDialogOpen(false);
-  };
-
-  const showSignUpDialog = () => {
-    setIsSignUpDialogOpen(true);
-  };
-
-  const hideSignUpDialog = () => {
-    setIsSignUpDialogOpen(false);
   };
 
   const showLoginDialog = () => {
@@ -106,9 +97,6 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
         </span>
       ) : (
         <>
-          <div onClick={showSignUpDialog} className={classes.link}>
-            <span className={classes.tab}>註冊</span>
-          </div>
           <div onClick={showLoginDialog} className={classes.link}>
             <span className={classes.tab}>登入</span>
           </div>
@@ -118,7 +106,6 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
         isOpen={isDownloadAppDialogOpen}
         close={hideDownloadAppDialog}
       />
-      <SignUpDialog isOpen={isSignUpDialogOpen} close={hideSignUpDialog} />
       <LoginDialog isOpen={isLoginDialogOpen} close={hideLoginDialog} />
     </div>
   );

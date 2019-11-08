@@ -4,16 +4,20 @@ import {
   DialogContent,
   InputAdornment,
   makeStyles,
-  TextField
+  TextField,
+  useMediaQuery,
+  useTheme
 } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import { Smartphone, Visibility, VisibilityOff } from "@material-ui/icons";
+import { Smartphone } from "@material-ui/icons";
 import to from "await-to-js";
-import { isIntlPhoneNumber } from "helpers";
-import React, { useState } from "react";
+import firebase from "firebase/app";
+import "firebase/auth";
+import { isIntlPhoneNumber, isValidVerificationCode } from "helpers";
+import React, { useCallback, useState } from "react";
+import Countdown from "react-countdown-now";
 import { useAuth } from "stores";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   container: {
     display: "flex",
     flexDirection: "column",
@@ -23,9 +27,23 @@ const useStyles = makeStyles(() => ({
     marginBottom: 36
   },
   row: {
-    flex: 1
+    flex: 1,
+    [theme.breakpoints.up("sm")]: {
+      display: "flex"
+    }
   },
-  loginButton: {
+  textColumn: {
+    flex: 2
+  },
+  buttonColumn: {
+    flex: 1,
+    height: 40,
+    marginTop: 8,
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: 12
+    }
+  },
+  registerButton: {
     marginTop: 8
   }
 }));
@@ -38,14 +56,23 @@ interface Props {
 const LoginDialog: React.FC<Props> = props => {
   const { isOpen, close } = props;
   const classes = useStyles();
-  const { login } = useAuth();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { reloadUser } = useAuth();
 
   const [phoneNumber, setPhoneNumber] = useState<string>();
   const [phoneNumberHelperText, setPhoneNumberHelperText] = useState<string>();
 
-  const [password, setPassword] = useState<string>();
-  const [showPassword, setShowPassword] = useState(false);
-  const [passwordHelperText, setPasswordHelperText] = useState<string>();
+  const [codeSent, setCodeSent] = useState(false);
+  const [codeHelperText, setCodeHelperText] = useState<string>();
+  const [code, setCode] = useState<string>();
+
+  const [countdown, setCountdown] = useState(0);
+  const [countdownKey, setCountdownKey] = useState(0);
+  const [countdownCompleted, setCountdownCompleted] = useState(true);
+
+  const [recaptcha, setRecaptcha] = useState<firebase.auth.RecaptchaVerifier>();
+  const [verifier, setVerifier] = useState<firebase.auth.ConfirmationResult>();
 
   const checkPhoneNumber = () => {
     const helperText =
@@ -57,28 +84,56 @@ const LoginDialog: React.FC<Props> = props => {
     return !helperText;
   };
 
-  const checkPassword = () => {
-    const helperText = !password ? "密碼不得為空" : undefined;
-    setPasswordHelperText(helperText);
+  const checkCode = () => {
+    const helperText =
+      !code || !isValidVerificationCode(code)
+        ? "驗證碼必須是六位數字"
+        : undefined;
+    setCodeHelperText(helperText);
 
     return !helperText;
   };
 
-  const tryLogin = async () => {
-    if (!checkPhoneNumber() || !checkPassword() || !phoneNumber || !password) {
+  const sendCode = async () => {
+    if (!checkPhoneNumber() || !phoneNumber || !recaptcha) {
       return;
     }
-    const [err] = await to(
-      login({
-        phoneNumber,
-        password
-      })
+    const [err, result] = await to(
+      firebase.auth().signInWithPhoneNumber(phoneNumber, recaptcha)
     );
-    err && setPasswordHelperText("手機號碼或密碼錯誤");
+    if (err) {
+      return;
+    }
+    setVerifier(result);
+    setCodeSent(true);
+    setCountdown(Date.now() + 59000);
+    setCountdownKey(k => k + 1);
+    setCountdownCompleted(false);
   };
 
+  const login = async () => {
+    if (!checkCode() || !code || !phoneNumber || !verifier) {
+      return;
+    }
+    const [err, result] = await to(verifier.confirm(code));
+
+    if (err || !result) {
+      setCodeHelperText("驗證碼錯誤");
+      return;
+    }
+    await reloadUser();
+    close();
+  };
+
+  const recaptchaButton = useCallback(node => {
+    node &&
+      setRecaptcha(
+        new firebase.auth.RecaptchaVerifier(node, { size: "invisible" })
+      );
+  }, []);
+
   return (
-    <Dialog open={isOpen} onClose={close}>
+    <Dialog open={isOpen} onClose={() => close()}>
       <DialogContent>
         <form
           noValidate
@@ -90,16 +145,19 @@ const LoginDialog: React.FC<Props> = props => {
         >
           <div className={classes.row}>
             <TextField
-              autoComplete="tel"
+              value={phoneNumber ? phoneNumber.replace("+8869", "") : ""}
               autoFocus
+              autoComplete="tel"
+              className={classes.textColumn}
               error={!!phoneNumberHelperText}
-              fullWidth
+              fullWidth={isMobile}
               helperText={phoneNumberHelperText || ""}
               id="phone-number-input"
               placeholder="手機號碼"
               margin="dense"
               variant="outlined"
               InputProps={{
+                readOnly: !countdownCompleted,
                 startAdornment: (
                   <InputAdornment position="start">09</InputAdornment>
                 ),
@@ -112,52 +170,69 @@ const LoginDialog: React.FC<Props> = props => {
               onChange={e => {
                 setPhoneNumber(`+8869${e.target.value}`);
                 setPhoneNumberHelperText(undefined);
+                setCodeSent(false);
               }}
               onBlur={checkPhoneNumber}
             />
-          </div>
-          <div className={classes.row}>
-            <TextField
-              autoComplete="current-password"
-              error={!!passwordHelperText}
-              fullWidth
-              helperText={passwordHelperText || ""}
-              id="password-input"
-              margin="dense"
-              placeholder="密碼"
-              type={showPassword ? "text" : "password"}
-              variant="outlined"
-              onChange={e => {
-                setPassword(e.target.value);
-                setPasswordHelperText(undefined);
-              }}
-              onBlur={checkPassword}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      edge="end"
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPassword(x => !x)}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
-            />
-          </div>
-          <div className={classes.row}>
             <Button
-              className={classes.loginButton}
+              className={classes.buttonColumn}
               color="primary"
-              fullWidth
-              onClick={tryLogin}
-              type="submit"
+              disabled={!countdownCompleted}
+              fullWidth={isMobile}
+              onClick={sendCode}
+              ref={recaptchaButton}
+              type={!codeSent ? "submit" : "button"}
               variant="contained"
             >
-              登入
+              {!codeSent ? (
+                "發送簡訊驗證碼"
+              ) : (
+                <Countdown
+                  key={countdownKey}
+                  date={countdown}
+                  renderer={({ seconds, completed }) => {
+                    if (completed) {
+                      setCountdownCompleted(true);
+                      return "再次發送驗證碼";
+                    } else {
+                      return `${seconds} 秒後再次發送`;
+                    }
+                  }}
+                />
+              )}
             </Button>
+          </div>
+          <div className={classes.row}>
+            {codeSent && (
+              <>
+                <TextField
+                  value={code}
+                  autoFocus
+                  className={classes.textColumn}
+                  error={!!codeHelperText}
+                  fullWidth={isMobile}
+                  helperText={codeHelperText || ""}
+                  id="phone-number-verification-code-input"
+                  placeholder="驗證碼"
+                  margin="dense"
+                  variant="outlined"
+                  onChange={e => {
+                    setCode(e.target.value);
+                    setCodeHelperText(undefined);
+                  }}
+                  onBlur={checkCode}
+                />
+                <Button
+                  className={classes.buttonColumn}
+                  color="primary"
+                  fullWidth={isMobile}
+                  onClick={login}
+                  variant="contained"
+                >
+                  登入
+                </Button>
+              </>
+            )}
           </div>
         </form>
       </DialogContent>

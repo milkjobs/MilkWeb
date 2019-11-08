@@ -1,7 +1,5 @@
 export * from "./AutoSuggestion";
 export * from "./DownloadAppDialog";
 export * from "./ErrorStatus";
-// export * from "./LoginDialog";
-export * from "./AuthDialog";
+export * from "./LoginDialog";
 export * from "./Select";
-export * from "./SignUpDialog";
