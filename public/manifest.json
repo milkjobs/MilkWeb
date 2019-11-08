@@ -1,0 +1,15 @@
+{
+  "short_name": "牛奶找工作",
+  "name": "牛奶找工作",
+  "icons": [
+    {
+      "src": "/milk.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff"
+}

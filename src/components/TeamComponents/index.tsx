@@ -1,0 +1,9 @@
+export { default as TeamCard } from "./teamCard";
+export { default as TeamDescription } from "./teamDescription";
+export { default as TeamInfo } from "./teamInfo";
+export { default as TeamLocation } from "./teamLocation";
+export { default as TeamOfficialInfo } from "./teamOfficialInfo";
+export { default as TeamPhotos } from "./teamPhotos";
+export { default as TeamSideCard } from "./teamSideCard";
+export { default as RecruiterTeamSideCard } from "./recruiterTeamSideCard";
+export { default as TeamWebsite } from "./teamWebsite";

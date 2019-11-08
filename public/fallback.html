@@ -1,0 +1,11 @@
+<!-- https://auth0.com/docs/cross-origin-authentication#create-a-cross-origin-verification-page -->
+<head>
+  <script src="https://cdn.auth0.com/js/auth0/9.11/auth0.min.js"></script>
+  <script type="text/javascript">
+    var auth0 = new auth0.WebAuth({
+      clientID: "vGMyWxoGB4ViM4uH72EqGeg56oy7hwV6",
+      domain: "milkjob.auth0.com"
+    });
+    auth0.crossOriginVerification();
+  </script>
+</head>
