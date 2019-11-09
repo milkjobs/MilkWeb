@@ -28,7 +28,7 @@ import React, {
   useState
 } from "react";
 
-export interface AuthContextProps {
+interface AuthContextProps {
   getApi: <T extends keyof Apis>(type: T) => Promise<ExtractApi<TypedApis, T>>;
   isAuthenticated: boolean;
   loading: boolean;
@@ -37,7 +37,7 @@ export interface AuthContextProps {
   userId: string | null;
 }
 
-export const AuthContext = createContext<AuthContextProps>({
+const AuthContext = createContext<AuthContextProps>({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getApi: () => undefined as any,
   isAuthenticated: false,
@@ -47,18 +47,17 @@ export const AuthContext = createContext<AuthContextProps>({
   userId: null
 });
 
-export const useAuth = (): AuthContextProps => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext);
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
 
-  const getApi = async <T extends keyof Apis>(
+  const getApi: <T extends keyof Apis>(
     type: T
-  ): Promise<ExtractApi<TypedApis, T>> => {
+  ) => Promise<ExtractApi<TypedApis, T>> = useCallback(async type => {
     const firebaseUser = firebase.auth().currentUser;
     const accessToken = firebaseUser && (await firebaseUser.getIdToken());
 
@@ -98,7 +97,7 @@ export const AuthProvider = ({ children }) => {
     /* eslint-enable @typescript-eslint/no-explicit-any */
 
     throw new Error(`Unknown api type ${type}`);
-  };
+  }, []);
 
   const reloadUser = useCallback(async () => {
     const firebaseUser = firebase.auth().currentUser;
@@ -111,7 +110,7 @@ export const AuthProvider = ({ children }) => {
       setUserId(userId);
       setUser({ ...user, recruiterInfo: recruiter.recruiterInfo });
     }
-  }, []);
+  }, [getApi]);
 
   const reset = useCallback(() => {
     for (const item in LocalStorageItem) {
@@ -131,7 +130,6 @@ export const AuthProvider = ({ children }) => {
           await reloadUser();
         } else {
           reset();
-          // TODO: anonymous login.
         }
         setLoading(false);
       });

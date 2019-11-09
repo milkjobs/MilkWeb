@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { Smartphone } from "@material-ui/icons";
 import to from "await-to-js";
-import firebase from "firebase/app";
+import firebase, { FirebaseError } from "firebase/app";
 import "firebase/auth";
 import { isIntlPhoneNumber, isValidVerificationCode } from "helpers";
 import React, { useCallback, useState } from "react";
@@ -113,12 +113,15 @@ const LoginDialog: React.FC<Props> = props => {
     if (!checkCode() || !code || !phoneNumber || !verifier) {
       return;
     }
-    const [err, result] = await to(verifier.confirm(code));
 
-    if (err || !result) {
+    const [err] = await to<firebase.auth.UserCredential, FirebaseError>(
+      verifier.confirm(code)
+    );
+    if (err && err.code === "auth/invalid-verification-code") {
       setCodeHelperText("驗證碼錯誤");
       return;
     }
+
     close();
   };
 
@@ -142,16 +145,17 @@ const LoginDialog: React.FC<Props> = props => {
         >
           <div className={classes.row}>
             <TextField
-              value={phoneNumber ? phoneNumber.replace("+8869", "") : ""}
-              autoFocus
               autoComplete="tel"
+              autoFocus
               className={classes.textColumn}
               error={!!phoneNumberHelperText}
               fullWidth={isMobile}
               helperText={phoneNumberHelperText || ""}
               id="phone-number-input"
-              placeholder="手機號碼"
               margin="dense"
+              placeholder="手機號碼"
+              type="tel"
+              value={phoneNumber ? phoneNumber.replace("+8869", "") : ""}
               variant="outlined"
               InputProps={{
                 readOnly: !countdownCompleted,
@@ -203,15 +207,16 @@ const LoginDialog: React.FC<Props> = props => {
             {codeSent && (
               <>
                 <TextField
-                  value={code || ""}
                   autoFocus
                   className={classes.textColumn}
                   error={!!codeHelperText}
                   fullWidth={isMobile}
                   helperText={codeHelperText || ""}
                   id="phone-number-verification-code-input"
-                  placeholder="驗證碼"
                   margin="dense"
+                  placeholder="驗證碼"
+                  type="number"
+                  value={code || ""}
                   variant="outlined"
                   onChange={e => {
                     setCode(e.target.value);

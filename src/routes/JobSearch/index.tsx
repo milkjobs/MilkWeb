@@ -104,7 +104,7 @@ const JobSearch: React.FC = () => {
   }, [inView, loading]);
 
   useEffect(() => {
-    const getApiKey = async (): Promise<string> => {
+    const getApiKey = async () => {
       if (user) {
         const userApi = (await getApi("User")) as UserApi;
         const algoliaService = new AlgoliaService(user.uuid, userApi);
