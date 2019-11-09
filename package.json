@@ -70,7 +70,7 @@
     "build-production": "REACT_APP_ENV=production react-scripts build",
     "build-staging": "REACT_APP_ENV=staging react-scripts build",
     "deploy-production": "rsync -avh --progress --stats build/ /var/www/production.milkjobs.ga/html/",
-    "deploy-staging": "rsync -avh --progress --stats build/ /var/www/staging.milkjobs.ga/html/"
+    "deploy-staging": "firebase deploy"
   },
   "browserslist": [
     ">0.2%",
