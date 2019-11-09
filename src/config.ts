@@ -65,34 +65,34 @@ const firebaseConfigs: Config<{
   measurementId: string;
 }> = {
   local: {
-    apiKey: "AIzaSyC3eTDNRAlQDEeMI-TQM2xe0-vetnkhf3A",
-    authDomain: "milkjobs-7938d.firebaseapp.com",
-    databaseURL: "https://milkjobs-7938d.firebaseio.com",
-    projectId: "milkjobs-7938d",
-    storageBucket: "milkjobs-7938d.appspot.com",
-    messagingSenderId: "749434492861",
-    appId: "1:749434492861:web:e83d0ba9e542ef87c464d4",
-    measurementId: "G-5KBC0HVN4F"
+    apiKey: "AIzaSyAkf8X85937LOb6LDIx722VSATP5zjre5U",
+    authDomain: "milkjobs-staging.firebaseapp.com",
+    databaseURL: "https://milkjobs-staging.firebaseio.com",
+    projectId: "milkjobs-staging",
+    storageBucket: "milkjobs-staging.appspot.com",
+    messagingSenderId: "610685322888",
+    appId: "1:610685322888:web:0a2c09b362fdd51a2e413d",
+    measurementId: "G-7ZT8RVB66E"
   },
   staging: {
-    apiKey: "AIzaSyC3eTDNRAlQDEeMI-TQM2xe0-vetnkhf3A",
-    authDomain: "milkjobs-7938d.firebaseapp.com",
-    databaseURL: "https://milkjobs-7938d.firebaseio.com",
-    projectId: "milkjobs-7938d",
-    storageBucket: "milkjobs-7938d.appspot.com",
-    messagingSenderId: "749434492861",
-    appId: "1:749434492861:web:e83d0ba9e542ef87c464d4",
-    measurementId: "G-5KBC0HVN4F"
+    apiKey: "AIzaSyAkf8X85937LOb6LDIx722VSATP5zjre5U",
+    authDomain: "milkjobs-staging.firebaseapp.com",
+    databaseURL: "https://milkjobs-staging.firebaseio.com",
+    projectId: "milkjobs-staging",
+    storageBucket: "milkjobs-staging.appspot.com",
+    messagingSenderId: "610685322888",
+    appId: "1:610685322888:web:0a2c09b362fdd51a2e413d",
+    measurementId: "G-7ZT8RVB66E"
   },
   production: {
-    apiKey: "AIzaSyC3eTDNRAlQDEeMI-TQM2xe0-vetnkhf3A",
-    authDomain: "milkjobs-7938d.firebaseapp.com",
-    databaseURL: "https://milkjobs-7938d.firebaseio.com",
-    projectId: "milkjobs-7938d",
-    storageBucket: "milkjobs-7938d.appspot.com",
-    messagingSenderId: "749434492861",
-    appId: "1:749434492861:web:e83d0ba9e542ef87c464d4",
-    measurementId: "G-5KBC0HVN4F"
+    apiKey: "AIzaSyDwMvFr2qewsiUhGy-118m6uLDIiDYuGjc",
+    authDomain: "milkjobs-production.firebaseapp.com",
+    databaseURL: "https://milkjobs-production.firebaseio.com",
+    projectId: "milkjobs-production",
+    storageBucket: "milkjobs-production.appspot.com",
+    messagingSenderId: "1065019619809",
+    appId: "1:1065019619809:web:d4e395235f279d63e3baa0",
+    measurementId: "G-K02VJE8HVN"
   }
 };
 

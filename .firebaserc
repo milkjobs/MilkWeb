@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "milkjobs-7938d"
+    "default": "milkjobs-production",
+    "production": "milkjobs-production",
+    "staging": "milkjobs-staging"
   }
 }
