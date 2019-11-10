@@ -1,23 +1,15 @@
-import { googleAnalyticsConfig } from "config";
+import "firebase/analytics";
+import firebase from "firebase/app";
 import React, { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 
-declare global {
-  interface Window {
-    gtag: Gtag.Gtag;
-  }
-}
-
-// https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 const PageView: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
 
   useEffect(() => {
-    const gtag = window.gtag;
-
-    if (typeof gtag === "function" && history.action === "PUSH") {
-      gtag("config", googleAnalyticsConfig.measurementId, {
+    if (history.action === "PUSH") {
+      firebase.analytics().logEvent("page_view", {
         // eslint-disable-next-line @typescript-eslint/camelcase
         page_location: window.location.href,
         // eslint-disable-next-line @typescript-eslint/camelcase

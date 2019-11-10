@@ -1,6 +1,5 @@
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ErrorCatcher } from "helpers";
-import GoogleAnalyticsService from "helpers/GoogleAnalyticsService";
 import React from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter, Route, RouteProps, Switch } from "react-router-dom";
@@ -38,7 +37,6 @@ const App: React.FC<{}> = () => {
       <HelmetProvider>
         <AuthProvider>
           <CssBaseline />
-          <GoogleAnalyticsService />
           <AppRouter />
         </AuthProvider>
       </HelmetProvider>

@@ -42,18 +42,6 @@ const sentryConfigs: Config<{ dsn: string }> = {
   }
 };
 
-const googleAnalyticsConfigs: Config<{ measurementId: string }> = {
-  local: {
-    measurementId: "G-0Y2XRWQPVS"
-  },
-  staging: {
-    measurementId: "G-0Y2XRWQPVS"
-  },
-  production: {
-    measurementId: "G-0Y2XRWQPVS"
-  }
-};
-
 const firebaseConfigs: Config<{
   apiKey: string;
   authDomain: string;
@@ -102,7 +90,6 @@ export const environment = (process.env.REACT_APP_ENV ||
 export const apiServiceConfig = apiServiceConfigs[environment];
 export const algoliaConfig = algoliaConfigs[environment];
 export const sentryConfig = sentryConfigs[environment];
-export const googleAnalyticsConfig = googleAnalyticsConfigs[environment];
 export const firebaseConfig = firebaseConfigs[environment];
 
 export const TokenExpiredBufferTime = 3600000;
