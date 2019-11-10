@@ -96,6 +96,7 @@ const Resume: React.FC = () => {
   const bodyRef = useRef<HTMLDivElement>(null);
   const [bodyWidth, setBodyWidth] = useState<number>();
   const [numPages, setNumPages] = useState<number>();
+  const [resumeUrl, setResumeUrl] = useState<string>();
 
   const upload = useCallback(
     async (files: File[] | FileList) => {
@@ -130,18 +131,39 @@ const Resume: React.FC = () => {
     [getApi, reloadUser, user]
   );
 
+  const remove = useCallback(async () => {
+    if (user && user.profile && user.profile.resumeKey) {
+      const profileApi = await getApi("Profile");
+      await profileApi.removeResume({
+        profileId: user.profile.uuid,
+        resumeKey: user.profile.resumeKey
+      });
+      setResumeUrl(undefined);
+    }
+  }, [getApi, user]);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: upload,
     accept: PdfMimeType
   });
 
-  const resumeUrl = user && user.profile && user.profile.resumeUrl;
-
-  const remove = () => {};
-
   useEffect(() => {
     bodyRef.current && setBodyWidth(bodyRef.current.offsetWidth);
   }, []);
+
+  useEffect(() => {
+    const updateResumeUrl = async () => {
+      if (user && user.profile && user.profile.resumeKey) {
+        const profileApi = await getApi("Profile");
+        const url = await profileApi.getResumeUrl({
+          profileId: user.profile.uuid,
+          resumeKey: user.profile.resumeKey
+        });
+        setResumeUrl(url);
+      }
+    };
+    updateResumeUrl();
+  }, [getApi, user]);
 
   return (
     <div className={classes.root}>

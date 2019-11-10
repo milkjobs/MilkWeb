@@ -1,4 +1,4 @@
-import { Team, JobType, SalaryType } from "@frankyjuang/milkapi-client";
+import { JobType, SalaryType, Team } from "@frankyjuang/milkapi-client";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   salaryNumberToString,
@@ -6,7 +6,7 @@ import {
   TeamSizeConvertor
 } from "helpers";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   container: {

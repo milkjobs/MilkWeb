@@ -8,7 +8,7 @@ import {
   RouteProps,
   Switch,
   useRouteMatch
-} from "react-router";
+} from "react-router-dom";
 import CreateJob from "routes/CreateJob";
 import CreateTeam from "routes/CreateTeam";
 import RecruiterJob from "routes/Recruiter/Job";

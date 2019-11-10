@@ -35,51 +35,35 @@ const useStyles = makeStyles(theme => ({
     marginRight: 20
   },
   logo: {
-    display: "block",
-    [theme.breakpoints.down("xs")]: {
-      marginLeft: theme.spacing(1)
-    }
+    display: "flex"
   },
   search: {
-    position: "relative",
     display: "flex",
     border: "1px solid #dfe1e5",
     borderRadius: 10,
+    marginRight: theme.spacing(3),
+    marginLeft: theme.spacing(3),
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(3),
     "&:hover": {
       boxShadow: "0 2px 4px rgba(0,0,0,0.1) !important"
     },
-    marginRight: theme.spacing(2),
-    marginLeft: theme.spacing(3),
-    paddingTop: 4,
-    paddingBottom: 4,
-    width: 500,
+    "&:focus-within": {
+      flex: 1
+    },
+    transition: theme.transitions.create("flex"),
     [theme.breakpoints.down("xs")]: {
       display: "none"
     }
   },
   searchIcon: {
-    marginTop: "auto",
-    marginBottom: "auto",
-    marginLeft: theme.spacing(2),
-    height: "100%",
-    pointerEvents: "none",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    pointerEvents: "none"
   },
-  inputRoot: {
-    color: "inherit"
-  },
-  inputInput: {
-    paddingTop: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    paddingLeft: theme.spacing(1),
-    transition: theme.transitions.create("width"),
-    width: 360,
-    [theme.breakpoints.up("lg")]: {
-      width: 560
-    }
+  input: {
+    width: "100%"
   },
   sectionMobile: {
     display: "flex",
@@ -99,7 +83,7 @@ const SearchBar: React.FC = () => {
   const search = () => {
     const qs = queryString.parse(location.search);
     qs.job = query;
-    history.push({ search: queryString.stringify(qs) });
+    history.push({ pathname: "/", search: queryString.stringify(qs) });
   };
 
   return (
@@ -113,10 +97,8 @@ const SearchBar: React.FC = () => {
       </IconButton>
       <InputBase
         placeholder="搜尋工作、地區、公司"
-        classes={{
-          root: classes.inputRoot,
-          input: classes.inputInput
-        }}
+        value={query}
+        className={classes.input}
         onChange={e => {
           setQuery(e.target.value);
         }}

@@ -39,7 +39,6 @@ export const InitialTeam: Team = {
 export const InitialUser: User = {
   uuid: "",
   name: "",
-  username: "",
   createdAt: new Date(),
   profileImageUrl: "",
   systemChannelUrl: ""

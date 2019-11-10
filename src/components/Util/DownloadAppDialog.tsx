@@ -44,6 +44,7 @@ const DownloadAppDialog: React.FC<Props> = props => {
             size={256}
             level="Q"
             value="https://play.google.com/store/apps/details?id=com.milkjobs.app"
+            // TODO: https://github.com/zpao/qrcode.react#imagesettings
           />
         )}
       </DialogContent>

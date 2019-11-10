@@ -1,8 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import { Header } from "components/Header";
 import React from "react";
-import { useRouteMatch } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   root: {

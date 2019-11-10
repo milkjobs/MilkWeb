@@ -21,7 +21,6 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    width: "100%",
     [theme.breakpoints.up("md")]: {
       width: 900,
       marginRight: "auto",

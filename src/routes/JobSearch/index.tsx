@@ -3,14 +3,15 @@ import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
-import { AlgoliaService } from "helpers";
-import { JobList, SearchBar } from "components/JobSearch";
+import algoliasearch from "algoliasearch/lite";
 import { Header } from "components/Header";
+import { JobList, SearchBar } from "components/JobSearch";
 import { algoliaConfig } from "config";
+import { AlgoliaService } from "helpers";
 import React, { useEffect, useState } from "react";
 import { Configure, InstantSearch } from "react-instantsearch-dom";
-import { useAuth } from "stores";
 import { useInView } from "react-intersection-observer";
+import { useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -94,7 +95,7 @@ const JobSearch: React.FC = () => {
   const classes = useStyles();
   const { getApi, user } = useAuth();
   const [ref, inView] = useInView({ threshold: 1 });
-  const [algoliaApiKey, setAlgoliaApiKey] = useState<string>();
+  const [algoliaClient, setAlgoliaClient] = useState<algoliasearch.Client>();
   const [hideHeaderSearchBar, setHideHeaderSearchBar] = useState(true);
   const [loading, setLoading] = useState(true);
 
@@ -115,22 +116,22 @@ const JobSearch: React.FC = () => {
       return algoliaCredential.apiKey;
     };
 
-    const setApiKey = async () => {
+    const setClient = async () => {
       const apiKey = await getApiKey();
-      setAlgoliaApiKey(apiKey);
+      const algoliaClient = algoliasearch(algoliaConfig.appId, apiKey);
+      setAlgoliaClient(algoliaClient);
     };
-    setApiKey();
+    setClient();
   }, [user, getApi]);
 
   return (
     <div className={classes.root}>
       <Header hideSearchBar={hideHeaderSearchBar} />
       <div className={classes.container}>
-        {algoliaApiKey ? (
+        {algoliaClient ? (
           <InstantSearch
             indexName={algoliaConfig.index}
-            appId={algoliaConfig.appId}
-            apiKey={algoliaApiKey}
+            searchClient={algoliaClient}
           >
             <Configure hitsPerPage={20} />
             <div ref={ref}>

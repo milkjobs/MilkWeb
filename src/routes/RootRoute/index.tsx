@@ -1,7 +1,12 @@
 import { LoginDialog } from "components/Util";
 import { NotFound } from "helpers";
 import React from "react";
-import { Route, RouteComponentProps, RouteProps, Switch } from "react-router";
+import {
+  Route,
+  RouteComponentProps,
+  RouteProps,
+  Switch
+} from "react-router-dom";
 import ApplicantProfile from "routes/ApplicantProfile";
 import HelpRoute from "routes/HelpRoute";
 import Job from "routes/Job";
