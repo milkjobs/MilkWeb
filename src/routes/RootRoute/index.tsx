@@ -5,6 +5,7 @@ import { Route, RouteComponentProps, RouteProps, Switch } from "react-router";
 import ApplicantProfile from "routes/ApplicantProfile";
 import HelpRoute from "routes/HelpRoute";
 import Job from "routes/Job";
+import Captcha from "routes/Captcha";
 import JobSearch from "routes/JobSearch";
 import Resume from "routes/Resume";
 import Team from "routes/Team";
@@ -41,6 +42,7 @@ const RootRoute: React.FC = () => {
     <Switch>
       <Route path="/" exact component={JobSearch} />
       <Route path="/help" component={HelpRoute} />
+      <Route path="/captcha" component={Captcha} />
       <Route path="/job/:id" exact component={Job} />
       <Route path="/team/:id" exact component={Team} />
       <PrivateRoute path="/profile" exact component={ApplicantProfile} />
