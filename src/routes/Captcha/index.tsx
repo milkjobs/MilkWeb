@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect } from "react";
 import firebase from "firebase";
-import { useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
 
 const Captcha: React.FC = () => {
   const classes = useStyles();
-  const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     function getToken(callback) {
@@ -31,7 +31,10 @@ const Captcha: React.FC = () => {
     }
 
     function sendTokenToApp(token) {
-      history.push("/captcha" + "/?token=" + encodeURIComponent(token));
+      var baseUri = decodeURIComponent(
+        location.search.replace(/^\?appurl\=/, "")
+      );
+      window.location.href = baseUri + "/?token=" + encodeURIComponent(token);
     }
 
     getToken(sendTokenToApp);
