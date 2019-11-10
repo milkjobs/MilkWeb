@@ -125,11 +125,14 @@ const LoginDialog: React.FC<Props> = props => {
     close();
   };
 
-  const recaptchaButton = useCallback(node => {
-    node &&
-      setRecaptcha(
-        new firebase.auth.RecaptchaVerifier(node, { size: "invisible" })
-      );
+  const recaptchaButton = useCallback(async node => {
+    if (node) {
+      const recaptchaVerifier = new firebase.auth.RecaptchaVerifier(node, {
+        size: "invisible"
+      });
+      await recaptchaVerifier.render();
+      setRecaptcha(recaptchaVerifier);
+    }
   }, []);
 
   return (

@@ -1,4 +1,6 @@
+import { Job as JobModel } from "@frankyjuang/milkapi-client";
 import { makeStyles } from "@material-ui/core/styles";
+import { Header } from "components/Header";
 import {
   JobDescription,
   JobFooter,
@@ -6,7 +8,8 @@ import {
   JobSideCard,
   JobTitle
 } from "components/Job";
-import { Header } from "components/Header";
+import "firebase/analytics";
+import firebase from "firebase/app";
 import { InitialJob } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -82,7 +85,7 @@ const Job: React.FC = () => {
   useEffect(() => {
     const fetchJob = async () => {
       const jobApi = await getApi("Job");
-      let fetchedJob;
+      let fetchedJob: JobModel;
       if (isAuthenticated) {
         fetchedJob = await jobApi.getJob({ jobId: params.id });
       } else {
@@ -90,6 +93,9 @@ const Job: React.FC = () => {
       }
       setJob(fetchedJob);
       setLoading(false);
+      firebase
+        .analytics()
+        .logEvent("view_item", { items: [{ id: fetchedJob.uuid }] });
     };
     fetchJob();
   }, [getApi, isAuthenticated, params.id]);

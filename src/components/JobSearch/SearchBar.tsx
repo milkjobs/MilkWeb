@@ -2,6 +2,8 @@ import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
+import "firebase/analytics";
+import firebase from "firebase/app";
 import queryString from "query-string";
 import React, { useEffect, useState } from "react";
 import { SearchBoxProvided } from "react-instantsearch-core";
@@ -47,6 +49,8 @@ const SearchBar: React.FC<SearchBoxProvided> = props => {
       if (jobQuery) {
         refine(jobQuery);
         setQuery(jobQuery);
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        firebase.analytics().logEvent("search", { search_term: jobQuery });
       }
     }
   }, [location.search, refine]);

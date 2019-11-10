@@ -17,6 +17,7 @@ import {
 } from "@frankyjuang/milkapi-client";
 import { apiServiceConfig } from "config";
 import firebase from "firebase/app";
+import "firebase/analytics";
 import "firebase/auth";
 import { Apis, ExtractApi, TypedApis } from "helpers/ApiService";
 import { LocalStorageItem } from "helpers/types";
@@ -106,6 +107,7 @@ export const AuthProvider = ({ children }) => {
       const userApi = await getApi("User");
       const user = await userApi.getUser({ userId, role: Role.Applicant });
       const recruiter = await userApi.getUser({ userId, role: Role.Recruiter });
+      firebase.analytics().setUserId(userId);
       setIsAuthenticated(true);
       setUserId(userId);
       setUser({ ...user, recruiterInfo: recruiter.recruiterInfo });
@@ -116,6 +118,7 @@ export const AuthProvider = ({ children }) => {
     for (const item in LocalStorageItem) {
       localStorage.removeItem(item);
     }
+    firebase.analytics().setUserId("");
     setIsAuthenticated(false);
     setUserId(null);
     setUser(null);
@@ -127,6 +130,7 @@ export const AuthProvider = ({ children }) => {
       .auth()
       .onAuthStateChanged(async firebaseUser => {
         if (firebaseUser) {
+          firebase.analytics().logEvent("login", {});
           await reloadUser();
         } else {
           reset();
