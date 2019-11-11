@@ -68,8 +68,8 @@
     "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
     "build-production": "REACT_APP_ENV=production react-scripts build",
     "build-staging": "REACT_APP_ENV=staging react-scripts build",
-    "deploy-production": "firebase deploy --project=production",
-    "deploy-staging": "firebase deploy --project=staging"
+    "deploy-production": "firebase deploy --project=production -m $(git rev-parse --short HEAD)",
+    "deploy-staging": "firebase deploy --project=staging -m $(git rev-parse --short HEAD)"
   },
   "browserslist": [
     ">0.2%",
