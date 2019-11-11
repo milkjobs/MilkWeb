@@ -1,46 +1,37 @@
-import { makeStyles } from "@material-ui/core/styles";
+import firebase from "firebase/app";
+import "firebase/auth";
+import queryString from "query-string";
 import React, { useEffect } from "react";
-import firebase from "firebase";
 import { useLocation } from "react-router-dom";
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    flex: 1,
-    backgroundColor: theme.palette.background.paper
-  }
-}));
+import urljoin from "url-join";
 
 const Captcha: React.FC = () => {
-  const classes = useStyles();
   const location = useLocation();
+  const captchaDomId = "captcha";
 
   useEffect(() => {
-    function getToken(callback) {
-      var captcha = new firebase.auth.RecaptchaVerifier("captcha", {
-        size: "normal",
-        callback: function(token) {
-          callback(token);
-        },
-        "expired-callback": function() {
-          callback("");
-        }
+    const getToken = async () => {
+      const captcha = new firebase.auth.RecaptchaVerifier(captchaDomId, {
+        size: "invisible"
       });
-      captcha.render().then(function() {
-        captcha.verify();
-      });
-    }
+      await captcha.render();
+      const token = await captcha.verify();
 
-    function sendTokenToApp(token) {
-      var baseUri = decodeURIComponent(
-        location.search.replace(/^\?appurl\=/, "")
-      );
-      window.location.href = baseUri + "/?token=" + encodeURIComponent(token);
-    }
+      // Redirect back to app.
+      const qs = queryString.parse(location.search);
+      if (typeof qs.appurl === "string") {
+        window.location.href = urljoin(
+          decodeURIComponent(qs.appurl),
+          `?token=${encodeURIComponent(token)}`
+        );
+      }
+    };
 
-    getToken(sendTokenToApp);
-  }, []);
+    firebase.auth().languageCode = "zh-TW";
+    getToken();
+  }, [location.search]);
 
-  return <div id={"captcha"} className={classes.root}></div>;
+  return <div id={captchaDomId}></div>;
 };
 
 export default Captcha;
