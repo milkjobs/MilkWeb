@@ -32,6 +32,8 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 12
   },
   item: {
+    fontSize: 18,
+    padding: 4,
     color: theme.palette.text.primary,
     textDecoration: "none"
   }
@@ -48,7 +50,10 @@ const HelpCenter: React.FC = () => {
         <div className={classes.container}>
           <div className={classes.title}>幫助中心</div>
           <Link to={`${match.path}/privacy-policy`} className={classes.item}>
-            <div>隱私權政策</div>
+            <div>隱私權條款</div>
+          </Link>
+          <Link to={`${match.path}/terms-of-service`} className={classes.item}>
+            <div>服務條款</div>
           </Link>
         </div>
       </div>
