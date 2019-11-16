@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import policyFile from "assets/faq.md";
 import to from "await-to-js";
 import { Header } from "components/Header";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ReactType } from "react";
 import ReactMarkdown from "react-markdown";
 
 const useStyles = makeStyles(theme => ({
@@ -32,6 +32,43 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const elements = {
+  h1: "h1",
+  h2: "h2",
+  h3: "h3",
+  h4: "h4",
+  h5: "h5",
+  h6: "h6"
+};
+
+function Heading({ level, children, ...props }) {
+  return React.createElement(elements[level] || elements.h1, props, children);
+}
+
+const HeadingBlock: ReactType = props => {
+  const renderHtml = () => {
+    const { level, children } = props;
+
+    if (children && children.length > 0) {
+      const nodeValue = children[0].props.value;
+      return (
+        <Heading level={`h${level}`} id={nodeValue}>
+          <a
+            href={`#${nodeValue}`}
+            className="title"
+            style={{ color: "black", textDecoration: "none" }}
+          >
+            {children}
+          </a>
+        </Heading>
+      );
+    } else {
+      return <>{children}</>;
+    }
+  };
+  return <>{renderHtml()}</>;
+};
+
 const TermsOfService: React.FC = () => {
   const classes = useStyles();
   const [policy, setPolicy] = useState<string>();
@@ -52,6 +89,9 @@ const TermsOfService: React.FC = () => {
           source={policy}
           className={classes.markdownContainer}
           linkTarget="_blank"
+          renderers={{
+            heading: HeadingBlock
+          }}
         />
       </div>
     </div>
