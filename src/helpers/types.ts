@@ -32,7 +32,6 @@ export const InitialTeam: Team = {
   website: "",
   introduction: "",
   nickname: "",
-  jobs: [],
   certificateVerified: VerificationState.None
 };
 
@@ -58,8 +57,5 @@ export const InitialJob: Job = {
   educationNeed: EducationLevel.Any,
   createdAt: new Date(),
   skillTags: [],
-  totalViews: 0,
-  totalVisitors: 0,
-  totalChannels: 0,
   published: true
 };

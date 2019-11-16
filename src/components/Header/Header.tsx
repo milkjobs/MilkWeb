@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(3),
     marginLeft: theme.spacing(3),
     paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(3),
+    paddingRight: theme.spacing(6),
     "&:hover": {
       boxShadow: "0 2px 4px rgba(0,0,0,0.1) !important"
     },
@@ -60,7 +60,9 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    pointerEvents: "none"
+    pointerEvents: "none",
+    paddingTop: 9,
+    paddingBottom: 9
   },
   input: {
     width: "100%"

@@ -5,6 +5,8 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import HelpCenter from "routes/HelpCenter";
 import PrivacyPolicy from "routes/HelpCenter/PrivacyPolicy";
 import TermsOfService from "routes/HelpCenter/TermsOfService";
+import Charges from "routes/HelpCenter/Charges";
+import FAQ from "routes/HelpCenter/FAQ";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,6 +34,8 @@ const HelpRoute: React.FC = () => {
             exact
             component={TermsOfService}
           />
+          <Route path={`${match.path}/charges`} exact component={Charges} />
+          <Route path={`${match.path}/faq`} exact component={FAQ} />
           <Route path={`${match.path}`} component={NotFound} />
         </Switch>
       </div>
