@@ -100,7 +100,7 @@ const CostEntry: React.FC<CostEntryProps> = props => {
             color={theme.palette.text.hint}
           />
           <div className={classes.costNumber}>
-            {entry.points ? entry.points.toLocaleString() : 0}
+            {entry.visitors ? entry.visitors.toLocaleString() : 0}
           </div>
         </div>
       </div>

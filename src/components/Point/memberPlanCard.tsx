@@ -1,4 +1,4 @@
-import { PointPlan } from "@frankyjuang/milkapi-client";
+import { VisitorPlan } from "@frankyjuang/milkapi-client";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import Dialog from "@material-ui/core/Dialog";
@@ -159,8 +159,8 @@ const MemberPlanDialog: React.FC<Props> = props => {
   );
 };
 
-const MemberPlanCard: React.FC<PointPlan> = props => {
-  const { points, price, uuid } = props;
+const MemberPlanCard: React.FC<VisitorPlan> = props => {
+  const { visitorsToBe, price, uuid } = props;
   const { getApi, user, reloadUser } = useAuth();
   const classes = useStyles();
   const [paymentUrl, setPaymentUrl] = useState("");
@@ -171,7 +171,7 @@ const MemberPlanCard: React.FC<PointPlan> = props => {
       const orderApi = await getApi("Order");
       const order = await orderApi.addOrder({
         teamId: user.recruiterInfo.team.uuid,
-        pointPlanId: uuid
+        visitorPlanId: uuid
       });
       order && order.token
         ? setPaymentUrl(
@@ -184,7 +184,7 @@ const MemberPlanCard: React.FC<PointPlan> = props => {
   return (
     <Card className={classes.memberCard}>
       <div className={classes.memberCardTitle}>
-        {points.toLocaleString() + " 點"}
+        {visitorsToBe.toLocaleString() + " 點"}
       </div>
       <div className={classes.memberCardPrice}>
         {price.toLocaleString() + " 元"}
@@ -207,7 +207,7 @@ const MemberPlanCard: React.FC<PointPlan> = props => {
           setOpen(false);
         }}
         close={() => setOpen(false)}
-        planPoints={points}
+        planPoints={visitorsToBe}
         planPrice={price}
         paymentUrl={paymentUrl}
       />

@@ -137,7 +137,7 @@ const TeamJobs: React.FC<Props> = props => {
   return (
     <div style={{ display: "flex" }}>
       <div style={{ flex: 2, marginTop: 16 }}>
-        {team.jobs &&
+        {/* {team.jobs &&
           team.jobs.map((value, index) => {
             value.team = team;
             return (
@@ -147,7 +147,7 @@ const TeamJobs: React.FC<Props> = props => {
                 targetPath={`/job/${value.uuid}`}
               />
             );
-          })}
+          })} */}
       </div>
     </div>
   );

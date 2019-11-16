@@ -40,8 +40,7 @@ const Usage: React.FC = () => {
         <CostEntry
           entry={{
             name: "全部職缺",
-            visitors: membershipUsage.totalVisitors,
-            points: membershipUsage.totalPoints
+            visitors: membershipUsage.totalVisitors
           }}
         />
       )}

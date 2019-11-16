@@ -55,6 +55,9 @@ const HelpCenter: React.FC = () => {
           <Link to={`${match.path}/terms-of-service`} className={classes.item}>
             <div>服務條款</div>
           </Link>
+          <Link to={`${match.path}/charges`} className={classes.item}>
+            <div>收費方案</div>
+          </Link>
           <Link to={`${match.path}/faq`} className={classes.item}>
             <div>常見問題</div>
           </Link>

@@ -1233,10 +1233,10 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.2.30.tgz#dd6878dffb09b6aedcbbfb226ce6461375b7c354"
   integrity sha512-tja+VVbHFN2q6k+n1Mgu/hFuips9UVCYTLzwbRL6Uu398OKPo57RoT4+UFrZx1iqb84ATw7ZEn7TtDH7IjtjJQ==
 
-"@frankyjuang/milkapi-client@^2.0.0":
-  version "2.0.0"
-  resolved "https://npm.pkg.github.com/download/@frankyjuang/milkapi-client/2.0.0/c0e51b1d091de9ca1ab523f63e313ad9493c0c86e59aacce4df98414c278a31c#e00a4b5b9af31cb8f8476d938957f3d85927da30"
-  integrity sha512-3PSH0PE0XE718PqHC2ydUsSIq36YWz335HXSdgfG5ivXz+6eCxouzbRvNo7hMjDHyv27iq+MxC6vY5vTowzBtA==
+"@frankyjuang/milkapi-client@^2.3.1":
+  version "2.3.1"
+  resolved "https://npm.pkg.github.com/download/@frankyjuang/milkapi-client/2.3.1/0a3dac8103878a721046994821ae9d4d0a26e86e958f2e2f34329c149f1d4613#921d00e4078450e68444a6c5e783fcacc7f717ea"
+  integrity sha512-8SEgDZwnoSV4eKL4t/Eug66ujD/BJm6+/RgIXV35rXzajVXh/xw9iSA6oCP0gGxaVhTT/mSCvL9X2iIDoLKYNg==
 
 "@grpc/proto-loader@^0.5.0":
   version "0.5.3"

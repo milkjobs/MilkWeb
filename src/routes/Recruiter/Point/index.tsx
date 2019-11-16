@@ -1,4 +1,4 @@
-import { Membership, PointPlan } from "@frankyjuang/milkapi-client";
+import { Membership, VisitorPlan } from "@frankyjuang/milkapi-client";
 import { makeStyles } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
@@ -123,7 +123,7 @@ const RecruiterAccount: React.FC = () => {
   const match = useRouteMatch();
   const { getApi, user } = useAuth();
   const { theme } = useTheme();
-  const [, setPointPlans] = useState<PointPlan[]>();
+  const [, setPointPlans] = useState<VisitorPlan[]>();
   const [membership, setMembership] = useState<Membership>();
   const classes = useStyles();
   const [value, setValue] = useState(0);
@@ -135,7 +135,7 @@ const RecruiterAccount: React.FC = () => {
   useEffect(() => {
     const getPointPlans = async () => {
       const membershipApi = await getApi("Membership");
-      const fetchPointPlans = await membershipApi.getPointPlans();
+      const fetchPointPlans = await membershipApi.getVisitorPlans();
       fetchPointPlans && setPointPlans(fetchPointPlans);
     };
 
@@ -182,7 +182,7 @@ const RecruiterAccount: React.FC = () => {
               color={theme.palette.text.primary}
             />
             <div className={classes.point}>
-              {membership.points.toLocaleString()}
+              {membership.visitorsToBe.toLocaleString()}
             </div>
           </div>
         )}
