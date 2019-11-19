@@ -6,3 +6,4 @@ export * from "./JobRecordCard";
 export * from "./JobSideCard";
 export * from "./JobTitle";
 export * from "./RecruiterJobSideCard";
+export * from "./JobCreateForm";

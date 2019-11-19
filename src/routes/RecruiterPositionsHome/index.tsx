@@ -2,7 +2,7 @@ import { Job } from "@frankyjuang/milkapi-client";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { Header } from "components/Header";
-import { JobCard } from "components/Job";
+import { JobCard, JobCreateForm } from "components/Job";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "stores";
@@ -60,6 +60,7 @@ const RecruiterPositionsHome: React.FC = () => {
   const { user } = useAuth();
   const history = useHistory();
   const [positions, setPositions] = useState<Job[]>([]);
+  const [formOpen, setFormOpen] = useState<boolean>(false);
   const classes = useStyles();
 
   useEffect(() => {
@@ -70,6 +71,7 @@ const RecruiterPositionsHome: React.FC = () => {
   return (
     <div className={classes.root}>
       <Header />
+      <JobCreateForm open={formOpen} handleClose={() => setFormOpen(false)} />
       <div className={classes.container}>
         <div className={classes.titleContainer}>
           <span className={classes.title}>職缺</span>
@@ -77,9 +79,9 @@ const RecruiterPositionsHome: React.FC = () => {
             variant="contained"
             color="primary"
             className={classes.addPositionButton}
-            onClick={() => history.push("/recruiter/create-a-job/title")}
+            onClick={() => setFormOpen(true)}
           >
-            <span>新增職缺</span>
+            <span>發布職缺</span>
           </Button>
         </div>
         <div>
