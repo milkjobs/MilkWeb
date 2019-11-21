@@ -75,7 +75,7 @@ const TeamInfo: React.FC<Team> = props => {
 
   let fieldsWords = primaryField;
   if (secondaryField) {
-    fieldsWords = fieldsWords + "｜" + secondaryField;
+    fieldsWords = fieldsWords + "・" + secondaryField;
   }
 
   return (
@@ -87,9 +87,9 @@ const TeamInfo: React.FC<Team> = props => {
           <div className={classes.detail}>
             {address.area +
               address.subArea +
-              "｜" +
+              "・" +
               fieldsWords +
-              "｜" +
+              "・" +
               TeamSizeConvertor(size)}
           </div>
         </div>

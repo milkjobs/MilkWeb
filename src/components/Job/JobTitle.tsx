@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     display: "flex",
     flexDirection: "row",
-    paddingLeft: 48,
+    paddingLeft: 24,
     [theme.breakpoints.down("xs")]: {
       paddingLeft: 0,
       marginTop: 16
@@ -152,7 +152,7 @@ const JobTitle: React.FC<Props> = props => {
     if (team) {
       let fieldsWords = team.primaryField;
       if (team.secondaryField) {
-        fieldsWords = fieldsWords + "｜" + team.secondaryField;
+        fieldsWords = fieldsWords + "・" + team.secondaryField;
       }
       setFields(fieldsWords);
     }
@@ -173,11 +173,11 @@ const JobTitle: React.FC<Props> = props => {
         <span className={classes.location}>
           {address.area +
             address.subArea +
-            "｜" +
+            "・" +
             EducationLevelConvertor(educationNeed) +
-            "｜" +
+            "・" +
             ExperienceLevelConvertor(experienceNeed) +
-            (type === JobType.Internship ? "｜實習" : "")}
+            (type === JobType.Internship ? "・實習" : "")}
         </span>
       </div>
       {team &&
@@ -191,7 +191,7 @@ const JobTitle: React.FC<Props> = props => {
             <div className={classes.teamInfo}>
               <div className={classes.teamName}>{team.nickname}</div>
               <div className={classes.teamField}>
-                {fields + "｜" + TeamSizeConvertor(team.size)}
+                {fields + "・" + TeamSizeConvertor(team.size)}
               </div>
             </div>
           </div>
@@ -209,7 +209,7 @@ const JobTitle: React.FC<Props> = props => {
             <div className={classes.teamInfo}>
               <div className={classes.teamName}>{team.nickname}</div>
               <div className={classes.teamField}>
-                {fields + "｜" + TeamSizeConvertor(team.size)}
+                {fields + "・" + TeamSizeConvertor(team.size)}
               </div>
             </div>
           </Link>

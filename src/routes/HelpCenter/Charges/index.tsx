@@ -1,5 +1,4 @@
 import { makeStyles } from "@material-ui/core/styles";
-import to from "await-to-js";
 import { Header } from "components/Header";
 import React, { useEffect, useState } from "react";
 import {
@@ -7,6 +6,8 @@ import {
   Configuration,
   VisitorPlan
 } from "@frankyjuang/milkapi-client";
+import Icon from "@mdi/react";
+import { mdiEyeCheckOutline } from "@mdi/js";
 import { apiServiceConfig } from "config";
 
 const useStyles = makeStyles(theme => ({
@@ -61,6 +62,11 @@ const useStyles = makeStyles(theme => ({
       marginTop: 32,
       marginBottom: 32
     }
+  },
+  visitorToBe: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center"
   }
 }));
 
@@ -72,14 +78,8 @@ const Charges: React.FC = () => {
     const membershpiApi = new MembershipApi(
       new Configuration({ basePath: apiServiceConfig.basePath })
     );
-    // const visitorPlans = await membershpiApi.getVisitorPlans();
-    setVisitorPlans([
-      { uuid: "1", price: 500, visitorsToBe: 250 },
-      { uuid: "2", price: 2000, visitorsToBe: 2000 },
-      { uuid: "3", price: 5000, visitorsToBe: 6000 },
-      { uuid: "4", price: 10000, visitorsToBe: 15000 },
-      { uuid: "5", price: 20000, visitorsToBe: 40000 }
-    ]);
+    const visitorPlans = await membershpiApi.getVisitorPlans();
+    setVisitorPlans(visitorPlans);
   };
 
   useEffect(() => {
@@ -98,7 +98,14 @@ const Charges: React.FC = () => {
           {visitorPlans &&
             visitorPlans.map(p => (
               <div className={classes.plan}>
-                <div>{p.visitorsToBe.toLocaleString() + " 點閱人數"}</div>
+                <div className={classes.visitorToBe}>
+                  <Icon
+                    path={mdiEyeCheckOutline}
+                    size={0.7}
+                    style={{ marginRight: 4 }}
+                  />
+                  {p.visitorsToBe.toLocaleString()}
+                </div>
                 <div>{p.price.toLocaleString() + " 元"}</div>
               </div>
             ))}

@@ -167,7 +167,7 @@ const JobCardBase: React.FC<Props> = props => {
     if (team) {
       let fieldsWords = team.primaryField;
       if (team.secondaryField) {
-        fieldsWords = fieldsWords + "｜" + team.secondaryField;
+        fieldsWords = fieldsWords + "・" + team.secondaryField;
       }
       setFields(fieldsWords);
     }
@@ -193,7 +193,7 @@ const JobCardBase: React.FC<Props> = props => {
           </div>
         </div>
         <div className={classes.location}>
-          {location + (type === JobType.Internship ? "｜實習" : "")}
+          {location + (type === JobType.Internship ? "・實習" : "")}
         </div>
       </div>
       {team && (
@@ -209,7 +209,7 @@ const JobCardBase: React.FC<Props> = props => {
             </div>
             <div className={classes.teamField}>
               <div className={classes.truncate}>
-                {fields + "｜" + TeamSizeConvertor(team.size)}
+                {fields + "・" + TeamSizeConvertor(team.size)}
               </div>
             </div>
           </div>
