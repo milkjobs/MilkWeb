@@ -54,29 +54,6 @@ const useStyles = makeStyles(theme => ({
     fontSize: 14,
     fontWeight: 400,
     color: theme.palette.text.secondary
-  },
-  jobInfoContainer: {
-    display: "flex",
-    alignItems: "center",
-    paddingBottom: 8,
-    marginBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.palette.divider,
-    borderBottomStyle: "solid"
-  },
-  jobInfoContent: {
-    display: "flex",
-    alignItems: "center",
-    fontSize: 14,
-    marginLeft: 8,
-    marginRight: 8,
-    fontWeight: 400,
-    color: theme.palette.text.secondary
-  },
-  jobInfoIcon: {
-    width: 14,
-    height: 14,
-    color: theme.palette.text.secondary
   }
 }));
 
@@ -103,12 +80,6 @@ const JobSideCard: React.FC<Props> = props => {
       <div style={{ height: "32px" }}></div>
       <Sticky top={32}>
         <div className={classes.card}>
-          <div className={classes.jobInfoContainer}>
-            <Visibility className={classes.jobInfoIcon} />
-            <div className={classes.jobInfoContent}>{"1000"}</div>
-            <Message className={classes.jobInfoIcon} />
-            <div className={classes.jobInfoContent}>{"200"}</div>
-          </div>
           <div className={classes.recruiterContainer}>
             <Avatar
               src={recruiter.profileImageUrl}
