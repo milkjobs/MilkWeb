@@ -13,14 +13,17 @@ import {
   JobType,
   EducationLevel,
   ExperienceLevel,
-  SalaryType
+  SalaryType,
+  Job
 } from "@frankyjuang/milkapi-client";
 import { useAuth } from "stores";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { useHistory } from "react-router";
 
-interface JobCreateFormProps {
+interface JobEditFormProps {
   open: boolean;
   handleClose: () => void;
+  job: Job;
 }
 
 const JobTypes = [
@@ -60,46 +63,49 @@ let range = n => Array.from(Array(n).keys());
 const HourlySalaryOptions = [...range(30).map(n => (n + 30) * 5)];
 const MonthlySalaryOptions = [23100, ...range(120).map(n => (n + 24) * 1000)];
 
-const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
+const JobEditForm: React.FC<JobEditFormProps> = ({
+  open,
+  handleClose,
+  job
+}) => {
   const classes = useStyles();
+  const history = useHistory();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { getApi, user, reloadUser } = useAuth();
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [type, setType] = useState<JobType>();
-  const [typeErrorMessage, setTypeErrorMessage] = useState<string>();
-  const [name, setName] = useState<string>();
-  const [nameErrorMessage, setNameErrorMessage] = useState<string>();
-  const [area, setArea] = useState<string>();
+  const [area, setArea] = useState<string>(job.address.area);
   const [areaErrorMessage, setAreaErrorMessage] = useState<string>();
-  const [subArea, setSubArea] = useState<string>();
+  const [subArea, setSubArea] = useState<string | undefined>(
+    job.address.subArea
+  );
   const [subAreaErrorMessage, setSubAreaErrorMessage] = useState<string>();
   const [subAreaOptions, setSubAreaOptions] = useState<SubArea[]>([]);
-  const [street, setStreet] = useState("");
+  const [street, setStreet] = useState(job.address.street);
   const [streetErrorMessage, setStreetErrorMessage] = useState<string>();
-  const [salaryType, setSalaryType] = useState<SalaryType>();
-  const [minSalary, setMinSalary] = useState<number>();
+  const [salaryType, setSalaryType] = useState<SalaryType>(job.salaryType);
+  const [minSalary, setMinSalary] = useState<number>(job.minSalary);
   const [minSalaryErrorMessage, setMinSalaryErrorMessage] = useState<string>();
-  const [maxSalary, setMaxSalary] = useState<number>();
+  const [maxSalary, setMaxSalary] = useState<number | undefined>(job.maxSalary);
   const [maxSalaryErrorMessage, setMaxSalaryErrorMessage] = useState<string>();
-  const [educationNeed, setEducationNeed] = useState<EducationLevel>();
+  const [educationNeed, setEducationNeed] = useState<EducationLevel>(
+    job.educationNeed
+  );
   const [educationNeedErrorMessage, setEducationNeedErrorMessage] = useState<
     string
   >();
-  const [experienceNeed, setExperienceNeed] = useState<ExperienceLevel>();
+  const [experienceNeed, setExperienceNeed] = useState<ExperienceLevel>(
+    job.experienceNeed
+  );
   const [experienceNeedErrorMessage, setExperienceNeedErrorMessage] = useState<
     string
   >();
-  const [description, setDescription] = useState<string>();
+  const [description, setDescription] = useState<string | undefined>(
+    job.description
+  );
 
   const publish = async () => {
     const jobApi = await getApi("Job");
-    if (!type) {
-      setTypeErrorMessage("請選擇類型");
-      return;
-    }
-    if (!name) {
-      setNameErrorMessage("請輸入名稱");
-      return;
-    }
     if (!area) {
       setAreaErrorMessage("請選擇縣市");
       return;
@@ -130,12 +136,10 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
     }
     if (user && user.recruiterInfo && user.recruiterInfo.uuid && salaryType) {
       setLoading(true);
-      const newJob = await jobApi.addJob({
-        recruiterInfoId: user.recruiterInfo.uuid,
-        newJob: {
-          type,
-          name,
-          skillTags: [],
+      await jobApi.updateJob({
+        jobId: job.uuid,
+        job: {
+          ...job,
           minSalary,
           maxSalary,
           salaryType,
@@ -151,21 +155,6 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
     handleClose();
   };
 
-  const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (
-      event.target.value === JobType.Fulltime ||
-      event.target.value === JobType.Internship
-    ) {
-      setType(event.target.value);
-      setTypeErrorMessage("");
-    }
-  };
-
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
-    setNameErrorMessage("");
-  };
-
   const handleAreaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setArea(event.target.value);
     setAreaErrorMessage("");
@@ -174,6 +163,9 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
   const handleSubAreaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSubArea(event.target.value);
     setSubAreaErrorMessage("");
+    const selectedMainArea = TaiwanAreaJSON.find(a => a.name === area);
+    setSubAreaOptions(selectedMainArea ? selectedMainArea.districts : []);
+    setSubArea(undefined);
   };
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -231,13 +223,6 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
   };
 
   useEffect(() => {
-    if (type === JobType.Fulltime) setSalaryType(SalaryType.Monthly);
-    if (type === JobType.Internship) setSalaryType(SalaryType.Hourly);
-    setMinSalary(undefined);
-    setMaxSalary(undefined);
-  }, [type]);
-
-  useEffect(() => {
     if (minSalary && maxSalary && minSalary > maxSalary)
       setMaxSalary(undefined);
   }, [minSalary]);
@@ -245,8 +230,25 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
   useEffect(() => {
     const selectedMainArea = TaiwanAreaJSON.find(a => a.name === area);
     setSubAreaOptions(selectedMainArea ? selectedMainArea.districts : []);
-    setSubArea(undefined);
   }, [area]);
+
+  const removeJob = async () => {
+    setDeleteLoading(true);
+    const jobApi = await getApi("Job");
+    await jobApi.removeJob({ jobId: job.uuid });
+    await reloadUser();
+    setDeleteLoading(false);
+    handleDeleteDialogClose();
+    history.push("/recruiter");
+  };
+
+  const handleDeleteDialogOpen = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteDialogClose = () => {
+    setDeleteDialogOpen(false);
+  };
 
   return (
     <div>
@@ -257,41 +259,8 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">發布職缺</DialogTitle>
+        <DialogTitle id="form-dialog-title">編輯職缺</DialogTitle>
         <DialogContent>
-          <TextField
-            error={Boolean(typeErrorMessage)}
-            id="standard-select-currency"
-            autoFocus
-            select
-            fullWidth
-            helperText={typeErrorMessage}
-            label="類型"
-            value={type}
-            onChange={handleTypeChange}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu
-              }
-            }}
-            margin="normal"
-          >
-            {JobTypes.map(option => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            error={Boolean(nameErrorMessage)}
-            helperText={nameErrorMessage}
-            margin="normal"
-            id="name"
-            label="名稱"
-            value={name}
-            fullWidth
-            onChange={handleNameChange}
-          />
           <div style={{ display: "flex" }}>
             <TextField
               style={{ marginRight: 4 }}
@@ -487,6 +456,13 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
           />
         </DialogContent>
         <DialogActions>
+          <Button
+            onClick={handleDeleteDialogOpen}
+            color="secondary"
+            style={{ marginRight: "auto" }}
+          >
+            刪除
+          </Button>
           <Button onClick={handleClose} color="primary">
             取消
           </Button>
@@ -496,7 +472,40 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
             />
           ) : (
             <Button onClick={publish} color="primary">
-              發布
+              儲存
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={handleDeleteDialogClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogContent style={{ marginTop: 16, marginBottom: 16 }}>
+          你確定要刪除這個職缺嗎？
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteDialogClose} color="primary">
+            取消
+          </Button>
+          {deleteLoading ? (
+            <CircularProgress
+              style={{ width: 20, height: 20, marginLeft: 20, marginRight: 20 }}
+            />
+          ) : (
+            <Button
+              style={{
+                boxShadow: "none",
+                color: "white"
+              }}
+              onClick={removeJob}
+              variant="contained"
+              color="secondary"
+              autoFocus
+            >
+              確定
             </Button>
           )}
         </DialogActions>
@@ -517,4 +526,4 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export { JobCreateForm };
+export { JobEditForm };

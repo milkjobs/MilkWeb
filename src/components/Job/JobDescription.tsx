@@ -73,7 +73,7 @@ const JobDescription: React.FC<Props> = props => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.title}>職位詳情</div>
+      <div className={classes.title}>介紹</div>
       <div className={classes.content}>
         {description && description.trim().length > 0
           ? description.split("\n").map((item, i) => {
