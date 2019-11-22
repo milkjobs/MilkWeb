@@ -2,7 +2,7 @@ import { Job } from "@frankyjuang/milkapi-client";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { Header } from "components/Header";
-import { JobCard, JobCreateForm } from "components/Job";
+import { RecruiterJobCard, JobCreateForm } from "components/Job";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "stores";
@@ -90,7 +90,7 @@ const RecruiterPositionsHome: React.FC = () => {
               if (user && user.recruiterInfo && user.recruiterInfo.team)
                 value.team = user.recruiterInfo.team;
               return (
-                <JobCard
+                <RecruiterJobCard
                   {...value}
                   key={index}
                   targetPath={`/recruiter/job/${value.uuid}`}

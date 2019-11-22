@@ -109,7 +109,7 @@ const RecruiterJob: React.FC = () => {
                 <JobLocation address={job.address} />
               </div>
               <div className={classes.descriptionSide}>
-                <RecruiterJobSideCard />
+                <RecruiterJobSideCard job={job} />
               </div>
             </div>
           </div>

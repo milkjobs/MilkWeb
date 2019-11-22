@@ -7,6 +7,7 @@ import {
 } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useTheme } from "stores";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -38,6 +39,11 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up("sm")]: {
       paddingRight: 48
     }
+  },
+  infoContainer: {
+    display: "flex",
+    flex: 1,
+    alignItems: "center"
   },
   teamContainer: {
     display: "flex",
@@ -103,6 +109,15 @@ const useStyles = makeStyles(theme => ({
   location: {
     display: "flex",
     alignItems: "center",
+    flex: 3,
+    color: theme.palette.text.primary,
+    fontSize: 16,
+    fontWeight: 400,
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 14
+    }
+  },
+  publish: {
     flex: 1,
     color: theme.palette.text.primary,
     fontSize: 16,
@@ -144,9 +159,10 @@ interface Props {
     "primaryField" | "secondaryField" | "logoUrl" | "nickname" | "size"
   >;
   targetPath: string;
+  published: boolean;
 }
 
-const JobCardBase: React.FC<Props> = props => {
+const RecruiterJobCardBase: React.FC<Props> = props => {
   const {
     type,
     name,
@@ -155,9 +171,11 @@ const JobCardBase: React.FC<Props> = props => {
     maxSalary,
     salaryType,
     team,
-    targetPath
+    targetPath,
+    published
   } = props;
   const classes = useStyles();
+  const { theme } = useTheme();
   const history = useHistory();
   const [fields, setFields] = useState("");
 
@@ -181,17 +199,36 @@ const JobCardBase: React.FC<Props> = props => {
       <div className={classes.jobContainer}>
         <div className={classes.nameContainer}>
           <div className={classes.jobName}>
-            <div className={classes.truncate}>{name}</div>
+            <div
+              className={classes.truncate}
+              style={{ color: published ? undefined : theme.palette.text.hint }}
+            >
+              {name}
+            </div>
           </div>
-          <div className={classes.jobSalary}>
+          <div
+            className={classes.jobSalary}
+            style={{ color: published ? undefined : theme.palette.text.hint }}
+          >
             {salaryNumberToString(minSalary) +
               "~" +
               salaryNumberToString(maxSalary) +
               SalaryTypeToWordInJobCard(salaryType)}
           </div>
         </div>
-        <div className={classes.location}>
-          {location + (type === JobType.Internship ? "・實習" : "")}
+        <div className={classes.infoContainer}>
+          <div
+            className={classes.location}
+            style={{ color: published ? undefined : theme.palette.text.hint }}
+          >
+            {location + (type === JobType.Internship ? "・實習" : "")}
+          </div>
+          <div
+            className={classes.publish}
+            style={{ color: published ? undefined : theme.palette.text.hint }}
+          >
+            {published ? "開放中" : "關閉中"}
+          </div>
         </div>
       </div>
       {team && (
@@ -203,10 +240,22 @@ const JobCardBase: React.FC<Props> = props => {
           />
           <div className={classes.teamInfo}>
             <div className={classes.teamName}>
-              <div className={classes.truncate}>{team.nickname}</div>
+              <div
+                className={classes.truncate}
+                style={{
+                  color: published ? undefined : theme.palette.text.hint
+                }}
+              >
+                {team.nickname}
+              </div>
             </div>
             <div className={classes.teamField}>
-              <div className={classes.truncate}>
+              <div
+                className={classes.truncate}
+                style={{
+                  color: published ? undefined : theme.palette.text.hint
+                }}
+              >
                 {fields + "・" + TeamSizeConvertor(team.size)}
               </div>
             </div>
@@ -217,4 +266,4 @@ const JobCardBase: React.FC<Props> = props => {
   );
 };
 
-export { JobCardBase };
+export { RecruiterJobCardBase };
