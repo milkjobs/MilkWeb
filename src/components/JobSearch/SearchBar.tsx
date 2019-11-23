@@ -46,12 +46,10 @@ const SearchBar: React.FC<SearchBoxProvided> = props => {
     const qs = queryString.parse(location.search);
     if ("job" in qs) {
       const jobQuery = Array.isArray(qs.job) ? qs.job.join(" ") : qs.job;
-      if (jobQuery) {
-        refine(jobQuery);
-        setQuery(jobQuery);
-        // eslint-disable-next-line @typescript-eslint/camelcase
-        firebase.analytics().logEvent("search", { search_term: jobQuery });
-      }
+      refine(jobQuery || "");
+      setQuery(jobQuery || "");
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      firebase.analytics().logEvent("search", { search_term: jobQuery || "" });
     }
   }, [location.search, refine]);
 
