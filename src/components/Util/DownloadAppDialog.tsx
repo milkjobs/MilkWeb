@@ -29,7 +29,7 @@ const DownloadAppDialog: React.FC<Props> = props => {
           <>
             {getMobileOS() !== MobileOS.Android && (
               // TODO: app store link
-              <a href="https://play.google.com/store/apps/details?id=com.milkjobs.app">
+              <a href="https://apps.apple.com/us/app/%E7%89%9B%E5%A5%B6%E6%89%BE%E5%B7%A5%E4%BD%9C/id1480033474?l=zh&ls=1">
                 <img alt="app store" src={appStoreBadge} width="200" />
               </a>
             )}
@@ -43,7 +43,7 @@ const DownloadAppDialog: React.FC<Props> = props => {
           <QRCode
             size={256}
             level="Q"
-            value="https://play.google.com/store/apps/details?id=com.milkjobs.app"
+            value="https://mjob.ml/app"
             // TODO: https://github.com/zpao/qrcode.react#imagesettings
           />
         )}
