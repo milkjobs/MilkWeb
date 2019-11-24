@@ -49,8 +49,8 @@ const RecruiterProfileMenu: React.FC<Props> = props => {
                 </Link>
                 {/* <MenuItem onClick={close}>公司成員</MenuItem> */}
                 {user && user.recruiterInfo && user.recruiterInfo.isAdmin && (
-                  <Link to="/recruiter/point" className={classes.link}>
-                    <MenuItem onClick={close}>點數管理</MenuItem>
+                  <Link to="/recruiter/visitorsToBe" className={classes.link}>
+                    <MenuItem onClick={close}>點閱人數</MenuItem>
                   </Link>
                 )}
                 <MenuItem

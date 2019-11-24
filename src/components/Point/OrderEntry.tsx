@@ -1,9 +1,8 @@
-import { MembershipUsageEntry } from "@frankyjuang/milkapi-client";
+import { Order } from "@frankyjuang/milkapi-client";
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Icon from "@mdi/react";
 import { mdiEyeCheckOutline } from "@mdi/js";
-import { useTheme } from "stores";
 
 const useStyles = makeStyles(theme => ({
   costCard: {
@@ -26,9 +25,9 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.primary,
     textAlign: "left"
   },
-  recruiterName: {
+  time: {
     fontSize: 16,
-    color: theme.palette.text.hint,
+    color: theme.palette.text.primary,
     marginTop: 4,
     textAlign: "left"
   },
@@ -55,22 +54,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-interface CostEntryProps {
-  entry: MembershipUsageEntry;
+interface OrderProps {
+  order: Order;
 }
 
-const CostEntry: React.FC<CostEntryProps> = props => {
-  const { entry } = props;
+const OrderEntry: React.FC<OrderProps> = props => {
+  const { order } = props;
   const classes = useStyles();
-  const { theme } = useTheme();
   return (
     <div className={classes.costCard}>
-      <div className={classes.costNameContainer}>
-        <div className={classes.costName}>{entry.name}</div>
-        {entry.recruiterName && (
-          <div className={classes.recruiterName}>{entry.recruiterName}</div>
-        )}
-      </div>
+      <div className={classes.time}>{order.lastUpdatedAt.toLocaleString()}</div>
       <div className={classes.costNumberContainer}>
         <div
           style={{
@@ -85,13 +78,12 @@ const CostEntry: React.FC<CostEntryProps> = props => {
             path={mdiEyeCheckOutline}
             size={0.7}
           />
-          <div className={classes.viewNumber}>
-            {entry.visitors ? entry.visitors.toLocaleString() : 0}
-          </div>
+          <div className={classes.viewNumber}>{order.visitorsToBe}</div>
         </div>
+        <div className={classes.viewNumber}>{order.amount + "元"}</div>
       </div>
     </div>
   );
 };
 
-export { CostEntry };
+export { OrderEntry };
