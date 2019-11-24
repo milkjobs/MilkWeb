@@ -1,10 +1,9 @@
-import { Team as TeamType } from "@frankyjuang/milkapi-client";
+import { Team as TeamType, UserApi } from "@frankyjuang/milkapi-client";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Header } from "components/Header";
-import { JobCard } from "components/Job";
 import {
   TeamDescription,
   TeamInfo,
@@ -13,10 +12,14 @@ import {
   TeamSideCard,
   TeamWebsite
 } from "components/TeamComponents";
-import { InitialTeam } from "helpers";
+import { JobList } from "components/JobSearch";
+import { InitialTeam, AlgoliaService } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { InstantSearch, connectRefinementList } from "react-instantsearch-dom";
 import { useAuth } from "stores";
+import algoliasearch from "algoliasearch";
+import { algoliaConfig } from "config";
 
 const useTabsStyles = makeStyles(theme => ({
   root: {
@@ -132,22 +135,46 @@ const TeamIntroduction: React.FC<Props> = props => {
 };
 
 const TeamJobs: React.FC<Props> = props => {
+  const { user, getApi } = useAuth();
   const { team } = props;
+  const [algoliaClient, setAlgoliaClient] = useState<algoliasearch.Client>();
 
+  useEffect(() => {
+    const getApiKey = async () => {
+      if (user) {
+        const userApi = (await getApi("User")) as UserApi;
+        const algoliaService = new AlgoliaService(user.uuid, userApi);
+        return await algoliaService.getApiKey();
+      }
+      const miscApi = await getApi("Misc");
+      const algoliaCredential = await miscApi.getAnonymousAlgoliaCredential();
+      return algoliaCredential.apiKey;
+    };
+
+    const setClient = async () => {
+      const apiKey = await getApiKey();
+      const algoliaClient = algoliasearch(algoliaConfig.appId, apiKey);
+      setAlgoliaClient(algoliaClient);
+    };
+    setClient();
+  }, [user, getApi]);
+
+  const RefinementList = connectRefinementList(() => <div />);
   return (
     <div style={{ display: "flex" }}>
       <div style={{ flex: 2, marginTop: 16 }}>
-        {/* {team.jobs &&
-          team.jobs.map((value, index) => {
-            value.team = team;
-            return (
-              <JobCard
-                {...value}
-                key={index}
-                targetPath={`/job/${value.uuid}`}
-              />
-            );
-          })} */}
+        {algoliaClient && (
+          <InstantSearch
+            indexName={algoliaConfig.index}
+            searchClient={algoliaClient}
+          >
+            <RefinementList
+              attribute={"team.uuid"}
+              defaultRefinement={[team.uuid]}
+            />
+            <JobList />
+          </InstantSearch>
+        )}
       </div>
     </div>
   );

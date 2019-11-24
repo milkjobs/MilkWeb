@@ -1,10 +1,9 @@
-import { Team } from "@frankyjuang/milkapi-client";
+import { Team, UserApi } from "@frankyjuang/milkapi-client";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Header } from "components/Header";
-import { JobCard } from "components/Job";
 import {
   TeamDescription,
   TeamInfo,
@@ -12,10 +11,14 @@ import {
   TeamOfficialInfo,
   TeamWebsite
 } from "components/TeamComponents";
+import { JobList } from "components/JobSearch";
 import RecruiterTeamSideCard from "components/TeamComponents/recruiterTeamSideCard";
-import { InitialTeam } from "helpers";
+import { AlgoliaService } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "stores";
+import { InstantSearch, connectRefinementList } from "react-instantsearch-dom";
+import algoliasearch from "algoliasearch";
+import { algoliaConfig } from "config";
 
 const useTabsStyles = makeStyles(theme => ({
   root: {
@@ -125,38 +128,62 @@ const TeamIntroduction: React.FC<Props> = props => {
         )}
       </div>
       <div className={classes.sideCard}>
-        <RecruiterTeamSideCard {...team} />
+        <RecruiterTeamSideCard team={team} />
       </div>
     </div>
   );
 };
 
 const TeamJobs: React.FC<Props> = props => {
+  const { user, getApi } = useAuth();
   const { team } = props;
+  const [algoliaClient, setAlgoliaClient] = useState<algoliasearch.Client>();
 
+  useEffect(() => {
+    const getApiKey = async () => {
+      if (user) {
+        const userApi = (await getApi("User")) as UserApi;
+        const algoliaService = new AlgoliaService(user.uuid, userApi);
+        return await algoliaService.getApiKey();
+      }
+      const miscApi = await getApi("Misc");
+      const algoliaCredential = await miscApi.getAnonymousAlgoliaCredential();
+      return algoliaCredential.apiKey;
+    };
+
+    const setClient = async () => {
+      const apiKey = await getApiKey();
+      const algoliaClient = algoliasearch(algoliaConfig.appId, apiKey);
+      setAlgoliaClient(algoliaClient);
+    };
+    setClient();
+  }, [user, getApi]);
+
+  const RefinementList = connectRefinementList(() => <div />);
   return (
     <div style={{ display: "flex" }}>
       <div style={{ flex: 2, marginTop: 16 }}>
-        {/* {team.jobs &&
-          team.jobs.map((value, index) => {
-            value.team = team;
-            return (
-              <JobCard
-                {...value}
-                key={index}
-                targetPath={`/recruiter/job/${value.uuid}`}
-              />
-            );
-          })} */}
+        {algoliaClient && (
+          <InstantSearch
+            indexName={algoliaConfig.index}
+            searchClient={algoliaClient}
+          >
+            <RefinementList
+              attribute={"team.uuid"}
+              defaultRefinement={[team.uuid]}
+            />
+            <JobList />
+          </InstantSearch>
+        )}
       </div>
     </div>
   );
 };
 
 const RecruiterTeam: React.FC = () => {
-  const [team, setTeam] = useState<Team>(InitialTeam);
   const [value, setValue] = useState(0);
   const { user, getApi } = useAuth();
+  const [team, setTeam] = useState<Team>();
   const classes = useStyles();
 
   function handleChange(event: React.ChangeEvent<{}>, newValue: number) {
@@ -165,15 +192,10 @@ const RecruiterTeam: React.FC = () => {
 
   useEffect(() => {
     const getTeam = async () => {
-      const teamApi = await getApi("Team");
-      const fetchTeam =
-        user &&
+      user &&
         user.recruiterInfo &&
         user.recruiterInfo.team &&
-        (await teamApi.getTeam({
-          teamId: user.recruiterInfo.team.uuid
-        }));
-      fetchTeam && setTeam(fetchTeam);
+        setTeam(user.recruiterInfo.team);
     };
 
     getTeam();
@@ -183,7 +205,7 @@ const RecruiterTeam: React.FC = () => {
     <div className={classes.root}>
       <Header />
       <div className={classes.container}>
-        <TeamInfo {...team} />
+        {team && <TeamInfo {...team} />}
         <Tabs
           value={value}
           onChange={handleChange}
@@ -194,8 +216,8 @@ const RecruiterTeam: React.FC = () => {
           <Tab disableRipple label="團隊介紹" classes={useTabStyles()} />
           <Tab disableRipple label="人才招募" classes={useTabStyles()} />
         </Tabs>
-        {value === 0 && <TeamIntroduction team={team} />}
-        {value === 1 && <TeamJobs team={team} />}
+        {value === 0 && team && <TeamIntroduction team={team} />}
+        {value === 1 && team && <TeamJobs team={team} />}
       </div>
     </div>
   );

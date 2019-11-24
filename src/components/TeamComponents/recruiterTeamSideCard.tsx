@@ -6,9 +6,10 @@ import {
   withStyles,
   WithStyles
 } from "@material-ui/core/styles";
-import React from "react";
+import React, { useState } from "react";
 import Sticky from "react-stickynode";
-import { TeamOfficialInfo, TeamWebsite } from "./";
+import { TeamOfficialInfo, TeamWebsite, TeamEditForm } from "./";
+import { useAuth } from "stores";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -34,28 +35,51 @@ const styles = (theme: Theme) =>
       boxShadow: "none"
     }
   });
-interface Props extends WithStyles<typeof styles>, Team {}
+interface Props extends WithStyles<typeof styles> {
+  team: Team;
+}
 
 const RecruiterTeamSideCard: React.FC<Props> = props => {
-  const { classes, website, name, unifiedNumber } = props;
+  const { user } = useAuth();
+  const { classes, team } = props;
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+
+  const handleEditDialogOpen = () => {
+    setEditDialogOpen(true);
+  };
+
+  const handleEditDialogClose = () => {
+    setEditDialogOpen(false);
+  };
   return (
     <div>
       <div style={{ height: "32px" }} />
       <Sticky top={32}>
         <div className={classes.card}>
-          {website && <TeamWebsite website={website} />}
-          {(name || unifiedNumber) && (
-            <TeamOfficialInfo name={name} unifiedNumber={unifiedNumber} />
+          {team.website && <TeamWebsite website={team.website} />}
+          {(team.name || team.unifiedNumber) && (
+            <TeamOfficialInfo
+              name={team.name}
+              unifiedNumber={team.unifiedNumber}
+            />
           )}
-          <Button
-            className={classes.removeButton}
-            variant="contained"
-            color="secondary"
-          >
-            刪除
-          </Button>
+          {user && user.recruiterInfo && user.recruiterInfo.isAdmin && (
+            <Button
+              className={classes.removeButton}
+              variant="contained"
+              color="secondary"
+              onClick={handleEditDialogOpen}
+            >
+              編輯
+            </Button>
+          )}
         </div>
       </Sticky>
+      <TeamEditForm
+        open={editDialogOpen}
+        handleClose={handleEditDialogClose}
+        team={team}
+      />
     </div>
   );
 };

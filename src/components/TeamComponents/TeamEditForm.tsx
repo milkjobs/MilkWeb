@@ -9,43 +9,27 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { createStyles, makeStyles } from "@material-ui/styles";
 import { TaiwanAreaJSON, SubArea } from "assets/TaiwanAreaJSON";
 import { Theme, InputAdornment } from "@material-ui/core";
-import {
-  JobType,
-  EducationLevel,
-  ExperienceLevel,
-  SalaryType,
-  Job
-} from "@frankyjuang/milkapi-client";
+import { ExperienceLevel, Team, TeamSize } from "@frankyjuang/milkapi-client";
 import { useAuth } from "stores";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useHistory } from "react-router";
+import to from "await-to-js";
 
-interface JobEditFormProps {
+interface TeamEditFormProps {
   open: boolean;
   handleClose: () => void;
-  job: Job;
+  team: Team;
 }
 
-const JobTypes = [
+const SizeTypes = [
+  { value: TeamSize.ExtraSmall, label: "0 ~ 20 人" },
   {
-    value: JobType.Fulltime,
-    label: "正職"
+    value: TeamSize.Small,
+    label: "21 ~ 100 人"
   },
-  {
-    value: JobType.Internship,
-    label: "實習"
-  }
-];
-
-const EducationLevelTypes = [
-  { value: EducationLevel.Any, label: "不限" },
-  {
-    value: EducationLevel.HighSchool,
-    label: "高中／高職"
-  },
-  { value: EducationLevel.Bachelor, label: "大學／專科" },
-  { value: EducationLevel.Master, label: "碩士" },
-  { value: EducationLevel.PhD, label: "博士" }
+  { value: TeamSize.Medium, label: "101 ~ 500 人" },
+  { value: TeamSize.Large, label: "501 ~ 1000 人" },
+  { value: TeamSize.ExtraLarge, label: "1001 人以上" }
 ];
 
 const ExperienceLevelTypes = [
@@ -58,15 +42,10 @@ const ExperienceLevelTypes = [
   { value: ExperienceLevel.Senior, label: "資深" }
 ];
 
-let range = n => Array.from(Array(n).keys());
-
-const HourlySalaryOptions = [...range(30).map(n => (n + 30) * 5)];
-const MonthlySalaryOptions = [23100, ...range(120).map(n => (n + 24) * 1000)];
-
-const JobEditForm: React.FC<JobEditFormProps> = ({
+const TeamEditForm: React.FC<TeamEditFormProps> = ({
   open,
   handleClose,
-  job
+  team
 }) => {
   const classes = useStyles();
   const history = useHistory();
@@ -74,38 +53,46 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
   const { getApi, user, reloadUser } = useAuth();
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [area, setArea] = useState<string>(job.address.area);
+  const [area, setArea] = useState<string>(team.address.area);
   const [areaErrorMessage, setAreaErrorMessage] = useState<string>();
   const [subArea, setSubArea] = useState<string | undefined>(
-    job.address.subArea
+    team.address.subArea
   );
   const [subAreaErrorMessage, setSubAreaErrorMessage] = useState<string>();
   const [subAreaOptions, setSubAreaOptions] = useState<SubArea[]>([]);
-  const [street, setStreet] = useState(job.address.street);
+  const [street, setStreet] = useState(team.address.street);
   const [streetErrorMessage, setStreetErrorMessage] = useState<string>();
-  const [salaryType, setSalaryType] = useState<SalaryType>(job.salaryType);
-  const [minSalary, setMinSalary] = useState<number>(job.minSalary);
-  const [minSalaryErrorMessage, setMinSalaryErrorMessage] = useState<string>();
-  const [maxSalary, setMaxSalary] = useState<number | undefined>(job.maxSalary);
-  const [maxSalaryErrorMessage, setMaxSalaryErrorMessage] = useState<string>();
-  const [educationNeed, setEducationNeed] = useState<EducationLevel>(
-    job.educationNeed
-  );
-  const [educationNeedErrorMessage, setEducationNeedErrorMessage] = useState<
+  const [size, setSize] = useState<TeamSize>(team.size);
+  const [sizeErrorMessage, setSizeErrorMessage] = useState<string>();
+  const [fieldTagOptions, setFieldTagOptions] = useState<string[]>([]);
+  const [primaryField, setPrimaryField] = useState<string>(team.primaryField);
+  const [primaryFieldErrorMessage, setPrimaryFieldErrorMessage] = useState<
     string
   >();
-  const [experienceNeed, setExperienceNeed] = useState<ExperienceLevel>(
-    job.experienceNeed
+  const [secondaryField, setSecondaryField] = useState<string | undefined>(
+    team.secondaryField
   );
-  const [experienceNeedErrorMessage, setExperienceNeedErrorMessage] = useState<
-    string
-  >();
-  const [description, setDescription] = useState<string | undefined>(
-    job.description
+  const [website, setWebsite] = useState<string | undefined>(team.website);
+  const [introduction, setIntroduction] = useState<string | undefined>(
+    team.introduction
   );
 
-  const publish = async () => {
-    const jobApi = await getApi("Job");
+  const getFieldTagOptions = async () => {
+    setLoading(true);
+    const verificationApiService = await getApi("Verification");
+    const [err, result] = await to(
+      verificationApiService.getCommerce({ unifiedNumber: team.unifiedNumber })
+    );
+    result && setFieldTagOptions(result.fields);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getFieldTagOptions();
+  }, []);
+
+  const edit = async () => {
+    const teamApi = await getApi("Team");
     if (!area) {
       setAreaErrorMessage("請選擇縣市");
       return;
@@ -118,35 +105,26 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
       setStreetErrorMessage("請輸入地址");
       return;
     }
-    if (!minSalary) {
-      setMinSalaryErrorMessage("請選擇");
+    if (!size) {
+      setSizeErrorMessage("請選擇公司人數");
       return;
     }
-    if (!maxSalary) {
-      setMaxSalaryErrorMessage("請選擇");
+    if (!primaryField) {
+      setPrimaryFieldErrorMessage("請選擇產業領域");
       return;
     }
-    if (!educationNeed) {
-      setEducationNeedErrorMessage("請選擇學歷要求");
-      return;
-    }
-    if (!experienceNeed) {
-      setExperienceNeedErrorMessage("請選擇經驗要求");
-      return;
-    }
-    if (user && user.recruiterInfo && user.recruiterInfo.uuid && salaryType) {
+    if (user && user.recruiterInfo && user.recruiterInfo.uuid) {
       setLoading(true);
-      await jobApi.updateJob({
-        jobId: job.uuid,
-        job: {
-          ...job,
-          minSalary,
-          maxSalary,
-          salaryType,
+      await teamApi.updateTeam({
+        teamId: team.uuid,
+        team: {
+          ...team,
           address: { area, subArea, street },
-          educationNeed,
-          experienceNeed,
-          description
+          size,
+          primaryField,
+          secondaryField,
+          website,
+          introduction
         }
       });
       await reloadUser();
@@ -175,73 +153,56 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
     setStreetErrorMessage("");
   };
 
-  const handleMinSalaryChange = (
+  const handlePrimaryFieldChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setMinSalary(parseInt(event.target.value));
-    setMinSalaryErrorMessage("");
+    setPrimaryField(event.target.value);
+    setPrimaryFieldErrorMessage("");
+    if (event.target.value === secondaryField) setSecondaryField(undefined);
   };
 
-  const handleMaxSalaryChange = (
+  const handleSecondaryFieldChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setMaxSalary(parseInt(event.target.value));
-    setMaxSalaryErrorMessage("");
+    setSecondaryField(event.target.value);
   };
 
-  const handleEducationLevelChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (
-      event.target.value === EducationLevel.Any ||
-      event.target.value === EducationLevel.Bachelor ||
-      event.target.value === EducationLevel.HighSchool ||
-      event.target.value === EducationLevel.Master ||
-      event.target.value === EducationLevel.PhD
+      event.target.value === TeamSize.ExtraSmall ||
+      event.target.value === TeamSize.Small ||
+      event.target.value === TeamSize.Medium ||
+      event.target.value === TeamSize.Large ||
+      event.target.value === TeamSize.ExtraLarge
     ) {
-      setEducationNeed(event.target.value);
-      setEducationNeedErrorMessage("");
+      setSize(event.target.value);
+      setSizeErrorMessage("");
     }
   };
 
-  const handleExperienceLevelChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (
-      event.target.value === ExperienceLevel.Any ||
-      event.target.value === ExperienceLevel.Entry ||
-      event.target.value === ExperienceLevel.Mid ||
-      event.target.value === ExperienceLevel.Senior
-    ) {
-      setExperienceNeed(event.target.value);
-      setExperienceNeedErrorMessage("");
-    }
+  const handleWebsiteChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setWebsite(event.target.value);
   };
 
   const handleDescriptionChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setDescription(event.target.value);
+    setIntroduction(event.target.value);
   };
-
-  useEffect(() => {
-    if (minSalary && maxSalary && minSalary > maxSalary)
-      setMaxSalary(undefined);
-  }, [minSalary]);
 
   useEffect(() => {
     const selectedMainArea = TaiwanAreaJSON.find(a => a.name === area);
     setSubAreaOptions(selectedMainArea ? selectedMainArea.districts : []);
   }, [area]);
 
-  const removeJob = async () => {
+  const removeTeam = async () => {
     setDeleteLoading(true);
-    const jobApi = await getApi("Job");
-    await jobApi.removeJob({ jobId: job.uuid });
+    const teamApi = await getApi("Team");
+    await teamApi.removeTeam({ teamId: team.uuid });
     await reloadUser();
     setDeleteLoading(false);
     handleDeleteDialogClose();
-    history.push("/recruiter");
+    history.push("/");
   };
 
   const handleDeleteDialogOpen = () => {
@@ -261,7 +222,7 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">編輯職缺</DialogTitle>
+        <DialogTitle id="form-dialog-title">編輯公司</DialogTitle>
         <DialogContent>
           <div style={{ display: "flex" }}>
             <TextField
@@ -335,81 +296,15 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
             fullWidth
             onChange={handleAddressChange}
           />
-          {salaryType && (
-            <div style={{ display: "flex" }}>
-              <TextField
-                style={{ marginRight: 4 }}
-                error={Boolean(minSalaryErrorMessage)}
-                helperText={minSalaryErrorMessage}
-                id="standard-select-currency"
-                select
-                fullWidth
-                label={`${
-                  salaryType === SalaryType.Monthly ? "月薪" : "時薪"
-                }下限`}
-                value={minSalary}
-                onChange={handleMinSalaryChange}
-                SelectProps={{
-                  MenuProps: {
-                    className: classes.menu
-                  }
-                }}
-                margin="normal"
-              >
-                {(salaryType === SalaryType.Monthly
-                  ? MonthlySalaryOptions
-                  : HourlySalaryOptions
-                ).map(option => (
-                  <MenuItem key={option} value={option}>
-                    {salaryType === SalaryType.Monthly
-                      ? option / 1000 + "K"
-                      : option}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                style={{ marginLeft: 4 }}
-                error={Boolean(maxSalaryErrorMessage)}
-                helperText={maxSalaryErrorMessage}
-                id="standard-select-currency"
-                select
-                fullWidth
-                label={`${
-                  salaryType === SalaryType.Monthly ? "月薪" : "時薪"
-                }上限`}
-                value={maxSalary}
-                onChange={handleMaxSalaryChange}
-                SelectProps={{
-                  MenuProps: {
-                    className: classes.menu
-                  }
-                }}
-                margin="normal"
-              >
-                {(salaryType === SalaryType.Monthly
-                  ? MonthlySalaryOptions
-                  : HourlySalaryOptions
-                )
-                  .filter(option => option > (minSalary || 0))
-                  .map(option => (
-                    <MenuItem key={option} value={option}>
-                      {salaryType === SalaryType.Monthly
-                        ? option / 1000 + "K"
-                        : option}
-                    </MenuItem>
-                  ))}
-              </TextField>
-            </div>
-          )}
           <TextField
             id="standard-select-currency"
-            error={Boolean(educationNeedErrorMessage)}
-            helperText={educationNeedErrorMessage}
+            error={Boolean(sizeErrorMessage)}
+            helperText={sizeErrorMessage}
             select
             fullWidth
-            label="學歷要求"
-            value={educationNeed}
-            onChange={handleEducationLevelChange}
+            label="人數"
+            value={size}
+            onChange={handleSizeChange}
             SelectProps={{
               MenuProps: {
                 className: classes.menu
@@ -417,7 +312,7 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
             }}
             margin="normal"
           >
-            {EducationLevelTypes.map(option => (
+            {SizeTypes.map(option => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
@@ -425,13 +320,13 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
           </TextField>
           <TextField
             id="standard-select-currency"
-            error={Boolean(experienceNeedErrorMessage)}
-            helperText={experienceNeedErrorMessage}
+            error={Boolean(primaryFieldErrorMessage)}
+            helperText={primaryFieldErrorMessage}
             select
             fullWidth
-            label="經驗要求"
-            value={experienceNeed}
-            onChange={handleExperienceLevelChange}
+            label="產業領域"
+            value={primaryField}
+            onChange={handlePrimaryFieldChange}
             SelectProps={{
               MenuProps: {
                 className: classes.menu
@@ -439,17 +334,47 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
             }}
             margin="normal"
           >
-            {ExperienceLevelTypes.map(option => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
+            {fieldTagOptions.map(option => (
+              <MenuItem key={option} value={option}>
+                {option}
               </MenuItem>
             ))}
+          </TextField>
+          <TextField
+            id="standard-select-currency"
+            select
+            fullWidth
+            label="產業次要領域"
+            value={secondaryField}
+            onChange={handleSecondaryFieldChange}
+            SelectProps={{
+              MenuProps: {
+                className: classes.menu
+              }
+            }}
+            margin="normal"
+          >
+            {fieldTagOptions
+              .filter(o => o !== primaryField)
+              .map(option => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
           </TextField>
           <TextField
             margin="normal"
             id="name"
+            label="網站（選填）"
+            value={website}
+            onChange={handleWebsiteChange}
+            fullWidth
+          />
+          <TextField
+            margin="normal"
+            id="name"
             label="介紹（選填）"
-            value={description}
+            value={introduction}
             onChange={handleDescriptionChange}
             multiline
             rows="10"
@@ -473,7 +398,7 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
               style={{ width: 20, height: 20, marginLeft: 20, marginRight: 20 }}
             />
           ) : (
-            <Button onClick={publish} color="primary">
+            <Button onClick={edit} color="primary">
               儲存
             </Button>
           )}
@@ -486,7 +411,7 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
         aria-describedby="alert-dialog-description"
       >
         <DialogContent style={{ marginTop: 16, marginBottom: 16 }}>
-          你確定要刪除這個職缺嗎？
+          你確定要刪除公司嗎？刪除後，可使用的點閱人數也會全部刪除。
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteDialogClose} color="primary">
@@ -502,7 +427,7 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
                 boxShadow: "none",
                 color: "white"
               }}
-              onClick={removeJob}
+              onClick={removeTeam}
               variant="contained"
               color="secondary"
               autoFocus
@@ -528,4 +453,4 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export { JobEditForm };
+export { TeamEditForm };
