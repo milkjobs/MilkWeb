@@ -20,6 +20,11 @@ export enum MobileOS {
   Ios
 }
 
+export enum PurchaseWay {
+  Credit = "Credit",
+  ATM = "ATM"
+}
+
 export const InitialTeam: Team = {
   uuid: "",
   unifiedNumber: "",

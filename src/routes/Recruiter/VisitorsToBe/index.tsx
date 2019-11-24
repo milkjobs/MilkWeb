@@ -2,13 +2,21 @@ import { Membership, VisitorPlan } from "@frankyjuang/milkapi-client";
 import { makeStyles } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
-import { mdiAlphaPCircleOutline } from "@mdi/js";
+import { mdiEyeCheckOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Header } from "components/Header";
 import React, { useEffect, useState } from "react";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import {
+  Route,
+  Switch,
+  useRouteMatch,
+  Link,
+  useLocation
+} from "react-router-dom";
 import { useAuth, useTheme } from "stores";
 import Usage from "./Usage";
+import Purchase from "./Purchase";
+import History from "./History";
 
 const useTabsStyles = makeStyles(theme => ({
   root: {
@@ -102,6 +110,7 @@ const useStyles = makeStyles(theme => ({
   pointIcon: {
     marginTop: "auto",
     marginBottom: "auto",
+    marginRight: 8,
     color: theme.palette.text.primary
   },
   point: {
@@ -121,6 +130,7 @@ const useStyles = makeStyles(theme => ({
 
 const RecruiterAccount: React.FC = () => {
   const match = useRouteMatch();
+  const location = useLocation();
   const { getApi, user } = useAuth();
   const { theme } = useTheme();
   const [, setPointPlans] = useState<VisitorPlan[]>();
@@ -162,6 +172,8 @@ const RecruiterAccount: React.FC = () => {
     getPointPlans();
     getTeamMembership();
     window.addEventListener("message", listener);
+    if (location.pathname === "/recruiter/visitorsToBe/purchase") setValue(1);
+    if (location.pathname === "/recruiter/visitorsToBe/history") setValue(2);
 
     return () => {
       window.removeEventListener("message", listener);
@@ -174,10 +186,10 @@ const RecruiterAccount: React.FC = () => {
       <div className={classes.container}>
         {membership && (
           <div className={classes.titleContainer}>
-            <div className={classes.title}>目前點數</div>
+            <div className={classes.title}>可使用的點閱人數</div>
             <Icon
               className={classes.pointIcon}
-              path={mdiAlphaPCircleOutline}
+              path={mdiEyeCheckOutline}
               size={1}
               color={theme.palette.text.primary}
             />
@@ -193,14 +205,41 @@ const RecruiterAccount: React.FC = () => {
           textColor="primary"
           classes={useTabsStyles()}
         >
-          <Tab disableRipple label="使用紀錄" classes={useTabStyles()} />
-          <Tab disableRipple label="點數儲值" classes={useTabStyles()} />
-          <Tab disableRipple label="儲值紀錄" classes={useTabStyles()} />
-          <Tab disableRipple label="點數規則" classes={useTabStyles()} />
+          <Tab
+            disableRipple
+            label="使用紀錄"
+            to="/recruiter/visitorsToBe"
+            component={Link}
+            classes={useTabStyles()}
+          />
+          <Tab
+            disableRipple
+            label="購買點閱人數"
+            to="/recruiter/visitorsToBe/purchase"
+            component={Link}
+            classes={useTabStyles()}
+          />
+          <Tab
+            disableRipple
+            label="儲值紀錄"
+            to="/recruiter/visitorsToBe/history"
+            component={Link}
+            classes={useTabStyles()}
+          />
         </Tabs>
         {match && (
           <Switch>
-            <Route path={`${match.path}`} exact component={Usage} />
+            <Route
+              path={"/recruiter/visitorsToBe/history"}
+              exact
+              component={History}
+            />
+            <Route
+              path={"/recruiter/visitorsToBe/purchase"}
+              exact
+              component={Purchase}
+            />
+            <Route path={"/recruiter/visitorsToBe"} exact component={Usage} />
           </Switch>
         )}
       </div>

@@ -15,6 +15,15 @@ const apiServiceConfigs: Config<{ basePath: string }> = {
   }
 };
 
+const paymentUrls: Config<(type: string, token: string) => string> = {
+  local: (type: string, token: string) =>
+    `https://payment-stage.ecpay.com.tw/SP/SPCheckOut?MerchantID=2000214&PaymentType=${type}&SPToken=${token}`,
+  staging: (type: string, token: string) =>
+    `https://payment-stage.ecpay.com.tw/SP/SPCheckOut?MerchantID=2000214&PaymentType=${type}&SPToken=${token}`,
+  production: (type: string, token: string) =>
+    `https://payment.ecpay.com.tw/SP/SPCheckOut?MerchantID=3144558&PaymentType=${type}&SPToken=${token}`
+};
+
 const algoliaConfigs: Config<{ appId: string; index: string }> = {
   local: {
     appId: "690O6NIOLW",
@@ -87,6 +96,7 @@ const firebaseConfigs: Config<{
 export const environment = (process.env.REACT_APP_ENV ||
   "local") as Environment;
 
+export const paymentUrl = paymentUrls[environment];
 export const apiServiceConfig = apiServiceConfigs[environment];
 export const algoliaConfig = algoliaConfigs[environment];
 export const sentryConfig = sentryConfigs[environment];

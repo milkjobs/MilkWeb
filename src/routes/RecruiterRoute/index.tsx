@@ -12,7 +12,7 @@ import {
 import CreateJob from "routes/CreateJob";
 import CreateTeam from "routes/CreateTeam";
 import RecruiterJob from "routes/Recruiter/Job";
-import RecruiterPoint from "routes/Recruiter/Point";
+import RecruiterVisitorsToBe from "routes/Recruiter/VisitorsToBe";
 import RecruiterOrder from "routes/RecruiterOrder";
 import RecruiterPositionsHome from "routes/RecruiterPositionsHome";
 import RecruiterTeam from "routes/RecruiterTeam";
@@ -73,7 +73,10 @@ const RecruiterRoute: React.FC = () => {
           path={`${match.path}/positions`}
           component={RecruiterPositionsHome}
         />
-        <PrivateRoute path={`${match.path}/point`} component={RecruiterPoint} />
+        <PrivateRoute
+          path={`${match.path}/visitorsToBe`}
+          component={RecruiterVisitorsToBe}
+        />
         <PrivateRoute path={`${match.path}/order`} component={RecruiterOrder} />
         <PrivateRoute
           path={`${match.path}/create-a-job/`}
