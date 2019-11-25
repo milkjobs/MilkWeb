@@ -85,6 +85,9 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
           <span className={classes.tab}>幫助中心</span>
         </Link>
       )}
+      <Link to={"/message"} className={classes.link}>
+        <span className={classes.tab}>訊息</span>
+      </Link>
 
       {user ? (
         <span

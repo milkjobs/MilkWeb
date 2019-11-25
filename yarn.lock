@@ -10682,10 +10682,10 @@ send@0.17.1:
     range-parser "~1.2.1"
     statuses "~1.5.0"
 
-sendbird@^3.0.108:
-  version "3.0.112"
-  resolved "https://registry.yarnpkg.com/sendbird/-/sendbird-3.0.112.tgz#f430e1967715bc5719b00362963ebe68b2eb3470"
-  integrity sha512-miHN5f1VUdmg+2/O9pzanHVG0xjwfPdlS+7NnWipnikzHGpIwfU5hRT+3EHFSiI6z/wyjCeoCHBBB/5poyOteQ==
+sendbird@3.0.108:
+  version "3.0.108"
+  resolved "https://registry.yarnpkg.com/sendbird/-/sendbird-3.0.108.tgz#16ef42423b9228fe21f3a79750a3e0864e3d679d"
+  integrity sha512-3vd+RMIQauflvJpuaBbEGgFL2erPYVW+mFgFfUJK0BlO4ZqWhpJnP+t09yogQLXyVR68wqUolXl6r5WJkmF7Ug==
   dependencies:
     agentkeepalive "2.2.0"
     ws "6.0.0"
