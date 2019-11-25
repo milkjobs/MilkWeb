@@ -9,12 +9,7 @@ const Message: React.FC<Props> = props => {
 
   return !fromMe ? (
     <div className={classes.message}>
-      <img
-        alt=""
-        src={"https://placeimg.com/140/140/any"}
-        width={40}
-        height={40}
-      />
+      <img alt="" src={props.profileUrl} width={40} height={40} />
       <div className={classes.messageBody}>{props.message}</div>
     </div>
   ) : (
@@ -25,12 +20,7 @@ const Message: React.FC<Props> = props => {
       className={classes.message}
     >
       <div className={classes.messageBody}>{props.message}</div>
-      <img
-        alt=""
-        src={"https://placeimg.com/140/140/any"}
-        width={40}
-        height={40}
-      />
+      <img alt="" src={props.profileUrl} width={40} height={40} />
     </div>
   );
 };
@@ -56,8 +46,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
+  profileUrl: string;
   message: string;
-  username: string;
   fromMe: boolean;
 }
 

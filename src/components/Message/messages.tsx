@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  messages: Array<any>;
+  messages: Array<SendBird.UserMessage>;
   userId: string;
 }
 
@@ -27,9 +27,9 @@ const Messages: React.FC<Props> = props => {
       return (
         <Message
           key={i}
-          username={message.username}
+          profileUrl={message.sender.profileUrl}
           message={message.message}
-          fromMe={message._sender.userId === userId}
+          fromMe={message.sender.userId === userId}
         />
       );
     });

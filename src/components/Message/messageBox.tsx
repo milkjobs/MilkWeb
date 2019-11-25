@@ -1,7 +1,5 @@
 import React, { useState, useRef } from "react";
 import { createStyles, Theme } from "@material-ui/core/styles";
-import AttachFileIcon from "@material-ui/icons/AttachFile";
-import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import Input from "@material-ui/core/Input";
 import { makeStyles } from "@material-ui/core/styles";
 import { Messages } from "components/Message";
@@ -9,10 +7,11 @@ import { useEffect } from "react";
 import { useAuth } from "stores";
 import { uuid4 } from "@sentry/utils";
 import SendBird from "sendbird";
+import Button from "@material-ui/core/Button";
 
 const MessageBox: React.FC<Props> = props => {
   const classes = useStyles();
-  const { channel } = props;
+  const { channel, isRecruiter } = props;
 
   const { userId } = useAuth();
 
@@ -127,10 +126,11 @@ const MessageBox: React.FC<Props> = props => {
         <Messages messages={messages.current} userId={userId!} />
       </div>
       <div className={classes.messageInput}>
-        <div style={{ display: "flex", marginLeft: 16, marginTop: 12 }}>
-          <AttachFileIcon style={{ marginRight: 12 }} />
-          <ChatBubbleOutlineIcon />
-        </div>
+        {!isRecruiter && (
+          <div style={{ display: "flex", marginLeft: 8, marginTop: 4 }}>
+            <Button onClick={() => {}}>發送履歷</Button>
+          </div>
+        )}
         <Input
           value={input}
           id="standard-multiline-static"
@@ -168,6 +168,7 @@ const useStyles = makeStyles((theme: Theme) =>
       overflow: "auto"
     },
     messageInput: {
+      padding: 8,
       borderTop: "1px solid #EBEBEB"
     },
     textField: {
@@ -215,6 +216,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface Props {
   channel: SendBird.GroupChannel;
+  isRecruiter: boolean;
 }
 
 export { MessageBox };
