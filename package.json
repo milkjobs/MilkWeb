@@ -60,7 +60,7 @@
     "react-stickynode": "^2.1.1",
     "react-toastify": "^5.4.1",
     "recompose": "^0.30.0",
-    "sendbird": "^3.0.108",
+    "sendbird": "3.0.108",
     "typescript": "^3.6.3",
     "url-join": "^4.0.1"
   },

@@ -5,6 +5,11 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
+  link: {
+    textDecoration: "none",
+    color: "#484848",
+    display: "flex"
+  },
   tab: {
     marginLeft: 30,
     display: "flex",
@@ -56,6 +61,9 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
           <span className={classes.tab}>職缺管理</span>
         </Link>
       )}
+      <Link to={"/message"} className={classes.link}>
+        <span className={classes.tab}>訊息</span>
+      </Link>
 
       {user && (
         <span

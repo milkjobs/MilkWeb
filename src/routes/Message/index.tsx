@@ -1,0 +1,258 @@
+import { makeStyles } from "@material-ui/core/styles";
+import to from "await-to-js";
+import { Header } from "components/Header";
+import React, { useEffect, useRef, useState } from "react";
+import { sendbirdConfig } from "config";
+import SendBird from "sendbird";
+import {
+  SendbirdCredential,
+  SendbirdCredentialToJSON,
+  SendbirdCredentialFromJSON
+} from "@frankyjuang/milkapi-client";
+import { useAuth } from "stores";
+import { uuid4 } from "@sentry/utils";
+import { MessageCard, MessageBox } from "components/Message";
+import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
+    backgroundColor: theme.palette.background.paper
+  },
+  container: {
+    backgroundColor: theme.palette.background.paper,
+    display: "flex",
+    flex: 1,
+    flexDirection: "row",
+    width: "100%"
+  },
+  title: {
+    display: "flex",
+    flex: 1,
+    alignItems: "center",
+    color: theme.palette.text.primary,
+    fontSize: 24,
+    fontWeight: 400,
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 18
+    }
+  },
+  contacts: {
+    border: "1px solid #EBEBEB",
+    flex: 1
+  },
+  buttonGroup: {
+    marginTop: 16,
+    marginBottom: 16
+  }
+}));
+
+const Message: React.FC = () => {
+  const classes = useStyles();
+  const { getApi, user } = useAuth();
+  const [sendbirdCredential, setSendbirdCredential] = useState<
+    SendbirdCredential
+  >();
+  const [isRecruiter, setIsRecruiter] = useState(false);
+  const [sb, setSb] = useState<SendBird.SendBirdInstance>();
+  const [channelsQuery, setChannelsQuery] = useState<
+    SendBird.GroupChannelListQuery
+  >();
+
+  const channels = useRef<Array<SendBird.GroupChannel>>([]);
+  const [selectedChannelId, setSelectedChannelId] = useState<string>();
+  const [, setState] = useState();
+
+  function onChannelChanged(channel) {
+    const newGroupChannelList = channels.current.filter(
+      c => c.name !== channel.name
+    );
+    channels.current = [channel, ...newGroupChannelList];
+    setState({});
+  }
+
+  useEffect(() => {
+    if (sb) {
+      const handler = new sb.ChannelHandler();
+      handler.onChannelChanged = onChannelChanged;
+      const channelHandlerId = uuid4();
+      sb.addChannelHandler(channelHandlerId, handler);
+    }
+  }, [sb]);
+
+  const getSendbirdCredential = async () => {
+    if (user) {
+      try {
+        const sendbirdCredentialString = window.localStorage.getItem(
+          "sendbirdCredential"
+        );
+        if (sendbirdCredentialString === null) throw "";
+
+        const sendbirdCredential = SendbirdCredentialFromJSON(
+          JSON.parse(sendbirdCredentialString)
+        );
+        if (sendbirdCredential.expiresAt.getTime() < new Date().getTime())
+          throw "";
+        setSendbirdCredential(sendbirdCredential);
+      } catch (error) {
+        const userApi = await getApi("User");
+        const sendbirdCredential = await userApi.getSendbirdCredential({
+          userId: user.uuid
+        });
+        setSendbirdCredential(sendbirdCredential);
+        window.localStorage.setItem(
+          "sendbirdCredential",
+          JSON.stringify(SendbirdCredentialToJSON(sendbirdCredential))
+        );
+      }
+    }
+  };
+
+  useEffect(() => {
+    getSendbirdCredential();
+  }, []);
+
+  useEffect(() => {
+    if (sendbirdCredential && user) {
+      var sb = new SendBird({ appId: sendbirdConfig.appId });
+      sb.connect(user.uuid, sendbirdCredential.sessionToken, (user, error) => {
+        if (user) {
+          setSb(sb);
+          var channelListQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+          channelListQuery.includeEmpty = true;
+          channelListQuery.order = "latest_last_message";
+          channelListQuery.limit = 15;
+          if (channelListQuery.hasNext) {
+            channelListQuery.next(function(channelList, error) {
+              if (error) {
+                return;
+              }
+              setChannelsQuery(channelListQuery);
+              channels.current = channelList.filter(
+                c => c.members.length === 2
+              );
+              setState({});
+            });
+          }
+        }
+      });
+    }
+  }, [sendbirdCredential]);
+
+  const parseChannel = (channel: SendBird.GroupChannel) => {
+    const memberIds = channel.name.split("_");
+    if (memberIds.length !== 2) return [undefined, undefined];
+    const applicantUser = channel.members.find(m => m.userId === memberIds[0]);
+    const recruiterUser = channel.members.find(m => m.userId === memberIds[1]);
+    if (channel.members.length === 2 && applicantUser && recruiterUser)
+      return [applicantUser, recruiterUser];
+    return [undefined, undefined];
+  };
+
+  const channelsFilter = (
+    sendBirdChannels: Array<SendBird.GroupChannel>
+  ): Array<SendBird.GroupChannel> => {
+    return sendBirdChannels.reduce<Array<SendBird.GroupChannel>>(
+      (result, c) => {
+        let matchChannel: SendBird.GroupChannel | undefined;
+        const [applicantUser, recruiterUser] = parseChannel(c);
+        // Check channel is system channel or not
+        if (user && c.url === user.systemChannelUrl) {
+          matchChannel = c;
+        } else if (
+          user &&
+          applicantUser &&
+          user.uuid === applicantUser.userId &&
+          !isRecruiter
+        ) {
+          // Filter Applicant Channels
+          matchChannel = c;
+        } else if (
+          user &&
+          recruiterUser &&
+          user.uuid === recruiterUser.userId &&
+          isRecruiter
+        ) {
+          // Filter Applicant Channels
+          matchChannel = c;
+        }
+        matchChannel && result.push(matchChannel);
+        return result;
+      },
+      []
+    );
+  };
+
+  return (
+    <div className={classes.root}>
+      {isRecruiter ? <Header /> : <Header />}
+      {channels.current.length > 0 && (
+        <div className={classes.container}>
+          <div className={classes.contacts}>
+            {user && user.recruiterInfo && (
+              <ButtonGroup
+                className={classes.buttonGroup}
+                color="primary"
+                aria-label="small outlined button group"
+              >
+                <Button
+                  onClick={() => setIsRecruiter(false)}
+                  variant={isRecruiter ? undefined : "contained"}
+                >
+                  求職
+                </Button>
+                <Button
+                  onClick={() => setIsRecruiter(true)}
+                  variant={!isRecruiter ? undefined : "contained"}
+                >
+                  求才
+                </Button>
+              </ButtonGroup>
+            )}
+            {channelsFilter(channels.current).map((c, index) => {
+              const applicantId = user ? user.uuid : "";
+              const recruiter = c.members.filter(
+                m => m.userId !== applicantId
+              )[0];
+              return (
+                <div key={index} onClick={() => setSelectedChannelId(c.url)}>
+                  <MessageCard
+                    recruiter={recruiter}
+                    teamName={""}
+                    selected={c.url === selectedChannelId}
+                    unreadMessageCount={
+                      channels.current[index].unreadMessageCount
+                    }
+                    lastMessage={channels.current[index].lastMessage}
+                  />
+                </div>
+              );
+            })}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flex: 3,
+              position: "relative"
+            }}
+          >
+            {channels.current.filter(c => c.url === selectedChannelId).length >
+              0 && (
+              <MessageBox
+                channel={
+                  channels.current.filter(c => c.url === selectedChannelId)[0]
+                }
+                isRecruiter={isRecruiter}
+              />
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Message;

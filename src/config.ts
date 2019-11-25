@@ -39,6 +39,18 @@ const algoliaConfigs: Config<{ appId: string; index: string }> = {
   }
 };
 
+const sendbirdConfigs: Config<{ appId: string }> = {
+  local: {
+    appId: "8B32F1A9-78F6-424B-9034-8CDCC7553198"
+  },
+  staging: {
+    appId: "8B32F1A9-78F6-424B-9034-8CDCC7553198"
+  },
+  production: {
+    appId: "A8E3141B-E9E7-43AF-B342-72FC02C74B8C"
+  }
+};
+
 const sentryConfigs: Config<{ dsn: string }> = {
   local: {
     dsn: "https://3d0cfcba265a495ba9955492b43f6769@sentry.io/1773342"
@@ -101,5 +113,6 @@ export const apiServiceConfig = apiServiceConfigs[environment];
 export const algoliaConfig = algoliaConfigs[environment];
 export const sentryConfig = sentryConfigs[environment];
 export const firebaseConfig = firebaseConfigs[environment];
+export const sendbirdConfig = sendbirdConfigs[environment];
 
 export const TokenExpiredBufferTime = 3600000;
