@@ -13,10 +13,12 @@ import {
   JobType,
   EducationLevel,
   ExperienceLevel,
-  SalaryType
+  SalaryType,
+  JobUnpublishedReason
 } from "@frankyjuang/milkapi-client";
 import { useAuth } from "stores";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { AlertDialog } from "components/Util";
 
 interface JobCreateFormProps {
   open: boolean;
@@ -89,6 +91,11 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
     string
   >();
   const [description, setDescription] = useState<string>();
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+
+  const showAlert = () => setAlertOpen(true);
+  const hideAlert = () => setAlertOpen(false);
 
   const publish = async () => {
     const jobApi = await getApi("Job");
@@ -145,6 +152,13 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
           description
         }
       });
+      if (
+        !newJob.published &&
+        newJob.unpublishedReason === JobUnpublishedReason.NotVerified
+      ) {
+        showAlert();
+        setAlertMessage("公司尚未驗證");
+      }
       await reloadUser();
       setLoading(false);
     }
@@ -250,6 +264,11 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
 
   return (
     <div>
+      <AlertDialog
+        isOpen={alertOpen}
+        close={hideAlert}
+        message={alertMessage}
+      />
       <Dialog
         maxWidth={"sm"}
         fullWidth

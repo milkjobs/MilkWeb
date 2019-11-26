@@ -1,6 +1,7 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { Header } from "components/Header";
-import { InitialJob, PdfMimeType, JpgMimeType } from "helpers";
+import { DownloadAppDialog } from "components/Util";
+import { JpgMimeType } from "helpers";
 import React, { useEffect, useState, useCallback } from "react";
 import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -26,6 +27,7 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     marginTop: 16,
+    marginRight: 16,
     maxWidth: 300
   }
 }));
@@ -33,7 +35,15 @@ const useStyles = makeStyles(theme => ({
 const Verification: React.FC = () => {
   const { user, getApi, reloadUser } = useAuth();
   const classes = useStyles();
-  const [loading, setLoading] = useState(true);
+  const [isDownloadAppDialogOpen, setIsDownloadAppDialogOpen] = useState(false);
+
+  const showDownloadAppDialog = () => {
+    setIsDownloadAppDialogOpen(true);
+  };
+
+  const hideDownloadAppDialog = () => {
+    setIsDownloadAppDialogOpen(false);
+  };
 
   const upload = useCallback(
     async (files: File[] | FileList) => {
@@ -91,26 +101,40 @@ const Verification: React.FC = () => {
           <br />
           {"【統編、公司名稱、公司地址】須清楚拍攝。"}
         </div>
-        <input
-          hidden
-          accept={JpgMimeType}
-          id="contained-button-file"
-          onChange={e => {
-            e.target.files && upload(e.target.files);
-          }}
-          type="file"
-        />
-        <label htmlFor="contained-button-file">
+        <div>
+          <input
+            hidden
+            accept={JpgMimeType}
+            id="contained-button-file"
+            onChange={e => {
+              e.target.files && upload(e.target.files);
+            }}
+            type="file"
+          />
+          <label htmlFor="contained-button-file">
+            <Button
+              className={classes.button}
+              color={"primary"}
+              component="span"
+              variant={"contained"}
+            >
+              上傳JPG
+            </Button>
+          </label>
           <Button
             className={classes.button}
             color={"primary"}
-            component="span"
             variant={"contained"}
+            onClick={showDownloadAppDialog}
           >
-            上傳JPG
+            下載App，體驗更完善功能
           </Button>
-        </label>
+        </div>
       </div>
+      <DownloadAppDialog
+        isOpen={isDownloadAppDialogOpen}
+        close={hideDownloadAppDialog}
+      />
       <ToastContainer
         position={ToastPosition.BOTTOM_CENTER}
         draggable={false}
