@@ -157,7 +157,9 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
         newJob.unpublishedReason === JobUnpublishedReason.NotVerified
       ) {
         showAlert();
-        setAlertMessage("公司尚未驗證");
+        setAlertMessage(
+          "公司尚未驗證，職缺會暫時關閉。等公司驗證成功，你可以再把職缺開放。"
+        );
       }
       await reloadUser();
       setLoading(false);
