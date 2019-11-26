@@ -8,3 +8,4 @@ export { default as TeamSideCard } from "./teamSideCard";
 export { default as RecruiterTeamSideCard } from "./recruiterTeamSideCard";
 export { default as TeamWebsite } from "./teamWebsite";
 export * from "./TeamEditForm";
+export * from "./TeamCreateForm";

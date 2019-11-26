@@ -1,6 +1,7 @@
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import { DownloadAppDialog, LoginDialog } from "components/Util";
+import { TeamCreateForm } from "components/TeamComponents";
 import React, { MouseEvent, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "stores";
@@ -48,8 +49,17 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
   const location = useLocation();
   const { user } = useAuth();
   const [isDownloadAppDialogOpen, setIsDownloadAppDialogOpen] = useState(false);
+  const [isCreateTeamFormOpen, setIsCreateTeamFormOpen] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const isHome = location.pathname === "/";
+
+  const showCreateTeamForm = () => {
+    setIsCreateTeamFormOpen(true);
+  };
+
+  const hideCreateTeamForm = () => {
+    setIsCreateTeamFormOpen(false);
+  };
 
   const showDownloadAppDialog = () => {
     setIsDownloadAppDialogOpen(true);
@@ -69,9 +79,13 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
 
   return (
     <div className={classes.sectionDesktop}>
+      <TeamCreateForm
+        handleClose={hideCreateTeamForm}
+        open={isCreateTeamFormOpen}
+      />
       {isHome &&
         (user && !user.recruiterInfo ? (
-          <div onClick={showDownloadAppDialog} className={classes.link}>
+          <div onClick={showCreateTeamForm} className={classes.link}>
             <span className={classes.tab}>發佈職缺</span>
           </div>
         ) : (

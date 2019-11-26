@@ -17,6 +17,7 @@ import RecruiterOrder from "routes/RecruiterOrder";
 import RecruiterPositionsHome from "routes/RecruiterPositionsHome";
 import RecruiterTeam from "routes/RecruiterTeam";
 import { useAuth } from "stores";
+import Verification from "routes/Recruiter/Verification";
 
 interface PrivateRouteProps extends RouteProps {
   component:
@@ -66,8 +67,8 @@ const RecruiterRoute: React.FC = () => {
         />
         <PrivateRoute path={`${match.path}/job/:id`} component={RecruiterJob} />
         <PrivateRoute
-          path={`${match.path}/create-team`}
-          component={CreateTeam}
+          path={`${match.path}/verification`}
+          component={Verification}
         />
         <PrivateRoute
           path={`${match.path}/positions`}

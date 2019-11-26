@@ -11,6 +11,7 @@ import "firebase/auth";
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "stores";
+import { VerificationState } from "@frankyjuang/milkapi-client";
 
 const useStyles = makeStyles(theme => ({
   link: {
@@ -44,6 +45,15 @@ const RecruiterProfileMenu: React.FC<Props> = props => {
             <ClickAwayListener onClickAway={close}>
               <MenuList>
                 {user && <MenuItem>{user.name}</MenuItem>}
+                {user &&
+                  user.recruiterInfo &&
+                  user.recruiterInfo.team &&
+                  user.recruiterInfo.team.certificateVerified !==
+                    VerificationState.Passed && (
+                    <Link to="/recruiter/verification" className={classes.link}>
+                      <MenuItem onClick={close}>公司驗證</MenuItem>
+                    </Link>
+                  )}
                 <Link to="/recruiter/team" className={classes.link}>
                   <MenuItem onClick={close}>公司簡介</MenuItem>
                 </Link>
