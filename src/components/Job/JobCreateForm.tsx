@@ -19,6 +19,7 @@ import {
 import { useAuth } from "stores";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { AlertDialog } from "components/Util";
+import { AlertType } from "helpers";
 
 interface JobCreateFormProps {
   open: boolean;
@@ -92,7 +93,7 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
   >();
   const [description, setDescription] = useState<string>();
   const [alertOpen, setAlertOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState<AlertType>();
 
   const showAlert = () => setAlertOpen(true);
   const hideAlert = () => setAlertOpen(false);
@@ -156,10 +157,8 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
         !newJob.published &&
         newJob.unpublishedReason === JobUnpublishedReason.NotVerified
       ) {
+        setAlertType(AlertType.NotVerification);
         showAlert();
-        setAlertMessage(
-          "公司尚未驗證，職缺會暫時關閉。等公司驗證成功，你可以再把職缺開放。"
-        );
       }
       await reloadUser();
       setLoading(false);
@@ -266,11 +265,9 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
 
   return (
     <div>
-      <AlertDialog
-        isOpen={alertOpen}
-        close={hideAlert}
-        message={alertMessage}
-      />
+      {alertType !== undefined && (
+        <AlertDialog isOpen={alertOpen} close={hideAlert} type={alertType} />
+      )}
       <Dialog
         maxWidth={"sm"}
         fullWidth

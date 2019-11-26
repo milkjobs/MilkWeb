@@ -20,6 +20,11 @@ export enum MobileOS {
   Ios
 }
 
+export enum AlertType {
+  NotVerification,
+  NoVisitorsToBe
+}
+
 export enum PurchaseWay {
   Credit = "Credit",
   ATM = "ATM"
