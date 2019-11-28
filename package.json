@@ -36,6 +36,7 @@
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^2.1.2",
     "firebase": "^7.2.3",
+    "intersection-observer": "^0.7.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "prettier": "^1.19.1",
@@ -43,6 +44,7 @@
     "qrcode.react": "^1.0.0",
     "query-string": "^6.8.3",
     "react": "^16.10.2",
+    "react-app-polyfill": "^1.0.4",
     "react-autosuggest": "^9.4.3",
     "react-countdown-now": "^2.1.1",
     "react-dom": "^16.10.2",
@@ -71,10 +73,17 @@
     "deploy-production": "./deploy.sh E3KGLF808BODZ4",
     "deploy-staging": "firebase deploy --project=staging -m $(git rev-parse --short HEAD)"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "browserslist": {
+    "production": [
+      ">0.1% in TW",
+      "not dead",
+      "last 2 versions",
+      "Firefox ESR"
+    ],
+    "development": [
+      "last 2 chrome version",
+      "last 2 firefox version",
+      "last 2 safari version"
+    ]
+  }
 }

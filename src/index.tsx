@@ -1,3 +1,4 @@
+import "./polyfills";
 import * as Sentry from "@sentry/browser";
 import { environment, firebaseConfig, sentryConfig } from "config";
 import firebase from "firebase/app";
