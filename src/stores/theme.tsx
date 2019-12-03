@@ -32,7 +32,7 @@ export const ThemeProvider = ({ children }) => {
     createMuiTheme({
       palette: {
         primary: { main: "#484848", light: "#666666" },
-        secondary: { main: "#fa6c71" },
+        secondary: { main: "#fa6c71", contrastText: "#ffffff" },
         background: { default: "#ffffff" },
         text: { primary: "#484848" },
         type

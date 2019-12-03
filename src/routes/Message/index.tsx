@@ -1,5 +1,4 @@
 import { makeStyles } from "@material-ui/core/styles";
-import to from "await-to-js";
 import { Header } from "components/Header";
 import React, { useEffect, useRef, useState } from "react";
 import { sendbirdConfig } from "config";
@@ -12,6 +11,7 @@ import {
 import { useAuth } from "stores";
 import { uuid4 } from "@sentry/utils";
 import { MessageCard, MessageBox } from "components/Message";
+import { useParams, useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 
@@ -42,7 +42,10 @@ const useStyles = makeStyles(theme => ({
   },
   contacts: {
     border: "1px solid #EBEBEB",
-    flex: 1
+    flex: 1,
+    [theme.breakpoints.down("xs")]: {
+      display: "none"
+    }
   },
   buttonGroup: {
     marginTop: 16,
@@ -53,6 +56,8 @@ const useStyles = makeStyles(theme => ({
 const Message: React.FC = () => {
   const classes = useStyles();
   const { getApi, user } = useAuth();
+  const params = useParams<{ id: string }>();
+  const history = useHistory();
   const [sendbirdCredential, setSendbirdCredential] = useState<
     SendbirdCredential
   >();
@@ -63,7 +68,7 @@ const Message: React.FC = () => {
   >();
 
   const channels = useRef<Array<SendBird.GroupChannel>>([]);
-  const [selectedChannelId, setSelectedChannelId] = useState<string>();
+  const [selectedChannelId, setSelectedChannelId] = useState<string>(params.id);
   const [, setState] = useState();
 
   function onChannelChanged(channel) {
@@ -117,11 +122,11 @@ const Message: React.FC = () => {
 
   useEffect(() => {
     if (sendbirdCredential && user) {
-      var sb = new SendBird({ appId: sendbirdConfig.appId });
+      const sb = new SendBird({ appId: sendbirdConfig.appId });
       sb.connect(user.uuid, sendbirdCredential.sessionToken, (user, error) => {
         if (user) {
           setSb(sb);
-          var channelListQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+          const channelListQuery = sb.GroupChannel.createMyGroupChannelListQuery();
           channelListQuery.includeEmpty = true;
           channelListQuery.order = "latest_last_message";
           channelListQuery.limit = 15;
@@ -218,7 +223,13 @@ const Message: React.FC = () => {
                 m => m.userId !== applicantId
               )[0];
               return (
-                <div key={index} onClick={() => setSelectedChannelId(c.url)}>
+                <div
+                  key={index}
+                  onClick={() => {
+                    setSelectedChannelId(c.url);
+                    history.push(`/message/${c.url}`);
+                  }}
+                >
                   <MessageCard
                     recruiter={recruiter}
                     teamName={""}

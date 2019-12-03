@@ -22,7 +22,8 @@ export enum MobileOS {
 
 export enum AlertType {
   NotVerification,
-  NoVisitorsToBe
+  NoVisitorsToBe,
+  NoResume
 }
 
 export enum PurchaseWay {
