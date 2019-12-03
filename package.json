@@ -70,7 +70,7 @@
     "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
     "build-production": "REACT_APP_ENV=production react-scripts build",
     "build-staging": "REACT_APP_ENV=staging react-scripts build",
-    "deploy-production": "./deploy.sh E3KGLF808BODZ4",
+    "deploy-production": "./deploy.sh E19KDDT43S99QX",
     "deploy-staging": "firebase deploy --project=staging -m $(git rev-parse --short HEAD)"
   },
   "browserslist": {

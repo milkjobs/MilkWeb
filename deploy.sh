@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 DISTRIBUTION_ID=${1}
-BUCKET="web.production.milkjobs.ga"
+BUCKET="web.production.milk.jobs"
 BUILD_DIR="build/"
 
 echo "Deploying..."
