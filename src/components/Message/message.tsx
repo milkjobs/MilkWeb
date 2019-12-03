@@ -34,10 +34,12 @@ const useStyles = makeStyles((theme: Theme) =>
     messageBody: {
       width: "auto",
       display: "flex",
+      alignItems: "center",
       marginLeft: 16,
       marginRight: 16,
+      paddingLeft: 16,
+      paddingRight: 16,
       fontSize: 14,
-      padding: 12,
       backgroundColor: "#eee",
       border: 1,
       borderRadius: 5

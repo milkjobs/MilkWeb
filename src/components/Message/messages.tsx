@@ -6,8 +6,7 @@ import { createStyles, Theme } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     messages: {
-      flexGrow: 1,
-      padding: 20
+      flexGrow: 1
     }
   })
 );

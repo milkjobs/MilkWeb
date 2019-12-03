@@ -8,12 +8,82 @@ import { useAuth } from "stores";
 import { uuid4 } from "@sentry/utils";
 import SendBird from "sendbird";
 import Button from "@material-ui/core/Button";
+import { AlertDialog } from "components/Util";
+import { AlertType } from "helpers";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      display: "flex",
+      flex: 1,
+      flexDirection: "column",
+      borderTop: "1px solid #EBEBEB",
+      borderRight: "1px solid #EBEBEB",
+      borderBottom: "1px solid #EBEBEB",
+      overflow: "hidden",
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0
+    },
+    messages: {
+      borderTop: "1px solid #EBEBEB",
+      flex: 1,
+      overflow: "auto"
+    },
+    messageInput: {
+      padding: 8,
+      borderTop: "1px solid #EBEBEB"
+    },
+    textField: {
+      display: "flex",
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      flex: 1,
+      border: 0
+    },
+    jobContainer: {
+      display: "flex",
+      marginLeft: 16,
+      paddingTop: 8,
+      paddingBottom: 8
+    },
+    jobName: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      fontSize: 18,
+      fontWeight: 800,
+      color: "#484848",
+      marginRight: 16
+    },
+    jobSalary: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      fontSize: 18,
+      fontWeight: 400,
+      marginRight: 16,
+      color: "#FD8150"
+    },
+    location: {
+      display: "flex",
+      fontSize: 16,
+      fontWeight: 400,
+      marginRight: 16,
+      color: "#484848",
+      justifyContent: "center",
+      alignItems: "center"
+    }
+  })
+);
 
 const MessageBox: React.FC<Props> = props => {
   const classes = useStyles();
   const { channel, isRecruiter } = props;
 
-  const { userId } = useAuth();
+  const { userId, user } = useAuth();
 
   const [input, setInput] = useState("");
   const useForceUpdate = () => {
@@ -29,6 +99,15 @@ const MessageBox: React.FC<Props> = props => {
   const [prevMessageListQuery, setPrevMessageListQuery] = useState<
     SendBird.PreviousMessageListQuery
   >();
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const loadPreviousMessages = (
     messageQuery: SendBird.PreviousMessageListQuery
@@ -111,8 +190,17 @@ const MessageBox: React.FC<Props> = props => {
     }
   };
 
+  const sendResume = async () => {
+    if (user && user.profile && !user.profile.resumeKey) handleClickOpen();
+  };
+
   return (
     <div className={classes.container}>
+      <AlertDialog
+        isOpen={open}
+        close={handleClose}
+        type={AlertType.NoResume}
+      />
       <div className={classes.jobContainer}>
         <div className={classes.jobName}>{recruiter.nickname}</div>
       </div>
@@ -123,12 +211,12 @@ const MessageBox: React.FC<Props> = props => {
           messagesEl.current = el;
         }}
       >
-        <Messages messages={messages.current} userId={userId!} />
+        <Messages messages={messages.current} userId={userId || ""} />
       </div>
       <div className={classes.messageInput}>
         {!isRecruiter && (
           <div style={{ display: "flex", marginLeft: 8, marginTop: 4 }}>
-            <Button onClick={() => {}}>發送履歷</Button>
+            <Button onClick={sendResume}>發送履歷</Button>
           </div>
         )}
         <Input
@@ -145,74 +233,6 @@ const MessageBox: React.FC<Props> = props => {
     </div>
   );
 };
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: "flex",
-      flex: 1,
-      flexDirection: "column",
-      borderTop: "1px solid #EBEBEB",
-      borderRight: "1px solid #EBEBEB",
-      borderBottom: "1px solid #EBEBEB",
-      overflow: "hidden",
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0
-    },
-    messages: {
-      borderTop: "1px solid #EBEBEB",
-      flex: 1,
-      overflow: "auto"
-    },
-    messageInput: {
-      padding: 8,
-      borderTop: "1px solid #EBEBEB"
-    },
-    textField: {
-      display: "flex",
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      flex: 1,
-      border: 0
-    },
-    jobContainer: {
-      display: "flex",
-      marginLeft: 16,
-      paddingTop: 8,
-      paddingBottom: 8
-    },
-    jobName: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      fontSize: 18,
-      fontWeight: 800,
-      color: "#484848",
-      marginRight: 16
-    },
-    jobSalary: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      fontSize: 18,
-      fontWeight: 400,
-      marginRight: 16,
-      color: "#FD8150"
-    },
-    location: {
-      display: "flex",
-      fontSize: 16,
-      fontWeight: 400,
-      marginRight: 16,
-      color: "#484848",
-      justifyContent: "center",
-      alignItems: "center"
-    }
-  })
-);
 
 interface Props {
   channel: SendBird.GroupChannel;

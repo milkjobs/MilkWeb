@@ -37,6 +37,16 @@ const AlertDialog: React.FC<Props> = props => {
           </DialogActions>
         </>
       )}
+      {type === AlertType.NoResume && (
+        <>
+          <DialogContent>{"尚未上傳履歷"}</DialogContent>
+          <DialogActions>
+            <Button onClick={() => history.push("/resume")} color="primary">
+              前往上傳
+            </Button>
+          </DialogActions>
+        </>
+      )}
     </Dialog>
   );
 };

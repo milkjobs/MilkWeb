@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { DownloadAppDialog } from "components/Util";
 import React, { useState } from "react";
+import { useHistory, useParams } from "react-router";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -57,10 +58,13 @@ interface Props {
 
 const JobFooter: React.FC<Props> = props => {
   const { recruiter } = props;
+  const history = useHistory();
   const classes = useStyles();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const showDownloadAppDialog = () => {
+    if (recruiter.uuid === "us3nb3W190WtXQd3NKQzVtDTZOa2")
+      history.push("/sample-message");
     setIsDialogOpen(true);
   };
 
