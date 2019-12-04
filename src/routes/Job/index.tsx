@@ -14,6 +14,7 @@ import { InitialJob } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "stores";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -72,6 +73,10 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       display: "none"
     }
+  },
+  loading: {
+    flex: 1,
+    marginTop: 200
   }
 }));
 
@@ -103,7 +108,7 @@ const Job: React.FC = () => {
   return (
     <div className={classes.root}>
       <Header />
-      {!loading && (
+      {!loading ? (
         <div className={classes.container}>
           <div className={classes.infoContainer}>
             <div className={classes.titleContainer}>
@@ -128,6 +133,8 @@ const Job: React.FC = () => {
             {job.recruiter && <JobFooter recruiter={job.recruiter} />}
           </div>
         </div>
+      ) : (
+        <CircularProgress className={classes.loading} />
       )}
     </div>
   );
