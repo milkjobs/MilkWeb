@@ -43,7 +43,7 @@ const DownloadAppDialog: React.FC<Props> = props => {
           <QRCode
             size={256}
             level="Q"
-            value="https://mjob.ml/app"
+            value="https://to.milk.jobs/app"
             // TODO: https://github.com/zpao/qrcode.react#imagesettings
           />
         )}
