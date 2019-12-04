@@ -13,7 +13,8 @@ import {
   TeamWebsite
 } from "components/TeamComponents";
 import { JobList } from "components/JobSearch";
-import { InitialTeam, AlgoliaService } from "helpers";
+import { AlgoliaService } from "helpers";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { InstantSearch, connectRefinementList } from "react-instantsearch-dom";
@@ -102,6 +103,10 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       display: "none"
     }
+  },
+  loading: {
+    flex: 1,
+    marginTop: 200
   }
 }));
 
@@ -185,7 +190,9 @@ const Team: React.FC = () => {
   const params = useParams<{ id: string }>();
   const { getApi } = useAuth();
   const [value, setValue] = useState(0);
-  const [team, setTeam] = useState<TeamType>(InitialTeam);
+  const [team, setTeam] = useState<TeamType>();
+  const tabsStyle = useTabsStyles();
+  const tabStyle = useTabStyles();
 
   function handleChange(event: React.ChangeEvent<{}>, newValue: number) {
     setValue(newValue);
@@ -206,21 +213,25 @@ const Team: React.FC = () => {
   return (
     <div className={classes.root}>
       <Header />
-      <div className={classes.containerMaster}>
-        <TeamInfo {...team} />
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          // indicatorColor="primary"
-          textColor="primary"
-          classes={useTabsStyles()}
-        >
-          <Tab disableRipple label="團隊介紹" classes={useTabStyles()} />
-          <Tab disableRipple label="人才招募" classes={useTabStyles()} />
-        </Tabs>
-        {value === 0 && <TeamIntroduction team={team} />}
-        {value === 1 && <TeamJobs team={team} />}
-      </div>
+      {team ? (
+        <div className={classes.containerMaster}>
+          <TeamInfo {...team} />
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            // indicatorColor="primary"
+            textColor="primary"
+            classes={tabsStyle}
+          >
+            <Tab disableRipple label="團隊介紹" classes={tabStyle} />
+            <Tab disableRipple label="人才招募" classes={tabStyle} />
+          </Tabs>
+          {value === 0 && <TeamIntroduction team={team} />}
+          {value === 1 && <TeamJobs team={team} />}
+        </div>
+      ) : (
+        <CircularProgress className={classes.loading} />
+      )}
     </div>
   );
 };
