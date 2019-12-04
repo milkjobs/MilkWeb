@@ -5,13 +5,13 @@ type Config<T> = {
 
 const apiServiceConfigs: Config<{ basePath: string }> = {
   local: {
-    basePath: "https://api.staging.milkjobs.ga"
+    basePath: "https://api.staging.milk.jobs"
   },
   staging: {
-    basePath: "https://api.staging.milkjobs.ga"
+    basePath: "https://api.staging.milk.jobs"
   },
   production: {
-    basePath: "https://api.production.milkjobs.ga"
+    basePath: "https://api.production.milk.jobs"
   }
 };
 

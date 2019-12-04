@@ -5,7 +5,16 @@
       "namespace": "android_app",
       "package_name": "com.milkjobs.app",
       "sha256_cert_fingerprints": [
-        "46:06:A7:14:05:15:11:95:60:A5:FD:6A:54:11:37:DA:01:50:B9:71:22:E1:11:E9:8C:1F:B7:46:65:E2:18:E1",
+        "46:06:A7:14:05:15:11:95:60:A5:FD:6A:54:11:37:DA:01:50:B9:71:22:E1:11:E9:8C:1F:B7:46:65:E2:18:E1"
+      ]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.milkjobs.app.debug",
+      "sha256_cert_fingerprints": [
         "FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B:83:32:66:75:91:03:3B:9C"
       ]
     }
