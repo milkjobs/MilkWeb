@@ -7,6 +7,7 @@
         "destination": "/index.html"
       }
     ],
+    "appAssociation": "NONE",
     "headers": [
       {
         "source": ".well-known/apple-app-site-association",

@@ -7,6 +7,12 @@
         "paths": [
           "*"
         ]
+      },
+      {
+        "appID": "M4FDAJ67F2.com.milkjobs.app.debug",
+        "paths": [
+          "*"
+        ]
       }
     ]
   }
