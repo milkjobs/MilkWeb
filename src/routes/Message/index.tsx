@@ -1,19 +1,19 @@
-import { makeStyles } from "@material-ui/core/styles";
-import { Header } from "components/Header";
-import React, { useEffect, useRef, useState } from "react";
-import { sendbirdConfig } from "config";
-import SendBird from "sendbird";
 import {
   SendbirdCredential,
-  SendbirdCredentialToJSON,
-  SendbirdCredentialFromJSON
+  SendbirdCredentialFromJSON,
+  SendbirdCredentialToJSON
 } from "@frankyjuang/milkapi-client";
-import { useAuth } from "stores";
-import { uuid4 } from "@sentry/utils";
-import { MessageCard, MessageBox } from "components/Message";
-import { useParams, useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import { makeStyles } from "@material-ui/core/styles";
+import { uuid4 } from "@sentry/utils";
+import { Header } from "components/Header";
+import { MessageBox, MessageCard } from "components/Message";
+import { sendbirdConfig } from "config";
+import React, { useEffect, useRef, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
+import SendBird from "sendbird";
+import { useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -63,9 +63,7 @@ const Message: React.FC = () => {
   >();
   const [isRecruiter, setIsRecruiter] = useState(false);
   const [sb, setSb] = useState<SendBird.SendBirdInstance>();
-  const [channelsQuery, setChannelsQuery] = useState<
-    SendBird.GroupChannelListQuery
-  >();
+  const [, setChannelsQuery] = useState<SendBird.GroupChannelListQuery>();
 
   const channels = useRef<Array<SendBird.GroupChannel>>([]);
   const [selectedChannelId, setSelectedChannelId] = useState<string>(params.id);
@@ -88,42 +86,46 @@ const Message: React.FC = () => {
     }
   }, [sb]);
 
-  const getSendbirdCredential = async () => {
-    if (user) {
-      try {
-        const sendbirdCredentialString = window.localStorage.getItem(
-          "sendbirdCredential"
-        );
-        if (sendbirdCredentialString === null) throw "";
-
-        const sendbirdCredential = SendbirdCredentialFromJSON(
-          JSON.parse(sendbirdCredentialString)
-        );
-        if (sendbirdCredential.expiresAt.getTime() < new Date().getTime())
-          throw "";
-        setSendbirdCredential(sendbirdCredential);
-      } catch (error) {
-        const userApi = await getApi("User");
-        const sendbirdCredential = await userApi.getSendbirdCredential({
-          userId: user.uuid
-        });
-        setSendbirdCredential(sendbirdCredential);
-        window.localStorage.setItem(
-          "sendbirdCredential",
-          JSON.stringify(SendbirdCredentialToJSON(sendbirdCredential))
-        );
-      }
-    }
-  };
-
   useEffect(() => {
+    const getSendbirdCredential = async () => {
+      if (user) {
+        try {
+          const sendbirdCredentialString = window.localStorage.getItem(
+            "sendbirdCredential"
+          );
+          if (sendbirdCredentialString === null) {
+            throw new Error();
+          }
+
+          const sendbirdCredential = SendbirdCredentialFromJSON(
+            JSON.parse(sendbirdCredentialString)
+          );
+          if (sendbirdCredential.expiresAt.getTime() < new Date().getTime()) {
+            throw new Error();
+          }
+
+          setSendbirdCredential(sendbirdCredential);
+        } catch (error) {
+          const userApi = await getApi("User");
+          const sendbirdCredential = await userApi.getSendbirdCredential({
+            userId: user.uuid
+          });
+          setSendbirdCredential(sendbirdCredential);
+          window.localStorage.setItem(
+            "sendbirdCredential",
+            JSON.stringify(SendbirdCredentialToJSON(sendbirdCredential))
+          );
+        }
+      }
+    };
+
     getSendbirdCredential();
-  }, []);
+  }, [getApi, user]);
 
   useEffect(() => {
     if (sendbirdCredential && user) {
       const sb = new SendBird({ appId: sendbirdConfig.appId });
-      sb.connect(user.uuid, sendbirdCredential.sessionToken, (user, error) => {
+      sb.connect(user.uuid, sendbirdCredential.sessionToken, user => {
         if (user) {
           setSb(sb);
           const channelListQuery = sb.GroupChannel.createMyGroupChannelListQuery();
@@ -145,7 +147,7 @@ const Message: React.FC = () => {
         }
       });
     }
-  }, [sendbirdCredential]);
+  }, [sendbirdCredential, user]);
 
   const parseChannel = (channel: SendBird.GroupChannel) => {
     const memberIds = channel.name.split("_");

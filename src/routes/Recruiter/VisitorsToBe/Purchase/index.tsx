@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useAuth } from "stores";
-import { makeStyles } from "@material-ui/core/styles";
 import { VisitorPlan } from "@frankyjuang/milkapi-client";
-import Icon from "@mdi/react";
-import { mdiEyeCheckOutline } from "@mdi/js";
-import { BuyDialog } from "components/Point";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import { makeStyles } from "@material-ui/core/styles";
+import { mdiEyeCheckOutline } from "@mdi/js";
+import Icon from "@mdi/react";
+import { BuyDialog } from "components/Point";
 import { PurchaseWay } from "helpers";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Purchase: React.FC = () => {
-  const { getApi, user } = useAuth();
+  const { getApi } = useAuth();
   const classes = useStyles();
   const [visitorPlans, setVisitorPlans] = useState<VisitorPlan[]>();
   const [selectedPlan, setSelectedPlan] = useState<VisitorPlan>();
@@ -63,15 +63,15 @@ const Purchase: React.FC = () => {
   );
   const [open, setOpen] = useState(false);
 
-  const getVisitorPlans = async () => {
-    const membershpiApi = await getApi("Membership");
-    const visitorPlans = await membershpiApi.getVisitorPlans();
-    setVisitorPlans(visitorPlans);
-  };
-
   useEffect(() => {
+    const getVisitorPlans = async () => {
+      const membershpiApi = await getApi("Membership");
+      const visitorPlans = await membershpiApi.getVisitorPlans();
+      setVisitorPlans(visitorPlans);
+    };
+
     getVisitorPlans();
-  }, []);
+  }, [getApi]);
 
   return (
     <div className={classes.root}>
@@ -91,8 +91,9 @@ const Purchase: React.FC = () => {
       </ButtonGroup>
       <div className={classes.plansContainer}>
         {visitorPlans &&
-          visitorPlans.map(p => (
+          visitorPlans.map((p, i) => (
             <div
+              key={i}
               className={classes.plan}
               onClick={() => {
                 setOpen(true);

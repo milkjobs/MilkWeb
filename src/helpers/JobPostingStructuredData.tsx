@@ -51,7 +51,7 @@ const JobPostingStructuredData: React.FC<Props> = props => {
       case SalaryType.Hourly:
         return "HOUR";
       default:
-        throw `Unknown salary type ${type}`;
+        throw new Error(`Unknown salary type ${type}`);
     }
   };
 
@@ -64,7 +64,7 @@ const JobPostingStructuredData: React.FC<Props> = props => {
       case JobType.Internship:
         return "INTERN";
       default:
-        throw `Unknown job type ${type}`;
+        throw new Error(`Unknown job type ${type}`);
     }
   };
 

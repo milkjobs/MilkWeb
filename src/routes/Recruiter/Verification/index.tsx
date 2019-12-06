@@ -1,13 +1,13 @@
+import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
+import to from "await-to-js";
 import { Header } from "components/Header";
 import { DownloadAppDialog } from "components/Util";
 import { JpgMimeType } from "helpers";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "stores";
-import Button from "@material-ui/core/Button";
-import to from "await-to-js";
 
 const useStyles = makeStyles(theme => ({
   root: {

@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from "react";
+import {
+  EducationLevel,
+  ExperienceLevel,
+  JobType,
+  JobUnpublishedReason,
+  SalaryType
+} from "@frankyjuang/milkapi-client";
+import { InputAdornment, Theme } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import MenuItem from "@material-ui/core/MenuItem";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import MenuItem from "@material-ui/core/MenuItem";
+import TextField from "@material-ui/core/TextField";
 import { createStyles, makeStyles } from "@material-ui/styles";
-import { TaiwanAreaJSON, SubArea } from "assets/TaiwanAreaJSON";
-import { Theme, InputAdornment } from "@material-ui/core";
-import {
-  JobType,
-  EducationLevel,
-  ExperienceLevel,
-  SalaryType,
-  JobUnpublishedReason
-} from "@frankyjuang/milkapi-client";
-import { useAuth } from "stores";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import { SubArea, TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
 import { AlertDialog } from "components/Util";
 import { AlertType } from "helpers";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "stores";
 
 interface JobCreateFormProps {
   open: boolean;
@@ -58,10 +58,22 @@ const ExperienceLevelTypes = [
   { value: ExperienceLevel.Senior, label: "資深" }
 ];
 
-let range = n => Array.from(Array(n).keys());
+const range = n => Array.from(Array(n).keys());
 
 const HourlySalaryOptions = [...range(30).map(n => (n + 30) * 5)];
 const MonthlySalaryOptions = [23100, ...range(120).map(n => (n + 24) * 1000)];
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      display: "flex",
+      flexWrap: "wrap"
+    },
+    menu: {
+      width: 200
+    }
+  })
+);
 
 const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
   const classes = useStyles();
@@ -255,7 +267,7 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
   useEffect(() => {
     if (minSalary && maxSalary && minSalary > maxSalary)
       setMaxSalary(undefined);
-  }, [minSalary]);
+  }, [minSalary, maxSalary]);
 
   useEffect(() => {
     const selectedMainArea = TaiwanAreaJSON.find(a => a.name === area);
@@ -522,17 +534,5 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
     </div>
   );
 };
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: "flex",
-      flexWrap: "wrap"
-    },
-    menu: {
-      width: 200
-    }
-  })
-);
 
 export { JobCreateForm };

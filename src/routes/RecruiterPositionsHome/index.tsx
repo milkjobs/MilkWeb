@@ -2,9 +2,8 @@ import { Job } from "@frankyjuang/milkapi-client";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { Header } from "components/Header";
-import { RecruiterJobCard, JobCreateForm } from "components/Job";
+import { JobCreateForm, RecruiterJobCard } from "components/Job";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import { useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
@@ -58,7 +57,6 @@ const useStyles = makeStyles(theme => ({
 
 const RecruiterPositionsHome: React.FC = () => {
   const { user } = useAuth();
-  const history = useHistory();
   const [positions, setPositions] = useState<Job[]>([]);
   const [formOpen, setFormOpen] = useState<boolean>(false);
   const classes = useStyles();

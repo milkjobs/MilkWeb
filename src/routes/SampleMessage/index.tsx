@@ -1,9 +1,7 @@
 import { makeStyles } from "@material-ui/core/styles";
-import to from "await-to-js";
 import { Header } from "components/Header";
-import React, { useState } from "react";
-import { useAuth } from "stores";
 import { SampleMessageBox } from "components/Message";
+import React from "react";
 
 const useStyles = makeStyles(theme => ({
   root: {
