@@ -10,7 +10,6 @@ import {
   useRouteMatch
 } from "react-router-dom";
 import CreateJob from "routes/CreateJob";
-import CreateTeam from "routes/CreateTeam";
 import RecruiterJob from "routes/Recruiter/Job";
 import RecruiterVisitorsToBe from "routes/Recruiter/VisitorsToBe";
 import RecruiterOrder from "routes/RecruiterOrder";
@@ -18,6 +17,7 @@ import RecruiterPositionsHome from "routes/RecruiterPositionsHome";
 import RecruiterTeam from "routes/RecruiterTeam";
 import { useAuth } from "stores";
 import Verification from "routes/Recruiter/Verification";
+import RecruitersManagement from "routes/RecruitersManagement";
 
 interface PrivateRouteProps extends RouteProps {
   component:
@@ -73,6 +73,10 @@ const RecruiterRoute: React.FC = () => {
         <PrivateRoute
           path={`${match.path}/positions`}
           component={RecruiterPositionsHome}
+        />
+        <PrivateRoute
+          path={`${match.path}/management`}
+          component={RecruitersManagement}
         />
         <PrivateRoute
           path={`${match.path}/visitorsToBe`}
