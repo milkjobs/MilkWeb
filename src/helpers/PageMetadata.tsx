@@ -3,8 +3,8 @@ import { Helmet } from "react-helmet-async";
 
 interface Props {
   title: string;
-  description: string;
-  image: string;
+  description?: string;
+  image?: string;
 }
 
 /*
@@ -21,6 +21,7 @@ const PageMetadata: React.FC<Props> = props => {
 
   return (
     <Helmet>
+      <title>{title}</title>
       <meta
         property="og:url"
         content={`${location.protocol}//${location.host}${location.pathname}`}

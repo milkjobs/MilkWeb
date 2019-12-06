@@ -1,4 +1,5 @@
 import { Job as JobModel } from "@frankyjuang/milkapi-client";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
 import { Header } from "components/Header";
 import {
@@ -10,11 +11,10 @@ import {
 } from "components/Job";
 import "firebase/analytics";
 import firebase from "firebase/app";
-import { InitialJob } from "helpers";
+import { JobPostingStructuredData, PageMetadata } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "stores";
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -84,8 +84,7 @@ const Job: React.FC = () => {
   const { getApi, isAuthenticated } = useAuth();
   const params = useParams<{ id: string }>();
   const classes = useStyles();
-  const [job, setJob] = useState(InitialJob);
-  const [loading, setLoading] = useState(true);
+  const [job, setJob] = useState<JobModel>();
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -97,7 +96,6 @@ const Job: React.FC = () => {
         fetchedJob = await jobApi.getJobAnonymously({ jobId: params.id });
       }
       setJob(fetchedJob);
-      setLoading(false);
       firebase
         .analytics()
         .logEvent("view_item", { items: [{ id: fetchedJob.uuid }] });
@@ -107,8 +105,33 @@ const Job: React.FC = () => {
 
   return (
     <div className={classes.root}>
+      {job && job.team && (
+        <>
+          <PageMetadata
+            title={`${job.name}・${job.team.nickname}－牛奶找工作`}
+            description={job.description}
+            image={job.team.logoUrl}
+          />
+          <JobPostingStructuredData
+            uuid={job.uuid}
+            name={job.name}
+            description={job.description || "尚無詳情"}
+            createdAt={job.createdAt}
+            teamName={job.team.name}
+            teamWebsite={job.team.website}
+            teamLogoUrl={job.team.logoUrl}
+            area={job.address.area}
+            subArea={job.address.subArea}
+            street={job.address.street}
+            salaryType={job.salaryType}
+            minSalary={job.minSalary}
+            maxSalary={job.maxSalary}
+            type={job.type}
+          />
+        </>
+      )}
       <Header />
-      {!loading ? (
+      {job ? (
         <div className={classes.container}>
           <div className={classes.infoContainer}>
             <div className={classes.titleContainer}>
