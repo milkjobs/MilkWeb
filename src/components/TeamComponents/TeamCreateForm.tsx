@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { TeamSize } from "@frankyjuang/milkapi-client";
+import { InputAdornment, Theme } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import MenuItem from "@material-ui/core/MenuItem";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import MenuItem from "@material-ui/core/MenuItem";
+import TextField from "@material-ui/core/TextField";
 import { createStyles, makeStyles } from "@material-ui/styles";
-import { TaiwanAreaJSON, SubArea } from "assets/TaiwanAreaJSON";
-import { Theme, InputAdornment } from "@material-ui/core";
-import { Team, TeamSize } from "@frankyjuang/milkapi-client";
-import { useAuth } from "stores";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { useHistory } from "react-router";
+import { SubArea, TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
 import to from "await-to-js";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
+import { useAuth } from "stores";
 
 interface TeamEditFormProps {
   open: boolean;
@@ -30,6 +30,18 @@ const SizeTypes = [
   { value: TeamSize.Large, label: "501 ~ 1000 人" },
   { value: TeamSize.ExtraLarge, label: "1001 人以上" }
 ];
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      display: "flex",
+      flexWrap: "wrap"
+    },
+    menu: {
+      width: 200
+    }
+  })
+);
 
 const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
   const classes = useStyles();
@@ -58,41 +70,41 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
   >();
   const [secondaryField, setSecondaryField] = useState<string>();
 
-  const getFieldTagOptions = async () => {
-    if (unifiedNumber) {
-      setLoading(true);
-      const verificationApiService = await getApi("Verification");
-      const [err, result] = await to(
-        verificationApiService.getCommerce({ unifiedNumber })
-      );
-      result && setFieldTagOptions(result.fields);
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const getFieldTagOptions = async () => {
+      if (unifiedNumber) {
+        setLoading(true);
+        const verificationApiService = await getApi("Verification");
+        const [, result] = await to(
+          verificationApiService.getCommerce({ unifiedNumber })
+        );
+        result && setFieldTagOptions(result.fields);
+        setLoading(false);
+      }
+    };
+
     getFieldTagOptions();
-  }, [unifiedNumber]);
+  }, [unifiedNumber, getApi]);
 
   function isValidGUI(taxId) {
-    var invalidList = "00000000,11111111";
-    if (/^\d{8}$/.test(taxId) == false || invalidList.indexOf(taxId) != -1) {
+    const invalidList = "00000000,11111111";
+    if (!/^\d{8}$/.test(taxId) || invalidList.indexOf(taxId) !== -1) {
       return false;
     }
 
-    var validateOperator = [1, 2, 1, 2, 1, 2, 4, 1],
-      sum = 0,
-      calculate = function(product) {
-        // 個位數 + 十位數
-        var ones = product % 10,
-          tens = (product - ones) / 10;
-        return ones + tens;
-      };
-    for (var i = 0; i < validateOperator.length; i++) {
+    const validateOperator = [1, 2, 1, 2, 1, 2, 4, 1];
+    let sum = 0;
+    const calculate = product => {
+      // 個位數 + 十位數
+      const ones = product % 10;
+      const tens = (product - ones) / 10;
+      return ones + tens;
+    };
+    for (let i = 0; i < validateOperator.length; i++) {
       sum += calculate(taxId[i] * validateOperator[i]);
     }
 
-    return sum % 10 == 0 || (taxId[6] == "7" && (sum + 1) % 10 == 0);
+    return sum % 10 === 0 || (taxId[6] === "7" && (sum + 1) % 10 === 0);
   }
 
   const create = async () => {
@@ -404,17 +416,5 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
     </div>
   );
 };
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: "flex",
-      flexWrap: "wrap"
-    },
-    menu: {
-      width: 200
-    }
-  })
-);
 
 export { TeamCreateForm };

@@ -13,7 +13,7 @@ import {
   TeamWebsite
 } from "components/TeamComponents";
 import { JobList } from "components/JobSearch";
-import { AlgoliaService } from "helpers";
+import { AlgoliaService, PageMetadata } from "helpers";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -212,6 +212,13 @@ const Team: React.FC = () => {
 
   return (
     <div className={classes.root}>
+      {team && (
+        <PageMetadata
+          title={`${team.nickname}－牛奶找工作`}
+          description={team.introduction}
+          image={team.logoUrl}
+        />
+      )}
       <Header />
       {team ? (
         <div className={classes.containerMaster}>

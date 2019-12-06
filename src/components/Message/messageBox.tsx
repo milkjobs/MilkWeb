@@ -1,15 +1,13 @@
-import React, { useState, useRef } from "react";
-import { createStyles, Theme } from "@material-ui/core/styles";
-import Input from "@material-ui/core/Input";
-import { makeStyles } from "@material-ui/core/styles";
-import { Messages } from "components/Message";
-import { useEffect } from "react";
-import { useAuth } from "stores";
-import { uuid4 } from "@sentry/utils";
-import SendBird from "sendbird";
 import Button from "@material-ui/core/Button";
+import Input from "@material-ui/core/Input";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { uuid4 } from "@sentry/utils";
+import { Messages } from "components/Message";
 import { AlertDialog } from "components/Util";
 import { AlertType } from "helpers";
+import React, { useEffect, useRef, useState } from "react";
+import SendBird from "sendbird";
+import { useAuth } from "stores";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

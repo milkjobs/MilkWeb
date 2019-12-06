@@ -1,9 +1,8 @@
 import { MembershipUsageEntry } from "@frankyjuang/milkapi-client";
-import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Icon from "@mdi/react";
 import { mdiEyeCheckOutline } from "@mdi/js";
-import { useTheme } from "stores";
+import Icon from "@mdi/react";
+import React from "react";
 
 const useStyles = makeStyles(theme => ({
   costCard: {
@@ -62,7 +61,7 @@ interface CostEntryProps {
 const CostEntry: React.FC<CostEntryProps> = props => {
   const { entry } = props;
   const classes = useStyles();
-  const { theme } = useTheme();
+
   return (
     <div className={classes.costCard}>
       <div className={classes.costNameContainer}>

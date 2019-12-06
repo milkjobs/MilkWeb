@@ -1,41 +1,29 @@
-import React, { useState, useEffect } from "react";
+import {
+  EducationLevel,
+  ExperienceLevel,
+  Job,
+  SalaryType
+} from "@frankyjuang/milkapi-client";
+import { InputAdornment, Theme } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import MenuItem from "@material-ui/core/MenuItem";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import MenuItem from "@material-ui/core/MenuItem";
+import TextField from "@material-ui/core/TextField";
 import { createStyles, makeStyles } from "@material-ui/styles";
-import { TaiwanAreaJSON, SubArea } from "assets/TaiwanAreaJSON";
-import { Theme, InputAdornment } from "@material-ui/core";
-import {
-  JobType,
-  EducationLevel,
-  ExperienceLevel,
-  SalaryType,
-  Job
-} from "@frankyjuang/milkapi-client";
-import { useAuth } from "stores";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import { SubArea, TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { useAuth } from "stores";
 
 interface JobEditFormProps {
   open: boolean;
   handleClose: () => void;
   job: Job;
 }
-
-const JobTypes = [
-  {
-    value: JobType.Fulltime,
-    label: "正職"
-  },
-  {
-    value: JobType.Internship,
-    label: "實習"
-  }
-];
 
 const EducationLevelTypes = [
   { value: EducationLevel.Any, label: "不限" },
@@ -83,7 +71,7 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
   const [subAreaOptions, setSubAreaOptions] = useState<SubArea[]>([]);
   const [street, setStreet] = useState(job.address.street);
   const [streetErrorMessage, setStreetErrorMessage] = useState<string>();
-  const [salaryType, setSalaryType] = useState<SalaryType>(job.salaryType);
+  const [salaryType] = useState<SalaryType>(job.salaryType);
   const [minSalary, setMinSalary] = useState<number>(job.minSalary);
   const [minSalaryErrorMessage, setMinSalaryErrorMessage] = useState<string>();
   const [maxSalary, setMaxSalary] = useState<number | undefined>(job.maxSalary);
@@ -227,7 +215,7 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
   useEffect(() => {
     if (minSalary && maxSalary && minSalary > maxSalary)
       setMaxSalary(undefined);
-  }, [minSalary]);
+  }, [minSalary, maxSalary]);
 
   useEffect(() => {
     const selectedMainArea = TaiwanAreaJSON.find(a => a.name === area);

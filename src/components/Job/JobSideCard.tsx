@@ -2,8 +2,6 @@ import { PublicUser } from "@frankyjuang/milkapi-client";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import Message from "@material-ui/icons/Message";
-import Visibility from "@material-ui/icons/Visibility";
 import { DownloadAppDialog } from "components/Util";
 import React, { useState } from "react";
 import Sticky from "react-stickynode";

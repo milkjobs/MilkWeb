@@ -1,14 +1,9 @@
+import { Job } from "@frankyjuang/milkapi-client";
 import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import React, { useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
 import Sticky from "react-stickynode";
 import { useAuth } from "stores";
-import { Job } from "@frankyjuang/milkapi-client";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import { JobEditForm } from "./";
 
 const useStyles = makeStyles((theme: Theme) => ({

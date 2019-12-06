@@ -1,5 +1,6 @@
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { ErrorCatcher } from "helpers";
+import logo from "assets/milk.png";
+import { ErrorCatcher, PageMetadata } from "helpers";
 import React from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter, Route, RouteProps, Switch } from "react-router-dom";
@@ -18,6 +19,11 @@ const LoadingRoute: React.FC<RouteProps> = props => {
 const AppRouter: React.FC<{}> = () => {
   return (
     <div className="App">
+      <PageMetadata
+        title="牛奶找工作"
+        description="求職、求才直接聊"
+        image={logo}
+      />
       <BrowserRouter>
         <ErrorCatcher>
           <LoadingRoute path="/" component={PageView} />

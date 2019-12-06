@@ -63,15 +63,6 @@ const RecruitersManagement: React.FC = () => {
   const [qrCodeData, setQrCodeData] = useState<string>();
   const [qrCodeShow, setQrCodeShow] = useState(false);
 
-  const getTeamRecruiters = async () => {
-    if (user && user.recruiterInfo && user.recruiterInfo.team) {
-      const teamApiService = await getApi("Team");
-      const fetchedTeamRecruiters = await teamApiService.getTeamRecruiters({
-        teamId: user.recruiterInfo.team.uuid
-      });
-      fetchedTeamRecruiters && setRecruiters(fetchedTeamRecruiters);
-    }
-  };
   const getInvitationCode = async () => {
     if (user && user.recruiterInfo && user.recruiterInfo.team) {
       const teamApiService = await getApi("Team");
@@ -89,8 +80,18 @@ const RecruitersManagement: React.FC = () => {
   };
 
   useEffect(() => {
+    const getTeamRecruiters = async () => {
+      if (user && user.recruiterInfo && user.recruiterInfo.team) {
+        const teamApiService = await getApi("Team");
+        const fetchedTeamRecruiters = await teamApiService.getTeamRecruiters({
+          teamId: user.recruiterInfo.team.uuid
+        });
+        fetchedTeamRecruiters && setRecruiters(fetchedTeamRecruiters);
+      }
+    };
+
     getTeamRecruiters();
-  }, []);
+  }, [getApi, user]);
 
   return (
     <div className={classes.root}>

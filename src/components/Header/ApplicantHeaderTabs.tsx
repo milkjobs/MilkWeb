@@ -1,7 +1,7 @@
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
-import { DownloadAppDialog, LoginDialog } from "components/Util";
 import { TeamCreateForm } from "components/TeamComponents";
+import { DownloadAppDialog, LoginDialog } from "components/Util";
 import React, { MouseEvent, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "stores";
@@ -59,10 +59,6 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
 
   const hideCreateTeamForm = () => {
     setIsCreateTeamFormOpen(false);
-  };
-
-  const showDownloadAppDialog = () => {
-    setIsDownloadAppDialogOpen(true);
   };
 
   const hideDownloadAppDialog = () => {

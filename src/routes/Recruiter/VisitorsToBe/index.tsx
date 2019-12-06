@@ -7,16 +7,16 @@ import Icon from "@mdi/react";
 import { Header } from "components/Header";
 import React, { useEffect, useState } from "react";
 import {
+  Link,
   Route,
   Switch,
-  useRouteMatch,
-  Link,
-  useLocation
+  useLocation,
+  useRouteMatch
 } from "react-router-dom";
 import { useAuth, useTheme } from "stores";
-import Usage from "./Usage";
-import Purchase from "./Purchase";
 import History from "./History";
+import Purchase from "./Purchase";
+import Usage from "./Usage";
 
 const useTabsStyles = makeStyles(theme => ({
   root: {
@@ -178,7 +178,7 @@ const RecruiterAccount: React.FC = () => {
     return () => {
       window.removeEventListener("message", listener);
     };
-  }, [getApi, user]);
+  }, [getApi, user, location.pathname]);
 
   return (
     <div className={classes.root}>
