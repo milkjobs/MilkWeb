@@ -1,14 +1,14 @@
-import { makeStyles } from "@material-ui/core/styles";
-import { Header } from "components/Header";
-import React, { useEffect, useState } from "react";
 import {
-  MembershipApi,
   Configuration,
+  MembershipApi,
   VisitorPlan
 } from "@frankyjuang/milkapi-client";
-import Icon from "@mdi/react";
+import { makeStyles } from "@material-ui/core/styles";
 import { mdiEyeCheckOutline } from "@mdi/js";
+import Icon from "@mdi/react";
+import { Header } from "components/Header";
 import { apiServiceConfig } from "config";
+import React, { useEffect, useState } from "react";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -70,7 +70,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Charges: React.FC = () => {
+const Pricing: React.FC = () => {
   const classes = useStyles();
   const [visitorPlans, setVisitorPlans] = useState<VisitorPlan[]>();
 
@@ -96,8 +96,8 @@ const Charges: React.FC = () => {
         </h4>
         <div className={classes.plansContainer}>
           {visitorPlans &&
-            visitorPlans.map(p => (
-              <div className={classes.plan}>
+            visitorPlans.map((p, i) => (
+              <div key={i} className={classes.plan}>
                 <div className={classes.visitorToBe}>
                   <Icon
                     path={mdiEyeCheckOutline}
@@ -116,4 +116,4 @@ const Charges: React.FC = () => {
   );
 };
 
-export default Charges;
+export default Pricing;

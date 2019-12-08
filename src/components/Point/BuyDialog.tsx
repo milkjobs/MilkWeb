@@ -120,11 +120,7 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
                 }}
               />
               <div className={classes.info}>以詳閱並同意</div>
-              <Link
-                to={"/help/terms-of-service"}
-                target="_blank"
-                className={classes.link}
-              >
+              <Link to={"/help/tos"} target="_blank" className={classes.link}>
                 服務條款
               </Link>
             </div>

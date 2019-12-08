@@ -49,13 +49,13 @@ const HelpCenter: React.FC = () => {
         <Header />
         <div className={classes.container}>
           <div className={classes.title}>幫助中心</div>
-          <Link to={`${match.path}/privacy-policy`} className={classes.item}>
+          <Link to={`${match.path}/privacy`} className={classes.item}>
             <div>隱私權政策</div>
           </Link>
-          <Link to={`${match.path}/terms-of-service`} className={classes.item}>
+          <Link to={`${match.path}/tos`} className={classes.item}>
             <div>服務條款</div>
           </Link>
-          <Link to={`${match.path}/charges`} className={classes.item}>
+          <Link to={`${match.path}/pricing`} className={classes.item}>
             <div>收費方案</div>
           </Link>
           <Link to={`${match.path}/faq`} className={classes.item}>
