@@ -18,6 +18,23 @@ import { RecruiterHeaderTabs } from "./RecruiterHeaderTabs";
 import { RecruiterProfileMenu } from "./RecruiterProfileMenu";
 
 const useStyles = makeStyles(theme => ({
+  link: {
+    textDecoration: "none",
+    color: "#484848",
+    display: "flex"
+  },
+  tab: {
+    marginLeft: 30,
+    display: "flex",
+    height: "auto",
+    alignItems: "center",
+    color: theme.palette.text.primary,
+    justifyContent: "center",
+    cursor: "pointer",
+    "&:hover": {
+      color: theme.palette.secondary.main
+    }
+  },
   root: {
     width: "100%",
     position: "relative",
@@ -204,6 +221,14 @@ const Header: React.FC<Props> = props => {
               <SearchBar />
             ) : (
               title && <div className={classes.title}>{title}</div>
+            )}
+            {isHome && (
+              <a
+                href={"https://www.facebook.com/themilkjobs"}
+                className={classes.link}
+              >
+                <span className={classes.tab}>關於我們</span>
+              </a>
             )}
 
             <div className={classes.grow} />
