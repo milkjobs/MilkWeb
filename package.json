@@ -71,7 +71,8 @@
     "build-production": "REACT_APP_ENV=production react-scripts --max_old_space_size=12288 build",
     "build-staging": "REACT_APP_ENV=staging react-scripts --max_old_space_size=12288 build",
     "deploy-production": "./deploy.sh E19KDDT43S99QX",
-    "deploy-staging": "firebase deploy --project=staging -m $(git rev-parse --short HEAD)"
+    "deploy-staging": "firebase deploy --project=staging -m $(git rev-parse --short HEAD)",
+    "sitemap": "ts-node-dev sitemap.ts"
   },
   "browserslist": {
     "production": [
@@ -85,5 +86,9 @@
       "last 2 firefox version",
       "last 2 safari version"
     ]
+  },
+  "devDependencies": {
+    "ts-node-dev": "^1.0.0-pre.44",
+    "xmlbuilder": "^13.0.2"
   }
 }
