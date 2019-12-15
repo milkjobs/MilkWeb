@@ -6,7 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import { Dehaze, Search } from "@material-ui/icons";
 import logo from "assets/milk.png";
-import queryString from "query-string";
+import qs from "qs";
 import React, { useState } from "react";
 import Headroom from "react-headroom";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -100,9 +100,12 @@ const SearchBar: React.FC = () => {
   const [query, setQuery] = useState<string>("");
 
   const search = () => {
-    const qs = queryString.parse(location.search);
-    qs.job = query;
-    history.push({ pathname: "/", search: queryString.stringify(qs) });
+    const params = qs.parse(location.search, { ignoreQueryPrefix: true });
+    params.job = query;
+    history.push({
+      pathname: "/",
+      search: qs.stringify(params, { addQueryPrefix: true })
+    });
   };
 
   return (
