@@ -42,6 +42,7 @@
     "prettier": "^1.19.1",
     "prop-types": "^15.7.2",
     "qrcode.react": "^1.0.0",
+    "qs": "^6.9.1",
     "query-string": "^6.8.3",
     "react": "^16.10.2",
     "react-app-polyfill": "^1.0.4",
@@ -88,6 +89,7 @@
     ]
   },
   "devDependencies": {
+    "@types/qs": "^6.9.0",
     "ts-node-dev": "^1.0.0-pre.44",
     "xmlbuilder": "^13.0.2"
   }
