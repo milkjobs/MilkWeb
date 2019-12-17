@@ -8,6 +8,7 @@ import {
   Switch
 } from "react-router-dom";
 import ApplicantProfile from "routes/ApplicantProfile";
+import About from "routes/About";
 import Captcha from "routes/Captcha";
 import HelpRoute from "routes/HelpRoute";
 import Job from "routes/Job";
@@ -49,6 +50,7 @@ const RootRoute: React.FC = () => {
   return (
     <Switch>
       <Route path="/" exact component={JobSearch} />
+      <Route path="/about" exact component={About} />
       <Route path="/help" component={HelpRoute} />
       <Route path="/captcha" component={Captcha} />
       <Route path="/job/:id" exact component={Job} />

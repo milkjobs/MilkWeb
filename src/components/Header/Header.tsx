@@ -226,12 +226,9 @@ const Header: React.FC<Props> = props => {
               title && <div className={classes.title}>{title}</div>
             )}
             {isHome && (
-              <a
-                href={"https://www.facebook.com/themilkjobs"}
-                className={classes.link}
-              >
+              <Link to={"/about"} className={classes.link}>
                 <span className={classes.tab}>關於我們</span>
-              </a>
+              </Link>
             )}
 
             <div className={classes.grow} />

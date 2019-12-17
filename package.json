@@ -61,6 +61,7 @@
     "react-select": "^3.0.8",
     "react-stickynode": "^2.1.1",
     "react-toastify": "^5.4.1",
+    "react-youtube": "^7.9.0",
     "recompose": "^0.30.0",
     "sendbird": "3.0.108",
     "typescript": "^3.6.3",
