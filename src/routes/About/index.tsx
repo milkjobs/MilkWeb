@@ -27,9 +27,13 @@ const useStyles = makeStyles(theme => ({
       marginLeft: "auto"
     }
   },
+  appImage: {
+    width: "70%"
+  },
   iconsContainer: {
     display: "flex",
     marginTop: 60,
+    marginBottom: 100,
     width: 640,
     padding: 40,
     justifyContent: "space-around",
@@ -63,7 +67,7 @@ const About: React.FC = () => {
     width: "640",
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
-      autoplay: 1
+      autoplay: 0
     }
   };
 
@@ -72,7 +76,30 @@ const About: React.FC = () => {
       <div className={classes.root}>
         <Header />
         <div className={classes.container}>
-          <YouTube videoId="T_sZkl-O7Ck" opts={opts} />
+          <img
+            className={classes.appImage}
+            src={
+              "https://drive.google.com/uc?id=15hxpJkRzQ2mV4FHGB1ZJ2EwV8ltJApI3"
+            }
+          />
+          <img
+            className={classes.appImage}
+            src={
+              "https://drive.google.com/uc?id=11FEBCeoAOlol0qEHFQ3u6i0bMSjEIz9O"
+            }
+          />
+          <img
+            className={classes.appImage}
+            src={
+              "https://drive.google.com/uc?id=1deXSAgsJowRk6PP_Ly418kL9Y70kS4FR"
+            }
+          />
+          <img
+            className={classes.appImage}
+            src={
+              "https://drive.google.com/uc?id=1Y_jnBKa0D-SiGxebP1WYxX7HVbgdhQ90"
+            }
+          />
           <div className={classes.iconsContainer}>
             <div className={classes.app} onClick={showDownloadAppDialog}>
               App
@@ -103,6 +130,7 @@ const About: React.FC = () => {
               />
             </a>
           </div>
+          <YouTube videoId="T_sZkl-O7Ck" opts={opts} />
         </div>
         <DownloadAppDialog
           isOpen={isDialogOpen}
