@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import "firebase/analytics";
 import firebase from "firebase/app";
-import queryString from "query-string";
+import qs from "qs";
 import React, { useEffect, useState } from "react";
 import { SearchBoxProvided } from "react-instantsearch-core";
 import { connectSearchBox } from "react-instantsearch-dom";
@@ -43,9 +43,11 @@ const SearchBar: React.FC<SearchBoxProvided> = props => {
   const [query, setQuery] = useState<string>(currentRefinement);
 
   useEffect(() => {
-    const qs = queryString.parse(location.search);
-    if ("job" in qs) {
-      const jobQuery = Array.isArray(qs.job) ? qs.job.join(" ") : qs.job;
+    const params = qs.parse(location.search, { ignoreQueryPrefix: true });
+    if ("job" in params) {
+      const jobQuery = Array.isArray(params.job)
+        ? params.job.join(" ")
+        : params.job;
       refine(jobQuery || "");
       setQuery(jobQuery || "");
       // eslint-disable-next-line @typescript-eslint/camelcase
@@ -54,9 +56,9 @@ const SearchBar: React.FC<SearchBoxProvided> = props => {
   }, [location.search, refine]);
 
   const search = () => {
-    const qs = queryString.parse(location.search);
-    qs.job = query;
-    history.push({ search: queryString.stringify(qs) });
+    const params = qs.parse(location.search, { ignoreQueryPrefix: true });
+    params.job = query;
+    history.push({ search: qs.stringify(params, { addQueryPrefix: true }) });
   };
 
   return (

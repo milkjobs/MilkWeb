@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/auth";
-import queryString from "query-string";
+import qs from "qs";
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import urljoin from "url-join";
@@ -18,10 +18,10 @@ const Captcha: React.FC = () => {
       const token = await captcha.verify();
 
       // Redirect back to app.
-      const qs = queryString.parse(location.search);
-      if (typeof qs.appurl === "string") {
+      const params = qs.parse(location.search, { ignoreQueryPrefix: true });
+      if (typeof params.appurl === "string") {
         window.location.href = urljoin(
-          decodeURIComponent(qs.appurl),
+          decodeURIComponent(params.appurl),
           `?token=${encodeURIComponent(token)}`
         );
       }

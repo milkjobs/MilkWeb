@@ -8,15 +8,17 @@ import {
   Switch
 } from "react-router-dom";
 import ApplicantProfile from "routes/ApplicantProfile";
+import About from "routes/About";
+import Captcha from "routes/Captcha";
 import HelpRoute from "routes/HelpRoute";
 import Job from "routes/Job";
-import Captcha from "routes/Captcha";
 import JobSearch from "routes/JobSearch";
-import Resume from "routes/Resume";
-import Team from "routes/Team";
+import JoinTeam from "routes/JoinTeam";
 import Message from "routes/Message";
-import { useAuth } from "stores";
+import Resume from "routes/Resume";
 import SampleMessage from "routes/SampleMessage";
+import Team from "routes/Team";
+import { useAuth } from "stores";
 
 interface PrivateRouteProps extends RouteProps {
   component:
@@ -48,6 +50,7 @@ const RootRoute: React.FC = () => {
   return (
     <Switch>
       <Route path="/" exact component={JobSearch} />
+      <Route path="/about" exact component={About} />
       <Route path="/help" component={HelpRoute} />
       <Route path="/captcha" component={Captcha} />
       <Route path="/job/:id" exact component={Job} />
@@ -57,8 +60,7 @@ const RootRoute: React.FC = () => {
       <PrivateRoute path="/resume" exact component={Resume} />
       <PrivateRoute path="/message/" exact component={Message} />
       <PrivateRoute path="/message/:id" exact component={Message} />
-      {/* <PrivateRoute path="/create-team" component={CreateTeam} /> */}
-      {/* <PrivateRoute path="/favorite" exact component={JobFavorite} /> */}
+      <PrivateRoute path="/join" exact component={JoinTeam} />
       <Route path="/" component={NotFound} />
     </Switch>
   );
