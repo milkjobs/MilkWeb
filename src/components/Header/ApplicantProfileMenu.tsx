@@ -111,6 +111,7 @@ const ApplicantProfileMenu: React.FC<Props> = props => {
                       onClick={async () => {
                         close();
                         await to(firebase.auth().signOut());
+                        window.localStorage.removeItem("sendbirdCredential");
                       }}
                     >
                       登出

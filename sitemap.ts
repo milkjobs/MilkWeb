@@ -4,6 +4,7 @@ import builder from "xmlbuilder";
 
 const staticPaths = [
   "/",
+  "/about",
   "/help",
   "/help/tos",
   "/help/privacy",

@@ -22,13 +22,13 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     justifyContent: "center",
     [theme.breakpoints.up("md")]: {
-      width: 900,
+      width: "100%",
       marginRight: "auto",
       marginLeft: "auto"
     }
   },
   appImage: {
-    width: "70%"
+    width: "100%"
   },
   iconsContainer: {
     display: "flex",
@@ -79,25 +79,25 @@ const About: React.FC = () => {
           <img
             className={classes.appImage}
             src={
-              "https://drive.google.com/uc?id=15hxpJkRzQ2mV4FHGB1ZJ2EwV8ltJApI3"
+              "https://drive.google.com/uc?id=1u12Nu1cqNDGNA3kvGjWswQpcURhsOpgb"
             }
           />
           <img
             className={classes.appImage}
             src={
-              "https://drive.google.com/uc?id=11FEBCeoAOlol0qEHFQ3u6i0bMSjEIz9O"
+              "https://drive.google.com/uc?id=1RKPOeLNcjrvjZlBDvYJWcZ4P5M-EZHY6"
             }
           />
           <img
             className={classes.appImage}
             src={
-              "https://drive.google.com/uc?id=1deXSAgsJowRk6PP_Ly418kL9Y70kS4FR"
+              "https://drive.google.com/uc?id=1Ob26YmtEofkV1Dclkxz0Xz_EtEFiGRQW"
             }
           />
           <img
             className={classes.appImage}
             src={
-              "https://drive.google.com/uc?id=1Y_jnBKa0D-SiGxebP1WYxX7HVbgdhQ90"
+              "https://drive.google.com/uc?id=1GxwhZ5eIHnM3flMPgv6okxtJ0yjD4oPB"
             }
           />
           <div className={classes.iconsContainer}>
@@ -130,7 +130,7 @@ const About: React.FC = () => {
               />
             </a>
           </div>
-          <YouTube videoId="T_sZkl-O7Ck" opts={opts} />
+          {/* <YouTube videoId="T_sZkl-O7Ck" opts={opts} /> */}
         </div>
         <DownloadAppDialog
           isOpen={isDialogOpen}
