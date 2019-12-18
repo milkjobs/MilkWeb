@@ -67,6 +67,9 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "row",
     alignItems: "center"
+  },
+  free: {
+    color: theme.palette.secondary.main
   }
 }));
 
@@ -91,9 +94,10 @@ const Pricing: React.FC = () => {
       <Header />
       <div className={classes.container}>
         <h1>收費方案</h1>
-        <h4>
-          牛奶找工作，按職缺的點閱人數收費。企業根據自己刊登職缺的需求，選擇購買合適數量的點閱人數。
-        </h4>
+        <h3>牛奶找工作，依職缺的點閱人數收費</h3>
+        <h3>企業根據自己刊登職缺的需求，用多少付多少</h3>
+        <h3>不再有付了錢，卻沒有曝光的窘境</h3>
+        <h3 className={classes.free}>現在加入，立刻送 1000 個免費點閱人數</h3>
         <div className={classes.plansContainer}>
           {visitorPlans &&
             visitorPlans.map((p, i) => (
@@ -110,7 +114,8 @@ const Pricing: React.FC = () => {
               </div>
             ))}
         </div>
-        <h4>登入牛奶找工作，創建公司後，即可在公司後台系統購買。</h4>
+        <h3>登入牛奶找工作，創建公司後，即可在公司後台系統購買。</h3>
+        <h3> * 點閱人數是採不重複計算，一個使用者看10次，只會計算1次</h3>
       </div>
     </div>
   );

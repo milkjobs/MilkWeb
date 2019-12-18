@@ -82,11 +82,11 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
       {isHome &&
         (user && !user.recruiterInfo ? (
           <div onClick={showCreateTeamForm} className={classes.link}>
-            <span className={classes.tab}>發佈職缺</span>
+            <span className={classes.tab}>刊登職缺</span>
           </div>
         ) : (
           <Link to={"/recruiter"} className={classes.link}>
-            <span className={classes.tab}>發佈職缺</span>
+            <span className={classes.tab}>刊登職缺</span>
           </Link>
         ))}
 
