@@ -1,5 +1,5 @@
 import { Team, TeamSize } from "@frankyjuang/milkapi-client";
-import { InputAdornment, Theme } from "@material-ui/core";
+import { InputAdornment } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
@@ -11,6 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import { createStyles, makeStyles } from "@material-ui/styles";
 import { SubArea, TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
 import to from "await-to-js";
+import { TeamSizeOptions } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { useAuth } from "stores";
@@ -21,18 +22,7 @@ interface TeamEditFormProps {
   team: Team;
 }
 
-const SizeTypes = [
-  { value: TeamSize.ExtraSmall, label: "0 ~ 20 人" },
-  {
-    value: TeamSize.Small,
-    label: "21 ~ 100 人"
-  },
-  { value: TeamSize.Medium, label: "101 ~ 500 人" },
-  { value: TeamSize.Large, label: "501 ~ 1000 人" },
-  { value: TeamSize.ExtraLarge, label: "1001 人以上" }
-];
-
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     container: {
       display: "flex",
@@ -316,7 +306,7 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
             }}
             margin="normal"
           >
-            {SizeTypes.map(option => (
+            {TeamSizeOptions.map(option => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>

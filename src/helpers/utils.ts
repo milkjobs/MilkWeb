@@ -11,10 +11,10 @@ const PdfMimeType = "application/pdf";
 const JpgMimeType = "image/jpeg";
 
 const TeamSizeOptions = [
-  { value: TeamSize.ExtraSmall, label: "0~20 人" },
-  { value: TeamSize.Small, label: "21~100 人" },
-  { value: TeamSize.Medium, label: "101~500 人" },
-  { value: TeamSize.Large, label: "501~1000 人" },
+  { value: TeamSize.ExtraSmall, label: "1 ~ 20 人" },
+  { value: TeamSize.Small, label: "21 ~ 100 人" },
+  { value: TeamSize.Medium, label: "101 ~ 500 人" },
+  { value: TeamSize.Large, label: "501 ~ 1000 人" },
   { value: TeamSize.ExtraLarge, label: "1001 人以上" }
 ];
 
