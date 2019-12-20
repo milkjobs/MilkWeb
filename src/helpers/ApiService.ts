@@ -10,7 +10,8 @@ import {
   ProjectApi,
   TeamApi,
   UserApi,
-  VerificationApi
+  VerificationApi,
+  ChannelApi
 } from "@frankyjuang/milkapi-client";
 
 // https://artsy.github.io/blog/2018/11/21/conditional-types-in-typescript/
@@ -31,6 +32,7 @@ export type Apis = {
   Team: TeamApi;
   User: UserApi;
   Verification: VerificationApi;
+  Channel: ChannelApi;
 };
 
 export type TypedApis = Unionize<TagWithType<Apis>>;
