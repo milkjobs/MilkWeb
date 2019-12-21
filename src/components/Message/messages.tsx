@@ -27,7 +27,7 @@ const Messages: React.FC<Props> = props => {
         <Message
           key={i}
           profileUrl={message.sender.profileUrl}
-          message={message.message}
+          message={message}
           fromMe={message.sender.userId === userId}
         />
       );

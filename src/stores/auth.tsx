@@ -13,7 +13,8 @@ import {
   TeamApi,
   User,
   UserApi,
-  VerificationApi
+  VerificationApi,
+  ChannelApi
 } from "@frankyjuang/milkapi-client";
 import { apiServiceConfig } from "config";
 import firebase from "firebase/app";
@@ -94,6 +95,8 @@ export const AuthProvider = ({ children }) => {
       return new UserApi(configuration) as any;
     } else if (type === "Verification") {
       return new VerificationApi(configuration) as any;
+    } else if (type === "Channel") {
+      return new ChannelApi(configuration) as any;
     }
     /* eslint-enable @typescript-eslint/no-explicit-any */
 

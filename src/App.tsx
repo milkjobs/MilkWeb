@@ -20,8 +20,8 @@ const AppRouter: React.FC<{}> = () => {
   return (
     <div className="App">
       <PageMetadata
-        title="牛奶找工作"
-        description="求職、求才直接聊"
+        title="牛奶找工作，求才直接聊"
+        description="牛奶找工作 App 提供最快速、直接的求職求才服務。求職者與公司直接聊、加快面試、即時反饋，隨時隨地都能掌握人才的訊息。"
         image={logo}
       />
       <BrowserRouter>
