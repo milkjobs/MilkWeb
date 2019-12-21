@@ -119,6 +119,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem(item);
     }
     firebase.analytics().setUserId("");
+    window.localStorage.removeItem("sendbirdCredential");
     setIsAuthenticated(false);
     setUserId(null);
     setUser(null);
