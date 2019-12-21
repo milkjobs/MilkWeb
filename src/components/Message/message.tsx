@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { MessageCustomType } from "@frankyjuang/milkapi-client";
 import { useAuth } from "stores";
 import to from "await-to-js";
+import { ResumeDialog } from "components/Util";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,6 +50,14 @@ const Message: React.FC<Props> = props => {
   const { getApi } = useAuth();
   const { fromMe } = props;
   const [resumeUrl, setResumeUrl] = useState<string>();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpen = () => {
+    setIsOpen(true);
+  };
+  const handleClose = () => {
+    setIsOpen(false);
+  };
 
   const getResumeUrl = async () => {
     const data = JSON.parse(props.message.data);
@@ -72,13 +81,14 @@ const Message: React.FC<Props> = props => {
     return !fromMe ? (
       <div className={classes.message}>
         <img alt="" src={props.profileUrl} width={40} height={40} />
-        <a
-          target="_blank"
-          href={resumeUrl}
-          className={classes.resumeMessageBody}
-        >
+        <div onClick={handleOpen} className={classes.resumeMessageBody}>
           {props.message.message}
-        </a>
+        </div>
+        <ResumeDialog
+          isOpen={isOpen}
+          close={handleClose}
+          resumeUrl={resumeUrl}
+        />
       </div>
     ) : (
       <div
@@ -87,14 +97,15 @@ const Message: React.FC<Props> = props => {
         }}
         className={classes.message}
       >
-        <a
-          target="_blank"
-          href={resumeUrl}
-          className={classes.resumeMessageBody}
-        >
+        <div onClick={handleOpen} className={classes.resumeMessageBody}>
           {props.message.message}
-        </a>
+        </div>
         <img alt="" src={props.profileUrl} width={40} height={40} />
+        <ResumeDialog
+          isOpen={isOpen}
+          close={handleClose}
+          resumeUrl={resumeUrl}
+        />
       </div>
     );
   }
