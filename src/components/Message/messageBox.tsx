@@ -99,7 +99,7 @@ const MessageBox: React.FC<Props> = props => {
   >();
   const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
+  const handleNoResumeHintOpen = () => {
     setOpen(true);
   };
 
@@ -189,7 +189,22 @@ const MessageBox: React.FC<Props> = props => {
   };
 
   const sendResume = async () => {
-    if (user && user.profile && !user.profile.resumeKey) handleClickOpen();
+    if (user && user.profile && user.profile.resumeKey) {
+      const sb = SendBird.getInstance();
+      const params = new sb.UserMessageParams();
+      params.customType = "resume";
+      params.data = JSON.stringify({ resumeKey: user.profile?.resumeKey });
+      params.message = "履歷";
+      const message = await sendUserMessage({
+        channel,
+        message: params
+      });
+      messages.current = [message].concat(messages.current);
+      forceUpdate();
+      // scroll to bottom
+      messagesEl.current.scrollTop =
+        messagesEl.current.scrollHeight - messagesEl.current.offsetHeight;
+    } else handleNoResumeHintOpen();
   };
 
   return (
@@ -220,6 +235,7 @@ const MessageBox: React.FC<Props> = props => {
         <Input
           value={input}
           id="standard-multiline-static"
+          autoFocus
           multiline
           rows="4"
           onChange={e => setInput(e.target.value)}

@@ -11,7 +11,13 @@ import {
 } from "@frankyjuang/milkapi-client";
 
 export enum LocalStorageItem {
-  AlgoliaCredential = "AlgoliaCredential"
+  AlgoliaCredential = "AlgoliaCredential",
+  SendbirdCredential = "SendbirdCredential"
+}
+
+export interface ApplicationMetaData {
+  jobId: string;
+  applicantId: string;
 }
 
 export enum MobileOS {

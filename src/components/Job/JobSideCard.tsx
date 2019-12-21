@@ -1,10 +1,20 @@
-import { PublicUser } from "@frankyjuang/milkapi-client";
+import {
+  PublicUser,
+  Team,
+  MessageCustomType
+} from "@frankyjuang/milkapi-client";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { DownloadAppDialog } from "components/Util";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sticky from "react-stickynode";
+import { useChannel } from "stores/channel";
+import { useAuth } from "stores";
+import SendBird from "sendbird";
+import to from "await-to-js";
+import { ApplicationMetaData } from "helpers";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -58,19 +68,137 @@ const useStyles = makeStyles(theme => ({
 interface Props {
   jobId: string;
   recruiter: PublicUser;
+  team?: Team;
 }
 
 const JobSideCard: React.FC<Props> = props => {
-  const { recruiter } = props;
+  const { recruiter, jobId, team } = props;
   const classes = useStyles();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const history = useHistory();
+  const { user, getApi } = useAuth();
+  const { sb } = useChannel();
+  const [channel, setChannel] = useState<SendBird.GroupChannel>();
 
-  const showDownloadAppDialog = () => {
-    setIsDialogOpen(true);
+  const createChannel = async (
+    members: string[],
+    data: Record<string, any>
+  ): Promise<SendBird.GroupChannel> => {
+    return new Promise((resolve, reject) => {
+      const sb = SendBird.getInstance();
+      sb.GroupChannel.createChannelWithUserIds(
+        members,
+        false,
+        members.join("_"),
+        "",
+        JSON.stringify(data),
+        (channel, error) => {
+          error ? reject(error) : resolve(channel);
+        }
+      );
+    });
   };
 
-  const hideDownloadAppDialog = () => {
-    setIsDialogOpen(false);
+  const sendApplicationMessage = async (
+    channel: SendBird.GroupChannel,
+    newApplication: ApplicationMetaData
+  ): Promise<
+    SendBird.UserMessage | SendBird.FileMessage | SendBird.AdminMessage
+  > => {
+    const sb = SendBird.getInstance();
+    const params = new sb.UserMessageParams();
+    params.customType = MessageCustomType.Application;
+    params.message = "職缺詢問";
+    params.data = JSON.stringify(newApplication);
+    return new Promise((resolve, reject) => {
+      channel.sendUserMessage(params, (message, error) => {
+        error ? reject(error) : resolve(message);
+      });
+    });
+  };
+
+  const apply = async () => {
+    if (user && recruiter && sb) {
+      const members = [user.uuid, recruiter.uuid];
+      // Check there is an application or not
+      const filteredQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+      filteredQuery.userIdsIncludeFilter = members;
+      filteredQuery.next(async (groupChannels, error) => {
+        let applicationChannel = groupChannels.find(
+          c =>
+            c.name === members.join("_") &&
+            c.members.some(m => m.userId === user.uuid) &&
+            c.members.some(m => m.userId === recruiter.uuid)
+        );
+        let newMetadata = {};
+        // If not found, create a new channel.
+        if (!applicationChannel) {
+          applicationChannel = await createChannel(members, {
+            teamName: team ? team.nickname : ""
+          });
+          newMetadata = {
+            applicantId: user.uuid,
+            recruiterId: recruiter.uuid,
+            teamName: team && team.nickname,
+            teamId: team && team.uuid
+          };
+        }
+
+        // Add application
+        const channelApi = await getApi("Channel");
+        channelApi.addApplication({
+          newApplication: {
+            applicantUserId: user.uuid,
+            channelUrl: applicationChannel.url,
+            jobId
+          }
+        });
+
+        // Update jobs meta data
+        newMetadata[jobId] = "job";
+        applicationChannel.updateMetaData(newMetadata, true, () => {});
+
+        const [, message] = await to(
+          sendApplicationMessage(applicationChannel, {
+            jobId,
+            applicantId: user.uuid
+          })
+        );
+
+        history.push("/message/" + applicationChannel.url);
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (user && sb) {
+      const recruiterId = recruiter.uuid;
+      const members = [user.uuid, recruiterId];
+      // Check there is an application or not
+      const filteredQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+      filteredQuery.userIdsIncludeFilter = members;
+      filteredQuery.next(function(groupChannels, error) {
+        const applicationChannel = groupChannels.find(
+          c =>
+            c.name === members.join("_") &&
+            c.members.some(m => m.userId === user.uuid) &&
+            c.members.some(m => m.userId === recruiterId)
+        );
+        if (applicationChannel) {
+          applicationChannel.getMetaData([jobId], res => {
+            try {
+              res[jobId] === "job" && setChannel(applicationChannel);
+            } catch (err) {
+              return;
+            }
+          });
+        }
+      });
+    }
+  }, [user, sb]);
+
+  const showDownloadAppDialog = async () => {
+    if (channel) history.push("/message/" + channel.url);
+    else apply();
   };
 
   return (
@@ -89,11 +217,10 @@ const JobSideCard: React.FC<Props> = props => {
             </div>
           </div>
           <Button className={classes.button} onClick={showDownloadAppDialog}>
-            立即詢問
+            {channel ? "繼續詢問" : "詢問"}
           </Button>
         </div>
       </Sticky>
-      <DownloadAppDialog isOpen={isDialogOpen} close={hideDownloadAppDialog} />
     </div>
   );
 };

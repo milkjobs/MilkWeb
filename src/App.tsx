@@ -9,6 +9,7 @@ import RecruiterRoute from "routes/RecruiterRoute";
 import RootRoute from "routes/RootRoute";
 import { AuthProvider, ThemeProvider, useAuth } from "stores";
 import "./App.css";
+import { ChannelProvider } from "stores/channel";
 
 const LoadingRoute: React.FC<RouteProps> = props => {
   const { loading } = useAuth();
@@ -42,8 +43,10 @@ const App: React.FC<{}> = () => {
     <ThemeProvider>
       <HelmetProvider>
         <AuthProvider>
-          <CssBaseline />
-          <AppRouter />
+          <ChannelProvider>
+            <CssBaseline />
+            <AppRouter />
+          </ChannelProvider>
         </AuthProvider>
       </HelmetProvider>
     </ThemeProvider>

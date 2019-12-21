@@ -1,19 +1,14 @@
-import {
-  SendbirdCredential,
-  SendbirdCredentialFromJSON,
-  SendbirdCredentialToJSON
-} from "@frankyjuang/milkapi-client";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import { makeStyles } from "@material-ui/core/styles";
 import { uuid4 } from "@sentry/utils";
 import { Header } from "components/Header";
 import { MessageBox, MessageCard } from "components/Message";
-import { sendbirdConfig } from "config";
 import React, { useEffect, useRef, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import SendBird from "sendbird";
 import { useAuth } from "stores";
+import { useChannel } from "stores/channel";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -55,14 +50,11 @@ const useStyles = makeStyles(theme => ({
 
 const Message: React.FC = () => {
   const classes = useStyles();
-  const { getApi, user } = useAuth();
+  const { user } = useAuth();
+  const { sb } = useChannel();
   const params = useParams<{ id: string }>();
   const history = useHistory();
-  const [sendbirdCredential, setSendbirdCredential] = useState<
-    SendbirdCredential
-  >();
   const [isRecruiter, setIsRecruiter] = useState(false);
-  const [sb, setSb] = useState<SendBird.SendBirdInstance>();
   const [, setChannelsQuery] = useState<SendBird.GroupChannelListQuery>();
 
   const channels = useRef<Array<SendBird.GroupChannel>>([]);
@@ -87,67 +79,23 @@ const Message: React.FC = () => {
   }, [sb]);
 
   useEffect(() => {
-    const getSendbirdCredential = async () => {
-      if (user) {
-        try {
-          const sendbirdCredentialString = window.localStorage.getItem(
-            "sendbirdCredential"
-          );
-          if (sendbirdCredentialString === null) {
-            throw new Error();
+    if (sb) {
+      const channelListQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+      channelListQuery.includeEmpty = true;
+      channelListQuery.order = "latest_last_message";
+      channelListQuery.limit = 15;
+      if (channelListQuery.hasNext) {
+        channelListQuery.next(function(channelList, error) {
+          if (error) {
+            return;
           }
-
-          const sendbirdCredential = SendbirdCredentialFromJSON(
-            JSON.parse(sendbirdCredentialString)
-          );
-          if (sendbirdCredential.expiresAt.getTime() < new Date().getTime()) {
-            throw new Error();
-          }
-
-          setSendbirdCredential(sendbirdCredential);
-        } catch (error) {
-          const userApi = await getApi("User");
-          const sendbirdCredential = await userApi.getSendbirdCredential({
-            userId: user.uuid
-          });
-          setSendbirdCredential(sendbirdCredential);
-          window.localStorage.setItem(
-            "sendbirdCredential",
-            JSON.stringify(SendbirdCredentialToJSON(sendbirdCredential))
-          );
-        }
+          setChannelsQuery(channelListQuery);
+          channels.current = channelList.filter(c => c.members.length === 2);
+          setState({});
+        });
       }
-    };
-
-    getSendbirdCredential();
-  }, [getApi, user]);
-
-  useEffect(() => {
-    if (sendbirdCredential && user) {
-      const sb = new SendBird({ appId: sendbirdConfig.appId });
-      sb.connect(user.uuid, sendbirdCredential.sessionToken, user => {
-        if (user) {
-          setSb(sb);
-          const channelListQuery = sb.GroupChannel.createMyGroupChannelListQuery();
-          channelListQuery.includeEmpty = true;
-          channelListQuery.order = "latest_last_message";
-          channelListQuery.limit = 15;
-          if (channelListQuery.hasNext) {
-            channelListQuery.next(function(channelList, error) {
-              if (error) {
-                return;
-              }
-              setChannelsQuery(channelListQuery);
-              channels.current = channelList.filter(
-                c => c.members.length === 2
-              );
-              setState({});
-            });
-          }
-        }
-      });
     }
-  }, [sendbirdCredential, user]);
+  }, [sb]);
 
   const parseChannel = (channel: SendBird.GroupChannel) => {
     const memberIds = channel.name.split("_");

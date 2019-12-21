@@ -22,10 +22,10 @@ const Messages: React.FC<Props> = props => {
   const messages = props.messages
     .slice()
     .reverse()
-    .map((message, i) => {
+    .map(message => {
       return (
         <Message
-          key={i}
+          key={message.messageId}
           profileUrl={message.sender.profileUrl}
           message={message}
           fromMe={message.sender.userId === userId}

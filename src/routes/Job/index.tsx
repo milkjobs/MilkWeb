@@ -149,7 +149,11 @@ const Job: React.FC = () => {
               </div>
               {job.recruiter && (
                 <div className={classes.descriptionSide}>
-                  <JobSideCard recruiter={job.recruiter} jobId={job.uuid} />
+                  <JobSideCard
+                    recruiter={job.recruiter}
+                    jobId={job.uuid}
+                    team={job.team}
+                  />
                 </div>
               )}
             </div>

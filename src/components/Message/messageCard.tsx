@@ -97,11 +97,13 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.hint
     },
     recentMessage: {
-      marginRight: "auto",
+      width: 250,
       fontSize: 12,
-      justifyContent: "center",
-      alignItems: "center",
-      color: theme.palette.text.primary
+      textAlign: "left",
+      color: theme.palette.text.primary,
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis"
     }
   })
 );

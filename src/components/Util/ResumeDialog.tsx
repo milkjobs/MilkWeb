@@ -11,13 +11,24 @@ interface Props {
 }
 
 const useStyles = makeStyles(theme => ({
+  dialogContent: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+  },
   pdfDocument: {
-    flex: 1,
-    marginLeft: "auto",
-    marginRight: "auto"
+    flex: 1
   },
   pdfPage: {
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.2)"
+  },
+  downloadButton: {
+    backgroundColor: theme.palette.secondary.main,
+    color: theme.palette.secondary.contrastText,
+    borderRadius: 4,
+    textDecoration: "none",
+    padding: 16,
+    marginTop: 32
   }
 }));
 
@@ -28,7 +39,7 @@ const ResumeDialog: React.FC<Props> = props => {
 
   return (
     <Dialog fullWidth maxWidth={"md"} open={isOpen} onClose={close}>
-      <DialogContent>
+      <DialogContent className={classes.dialogContent}>
         {resumeUrl && (
           <Document
             className={classes.pdfDocument}
@@ -50,6 +61,9 @@ const ResumeDialog: React.FC<Props> = props => {
               ))}
           </Document>
         )}
+        <a href={resumeUrl} className={classes.downloadButton}>
+          下載
+        </a>
       </DialogContent>
     </Dialog>
   );
