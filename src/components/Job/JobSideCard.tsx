@@ -6,7 +6,6 @@ import {
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import { DownloadAppDialog } from "components/Util";
 import React, { useState, useEffect } from "react";
 import Sticky from "react-stickynode";
 import { useChannel } from "stores/channel";
@@ -15,6 +14,7 @@ import SendBird from "sendbird";
 import to from "await-to-js";
 import { ApplicationMetaData } from "helpers";
 import { useHistory } from "react-router-dom";
+import { LoginDialog } from "components/Util";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -77,7 +77,16 @@ const JobSideCard: React.FC<Props> = props => {
   const history = useHistory();
   const { user, getApi } = useAuth();
   const { sb } = useChannel();
+  const [loading, setLoading] = useState(false);
   const [channel, setChannel] = useState<SendBird.GroupChannel>();
+  const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
+  const showLoginDialog = () => {
+    setIsLoginDialogOpen(true);
+  };
+
+  const hideLoginDialog = () => {
+    setIsLoginDialogOpen(false);
+  };
 
   const createChannel = async (
     members: string[],
@@ -171,6 +180,7 @@ const JobSideCard: React.FC<Props> = props => {
 
   useEffect(() => {
     if (user && sb) {
+      setLoading(true);
       const recruiterId = recruiter.uuid;
       const members = [user.uuid, recruiterId];
       // Check there is an application or not
@@ -190,13 +200,15 @@ const JobSideCard: React.FC<Props> = props => {
             } catch (err) {
               return;
             }
+            setLoading(false);
           });
-        }
+        } else setLoading(false);
       });
     }
   }, [user, sb]);
 
-  const showDownloadAppDialog = async () => {
+  const chat = async () => {
+    if (!user) showLoginDialog();
     if (channel) history.push("/message/" + channel.url);
     else apply();
   };
@@ -204,6 +216,7 @@ const JobSideCard: React.FC<Props> = props => {
   return (
     <div>
       <div style={{ height: "32px" }}></div>
+      <LoginDialog isOpen={isLoginDialogOpen} close={hideLoginDialog} />
       <Sticky top={32}>
         <div className={classes.card}>
           <div className={classes.recruiterContainer}>
@@ -216,9 +229,11 @@ const JobSideCard: React.FC<Props> = props => {
               <div className={classes.recruiterTitle}>{recruiter.title}</div>
             </div>
           </div>
-          <Button className={classes.button} onClick={showDownloadAppDialog}>
-            {channel ? "繼續詢問" : "詢問"}
-          </Button>
+          {!loading && recruiter.uuid !== user?.uuid && (
+            <Button className={classes.button} onClick={chat}>
+              {channel ? "繼續詢問" : "詢問"}
+            </Button>
+          )}
         </div>
       </Sticky>
     </div>
