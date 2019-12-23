@@ -226,7 +226,9 @@ const JobSideCard: React.FC<Props> = props => {
             />
             <div>
               <div className={classes.recruiterName}>{recruiter.name}</div>
-              <div className={classes.recruiterTitle}>{recruiter.title}</div>
+              <div className={classes.recruiterTitle}>
+                {recruiter.title || "招募員"}
+              </div>
             </div>
           </div>
           {!loading && recruiter.uuid !== user?.uuid && (

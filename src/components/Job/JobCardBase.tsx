@@ -191,7 +191,9 @@ const JobCardBase: React.FC<Props> = props => {
           </div>
         </div>
         <div className={classes.location}>
-          {location + (type === JobType.Internship ? "・實習" : "")}
+          {location +
+            (type === JobType.Internship ? "・實習" : "") +
+            (type === JobType.Parttime ? "・兼職" : "")}
         </div>
       </div>
       {team && (
