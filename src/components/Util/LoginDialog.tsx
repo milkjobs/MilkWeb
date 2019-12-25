@@ -128,7 +128,15 @@ const LoginDialog: React.FC<Props> = props => {
   const recaptchaButton = useCallback(async node => {
     if (node) {
       const recaptchaVerifier = new firebase.auth.RecaptchaVerifier(node, {
-        size: "invisible"
+        size: "invisible",
+        callback: function(response) {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+          // ...
+        },
+        "expired-callback": function() {
+          // Response expired. Ask user to solve reCAPTCHA again.
+          // ...
+        }
       });
       await recaptchaVerifier.render();
       setRecaptcha(recaptchaVerifier);
@@ -146,6 +154,7 @@ const LoginDialog: React.FC<Props> = props => {
             e.preventDefault();
           }}
         >
+          <div ref={recaptchaButton}></div>
           <div className={classes.row}>
             <TextField
               autoComplete="tel"
@@ -184,7 +193,6 @@ const LoginDialog: React.FC<Props> = props => {
               disabled={!countdownCompleted}
               fullWidth={isMobile}
               onClick={sendCode}
-              ref={recaptchaButton}
               type={!codeSent ? "submit" : "button"}
               variant="contained"
             >
