@@ -79,25 +79,37 @@ const About: React.FC = () => {
           <img
             className={classes.appImage}
             src={
-              "https://drive.google.com/uc?id=1u12Nu1cqNDGNA3kvGjWswQpcURhsOpgb"
+              "https://drive.google.com/uc?id=1U9kokrW01T8JksoDAQN21-k80oo_9TWy"
             }
           />
           <img
             className={classes.appImage}
             src={
-              "https://drive.google.com/uc?id=1RKPOeLNcjrvjZlBDvYJWcZ4P5M-EZHY6"
+              "https://drive.google.com/uc?id=1eSOHvfUXxbBoA1ACMOOMUsEizTaIEXh6"
             }
           />
           <img
             className={classes.appImage}
             src={
-              "https://drive.google.com/uc?id=1Ob26YmtEofkV1Dclkxz0Xz_EtEFiGRQW"
+              "https://drive.google.com/uc?id=1HQ2bPvx1AYxMDTN-VaSggevaIjIzFyRL"
             }
           />
           <img
             className={classes.appImage}
             src={
-              "https://drive.google.com/uc?id=1GxwhZ5eIHnM3flMPgv6okxtJ0yjD4oPB"
+              "https://drive.google.com/uc?id=1CcUcfR7MZvvnljcSYKWepkEgenj-4cKk"
+            }
+          />
+          <img
+            className={classes.appImage}
+            src={
+              "https://drive.google.com/uc?id=1aztEr5KR3VZSqjvUnWYsKr_2iZksEQtz"
+            }
+          />
+          <img
+            className={classes.appImage}
+            src={
+              "https://drive.google.com/uc?id=1dYAVCZgh_xarMMbHi3CY9iZHrAoA1ytf"
             }
           />
           <div className={classes.iconsContainer}>
