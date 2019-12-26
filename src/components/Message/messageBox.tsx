@@ -159,6 +159,14 @@ const MessageBox: React.FC<Props> = props => {
     });
   };
 
+  const updateMetaData = ({ channel, metaData }) => {
+    return new Promise((resolve, reject) => {
+      channel.updateMetaData(metaData, true, (res, err) => {
+        err ? reject(err) : resolve(res);
+      });
+    });
+  };
+
   const keyPress = async e => {
     if (e.keyCode === 13) {
       const text = e.target.value.replace(/(\r\n|\n|\r)/gm, "");
@@ -198,6 +206,13 @@ const MessageBox: React.FC<Props> = props => {
       const message = await sendUserMessage({
         channel,
         message: params
+      });
+      // Update resumes meta data
+      await updateMetaData({
+        channel,
+        metaData: {
+          resumeKey: user.profile?.resumeKey
+        }
       });
       messages.current = [message].concat(messages.current);
       forceUpdate();
