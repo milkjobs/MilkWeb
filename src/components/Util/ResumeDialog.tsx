@@ -40,30 +40,34 @@ const ResumeDialog: React.FC<Props> = props => {
   return (
     <Dialog fullWidth maxWidth={"md"} open={isOpen} onClose={close}>
       <DialogContent className={classes.dialogContent}>
-        {resumeUrl && (
-          <Document
-            className={classes.pdfDocument}
-            file={resumeUrl}
-            loading="載入中"
-            noData="無法載入履歷"
-            onLoadSuccess={doc => {
-              setNumPages(doc.numPages);
-            }}
-          >
-            {numPages &&
-              Array.from({ length: numPages }, (v, k) => k).map(x => (
-                <Page
-                  key={x}
-                  pageIndex={x}
-                  className={classes.pdfPage}
-                  width={900}
-                />
-              ))}
-          </Document>
+        {resumeUrl ? (
+          <>
+            <Document
+              className={classes.pdfDocument}
+              file={resumeUrl}
+              loading="載入中"
+              noData="無法載入履歷"
+              onLoadSuccess={doc => {
+                setNumPages(doc.numPages);
+              }}
+            >
+              {numPages &&
+                Array.from({ length: numPages }, (v, k) => k).map(x => (
+                  <Page
+                    key={x}
+                    pageIndex={x}
+                    className={classes.pdfPage}
+                    width={900}
+                  />
+                ))}
+            </Document>
+            <a href={resumeUrl} className={classes.downloadButton}>
+              下載
+            </a>
+          </>
+        ) : (
+          <div>{"連結已經失效"}</div>
         )}
-        <a href={resumeUrl} className={classes.downloadButton}>
-          下載
-        </a>
       </DialogContent>
     </Dialog>
   );

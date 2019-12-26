@@ -7,8 +7,7 @@ import { MessageBox, MessageCard } from "components/Message";
 import React, { useEffect, useRef, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import SendBird from "sendbird";
-import { useAuth } from "stores";
-import { useChannel } from "stores/channel";
+import { useAuth, useChannel } from "stores";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -58,8 +57,14 @@ const Message: React.FC = () => {
   const [, setChannelsQuery] = useState<SendBird.GroupChannelListQuery>();
 
   const channels = useRef<Array<SendBird.GroupChannel>>([]);
-  const [selectedChannelId, setSelectedChannelId] = useState<string>(params.id);
+  const [selectedChannelId, setSelectedChannelId] = useState<
+    string | undefined
+  >(params.id);
   const [, setState] = useState();
+
+  useEffect(() => {
+    setSelectedChannelId(undefined);
+  }, [isRecruiter]);
 
   function onChannelChanged(channel) {
     const newGroupChannelList = channels.current.filter(
@@ -185,9 +190,11 @@ const Message: React.FC = () => {
                     teamName={""}
                     selected={c.url === selectedChannelId}
                     unreadMessageCount={
-                      channels.current[index].unreadMessageCount
+                      channelsFilter(channels.current)[index].unreadMessageCount
                     }
-                    lastMessage={channels.current[index].lastMessage}
+                    lastMessage={
+                      channelsFilter(channels.current)[index].lastMessage
+                    }
                   />
                 </div>
               );

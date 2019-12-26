@@ -6,13 +6,15 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { ImageMimeType } from "helpers";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import { createStyles, makeStyles } from "@material-ui/styles";
 import { SubArea, TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
 import to from "await-to-js";
 import { TeamSizeOptions } from "helpers";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import { useHistory } from "react-router";
 import { useAuth } from "stores";
 
@@ -30,6 +32,14 @@ const useStyles = makeStyles(() =>
     },
     menu: {
       width: 200
+    },
+    logo: {
+      width: 50,
+      height: 50
+    },
+    button: {
+      marginLeft: 16,
+      maxWidth: 300
     }
   })
 );
@@ -207,6 +217,39 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
     setDeleteDialogOpen(false);
   };
 
+  const uploadLogo = useCallback(
+    async (files: File[] | FileList) => {
+      if (files.length === 0) {
+        return;
+      }
+      if (!user || !user.recruiterInfo || !user.recruiterInfo.team) {
+        return;
+      }
+
+      const file = files[0];
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("檔案過大，大小上限為 5MB");
+        return;
+      }
+
+      const teamApi = await getApi("Team");
+      const [err] = await to(
+        teamApi.uploadTeamLogo({
+          teamId: user.recruiterInfo.team.uuid,
+          file,
+          filename: file.name
+        })
+      );
+      if (err) {
+        toast.error("上傳失敗，請稍後再試");
+        return;
+      }
+      toast.success("上傳成功");
+      await reloadUser();
+    },
+    [getApi, reloadUser, user]
+  );
+
   return (
     <div>
       <Dialog
@@ -218,6 +261,33 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
       >
         <DialogTitle id="form-dialog-title">編輯公司</DialogTitle>
         <DialogContent>
+          <div style={{ display: "flex" }}>
+            <img src={team.logoUrl} className={classes.logo} />
+            <input
+              hidden
+              accept={ImageMimeType}
+              id="contained-button-file"
+              onChange={e => {
+                e.target.files && uploadLogo(e.target.files);
+              }}
+              type="file"
+            />
+            <label htmlFor="contained-button-file">
+              <Button
+                className={classes.button}
+                color={"primary"}
+                component="span"
+              >
+                上傳Logo
+              </Button>
+            </label>
+            <ToastContainer
+              position={ToastPosition.BOTTOM_CENTER}
+              draggable={false}
+              hideProgressBar
+              transition={Slide}
+            />
+          </div>
           <div style={{ display: "flex" }}>
             <TextField
               style={{ marginRight: 4 }}

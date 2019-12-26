@@ -8,10 +8,13 @@ import { useAuth } from "./auth";
 import {
   SendbirdCredentialFromJSON,
   SendbirdCredential,
-  SendbirdCredentialToJSON
+  SendbirdCredentialToJSON,
+  ChannelCustomType
 } from "@frankyjuang/milkapi-client";
+import uuidv4 from "uuid/v4";
 
 interface ChannelContextProps {
+  unreadMessageCount?: number;
   sb?: SendBird.SendBirdInstance;
 }
 
@@ -20,10 +23,12 @@ const ChannelContext = createContext<ChannelContextProps>({});
 export const useChannel = () => useContext(ChannelContext);
 
 export const ChannelProvider = ({ children }) => {
-  const { user, getApi } = useAuth();
+  const { user, getApi, reloadUser } = useAuth();
   const [sendbirdCredential, setSendbirdCredential] = useState<
     SendbirdCredential
   >();
+  const [channelHandlerId, setChannelHandlerId] = useState<string>();
+  const [unreadMessageCount, setUnreadMessageCount] = useState(0);
   const [sb, setSb] = useState<SendBird.SendBirdInstance>();
   const getSendbirdCredential = async () => {
     if (user) {
@@ -57,9 +62,43 @@ export const ChannelProvider = ({ children }) => {
     }
   };
 
+  const onMessageReceived: SendBird.ChannelHandler["onMessageReceived"] = (
+    c,
+    m
+  ) => {
+    sb?.getTotalUnreadMessageCount((count, error) => {
+      setUnreadMessageCount(count);
+    });
+    if (c.customType === ChannelCustomType.System) {
+      reloadUser();
+    }
+  };
+
+  const registerHandler = (handler: SendBird.ChannelHandler) => {
+    const channelHandlerId = uuidv4();
+    sb?.addChannelHandler(channelHandlerId, handler);
+    return channelHandlerId;
+  };
+  const removeChannelHandler = (channelHandlerId: string) => {
+    sb?.removeChannelHandler(channelHandlerId);
+  };
+
   useEffect(() => {
     getSendbirdCredential();
+    !user && channelHandlerId && removeChannelHandler(channelHandlerId);
   }, [user]);
+
+  useEffect(() => {
+    if (sb) {
+      const newHandler = new sb.ChannelHandler();
+      newHandler.onMessageReceived = onMessageReceived;
+      setChannelHandlerId(registerHandler(newHandler));
+      sb.getTotalUnreadMessageCount((count, error) => {
+        setUnreadMessageCount(count);
+      });
+    }
+  }, [sb]);
+
   useEffect(() => {
     if (user && sendbirdCredential) {
       const sb = new SendBird({ appId: sendbirdConfig.appId });
@@ -69,6 +108,8 @@ export const ChannelProvider = ({ children }) => {
     } else window.localStorage.removeItem(LocalStorageItem.SendbirdCredential);
   }, [sendbirdCredential]);
   return (
-    <ChannelContext.Provider value={{ sb }}>{children}</ChannelContext.Provider>
+    <ChannelContext.Provider value={{ sb, unreadMessageCount }}>
+      {children}
+    </ChannelContext.Provider>
   );
 };

@@ -8,7 +8,8 @@ import {
 import { MobileOS } from "helpers";
 
 const PdfMimeType = "application/pdf";
-const JpgMimeType = "image/jpeg";
+const ImageMimeType = "image/*";
+const ImagePdfMimeType = "image/*,application/pdf";
 
 const TeamSizeOptions = [
   { value: TeamSize.ExtraSmall, label: "1 ~ 20 人" },
@@ -173,7 +174,8 @@ export {
   JobTypeOptions,
   openInNewTab,
   PdfMimeType,
-  JpgMimeType,
+  ImageMimeType,
+  ImagePdfMimeType,
   salaryNumberToString,
   salaryStringToNumber,
   SalaryTypeToWord,

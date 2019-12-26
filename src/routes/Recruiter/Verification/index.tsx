@@ -3,11 +3,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import to from "await-to-js";
 import { Header } from "components/Header";
 import { DownloadAppDialog } from "components/Util";
-import { JpgMimeType } from "helpers";
+import { ImagePdfMimeType } from "helpers";
 import React, { useCallback, useState } from "react";
 import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "stores";
+import { VerificationState } from "@frankyjuang/milkapi-client";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,6 +25,9 @@ const useStyles = makeStyles(theme => ({
     fontSize: 18,
     marginTop: 40,
     marginBottom: 100
+  },
+  status: {
+    marginTop: 32
   },
   button: {
     marginTop: 16,
@@ -102,9 +106,26 @@ const Verification: React.FC = () => {
           {"【統編、公司名稱、公司地址】須清楚拍攝。"}
         </div>
         <div>
+          {user &&
+            user.recruiterInfo &&
+            user.recruiterInfo.team &&
+            user.recruiterInfo.team.certificateVerified ===
+              VerificationState.Processing && (
+              <div className={classes.status}>{"審核中"}</div>
+            )}
+          {user &&
+            user.recruiterInfo &&
+            user.recruiterInfo.team &&
+            user.recruiterInfo.team.certificateVerified ===
+              VerificationState.Failed && (
+              <div className={classes.status}>
+                {"審核失敗：" +
+                  user.recruiterInfo.team.certificateVerificationReason}
+              </div>
+            )}
           <input
             hidden
-            accept={JpgMimeType}
+            accept={ImagePdfMimeType}
             id="contained-button-file"
             onChange={e => {
               e.target.files && upload(e.target.files);
@@ -118,7 +139,7 @@ const Verification: React.FC = () => {
               component="span"
               variant={"contained"}
             >
-              上傳JPG
+              上傳
             </Button>
           </label>
           <Button

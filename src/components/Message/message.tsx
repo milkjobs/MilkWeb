@@ -77,7 +77,7 @@ const Message: React.FC<Props> = props => {
     }
   }, []);
 
-  if (resumeUrl) {
+  if (props.message.customType === MessageCustomType.Resume) {
     return !fromMe ? (
       <div className={classes.message}>
         <img alt="" src={props.profileUrl} width={40} height={40} />
