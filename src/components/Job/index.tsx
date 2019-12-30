@@ -9,3 +9,4 @@ export * from "./JobTitle";
 export * from "./RecruiterJobSideCard";
 export * from "./JobCreateForm";
 export * from "./JobEditForm";
+export * from "./JobStat"
