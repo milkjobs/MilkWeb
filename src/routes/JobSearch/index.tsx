@@ -12,6 +12,8 @@ import React, { useEffect, useState } from "react";
 import { Configure, InstantSearch } from "react-instantsearch-dom";
 import { useInView } from "react-intersection-observer";
 import { useAuth } from "stores";
+import { Link } from "react-router-dom";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -88,6 +90,19 @@ const useStyles = makeStyles(theme => ({
   },
   iconButton: {
     padding: 10
+  },
+  schoolContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 16
+  },
+  schoolTitle: {
+    fontWeight: 800,
+    marginRight: 16
+  },
+  majorButton: {
+    textDecoration: "none"
   }
 }));
 
@@ -128,6 +143,15 @@ const JobSearch: React.FC = () => {
     <div className={classes.root}>
       <Header hideSearchBar={hideHeaderSearchBar} />
       <div className={classes.container}>
+        <div className={classes.schoolContainer}>
+          <div className={classes.schoolTitle}>台大就業專區</div>
+          <Link to={"/ntu"} className={classes.majorButton}>
+            <Button>台大電機</Button>
+          </Link>
+          <Link to={"/ntu"} className={classes.majorButton}>
+            <Button>台大資工</Button>
+          </Link>
+        </div>
         {algoliaClient ? (
           <InstantSearch
             indexName={algoliaConfig.index}

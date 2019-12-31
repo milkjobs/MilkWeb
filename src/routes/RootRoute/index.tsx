@@ -16,6 +16,7 @@ import JobSearch from "routes/JobSearch";
 import JoinTeam from "routes/JoinTeam";
 import Message from "routes/Message";
 import Resume from "routes/Resume";
+import SchoolRecommend from "routes/SchoolRecommend";
 import SampleMessage from "routes/SampleMessage";
 import Team from "routes/Team";
 import { useAuth } from "stores";
@@ -56,6 +57,7 @@ const RootRoute: React.FC = () => {
       <Route path="/job/:id" exact component={Job} />
       <Route path="/team/:id" exact component={Team} />
       <Route path="/sample-message" exact component={SampleMessage} />
+      <Route path="/ntu" exact component={SchoolRecommend} />
       <PrivateRoute path="/profile" exact component={ApplicantProfile} />
       <PrivateRoute path="/resume" exact component={Resume} />
       <PrivateRoute path="/message/" exact component={Message} />
