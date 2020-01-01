@@ -145,10 +145,16 @@ const JobSearch: React.FC = () => {
       <div className={classes.container}>
         <div className={classes.schoolContainer}>
           <div className={classes.schoolTitle}>台大就業專區</div>
-          <Link to={"/ntu"} className={classes.majorButton}>
+          <Link
+            to={{ pathname: "/ntu", search: "?major=ee" }}
+            className={classes.majorButton}
+          >
             <Button>台大電機</Button>
           </Link>
-          <Link to={"/ntu"} className={classes.majorButton}>
+          <Link
+            to={{ pathname: "/ntu", search: "?major=cs" }}
+            className={classes.majorButton}
+          >
             <Button>台大資工</Button>
           </Link>
         </div>
