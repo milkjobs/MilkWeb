@@ -41,6 +41,8 @@ const useStyles = makeStyles(theme => ({
   },
   description: {
     display: "flex",
+    whiteSpace: "pre-line",
+    textAlign: "left",
     flex: 1,
     fontSize: 16,
     marginTop: 32,
@@ -204,11 +206,9 @@ const ApplicantBasicInfo: React.FC<Props> = props => {
         </div>
       </div>
       <div className={classes.description}>
-        <div>
-          {user && user.profile && user.profile.introduction
-            ? user.profile.introduction
-            : "尚無描述"}
-        </div>
+        {user && user.profile && user.profile.introduction
+          ? user.profile.introduction
+          : "尚無描述"}
       </div>
       <EditDialog isOpen={isDialogOpen} close={closeDialog} />
     </div>

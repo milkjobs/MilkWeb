@@ -39,6 +39,12 @@ const useStyles = makeStyles((theme: Theme) =>
       cursor: "pointer",
       alignItems: "flex-start"
     },
+    userIntroduction: {
+      marginTop: 8,
+      maxWidth: 300,
+      whiteSpace: "pre-line",
+      textAlign: "left"
+    },
     jobCard: {
       paddingTop: 16,
       paddingBottom: 16,
@@ -90,7 +96,9 @@ const ApplicationMessage: React.FC<Props> = props => {
         {applicant && (
           <div className={classes.userCard}>
             <div>{applicant.name}</div>
-            <div>{applicant.profile?.introduction || "尚無自我介紹"}</div>
+            <div className={classes.userIntroduction}>
+              {applicant.profile?.introduction || "尚無自我介紹"}
+            </div>
           </div>
         )}
         {job && (
@@ -123,7 +131,9 @@ const ApplicationMessage: React.FC<Props> = props => {
             onClick={() => history.push("/profile")}
           >
             <div>{applicant.name}</div>
-            <div>{applicant.profile?.introduction || "尚無自我介紹"}</div>
+            <div className={classes.userIntroduction}>
+              {applicant.profile?.introduction || "尚無自我介紹"}
+            </div>
           </div>
         )}
         {job && (
