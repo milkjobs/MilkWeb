@@ -76,6 +76,7 @@ const Message: React.FC = () => {
 
   useEffect(() => {
     if (sb) {
+      setSelectedChannelId(params.id);
       const handler = new sb.ChannelHandler();
       handler.onChannelChanged = onChannelChanged;
       const channelHandlerId = uuid4();

@@ -9,7 +9,6 @@ import PageView from "routes/PageView";
 import RecruiterRoute from "routes/RecruiterRoute";
 import RootRoute from "routes/RootRoute";
 import { AuthProvider, ThemeProvider, useAuth } from "stores";
-import { ChannelProvider } from "stores/channel";
 import "./App.css";
 
 const LoadingRoute: React.FC<RouteProps> = props => {
@@ -50,10 +49,8 @@ const App: React.FC<{}> = () => {
     <ThemeProvider>
       <HelmetProvider>
         <AuthProvider>
-          <ChannelProvider>
-            <CssBaseline />
-            <AppRouter />
-          </ChannelProvider>
+          <CssBaseline />
+          <AppRouter />
         </AuthProvider>
       </HelmetProvider>
     </ThemeProvider>

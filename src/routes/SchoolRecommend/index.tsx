@@ -12,6 +12,8 @@ interface Company {
   key: string;
   logoUrl: string;
   link: string;
+  size: number;
+  income: number;
   description: string;
 }
 
@@ -23,8 +25,11 @@ const majorDict = {
         name: "華碩",
         key: "1",
         logoUrl: "https://www.asus.com/media/img/2017/images/n-logo-asus.svg",
-        link: "https://hr-recruit.asus.com/",
-        description: "華碩電腦"
+        link: "http://ehr.asus.com/",
+        size: 14000,
+        income: 3500,
+        description:
+          "產品包括家用與商務用桌上型電腦、筆記型電腦、行動電話、網路設備、多媒體產品、平板電腦等等。同時也是一家 OEM 製造商。目前正在積極尋找「電腦視覺、語音辨識、自然語言處理等AI應用」之人才。"
       },
       {
         name: "台積電",
@@ -32,30 +37,40 @@ const majorDict = {
         logoUrl: "https://www.tsmc.com/img/logo.png",
         link:
           "https://tsmc.taleo.net/careersection/tsmc_exti/jobdetail.ftl?job=1900008Z&lang=zh_TW",
-        description: "世界第一的半導體設計廠"
+        size: 40000,
+        income: 10000,
+        description:
+          "率先開創了專業積體電路製造服務之商業模式，並一直是全球最大的專業積體電路製造服務公司。尋找研發工程師、IC設計工程師、資訊技術工程師等等。"
       },
       {
         name: "聯發科",
         key: "3",
         logoUrl: "https://cdn-www.mediatek.com/icons/mtklogo.svg",
         link: "https://careers.mediatek.com/eREC/?langKey=zh-TW&langKey=zh-TW",
+        size: 10000,
+        income: 2380,
         description:
-          "無線通訊、高清電視、5G提供系统晶片解決方案的無廠半導體公司"
+          "核心業務包括行動通訊、智慧家庭與車用電子，著重於研發適用於這三種平台的晶片組核心技術。尋找IC設計工程師、電腦視覺工程師等等。"
       },
       {
         name: "聯詠科技",
         key: "4",
         logoUrl: "http://www.novatek.com.tw/templates/default/images/logo.png",
-        link: "https://www.104.com.tw/company/12nopku0?jobsource=n104bank1",
-        description: "聯詠科技為國內IC設計領導廠商，從事產品設計，研發及銷售。"
+        link: "http://www.novatek.com.tw/zh-TW/Html/hr_overview",
+        size: 2000,
+        income: 550,
+        description:
+          "全球平面顯示螢幕驅動IC領導廠商，產品成功獲得國際知名平面顯示器供應商之採用。尋找IC設計工程師、系統應用工程師、演算法工程師等等。"
       },
       {
         name: "瑞昱半導體",
         key: "5",
         logoUrl: "https://www.realtek.com/images/realtek_logo.png",
         link: "https://recruit.realtek.com/zh/",
+        size: 4000,
+        income: 450,
         description:
-          "憑藉著7位創始工程師的熱情與毅力，走過風雨飄搖的草創時期，我們不僅堅持信念，努力執著鑽研，更洞悉市場需求，因而造就了今日的瑞昱，成為國際知名IC專業設計公司。"
+          "主要產品為網路晶片、音訊晶片、螢幕控制晶片與無線超寬頻晶片。尋找IC設計工程師等等"
       },
       {
         name: "立錡科技",
@@ -63,6 +78,8 @@ const majorDict = {
         logoUrl:
           "https://richtek.referrals.selectminds.com/media/client_3_s2_r0_v1524817811639_main.png",
         link: "https://richtek.referrals.selectminds.com/jobs/search/27768",
+        size: 1000,
+        income: 100,
         description:
           "國際級的電源管理IC設計公司。專注於提供客戶最多元且最具競爭力的電源管理IC產品以及完整的電源解決方案。"
       },
@@ -72,7 +89,10 @@ const majorDict = {
         logoUrl:
           "http://thearea.org/wp-content/uploads/2019/03/qc_logo_dml_rgb_blu_pos.png",
         link: "https://jobs.qualcomm.com/public/search.xhtml",
-        description: "位於美國加州聖地牙哥的無線電通信技術研發公司。"
+        size: 35000,
+        income: 6500,
+        description:
+          "全球CDMA與無線技術領導廠，全球前二大手機晶片廠商，從事設計、開發、製造及銷售數位通訊產品，業務涵蓋技術領先的3G、4G晶片組、系統軟體以及開發工具和產品。尋找系統應用工程師、軟體工程師、RF通訊工程師等等。"
       },
       {
         name: "奇景光電",
@@ -80,7 +100,10 @@ const majorDict = {
         logoUrl:
           "https://img.technews.tw/wp-content/uploads/2015/01/Hima-logo.jpg",
         link: "https://www.himax.com.tw/zh/company/careers/",
-        description: "專注於影像顯示處理技術之IC設計公司。"
+        size: 2000,
+        income: 250,
+        description:
+          "專注於影像顯示處理技術之IC設計公司，產品應用於全球各種消費性電子品牌。尋找IC設計工程師、系統應用工程師、演算法工程師等等"
       },
       {
         name: "宏碁",
@@ -88,8 +111,10 @@ const majorDict = {
         logoUrl:
           "https://c.share.photo.xuite.net/yuan6133/1cd27e2/7253464/279601162_m.jpg",
         link: "https://www.acer.com/ac/zh/TW/content/global-recruiting",
+        size: 7000,
+        income: 3000,
         description:
-          "Acer 的產品範圍涵蓋筆記型電腦、桌上型電腦、平板電腦、智慧型手機、顯示器、投影機以及雲端解決方案，適合家庭使用者、企業、政府與教育機構使用。"
+          "產品範圍涵蓋個人電腦、電競產品、虛擬實境裝置、平板電腦、智慧型手機、顯示器、投影機以及雲端解決方案，適合家庭使用者、企業、政府與教育機構使用。"
       },
       {
         name: "HTC",
@@ -547,6 +572,14 @@ const useStyles = makeStyles(theme => ({
       marginLeft: 8
     }
   },
+  info: {
+    fontSize: 16,
+    color: theme.palette.text.secondary,
+    textAlign: "left",
+    [theme.breakpoints.down("xs")]: {
+      marginLeft: 8
+    }
+  },
   description: {
     marginTop: 16,
     fontSize: 18,
@@ -566,6 +599,17 @@ const useStyles = makeStyles(theme => ({
 const CompanyCard: React.FC<Company> = props => {
   const classes = useStyles();
   const matched = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
+
+  const sizeToWord = (size: number) => {
+    if (size >= 10000) return ` ${size / 10000} 萬人`;
+    else return ` ${size} 人`;
+  };
+
+  const incomeToWord = (income: number) => {
+    if (income >= 10000) return `營收約 ${income / 10000} 兆新台幣`;
+    else return `營收約 ${income} 億新台幣`;
+  };
+
   return (
     <div
       className={classes.companyCardContainer}
@@ -575,7 +619,14 @@ const CompanyCard: React.FC<Company> = props => {
       <div className={classes.nameContainer}>
         <div className={classes.iconContainer}>
           {matched && <img src={props.logoUrl} className={classes.logo} />}
-          <div className={classes.title}>{props.name}</div>
+          <div>
+            <div className={classes.title}>{props.name}</div>
+            <div className={classes.info}>
+              {`${props.size ? sizeToWord(props.size) : ""}   ${
+                props.income ? incomeToWord(props.income) : ""
+              }`}
+            </div>
+          </div>
         </div>
         <div className={classes.description}>{props.description}</div>
       </div>

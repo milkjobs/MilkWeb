@@ -19,7 +19,7 @@ import Resume from "routes/Resume";
 import SchoolRecommend from "routes/SchoolRecommend";
 import SampleMessage from "routes/SampleMessage";
 import Team from "routes/Team";
-import { useAuth } from "stores";
+import { useAuth, ChannelProvider } from "stores";
 
 interface PrivateRouteProps extends RouteProps {
   component:
@@ -47,6 +47,17 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   );
 };
 
+const MessageRoute: React.FC = () => {
+  return (
+    <ChannelProvider>
+      <Switch>
+        <PrivateRoute path="/message/:id" exact component={Message} />
+        <PrivateRoute path="/message/" exact component={Message} />
+      </Switch>
+    </ChannelProvider>
+  );
+};
+
 const RootRoute: React.FC = () => {
   return (
     <Switch>
@@ -60,8 +71,7 @@ const RootRoute: React.FC = () => {
       <Route path="/ntu" exact component={SchoolRecommend} />
       <PrivateRoute path="/profile" exact component={ApplicantProfile} />
       <PrivateRoute path="/resume" exact component={Resume} />
-      <PrivateRoute path="/message/" exact component={Message} />
-      <PrivateRoute path="/message/:id" exact component={Message} />
+      <PrivateRoute path="/message/" component={MessageRoute} />
       <PrivateRoute path="/join" exact component={JoinTeam} />
       <Route path="/" component={NotFound} />
     </Switch>

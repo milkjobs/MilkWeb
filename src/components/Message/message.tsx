@@ -5,6 +5,7 @@ import { MessageCustomType } from "@frankyjuang/milkapi-client";
 import { useAuth } from "stores";
 import to from "await-to-js";
 import { ResumeDialog } from "components/Util";
+import { ApplicationMessage } from "./applicationMessage";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,6 +77,10 @@ const Message: React.FC<Props> = props => {
       getResumeUrl();
     }
   }, []);
+
+  if (props.message.customType === MessageCustomType.Application) {
+    return <ApplicationMessage {...props} />;
+  }
 
   if (props.message.customType === MessageCustomType.Resume) {
     return !fromMe ? (

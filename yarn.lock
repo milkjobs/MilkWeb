@@ -1315,9 +1315,9 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.2.33.tgz#183d14d987de0af0b2a6ec9728665c5d08aaf500"
   integrity sha512-xfYZ1Z2CY7YRUJzXRS+nR1HKhxmGItdmGl7SmhhpuX89MXiTP9zjoa65asdSwDwTfCK8vALvya5pl2ecbQAZQg==
 
-"@frankyjuang/milkapi-client@git+ssh://git@github.com/frankyjuang/MilkAPI-Client.git#2.6.0":
-  version "2.6.0"
-  resolved "git+ssh://git@github.com/frankyjuang/MilkAPI-Client.git#0f298e5190691f461385b20e3b5c285a6e25def8"
+"@frankyjuang/milkapi-client@git+ssh://git@github.com/frankyjuang/MilkAPI-Client.git#2.10.0":
+  version "2.10.0"
+  resolved "git+ssh://git@github.com/frankyjuang/MilkAPI-Client.git#618aa0fbad57604e654c00107d970b19868909a0"
 
 "@grpc/proto-loader@^0.5.0":
   version "0.5.3"
