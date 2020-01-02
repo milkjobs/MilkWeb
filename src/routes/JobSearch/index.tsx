@@ -144,15 +144,15 @@ const JobSearch: React.FC = () => {
       <Header hideSearchBar={hideHeaderSearchBar} />
       <div className={classes.container}>
         <div className={classes.schoolContainer}>
-          <div className={classes.schoolTitle}>台大就業專區</div>
+          <div className={classes.schoolTitle}>就業精選</div>
           <Link
-            to={{ pathname: "/ntu", search: "?major=ee" }}
+            to={{ pathname: "/awesome/台大電機" }}
             className={classes.majorButton}
           >
             <Button>台大電機</Button>
           </Link>
           <Link
-            to={{ pathname: "/ntu", search: "?major=cs" }}
+            to={{ pathname: "/awesome/台大資工" }}
             className={classes.majorButton}
           >
             <Button>台大資工</Button>

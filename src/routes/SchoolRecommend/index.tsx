@@ -1,13 +1,18 @@
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Header } from "components/Header";
 import React, { useEffect, useState } from "react";
-import qs from "qs";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import { openInNewTab, checkUrl } from "helpers";
 import { useMediaQuery } from "@material-ui/core";
 import { useAuth } from "stores";
 import { AwesomeList } from "@frankyjuang/milkapi-client";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 interface Company {
   name: string;
@@ -54,6 +59,12 @@ const useStyles = makeStyles(theme => ({
   },
   majorButton: {
     textDecoration: "none"
+  },
+  headerContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
   },
   header: {
     fontSize: 20,
@@ -168,9 +179,32 @@ const CompanyCard: React.FC<Company> = props => {
 
 const JobSearch: React.FC = () => {
   const { getApi } = useAuth();
-  const location = useLocation();
+  const params = useParams<{ name: string }>();
   const classes = useStyles();
   const [awesomeList, setAwesomeList] = useState<AwesomeList[]>();
+  const [open, setOpen] = useState(false);
+  const [suggestion, setSuggestion] = useState<string>();
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const sendSuggestion = async () => {
+    const supportApi = await getApi("Support");
+    await supportApi.addAnonymousSupportTicket({
+      newSupportTicket: {
+        subject: params.name || "台大電機",
+        body: suggestion,
+        email: "awesomeSuggestion@milk.jobs"
+      }
+    });
+    handleClose();
+    setSuggestion("");
+  };
 
   const getAwesomeList = async (name: string) => {
     const awesomeApi = await getApi("Awesome");
@@ -179,12 +213,10 @@ const JobSearch: React.FC = () => {
   };
 
   useEffect(() => {
-    const params = qs.parse(location.search, { ignoreQueryPrefix: true });
-    if ("major" in params) {
-      if (params.major === "ee") getAwesomeList("台大電機");
-      if (params.major === "cs") getAwesomeList("台大資工");
+    if (params.name) {
+      getAwesomeList(params.name);
     } else getAwesomeList("台大電機");
-  }, [location.search]);
+  }, [params]);
 
   return (
     <div className={classes.root}>
@@ -192,22 +224,31 @@ const JobSearch: React.FC = () => {
       <div className={classes.container}>
         <div className={classes.schoolContainer}>
           <Link
-            to={{ pathname: "/ntu", search: "?major=ee" }}
+            to={{ pathname: "/awesome/台大電機" }}
             className={classes.majorButton}
           >
             <Button>台大電機</Button>
           </Link>
           <Link
-            to={{ pathname: "/ntu", search: "?major=cs" }}
+            to={{ pathname: "/awesome/台大資工" }}
             className={classes.majorButton}
           >
             <Button>台大資工</Button>
           </Link>
         </div>
         {awesomeList && (
-          <div className={classes.header}>
-            精選{awesomeList[0].name}
-            畢業生，最常去的公司。先從這些公司開始應徵吧!
+          <div className={classes.headerContainer}>
+            <div className={classes.header}>
+              精選{awesomeList[0].name}
+              畢業生，最常去的公司。先從這些公司開始應徵吧!
+            </div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleClickOpen}
+            >
+              我要建議
+            </Button>
           </div>
         )}
         {awesomeList &&
@@ -215,6 +256,35 @@ const JobSearch: React.FC = () => {
           awesomeList[0].teams &&
           awesomeList[0].teams.map(c => <CompanyCard key={c.name} {...c} />)}
       </div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">我要建議</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            這些數據，是牛奶找工作聯絡系上教授、請教同學、統計Linkedin等網路資料，得出的名單。如果有任何與事實不符的地方，或想補充、新增公司，歡迎留言告訴我們！
+          </DialogContentText>
+          <TextField
+            value={suggestion}
+            id="outlined-multiline-static"
+            multiline
+            rows="8"
+            fullWidth
+            variant="outlined"
+            onChange={e => setSuggestion(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            取消
+          </Button>
+          <Button onClick={sendSuggestion} color="primary">
+            送出
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

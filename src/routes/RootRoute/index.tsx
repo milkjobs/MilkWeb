@@ -68,7 +68,7 @@ const RootRoute: React.FC = () => {
       <Route path="/job/:id" exact component={Job} />
       <Route path="/team/:id" exact component={Team} />
       <Route path="/sample-message" exact component={SampleMessage} />
-      <Route path="/ntu" exact component={SchoolRecommend} />
+      <Route path="/awesome/:name" exact component={SchoolRecommend} />
       <PrivateRoute path="/profile" exact component={ApplicantProfile} />
       <PrivateRoute path="/resume" exact component={Resume} />
       <PrivateRoute path="/message/" component={MessageRoute} />

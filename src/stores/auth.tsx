@@ -15,7 +15,8 @@ import {
   UserApi,
   VerificationApi,
   ChannelApi,
-  AwesomeApi
+  AwesomeApi,
+  SupportApi
 } from "@frankyjuang/milkapi-client";
 import { apiServiceConfig } from "config";
 import firebase from "firebase/app";
