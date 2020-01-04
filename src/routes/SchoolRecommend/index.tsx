@@ -235,6 +235,18 @@ const JobSearch: React.FC = () => {
           >
             <Button>台大資工</Button>
           </Link>
+          <Link
+            to={{ pathname: "/awesome/台大財金" }}
+            className={classes.majorButton}
+          >
+            <Button>台大財金</Button>
+          </Link>
+          <Link
+            to={{ pathname: "/awesome/台大國企" }}
+            className={classes.majorButton}
+          >
+            <Button>台大國企</Button>
+          </Link>
         </div>
         {awesomeList && (
           <div className={classes.headerContainer}>
