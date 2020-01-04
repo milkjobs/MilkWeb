@@ -51,6 +51,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+    flexWrap: "wrap",
     padding: 16
   },
   schoolTitle: {
@@ -68,6 +69,7 @@ const useStyles = makeStyles(theme => ({
   },
   header: {
     fontSize: 20,
+    textAlign: "left",
     [theme.breakpoints.down("xs")]: {
       fontSize: 16
     },
@@ -247,14 +249,29 @@ const JobSearch: React.FC = () => {
           >
             <Button>台大國企</Button>
           </Link>
+          <Link
+            to={{ pathname: "/awesome/台大化工" }}
+            className={classes.majorButton}
+          >
+            <Button>台大化工</Button>
+          </Link>
+          <Link
+            to={{ pathname: "/awesome/台大機械" }}
+            className={classes.majorButton}
+          >
+            <Button>台大機械</Button>
+          </Link>
         </div>
         {awesomeList && (
           <div className={classes.headerContainer}>
             <div className={classes.header}>
-              精選{awesomeList[0].name}
-              畢業生，最常去的公司。先從這些公司開始應徵吧!
+              為了幫助學生更了解自己有哪些選擇，我們整理了{awesomeList[0].name}
+              畢業生，最常去的公司。
+              <br />
+              先從這些公司開始應徵吧!
             </div>
             <Button
+              style={{ minWidth: 100, marginLeft: 8 }}
               variant="contained"
               color="primary"
               onClick={handleClickOpen}

@@ -95,6 +95,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+    flexWrap: "wrap",
     padding: 16
   },
   schoolTitle: {
@@ -168,6 +169,18 @@ const JobSearch: React.FC = () => {
             className={classes.majorButton}
           >
             <Button>台大國企</Button>
+          </Link>
+          <Link
+            to={{ pathname: "/awesome/台大化工" }}
+            className={classes.majorButton}
+          >
+            <Button>台大化工</Button>
+          </Link>
+          <Link
+            to={{ pathname: "/awesome/台大機械" }}
+            className={classes.majorButton}
+          >
+            <Button>台大機械</Button>
           </Link>
         </div>
         {algoliaClient ? (
