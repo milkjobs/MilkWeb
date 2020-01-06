@@ -20,6 +20,7 @@ import SchoolRecommend from "routes/SchoolRecommend";
 import SampleMessage from "routes/SampleMessage";
 import Team from "routes/Team";
 import { useAuth, ChannelProvider } from "stores";
+import Stories from "routes/Stories";
 
 interface PrivateRouteProps extends RouteProps {
   component:
@@ -68,6 +69,7 @@ const RootRoute: React.FC = () => {
       <Route path="/job/:id" exact component={Job} />
       <Route path="/team/:id" exact component={Team} />
       <Route path="/sample-message" exact component={SampleMessage} />
+      <Route path="/stories" exact component={Stories} />
       <Route path="/awesome/:name" exact component={SchoolRecommend} />
       <PrivateRoute path="/profile" exact component={ApplicantProfile} />
       <PrivateRoute path="/resume" exact component={Resume} />

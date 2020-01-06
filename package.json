@@ -4,7 +4,7 @@
   "description": "react web of milk",
   "private": true,
   "dependencies": {
-    "@frankyjuang/milkapi-client": "git+ssh://git@github.com/frankyjuang/MilkAPI-Client.git#2.10.0",
+    "@frankyjuang/milkapi-client": "git+ssh://git@github.com/frankyjuang/MilkAPI-Client.git#2.10.1",
     "@material-ui/core": "^4.5.0",
     "@material-ui/icons": "^4.4.3",
     "@mdi/js": "^4.5.95",
@@ -37,6 +37,7 @@
     "react-scripts": "^3.2.0",
     "react-select": "^3.0.8",
     "react-stickynode": "^2.1.1",
+    "react-text-loop": "^2.3.0",
     "react-toastify": "^5.4.1",
     "react-youtube": "^7.9.0",
     "recompose": "^0.30.0",
@@ -67,6 +68,7 @@
   "devDependencies": {
     "@types/node": "^12.12.7",
     "@types/qrcode.react": "^0.9.0",
+    "@types/qs": "^6.9.0",
     "@types/react": "^16.9.5",
     "@types/react-autosuggest": "^9.3.11",
     "@types/react-dom": "^16.9.1",
@@ -87,7 +89,6 @@
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^2.1.2",
     "prettier": "^1.19.1",
-    "@types/qs": "^6.9.0",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.6.3",
     "xmlbuilder": "^13.0.2"

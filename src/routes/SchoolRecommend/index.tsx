@@ -179,7 +179,7 @@ const CompanyCard: React.FC<Company> = props => {
   );
 };
 
-const JobSearch: React.FC = () => {
+const Awesome: React.FC = () => {
   const { getApi } = useAuth();
   const params = useParams<{ name: string }>();
   const classes = useStyles();
@@ -225,6 +225,9 @@ const JobSearch: React.FC = () => {
       <Header />
       <div className={classes.container}>
         <div className={classes.schoolContainer}>
+          <Link to={{ pathname: "/stories" }} className={classes.majorButton}>
+            <Button>故事</Button>
+          </Link>
           <Link
             to={{ pathname: "/awesome/台大電機" }}
             className={classes.majorButton}
@@ -261,6 +264,18 @@ const JobSearch: React.FC = () => {
           >
             <Button>台大機械</Button>
           </Link>
+          <Link
+            to={{ pathname: "/awesome/台大公衛" }}
+            className={classes.majorButton}
+          >
+            <Button>台大公衛</Button>
+          </Link>
+          <Link
+            to={{ pathname: "/awesome/台大藥學" }}
+            className={classes.majorButton}
+          >
+            <Button>台大藥學</Button>
+          </Link>
         </div>
         {awesomeList && (
           <div className={classes.headerContainer}>
@@ -293,7 +308,9 @@ const JobSearch: React.FC = () => {
         <DialogTitle id="form-dialog-title">我要建議</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            這些數據，是牛奶找工作聯絡系上教授、請教同學、統計Linkedin等網路資料，得出的名單。如果有任何與事實不符的地方，或想補充、新增公司，歡迎留言告訴我們！
+            這些數據，是牛奶找工作，詢問系上教授、請教同學、統計 Linkedin 上
+            2010
+            後入學的學生，得出的名單。如果有任何與事實不符的地方，或想補充、新增公司，歡迎留言告訴我們，一起幫助大學生畢業更有方向！
           </DialogContentText>
           <TextField
             value={suggestion}
@@ -318,4 +335,4 @@ const JobSearch: React.FC = () => {
   );
 };
 
-export default JobSearch;
+export default Awesome;

@@ -13,6 +13,8 @@ import { Configure, InstantSearch } from "react-instantsearch-dom";
 import { useInView } from "react-intersection-observer";
 import { useAuth } from "stores";
 import { Link } from "react-router-dom";
+import TextLoop from "react-text-loop";
+import { openInNewTab, checkUrl } from "helpers";
 import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles(theme => ({
@@ -104,8 +106,43 @@ const useStyles = makeStyles(theme => ({
   },
   majorButton: {
     textDecoration: "none"
+  },
+  latestJobs: {
+    width: 200,
+    marginLeft: "auto",
+    marginRight: "auto",
+    textAlign: "center",
+    height: 20
+  },
+  latestJob: {
+    width: 200,
+    textAlign: "center",
+    fontWeight: 800,
+    cursor: "pointer"
   }
 }));
+
+const latestJobs = [
+  { name: "蝦皮 儲備幹部 1/31 截止", website: "https://careers.shopee.tw/GLP" },
+  {
+    name: "Garena 儲備幹部 3/8 截止",
+    website: "https://map.career.garena.tw/"
+  },
+  {
+    name: "Mckinsey 實習生 1/30 截止",
+    website: "https://www.facebook.com/NCCUCG/posts/936614543202599/"
+  },
+  {
+    name: "17 Media 1/18 工程招募日",
+    website:
+      "https://docs.google.com/forms/d/e/1FAIpQLSeA17OfMg2yLpUNWzhty8c3xVFHuMfTOLaBk0W76WqqYsnctg/viewform"
+  },
+  {
+    name: "Dell 儲備幹部",
+    website:
+      "https://dell.wd1.myworkdayjobs.com/External/job/Taipei-Taiwan/RG-Advisor--Project-Program-Management_R41987"
+  }
+];
 
 const JobSearch: React.FC = () => {
   const classes = useStyles();
@@ -144,6 +181,17 @@ const JobSearch: React.FC = () => {
     <div className={classes.root}>
       <Header hideSearchBar={hideHeaderSearchBar} />
       <div className={classes.container}>
+        <TextLoop className={classes.latestJobs}>
+          {latestJobs.map(j => (
+            <div
+              className={classes.latestJob}
+              key={j.name}
+              onClick={() => openInNewTab(checkUrl(j.website))}
+            >
+              {j.name}
+            </div>
+          ))}
+        </TextLoop>
         <div className={classes.schoolContainer}>
           <div className={classes.schoolTitle}>就業精選</div>
           <Link
@@ -181,6 +229,18 @@ const JobSearch: React.FC = () => {
             className={classes.majorButton}
           >
             <Button>台大機械</Button>
+          </Link>
+          <Link
+            to={{ pathname: "/awesome/台大公衛" }}
+            className={classes.majorButton}
+          >
+            <Button>台大公衛</Button>
+          </Link>
+          <Link
+            to={{ pathname: "/awesome/台大藥學" }}
+            className={classes.majorButton}
+          >
+            <Button>台大藥學</Button>
           </Link>
         </div>
         {algoliaClient ? (
