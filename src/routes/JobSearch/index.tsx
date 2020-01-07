@@ -219,6 +219,12 @@ const JobSearch: React.FC = () => {
             <Button>台大國企</Button>
           </Link>
           <Link
+            to={{ pathname: "/awesome/台大工管" }}
+            className={classes.majorButton}
+          >
+            <Button>台大工管</Button>
+          </Link>
+          <Link
             to={{ pathname: "/awesome/台大化工" }}
             className={classes.majorButton}
           >
