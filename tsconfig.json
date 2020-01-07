@@ -17,5 +17,6 @@
     "noEmit": true,
     "jsx": "preserve"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["src/tlk.js"]
 }

@@ -13,6 +13,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import chat from "tlk";
 
 interface Company {
   name: string;
@@ -25,26 +26,29 @@ interface Company {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flex: 1,
+    height: "100vh",
     backgroundColor: theme.palette.background.paper
   },
   container: {
-    marginTop: 40,
-    marginBottom: 40,
+    flex: 3,
+    marginTop: 20,
+    marginBottom: 20,
     display: "flex",
     justifyContent: "center",
-    marginRight: "auto",
-    marginLeft: "auto",
-    paddingRight: 24,
-    paddingLeft: 24,
+    paddingRight: 48,
+    paddingLeft: 48,
     flexDirection: "column",
     backgroundColor: theme.palette.background.paper,
     [theme.breakpoints.up("md")]: {
       width: "960px"
     },
     [theme.breakpoints.down("xs")]: {
+      marginRight: "auto",
+      marginLeft: "auto",
       marginTop: 8,
-      marginBottom: 8
+      marginBottom: 8,
+      paddingRight: 24,
+      paddingLeft: 24
     }
   },
   schoolContainer: {
@@ -52,7 +56,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "row",
     alignItems: "center",
     flexWrap: "wrap",
-    padding: 16
+    paddingBottom: 16
   },
   schoolTitle: {
     fontWeight: 800,
@@ -138,6 +142,14 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "row",
     alignItems: "center"
+  },
+  chatRoom: {
+    flex: 1,
+    paddingTop: 60,
+    paddingLeft: 40,
+    [theme.breakpoints.down("xs")]: {
+      display: "none"
+    }
   }
 }));
 
@@ -180,7 +192,7 @@ const CompanyCard: React.FC<Company> = props => {
 };
 
 const Awesome: React.FC = () => {
-  const { getApi } = useAuth();
+  const { getApi, user } = useAuth();
   const params = useParams<{ name: string }>();
   const classes = useStyles();
   const [awesomeList, setAwesomeList] = useState<AwesomeList[]>();
@@ -215,6 +227,10 @@ const Awesome: React.FC = () => {
   };
 
   useEffect(() => {
+    chat();
+  }, []);
+
+  useEffect(() => {
     if (params.name) {
       getAwesomeList(params.name);
     } else getAwesomeList("台大電機");
@@ -223,120 +239,132 @@ const Awesome: React.FC = () => {
   return (
     <div className={classes.root}>
       <Header />
-      <div className={classes.container}>
-        <div className={classes.schoolContainer}>
-          <Link to={{ pathname: "/stories" }} className={classes.majorButton}>
-            <Button>故事</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大電機" }}
-            className={classes.majorButton}
-          >
-            <Button>台大電機</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大資工" }}
-            className={classes.majorButton}
-          >
-            <Button>台大資工</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大財金" }}
-            className={classes.majorButton}
-          >
-            <Button>台大財金</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大國企" }}
-            className={classes.majorButton}
-          >
-            <Button>台大國企</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大工管" }}
-            className={classes.majorButton}
-          >
-            <Button>台大工管</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大化工" }}
-            className={classes.majorButton}
-          >
-            <Button>台大化工</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大機械" }}
-            className={classes.majorButton}
-          >
-            <Button>台大機械</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大公衛" }}
-            className={classes.majorButton}
-          >
-            <Button>台大公衛</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大藥學" }}
-            className={classes.majorButton}
-          >
-            <Button>台大藥學</Button>
-          </Link>
-        </div>
-        {awesomeList && (
-          <div className={classes.headerContainer}>
-            <div className={classes.header}>
-              為了幫助學生更了解自己有哪些選擇，我們整理了{awesomeList[0].name}
-              畢業生，最常去的公司。
-              <br />
-              先從這些公司開始應徵吧!
-            </div>
-            <Button
-              style={{ minWidth: 100, marginLeft: 8 }}
-              variant="contained"
-              color="primary"
-              onClick={handleClickOpen}
+      <div style={{ display: "flex", flexDirection: "row", flex: 1 }}>
+        <div className={classes.container}>
+          <div className={classes.schoolContainer}>
+            <Link to={{ pathname: "/stories" }} className={classes.majorButton}>
+              <Button>故事</Button>
+            </Link>
+            <Link
+              to={{ pathname: "/awesome/台大電機" }}
+              className={classes.majorButton}
             >
-              我要建議
-            </Button>
+              <Button>台大電機</Button>
+            </Link>
+            <Link
+              to={{ pathname: "/awesome/台大資工" }}
+              className={classes.majorButton}
+            >
+              <Button>台大資工</Button>
+            </Link>
+            <Link
+              to={{ pathname: "/awesome/台大財金" }}
+              className={classes.majorButton}
+            >
+              <Button>台大財金</Button>
+            </Link>
+            <Link
+              to={{ pathname: "/awesome/台大國企" }}
+              className={classes.majorButton}
+            >
+              <Button>台大國企</Button>
+            </Link>
+            <Link
+              to={{ pathname: "/awesome/台大工管" }}
+              className={classes.majorButton}
+            >
+              <Button>台大工管</Button>
+            </Link>
+            <Link
+              to={{ pathname: "/awesome/台大化工" }}
+              className={classes.majorButton}
+            >
+              <Button>台大化工</Button>
+            </Link>
+            <Link
+              to={{ pathname: "/awesome/台大機械" }}
+              className={classes.majorButton}
+            >
+              <Button>台大機械</Button>
+            </Link>
+            <Link
+              to={{ pathname: "/awesome/台大公衛" }}
+              className={classes.majorButton}
+            >
+              <Button>台大公衛</Button>
+            </Link>
+            <Link
+              to={{ pathname: "/awesome/台大藥學" }}
+              className={classes.majorButton}
+            >
+              <Button>台大藥學</Button>
+            </Link>
           </div>
-        )}
-        {awesomeList &&
-          awesomeList.length > 0 &&
-          awesomeList[0].teams &&
-          awesomeList[0].teams.map(c => <CompanyCard key={c.name} {...c} />)}
+          {awesomeList && (
+            <div className={classes.headerContainer}>
+              <div className={classes.header}>
+                為了幫助學生更了解自己有哪些選擇，我們整理了
+                {awesomeList[0].name}
+                畢業生，最常去的公司。
+                <br />
+                先從這些公司開始應徵吧!
+              </div>
+              <Button
+                style={{ minWidth: 100, marginLeft: 8 }}
+                variant="contained"
+                color="primary"
+                onClick={handleClickOpen}
+              >
+                我要建議
+              </Button>
+            </div>
+          )}
+          {awesomeList &&
+            awesomeList.length > 0 &&
+            awesomeList[0].teams &&
+            awesomeList[0].teams.map(c => (
+              <CompanyCard key={c.name + params.name || ""} {...c} />
+            ))}
+        </div>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">我要建議</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              這些數據，是牛奶找工作，詢問系上教授、請教同學、統計 Linkedin 上
+              2010
+              後入學的學生，得出的名單。如果有任何與事實不符的地方，或想補充、新增公司，歡迎留言告訴我們，一起幫助大學生畢業更有方向！
+            </DialogContentText>
+            <TextField
+              value={suggestion}
+              id="outlined-multiline-static"
+              multiline
+              rows="8"
+              fullWidth
+              variant="outlined"
+              onChange={e => setSuggestion(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              取消
+            </Button>
+            <Button onClick={sendSuggestion} color="primary">
+              送出
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <div
+          id="tlkio"
+          data-channel="NTU"
+          data-nickname={user ? user.name : "路人"}
+          data-theme="theme--minimal"
+          className={classes.chatRoom}
+        ></div>
       </div>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">我要建議</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            這些數據，是牛奶找工作，詢問系上教授、請教同學、統計 Linkedin 上
-            2010
-            後入學的學生，得出的名單。如果有任何與事實不符的地方，或想補充、新增公司，歡迎留言告訴我們，一起幫助大學生畢業更有方向！
-          </DialogContentText>
-          <TextField
-            value={suggestion}
-            id="outlined-multiline-static"
-            multiline
-            rows="8"
-            fullWidth
-            variant="outlined"
-            onChange={e => setSuggestion(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            取消
-          </Button>
-          <Button onClick={sendSuggestion} color="primary">
-            送出
-          </Button>
-        </DialogActions>
-      </Dialog>
     </div>
   );
 };
