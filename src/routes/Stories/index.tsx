@@ -36,6 +36,11 @@ const videoList: Video[] = [
     name: "星宇航空",
     website: "https://careers.starlux-airlines.com/",
     youtubeId: "ZDP2Nj6wHxE"
+  },
+  {
+    name: "Cutaway",
+    website: "https://www.cakeresume.com/companies/cutawaytw",
+    youtubeId: "LA5VnFHFB2E"
   }
 ];
 

@@ -248,6 +248,12 @@ const JobSearch: React.FC = () => {
           >
             <Button>台大藥學</Button>
           </Link>
+          <Link
+            to={{ pathname: "/awesome/台大圖資" }}
+            className={classes.majorButton}
+          >
+            <Button>台大圖資</Button>
+          </Link>
         </div>
         {algoliaClient ? (
           <InstantSearch

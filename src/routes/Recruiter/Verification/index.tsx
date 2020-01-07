@@ -148,7 +148,7 @@ const Verification: React.FC = () => {
             variant={"contained"}
             onClick={showDownloadAppDialog}
           >
-            下載App，體驗更完善功能
+            下載App：審核通過後，App內直接通知
           </Button>
         </div>
       </div>
