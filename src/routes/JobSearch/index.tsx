@@ -138,6 +138,10 @@ const latestJobs = [
       "https://docs.google.com/forms/d/e/1FAIpQLSeA17OfMg2yLpUNWzhty8c3xVFHuMfTOLaBk0W76WqqYsnctg/viewform"
   },
   {
+    name: "華碩 AI 實習 4/30 截止",
+    website: "https://aics.asus.com/zh/homepage-tw/"
+  },
+  {
     name: "Dell 儲備幹部",
     website:
       "https://dell.wd1.myworkdayjobs.com/External/job/Taipei-Taiwan/RG-Advisor--Project-Program-Management_R41987"

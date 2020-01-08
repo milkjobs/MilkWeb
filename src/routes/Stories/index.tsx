@@ -38,6 +38,11 @@ const videoList: Video[] = [
     youtubeId: "ZDP2Nj6wHxE"
   },
   {
+    name: "遠傳電信",
+    website: "https://www.fetnet.net/corporate/hr/index.html",
+    youtubeId: "SFjSEi9MkXM"
+  },
+  {
     name: "Cutaway",
     website: "https://www.cakeresume.com/companies/cutawaytw",
     youtubeId: "LA5VnFHFB2E"
