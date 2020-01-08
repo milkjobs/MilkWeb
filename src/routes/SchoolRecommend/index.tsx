@@ -26,7 +26,6 @@ const useStyles = makeStyles(theme => ({
     marginTop: 20,
     marginBottom: 20,
     display: "flex",
-    justifyContent: "center",
     paddingRight: 48,
     paddingLeft: 48,
     flexDirection: "column",
@@ -171,7 +170,7 @@ const CompanyCard: React.FC<AwesomeTeam> = props => {
           <div>
             <div className={classes.title}>{props.name}</div>
             <div className={classes.info}>
-              {`${props.field} ${
+              {`${props.field ? props.field : ""} ${
                 props.headcount ? sizeToWord(props.headcount) : ""
               }   ${
                 props.revenue && !matched ? incomeToWord(props.revenue) : ""
@@ -301,9 +300,12 @@ const Awesome: React.FC = () => {
               <Button>台大圖資</Button>
             </Link>
             {matched && (
-              <Link to={{ pathname: "/chat" }} className={classes.majorButton}>
+              <div
+                onClick={() => openInNewTab("https://tlk.io/ntu")}
+                className={classes.majorButton}
+              >
                 <Button>找工作聊天室</Button>
-              </Link>
+              </div>
             )}
           </div>
           {awesomeList && (
@@ -311,9 +313,9 @@ const Awesome: React.FC = () => {
               <div className={classes.header}>
                 為了幫助學生更了解自己有哪些選擇，我們整理了
                 {awesomeList[0].name}
-                畢業生，最常去的公司。
+                畢業生最常去的公司。
                 <br />
-                先從這些公司開始應徵吧!
+                先從這些公司開始應徵吧！
               </div>
               <Button
                 style={{ minWidth: 100, marginLeft: 8 }}
