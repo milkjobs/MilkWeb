@@ -192,6 +192,7 @@ const Awesome: React.FC = () => {
   const [awesomeList, setAwesomeList] = useState<AwesomeList[]>();
   const [open, setOpen] = useState(false);
   const [suggestion, setSuggestion] = useState<string>();
+  const matched = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -299,6 +300,11 @@ const Awesome: React.FC = () => {
             >
               <Button>台大圖資</Button>
             </Link>
+            {matched && (
+              <Link to={{ pathname: "/chat" }} className={classes.majorButton}>
+                <Button>找工作聊天室</Button>
+              </Link>
+            )}
           </div>
           {awesomeList && (
             <div className={classes.headerContainer}>

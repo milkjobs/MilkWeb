@@ -1,6 +1,6 @@
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Header } from "components/Header";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import YouTube from "react-youtube";
 import { openInNewTab, checkUrl } from "helpers";
 import { Button, useMediaQuery } from "@material-ui/core";

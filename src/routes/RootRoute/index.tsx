@@ -21,6 +21,7 @@ import SampleMessage from "routes/SampleMessage";
 import Team from "routes/Team";
 import { useAuth, ChannelProvider } from "stores";
 import Stories from "routes/Stories";
+import Chat from "routes/Chat";
 
 interface PrivateRouteProps extends RouteProps {
   component:
@@ -70,6 +71,7 @@ const RootRoute: React.FC = () => {
       <Route path="/team/:id" exact component={Team} />
       <Route path="/sample-message" exact component={SampleMessage} />
       <Route path="/stories" exact component={Stories} />
+      <Route path="/chat" exact component={Chat} />
       <Route path="/awesome/:name" exact component={SchoolRecommend} />
       <PrivateRoute path="/profile" exact component={ApplicantProfile} />
       <PrivateRoute path="/resume" exact component={Resume} />
