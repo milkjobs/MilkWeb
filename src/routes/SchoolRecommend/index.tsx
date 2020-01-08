@@ -6,23 +6,15 @@ import Button from "@material-ui/core/Button";
 import { openInNewTab, checkUrl } from "helpers";
 import { useMediaQuery } from "@material-ui/core";
 import { useAuth } from "stores";
-import { AwesomeList } from "@frankyjuang/milkapi-client";
+import { AwesomeList, AwesomeTeam } from "@frankyjuang/milkapi-client";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Sticky from "react-stickynode";
 import chat from "tlk";
-
-interface Company {
-  name: string;
-  logoUrl: string;
-  website: string;
-  headcount?: number;
-  revenue?: number;
-  introduction: string;
-}
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -153,7 +145,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const CompanyCard: React.FC<Company> = props => {
+const CompanyCard: React.FC<AwesomeTeam> = props => {
   const classes = useStyles();
   const matched = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
 
@@ -179,8 +171,10 @@ const CompanyCard: React.FC<Company> = props => {
           <div>
             <div className={classes.title}>{props.name}</div>
             <div className={classes.info}>
-              {`${props.headcount ? sizeToWord(props.headcount) : ""}   ${
-                props.revenue ? incomeToWord(props.revenue) : ""
+              {`${props.field} ${
+                props.headcount ? sizeToWord(props.headcount) : ""
+              }   ${
+                props.revenue && !matched ? incomeToWord(props.revenue) : ""
               }`}
             </div>
           </div>
@@ -299,6 +293,12 @@ const Awesome: React.FC = () => {
             >
               <Button>台大藥學</Button>
             </Link>
+            <Link
+              to={{ pathname: "/awesome/台大圖資" }}
+              className={classes.majorButton}
+            >
+              <Button>台大圖資</Button>
+            </Link>
           </div>
           {awesomeList && (
             <div className={classes.headerContainer}>
@@ -334,9 +334,9 @@ const Awesome: React.FC = () => {
           <DialogTitle id="form-dialog-title">我要建議</DialogTitle>
           <DialogContent>
             <DialogContentText>
-            這些數據，是牛奶找工作，詢問系上教授、請教同學、統計 Linkedin 上
-            2010
-            後入學的學生，自行整理的名單，並沒有受公司委託進行廣告。如果有任何與事實不符的地方，或想補充、新增、刪除公司，歡迎留言告訴我們，一起幫助大學生畢業更有方向！
+              這些數據，是牛奶找工作，詢問系上教授、請教同學、統計 Linkedin 上
+              2010
+              後入學的學生，自行整理的名單，並沒有受公司委託進行廣告。如果有任何與事實不符的地方，或想補充、新增、刪除公司，歡迎留言告訴我們，一起幫助大學生畢業更有方向！
             </DialogContentText>
             <TextField
               value={suggestion}
@@ -357,13 +357,17 @@ const Awesome: React.FC = () => {
             </Button>
           </DialogActions>
         </Dialog>
-        <div
-          id="tlkio"
-          data-channel="NTU"
-          data-nickname={user ? user.name : "路人"}
-          data-theme="theme--minimal"
-          className={classes.chatRoom}
-        ></div>
+        <div className={classes.chatRoom}>
+          <Sticky top={64}>
+            <div
+              id="tlkio"
+              data-channel="NTU"
+              data-nickname={user ? user.name : "路人"}
+              data-theme="theme--minimal"
+              style={{ height: "80vh" }}
+            ></div>
+          </Sticky>
+        </div>
       </div>
     </div>
   );
