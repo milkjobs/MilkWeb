@@ -48,8 +48,8 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "960px"
+    [theme.breakpoints.up("lg")]: {
+      width: "1120px"
     }
   },
   titleContainer: {

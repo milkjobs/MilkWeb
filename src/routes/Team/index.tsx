@@ -82,8 +82,8 @@ const useStyles = makeStyles(theme => ({
     alignContent: "stretch",
     justifyContent: "center",
     flexDirection: "column",
-    [theme.breakpoints.up("md")]: {
-      width: "960px"
+    [theme.breakpoints.up("lg")]: {
+      width: "1120px"
     },
     [theme.breakpoints.down("xs")]: {
       marginTop: 0
