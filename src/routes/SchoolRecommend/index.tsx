@@ -1,6 +1,8 @@
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Header } from "components/Header";
 import React, { useEffect, useState } from "react";
+import Tab from "@material-ui/core/Tab";
+import Tabs from "@material-ui/core/Tabs";
 import { Link, useParams } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import { openInNewTab, checkUrl } from "helpers";
@@ -136,7 +138,6 @@ const useStyles = makeStyles(theme => ({
   },
   chatRoom: {
     flex: 1,
-    paddingTop: 60,
     paddingLeft: 40,
     [theme.breakpoints.down("xs")]: {
       display: "none"
@@ -184,6 +185,53 @@ const CompanyCard: React.FC<AwesomeTeam> = props => {
   );
 };
 
+const useTabsStyles = makeStyles(theme => ({
+  root: {
+    borderBottomWidth: 1,
+    borderBottomStyle: "solid",
+    borderBottomColor: theme.palette.divider,
+    paddingLeft: 24,
+    paddingRight: 24
+  },
+  indicator: {
+    backgroundColor: theme.palette.text.primary
+  }
+}));
+
+const useTabStyles = makeStyles(theme => ({
+  root: {
+    textTransform: "none",
+    color: theme.palette.grey["500"],
+    minWidth: 72,
+    fontSize: 16,
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 14
+    },
+    fontWeight: theme.typography.fontWeightRegular,
+    marginRight: theme.spacing(4),
+    fontFamily: [
+      "-apple-system",
+      "BlinkMacSystemFont",
+      '"Segoe UI"',
+      "Roboto",
+      '"Helvetica Neue"',
+      "Arial",
+      "sans-serif",
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"'
+    ].join(","),
+    "&:hover": {
+      color: theme.palette.secondary.main,
+      opacity: 1
+    },
+    "&$selected": {
+      color: theme.palette.text.primary
+    }
+  },
+  selected: {}
+}));
+
 const Awesome: React.FC = () => {
   const { getApi, user } = useAuth();
   const params = useParams<{ name: string }>();
@@ -192,6 +240,21 @@ const Awesome: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [suggestion, setSuggestion] = useState<string>();
   const matched = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
+  const tabsStyle = useTabsStyles();
+  const tabStyle = useTabStyles();
+  const [value, setValue] = useState(0);
+  const [note, setNote] = useState<string>(localStorage.getItem("note") || "");
+  const [helperText, setHelperText] = useState<string>();
+
+  const saveNote = (note: string) => {
+    localStorage.setItem("note", note);
+    setNote(note);
+    setHelperText("已儲存");
+  };
+
+  function handleChange(event: React.ChangeEvent<{}>, newValue: number) {
+    setValue(newValue);
+  }
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -366,13 +429,39 @@ const Awesome: React.FC = () => {
           </DialogActions>
         </Dialog>
         <div className={classes.chatRoom}>
-          <Sticky top={64}>
+          <Sticky top={48}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              // indicatorColor="primary"
+              textColor="primary"
+              classes={tabsStyle}
+            >
+              <Tab disableRipple label="備忘錄" classes={tabStyle} />
+              <Tab disableRipple label="聊天室" classes={tabStyle} />
+            </Tabs>
+            {!value && (
+              <TextField
+                fullWidth
+                id="introduction"
+                placeholder="隨手把工作資訊記下來"
+                multiline
+                style={{ padding: 24 }}
+                onChange={e => saveNote(e.target.value)}
+                value={note}
+                rows="40"
+                helperText={helperText}
+              />
+            )}
             <div
               id="tlkio"
               data-channel="NTU"
               data-nickname={user ? user.name : "路人"}
               data-theme="theme--minimal"
-              style={{ height: "80vh" }}
+              style={{
+                height: value ? "80vh" : 0,
+                visibility: value ? "visible" : "hidden"
+              }}
             ></div>
           </Sticky>
         </div>
