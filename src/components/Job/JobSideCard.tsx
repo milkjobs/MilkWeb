@@ -166,7 +166,7 @@ const JobSideCard: React.FC<Props> = props => {
         newMetadata[jobId] = "job";
         applicationChannel.updateMetaData(newMetadata, true, () => {});
 
-        const [, message] = await to(
+        await to(
           sendApplicationMessage(applicationChannel, {
             jobId,
             applicantId: user.uuid
@@ -196,7 +196,7 @@ const JobSideCard: React.FC<Props> = props => {
         if (applicationChannel) {
           applicationChannel.getMetaData([jobId], res => {
             try {
-              console.warn(res)
+              console.warn(res);
               res[jobId] === "job" && setChannel(applicationChannel);
             } catch (err) {
               return;
@@ -206,7 +206,7 @@ const JobSideCard: React.FC<Props> = props => {
         } else setLoading(false);
       });
     }
-  }, [user, sb]);
+  }, [user, sb, recruiter.uuid, jobId]);
 
   const chat = async () => {
     if (!user) showLoginDialog();

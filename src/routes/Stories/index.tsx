@@ -1,9 +1,9 @@
+import { Button, useMediaQuery } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Header } from "components/Header";
+import { checkUrl, openInNewTab, PageMetadata } from "helpers";
 import React from "react";
 import YouTube from "react-youtube";
-import { openInNewTab, checkUrl } from "helpers";
-import { Button, useMediaQuery } from "@material-ui/core";
 
 interface Video {
   name: string;
@@ -142,6 +142,7 @@ const Stories: React.FC = () => {
 
   return (
     <div className={classes.root}>
+      <PageMetadata title={"故事－牛奶找工作"} />
       <Header />
       <div className={classes.container}>
         {videoList.map(v => (

@@ -1,9 +1,7 @@
 /* eslint-disable */
 const render = function() {
   !(function(t, e) {
-    console.log("AAA");
     var i = function() {
-        console.log("III");
         var t = e.getElementById("tlkio"),
           i = t.getAttribute("data-env") || "production",
           n = t.getAttribute("data-channel"),
@@ -32,7 +30,6 @@ const render = function() {
           t.appendChild(l);
       },
       n = function() {
-        console.log("NNN");
         var n = e.getElementById("tlkio"),
           a = e.createElement("style"),
           o = e.createElement("img");

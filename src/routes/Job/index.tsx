@@ -14,8 +14,7 @@ import firebase from "firebase/app";
 import { JobPostingStructuredData, PageMetadata } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useAuth } from "stores";
-import { ChannelProvider } from "stores";
+import { ChannelProvider, useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
   root: {

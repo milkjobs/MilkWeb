@@ -262,7 +262,7 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
         <DialogTitle id="form-dialog-title">編輯公司</DialogTitle>
         <DialogContent>
           <div style={{ display: "flex" }}>
-            <img src={team.logoUrl} className={classes.logo} />
+            <img alt="team logo" src={team.logoUrl} className={classes.logo} />
             <input
               hidden
               accept={ImageMimeType}

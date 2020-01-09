@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { createStyles, Theme } from "@material-ui/core/styles";
-import { makeStyles } from "@material-ui/core/styles";
-import { Role, User, PublicUser, Job } from "@frankyjuang/milkapi-client";
-import { useAuth } from "stores";
+import { Job, PublicUser, Role, User } from "@frankyjuang/milkapi-client";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 import to from "await-to-js";
 import { salaryNumberToString, SalaryTypeToWordInJobCard } from "helpers";
+import React, { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useAuth } from "stores";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(theme =>
   createStyles({
     message: {
       margin: 16,
@@ -63,7 +62,7 @@ const ApplicationMessage: React.FC<Props> = props => {
   const [applicant, setApplicant] = useState<PublicUser | User>();
   const [job, setJob] = useState<Job>();
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     const data = JSON.parse(props.message.data);
     if (user && data.applicantId === user.uuid) {
       setApplicant(user);
@@ -83,11 +82,11 @@ const ApplicationMessage: React.FC<Props> = props => {
       const [, fetchedJob] = await to(jobApi.getJob({ jobId }));
       setJob(fetchedJob);
     }
-  };
+  }, [getApi, props.message.data, user]);
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [getData]);
 
   return !fromMe ? (
     <div className={classes.message}>

@@ -1,6 +1,6 @@
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { Header } from "components/Header";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "stores";
 import chat from "tlk";
 

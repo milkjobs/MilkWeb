@@ -1,21 +1,24 @@
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import { Header } from "components/Header";
-import React, { useEffect, useState } from "react";
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
-import { Link, useParams } from "react-router-dom";
-import Button from "@material-ui/core/Button";
-import { openInNewTab, checkUrl } from "helpers";
-import { useMediaQuery } from "@material-ui/core";
-import { useAuth } from "stores";
 import { AwesomeList, AwesomeTeam } from "@frankyjuang/milkapi-client";
-import TextField from "@material-ui/core/TextField";
+import { useMediaQuery } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import Tab from "@material-ui/core/Tab";
+import Tabs from "@material-ui/core/Tabs";
+import TextField from "@material-ui/core/TextField";
+import { AwesomeHeader } from "components/Awesome";
+import { Header } from "components/Header";
+import "firebase/analytics";
+import firebase from "firebase/app";
+import { checkUrl, openInNewTab, PageMetadata } from "helpers";
+import React, { useCallback, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Sticky from "react-stickynode";
+import { useAuth } from "stores";
 import chat from "tlk";
 
 const useStyles = makeStyles(theme => ({
@@ -44,20 +47,6 @@ const useStyles = makeStyles(theme => ({
       paddingLeft: 24
     }
   },
-  schoolContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    flexWrap: "wrap",
-    paddingBottom: 16
-  },
-  schoolTitle: {
-    fontWeight: 800,
-    marginRight: 16
-  },
-  majorButton: {
-    textDecoration: "none"
-  },
   headerContainer: {
     display: "flex",
     flexDirection: "row",
@@ -70,7 +59,8 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       fontSize: 16
     },
-    fontWeight: 800
+    fontWeight: 800,
+    margin: "16px 0"
   },
   companyCardContainer: {
     display: "flex",
@@ -164,10 +154,14 @@ const CompanyCard: React.FC<AwesomeTeam> = props => {
       className={classes.companyCardContainer}
       onClick={() => openInNewTab(checkUrl(props.website))}
     >
-      {!matched && <img src={props.logoUrl} className={classes.logo} />}
+      {!matched && (
+        <img alt="team logo" src={props.logoUrl} className={classes.logo} />
+      )}
       <div className={classes.nameContainer}>
         <div className={classes.iconContainer}>
-          {matched && <img src={props.logoUrl} className={classes.logo} />}
+          {matched && (
+            <img alt="team logo" src={props.logoUrl} className={classes.logo} />
+          )}
           <div>
             <div className={classes.title}>{props.name}</div>
             <div className={classes.info}>
@@ -239,20 +233,26 @@ const Awesome: React.FC = () => {
   const [awesomeList, setAwesomeList] = useState<AwesomeList[]>();
   const [open, setOpen] = useState(false);
   const [suggestion, setSuggestion] = useState<string>();
-  const matched = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
   const tabsStyle = useTabsStyles();
   const tabStyle = useTabStyles();
   const [value, setValue] = useState(0);
   const [note, setNote] = useState<string>(localStorage.getItem("note") || "");
   const [helperText, setHelperText] = useState<string>();
+  const introduction = `為了幫助學生更了解自己有哪些選擇，我們整理了${params.name}畢業生最常去的公司。先從這些公司開始應徵吧！`;
 
   const saveNote = (note: string) => {
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    firebase.analytics().logEvent("save_note", { word_count: note.length });
     localStorage.setItem("note", note);
     setNote(note);
     setHelperText("已儲存");
   };
 
   function handleChange(event: React.ChangeEvent<{}>, newValue: number) {
+    firebase.analytics().logEvent("click_tab", {
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      tab_name: newValue === 0 ? "備忘錄" : "聊天室"
+    });
     setValue(newValue);
   }
 
@@ -268,7 +268,7 @@ const Awesome: React.FC = () => {
     const supportApi = await getApi("Support");
     await supportApi.addAnonymousSupportTicket({
       newSupportTicket: {
-        subject: params.name || "台大電機",
+        subject: params.name || "我要建議",
         body: suggestion,
         email: "awesomeSuggestion@milk.jobs"
       }
@@ -277,11 +277,14 @@ const Awesome: React.FC = () => {
     setSuggestion("");
   };
 
-  const getAwesomeList = async (name: string) => {
-    const awesomeApi = await getApi("Awesome");
-    const list = await awesomeApi.getAwesomeLists({ name });
-    setAwesomeList(list);
-  };
+  const getAwesomeList = useCallback(
+    async (name: string) => {
+      const awesomeApi = await getApi("Awesome");
+      const list = await awesomeApi.getAwesomeLists({ name });
+      setAwesomeList(list);
+    },
+    [getApi]
+  );
 
   useEffect(() => {
     chat();
@@ -290,111 +293,37 @@ const Awesome: React.FC = () => {
   useEffect(() => {
     if (params.name) {
       getAwesomeList(params.name);
-    } else getAwesomeList("台大電機");
-  }, [params]);
+    } else {
+      getAwesomeList("台大電機");
+    }
+  }, [getAwesomeList, params]);
 
   return (
     <div className={classes.root}>
+      <PageMetadata
+        title={`${params.name}－牛奶找工作`}
+        description={introduction}
+      />
       <Header />
       <div style={{ display: "flex", flexDirection: "row", flex: 1 }}>
         <div className={classes.container}>
-          <div className={classes.schoolContainer}>
-            <Link to={{ pathname: "/stories" }} className={classes.majorButton}>
-              <Button>故事</Button>
-            </Link>
-            <Link
-              to={{ pathname: "/awesome/台大電機" }}
-              className={classes.majorButton}
+          <AwesomeHeader showStories showChatRoom />
+          <div className={classes.headerContainer}>
+            <div className={classes.header}>{introduction}</div>
+            <Button
+              style={{ minWidth: 100, marginLeft: 8 }}
+              variant="contained"
+              color="primary"
+              onClick={handleClickOpen}
             >
-              <Button>台大電機</Button>
-            </Link>
-            <Link
-              to={{ pathname: "/awesome/台大資工" }}
-              className={classes.majorButton}
-            >
-              <Button>台大資工</Button>
-            </Link>
-            <Link
-              to={{ pathname: "/awesome/台大財金" }}
-              className={classes.majorButton}
-            >
-              <Button>台大財金</Button>
-            </Link>
-            <Link
-              to={{ pathname: "/awesome/台大國企" }}
-              className={classes.majorButton}
-            >
-              <Button>台大國企</Button>
-            </Link>
-            <Link
-              to={{ pathname: "/awesome/台大工管" }}
-              className={classes.majorButton}
-            >
-              <Button>台大工管</Button>
-            </Link>
-            <Link
-              to={{ pathname: "/awesome/台大化工" }}
-              className={classes.majorButton}
-            >
-              <Button>台大化工</Button>
-            </Link>
-            <Link
-              to={{ pathname: "/awesome/台大機械" }}
-              className={classes.majorButton}
-            >
-              <Button>台大機械</Button>
-            </Link>
-            <Link
-              to={{ pathname: "/awesome/台大公衛" }}
-              className={classes.majorButton}
-            >
-              <Button>台大公衛</Button>
-            </Link>
-            <Link
-              to={{ pathname: "/awesome/台大藥學" }}
-              className={classes.majorButton}
-            >
-              <Button>台大藥學</Button>
-            </Link>
-            <Link
-              to={{ pathname: "/awesome/台大圖資" }}
-              className={classes.majorButton}
-            >
-              <Button>台大圖資</Button>
-            </Link>
-            {matched && (
-              <div
-                onClick={() => openInNewTab("https://tlk.io/ntu")}
-                className={classes.majorButton}
-              >
-                <Button>找工作聊天室</Button>
-              </div>
-            )}
+              我要建議
+            </Button>
           </div>
-          {awesomeList && (
-            <div className={classes.headerContainer}>
-              <div className={classes.header}>
-                為了幫助學生更了解自己有哪些選擇，我們整理了
-                {awesomeList[0].name}
-                畢業生最常去的公司。
-                <br />
-                先從這些公司開始應徵吧！
-              </div>
-              <Button
-                style={{ minWidth: 100, marginLeft: 8 }}
-                variant="contained"
-                color="primary"
-                onClick={handleClickOpen}
-              >
-                我要建議
-              </Button>
-            </div>
-          )}
           {awesomeList &&
             awesomeList.length > 0 &&
             awesomeList[0].teams &&
             awesomeList[0].teams.map(c => (
-              <CompanyCard key={c.name + params.name || ""} {...c} />
+              <CompanyCard key={c.name + (params.name || "")} {...c} />
             ))}
         </div>
         <Dialog
@@ -405,9 +334,8 @@ const Awesome: React.FC = () => {
           <DialogTitle id="form-dialog-title">我要建議</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              這些數據，是牛奶找工作，詢問系上教授、請教同學、統計 Linkedin 上
-              2010
-              後入學的學生，自行整理的名單，並沒有受公司委託進行廣告。如果有任何與事實不符的地方，或想補充、新增、刪除公司，歡迎留言告訴我們，一起幫助大學生畢業更有方向！
+              這些數據是牛奶找工作詢問系上教授、同學，及統計 LinkedIn 上 2010
+              年後入學的學生，自行整理的名單，並沒有受公司委託進行廣告。如果有任何與事實不符的地方，或想補充、新增、刪除公司，歡迎留言告訴我們，一起幫助大學生畢業更有方向！
             </DialogContentText>
             <TextField
               value={suggestion}

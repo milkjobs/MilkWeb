@@ -4,8 +4,7 @@ import { TeamCreateForm } from "components/TeamComponents";
 import { DownloadAppDialog, LoginDialog } from "components/Util";
 import React, { MouseEvent, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import Badge from "@material-ui/core/Badge";
-import { useAuth, useChannel } from "stores";
+import { useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
   link: {
@@ -49,7 +48,6 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
   const classes = useStyles();
   const location = useLocation();
   const { user } = useAuth();
-  const { unreadMessageCount } = useChannel();
   const [isDownloadAppDialogOpen, setIsDownloadAppDialogOpen] = useState(false);
   const [isCreateTeamFormOpen, setIsCreateTeamFormOpen] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);

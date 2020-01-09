@@ -4,18 +4,18 @@ import InputBase from "@material-ui/core/InputBase";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import algoliasearch from "algoliasearch/lite";
+import { AwesomeHeader } from "components/Awesome";
 import { Header } from "components/Header";
 import { JobList, SearchBar } from "components/JobSearch";
 import { algoliaConfig } from "config";
-import { AlgoliaService } from "helpers";
+import "firebase/analytics";
+import firebase from "firebase/app";
+import { AlgoliaService, checkUrl, openInNewTab } from "helpers";
 import React, { useEffect, useState } from "react";
 import { Configure, InstantSearch } from "react-instantsearch-dom";
 import { useInView } from "react-intersection-observer";
-import { useAuth } from "stores";
-import { Link } from "react-router-dom";
 import TextLoop from "react-text-loop";
-import { openInNewTab, checkUrl } from "helpers";
-import Button from "@material-ui/core/Button";
+import { useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,39 +41,6 @@ const useStyles = makeStyles(theme => ({
       marginBottom: 8
     }
   },
-  cataloguesContainer: {
-    flexDirection: "column",
-    display: "none",
-    [theme.breakpoints.up("md")]: {
-      maxWidth: "100px",
-      display: "flex",
-      flex: 1
-    }
-  },
-  catalogue: {
-    fontSize: 16,
-    [theme.breakpoints.up("md")]: {
-      width: "100px",
-      paddingTop: 12,
-      paddingBottom: 12,
-      marginTop: 4,
-      marginBottom: 4,
-      "&:hover": {
-        backgroundColor: "#eeeeee",
-        borderRadius: 4,
-        cursor: "pointer"
-      }
-    }
-  },
-  jobsContainer: {
-    display: "flex",
-    flex: 4,
-    flexDirection: "column",
-    boxSizing: "border-box",
-    [theme.breakpoints.up("md")]: {
-      paddingLeft: 24
-    }
-  },
   searchBarRoot: {
     padding: "2px 4px",
     display: "flex",
@@ -93,20 +60,6 @@ const useStyles = makeStyles(theme => ({
   iconButton: {
     padding: 10
   },
-  schoolContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    flexWrap: "wrap",
-    padding: 16
-  },
-  schoolTitle: {
-    fontWeight: 800,
-    marginRight: 16
-  },
-  majorButton: {
-    textDecoration: "none"
-  },
   latestJobs: {
     width: 200,
     marginLeft: "auto",
@@ -114,7 +67,7 @@ const useStyles = makeStyles(theme => ({
     textAlign: "center",
     height: 20
   },
-  latestJob: {
+  latestNews: {
     width: 200,
     textAlign: "center",
     fontWeight: 800,
@@ -122,7 +75,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const latestJobs = [
+interface News {
+  name: string;
+  website: string;
+}
+
+const latestNews: News[] = [
   { name: "蝦皮 儲備幹部 1/31 截止", website: "https://careers.shopee.tw/GLP" },
   {
     name: "Garena 儲備幹部 3/8 截止",
@@ -181,83 +139,28 @@ const JobSearch: React.FC = () => {
     setClient();
   }, [user, getApi]);
 
+  const onClickTextLoop = (news: News) => {
+    firebase.analytics().logEvent("click_news", { name: news.name });
+    openInNewTab(checkUrl(news.website));
+  };
+
   return (
     <div className={classes.root}>
       <Header hideSearchBar={hideHeaderSearchBar} />
       <div className={classes.container}>
         <TextLoop className={classes.latestJobs}>
-          {latestJobs.map(j => (
+          {latestNews.map(n => (
             <div
-              className={classes.latestJob}
-              key={j.name}
-              onClick={() => openInNewTab(checkUrl(j.website))}
+              className={classes.latestNews}
+              key={n.name}
+              onClick={() => onClickTextLoop(n)}
             >
-              {j.name}
+              {n.name}
             </div>
           ))}
         </TextLoop>
-        <div className={classes.schoolContainer}>
-          <div className={classes.schoolTitle}>就業精選</div>
-          <Link
-            to={{ pathname: "/awesome/台大電機" }}
-            className={classes.majorButton}
-          >
-            <Button>台大電機</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大資工" }}
-            className={classes.majorButton}
-          >
-            <Button>台大資工</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大財金" }}
-            className={classes.majorButton}
-          >
-            <Button>台大財金</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大國企" }}
-            className={classes.majorButton}
-          >
-            <Button>台大國企</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大工管" }}
-            className={classes.majorButton}
-          >
-            <Button>台大工管</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大化工" }}
-            className={classes.majorButton}
-          >
-            <Button>台大化工</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大機械" }}
-            className={classes.majorButton}
-          >
-            <Button>台大機械</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大公衛" }}
-            className={classes.majorButton}
-          >
-            <Button>台大公衛</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大藥學" }}
-            className={classes.majorButton}
-          >
-            <Button>台大藥學</Button>
-          </Link>
-          <Link
-            to={{ pathname: "/awesome/台大圖資" }}
-            className={classes.majorButton}
-          >
-            <Button>台大圖資</Button>
-          </Link>
+        <div style={{ padding: 16 }}>
+          <AwesomeHeader />
         </div>
         {algoliaClient ? (
           <InstantSearch
