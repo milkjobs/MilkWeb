@@ -97,6 +97,12 @@ const AwesomeHeader: React.FC<Props> = ({ showStories, showChatRoom }) => {
       >
         <Button>台大圖資</Button>
       </Link>
+      <Link
+        to={{ pathname: "/awesome/台大數學" }}
+        className={classes.majorButton}
+      >
+        <Button>台大數學</Button>
+      </Link>
       {showChatRoom && matched && (
         <div
           onClick={() => openInNewTab("https://tlk.io/ntu")}

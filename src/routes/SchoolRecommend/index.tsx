@@ -149,6 +149,10 @@ const CompanyCard: React.FC<AwesomeTeam> = props => {
     else return `營收約 ${income} 億新台幣`;
   };
 
+  const linkedinCountToWord = (count: number) => {
+    return `統計: ${count} 人`;
+  };
+
   return (
     <div
       className={classes.companyCardContainer}
@@ -169,6 +173,10 @@ const CompanyCard: React.FC<AwesomeTeam> = props => {
                 props.headcount ? sizeToWord(props.headcount) : ""
               }   ${
                 props.revenue && !matched ? incomeToWord(props.revenue) : ""
+              }   ${
+                props.linkedinCount
+                  ? linkedinCountToWord(props.linkedinCount)
+                  : ""
               }`}
             </div>
           </div>

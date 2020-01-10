@@ -4,7 +4,7 @@
   "description": "react web of milk",
   "private": true,
   "dependencies": {
-    "@frankyjuang/milkapi-client": "git+ssh://git@github.com/frankyjuang/MilkAPI-Client.git#2.10.1",
+    "@frankyjuang/milkapi-client": "git+ssh://git@github.com/frankyjuang/MilkAPI-Client.git#2.10.2",
     "@material-ui/core": "^4.5.0",
     "@material-ui/icons": "^4.4.3",
     "@mdi/js": "^4.5.95",
