@@ -18,6 +18,7 @@ import Message from "routes/Message";
 import Resume from "routes/Resume";
 import SampleMessage from "routes/SampleMessage";
 import Team from "routes/Team";
+import JobStatVis from "routes/JobStatVis"
 import { useAuth } from "stores";
 
 interface PrivateRouteProps extends RouteProps {
@@ -54,6 +55,7 @@ const RootRoute: React.FC = () => {
       <Route path="/help" component={HelpRoute} />
       <Route path="/captcha" component={Captcha} />
       <Route path="/job/:id" exact component={Job} />
+      <Route path="/jobstat/:id" exact component={JobStatVis} />
       <Route path="/team/:id" exact component={Team} />
       <Route path="/sample-message" exact component={SampleMessage} />
       <PrivateRoute path="/profile" exact component={ApplicantProfile} />
