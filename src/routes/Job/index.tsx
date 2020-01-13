@@ -147,7 +147,7 @@ const Job: React.FC = () => {
                   />
                 )}
                 <JobLocation address={job.address} />
-                <JobStat jobId={params.id} />
+                <JobStat jobId={params.id} createdAt={job.createdAt} />
               </div>
               {job.recruiter && (
                 <div className={classes.descriptionSide}>
