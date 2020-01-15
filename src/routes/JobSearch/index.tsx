@@ -81,6 +81,10 @@ interface News {
 }
 
 const latestNews: News[] = [
+  {
+    name: "MixerBox 2020 新鮮人招募中",
+    website: "https://milk.jobs/job/2e2aa7dc13c542179559177d265f2183"
+  },
   { name: "蝦皮 儲備幹部 1/31 截止", website: "https://careers.shopee.tw/GLP" },
   {
     name: "Garena 儲備幹部 3/8 截止",
