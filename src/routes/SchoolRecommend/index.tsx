@@ -273,6 +273,7 @@ const Awesome: React.FC = () => {
   };
 
   const sendSuggestion = async () => {
+    handleClose();
     const supportApi = await getApi("Support");
     await supportApi.addAnonymousSupportTicket({
       newSupportTicket: {
@@ -281,7 +282,6 @@ const Awesome: React.FC = () => {
         email: "awesomeSuggestion@milk.jobs"
       }
     });
-    handleClose();
     setSuggestion("");
   };
 
