@@ -75,9 +75,13 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
     team.secondaryField
   );
   const [website, setWebsite] = useState<string | undefined>(team.website);
+  const [websiteErrorMessage, setWebsiteErrorMessage] = useState<string>();
   const [introduction, setIntroduction] = useState<string | undefined>(
     team.introduction
   );
+  const [introductionErrorMessage, setIntroductionErrorMessage] = useState<
+    string
+  >();
 
   useEffect(() => {
     const getFieldTagOptions = async () => {
@@ -153,6 +157,10 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
   };
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length > 100) {
+      setStreetErrorMessage("地址最長不能超過 100 個字");
+      return;
+    }
     setStreet(event.target.value);
     setStreetErrorMessage("");
   };
@@ -185,13 +193,23 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
   };
 
   const handleWebsiteChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length > 2048) {
+      setWebsiteErrorMessage("公司網站最長不能超過 2048 個字");
+      return;
+    }
     setWebsite(event.target.value);
+    setWebsiteErrorMessage("");
   };
 
-  const handleDescriptionChange = (
+  const handleIntroductionChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    if (event.target.value.length > 2000) {
+      setIntroductionErrorMessage("介紹最長不能超過 2000 個字");
+      return;
+    }
     setIntroduction(event.target.value);
+    setIntroductionErrorMessage("");
   };
 
   useEffect(() => {
@@ -427,6 +445,8 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
               ))}
           </TextField>
           <TextField
+            error={Boolean(websiteErrorMessage)}
+            helperText={websiteErrorMessage}
             margin="normal"
             id="name"
             label="網站（選填）"
@@ -435,11 +455,13 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
             fullWidth
           />
           <TextField
+            error={Boolean(introductionErrorMessage)}
+            helperText={introductionErrorMessage}
             margin="normal"
             id="name"
             label="介紹（選填）"
             value={introduction}
-            onChange={handleDescriptionChange}
+            onChange={handleIntroductionChange}
             multiline
             rows="10"
             rowsMax="10"
