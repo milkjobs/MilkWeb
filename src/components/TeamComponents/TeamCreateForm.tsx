@@ -1,5 +1,5 @@
 import { TeamSize } from "@frankyjuang/milkapi-client";
-import { InputAdornment, Theme } from "@material-ui/core";
+import { InputAdornment } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
@@ -21,12 +21,8 @@ interface TeamEditFormProps {
   handleClose: () => void;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
-    container: {
-      display: "flex",
-      flexWrap: "wrap"
-    },
     menu: {
       width: 200
     }
@@ -159,6 +155,10 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
   };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length > 20) {
+      setNicknameErrorMessage("公司名稱長度不能超過 20 個字");
+      return;
+    }
     setNickname(event.target.value);
     setNicknameErrorMessage("");
   };
@@ -179,6 +179,10 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
   };
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length > 100) {
+      setStreetErrorMessage("地址最長不能超過 100 個字");
+      return;
+    }
     setStreet(event.target.value);
     setStreetErrorMessage("");
   };
