@@ -68,7 +68,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     padding: 16,
     [theme.breakpoints.down("xs")]: {
-      padding: 8
+      padding: 12
     },
     "&:hover": {
       cursor: "pointer",
@@ -106,7 +106,7 @@ const useStyles = makeStyles(theme => ({
   },
   info: {
     fontSize: 16,
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.hint,
     textAlign: "left",
     [theme.breakpoints.down("xs")]: {
       marginLeft: 8
@@ -246,7 +246,10 @@ const Awesome: React.FC = () => {
   const [value, setValue] = useState(0);
   const [note, setNote] = useState<string>(localStorage.getItem("note") || "");
   const [helperText, setHelperText] = useState<string>();
-  const introduction = `為了幫助學生更了解自己有哪些選擇，我們整理了${params.name}畢業生最常去的公司。先從這些公司開始應徵吧！`;
+  const introduction =
+    params.name.length === 4
+      ? `為了幫助學生更了解自己有哪些選擇，我們整理了${params.name}畢業生最常去的公司。先從這些公司開始應徵吧！`
+      : `你對${params.name}有興趣嗎？我們整理了${params.name}相關的公司。先從這些公司開始應徵吧！`;
 
   const saveNote = (note: string) => {
     // eslint-disable-next-line @typescript-eslint/camelcase

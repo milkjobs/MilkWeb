@@ -115,6 +115,12 @@ const AwesomeHeader: React.FC<Props> = ({ showStories, showChatRoom }) => {
       >
         <Button>台大經濟</Button>
       </Link>
+      <Link to={{ pathname: "/awesome/電商" }} className={classes.majorButton}>
+        <Button>電商</Button>
+      </Link>
+      <Link to={{ pathname: "/awesome/遊戲" }} className={classes.majorButton}>
+        <Button>遊戲</Button>
+      </Link>
       {showChatRoom && matched && (
         <div
           onClick={() => openInNewTab("https://tlk.io/ntu")}
