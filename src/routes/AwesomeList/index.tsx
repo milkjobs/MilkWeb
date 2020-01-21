@@ -1,4 +1,7 @@
-import { AwesomeList, AwesomeTeam } from "@frankyjuang/milkapi-client";
+import {
+  AwesomeList as AwesomeListType,
+  AwesomeTeam
+} from "@frankyjuang/milkapi-client";
 import { useMediaQuery } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -234,11 +237,11 @@ const useTabStyles = makeStyles(theme => ({
   selected: {}
 }));
 
-const Awesome: React.FC = () => {
+const AwesomeList: React.FC = () => {
   const { getApi, user } = useAuth();
   const params = useParams<{ name: string }>();
   const classes = useStyles();
-  const [awesomeList, setAwesomeList] = useState<AwesomeList[]>();
+  const [awesomeList, setAwesomeList] = useState<AwesomeListType[]>();
   const [open, setOpen] = useState(false);
   const [suggestion, setSuggestion] = useState<string>();
   const tabsStyle = useTabsStyles();
@@ -409,4 +412,4 @@ const Awesome: React.FC = () => {
   );
 };
 
-export default Awesome;
+export default AwesomeList;
