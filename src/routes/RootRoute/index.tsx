@@ -16,7 +16,7 @@ import JobSearch from "routes/JobSearch";
 import JoinTeam from "routes/JoinTeam";
 import Message from "routes/Message";
 import Resume from "routes/Resume";
-import SchoolRecommend from "routes/SchoolRecommend";
+import AwesomeList from "routes/AwesomeList";
 import SampleMessage from "routes/SampleMessage";
 import Team from "routes/Team";
 import { useAuth, ChannelProvider } from "stores";
@@ -72,7 +72,7 @@ const RootRoute: React.FC = () => {
       <Route path="/sample-message" exact component={SampleMessage} />
       <Route path="/stories" exact component={Stories} />
       <Route path="/chat" exact component={Chat} />
-      <Route path="/awesome/:name" exact component={SchoolRecommend} />
+      <Route path="/awesome/:name" exact component={AwesomeList} />
       <PrivateRoute path="/profile" exact component={ApplicantProfile} />
       <PrivateRoute path="/resume" exact component={Resume} />
       <PrivateRoute path="/message/" component={MessageRoute} />
