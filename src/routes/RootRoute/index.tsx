@@ -19,6 +19,7 @@ import Resume from "routes/Resume";
 import AwesomeList from "routes/AwesomeList";
 import SampleMessage from "routes/SampleMessage";
 import Team from "routes/Team";
+import JobStatVis from "routes/JobStatVis";
 import { useAuth, ChannelProvider } from "stores";
 import Stories from "routes/Stories";
 import Chat from "routes/Chat";
@@ -68,6 +69,7 @@ const RootRoute: React.FC = () => {
       <Route path="/help" component={HelpRoute} />
       <Route path="/captcha" component={Captcha} />
       <Route path="/job/:id" exact component={Job} />
+      <Route path="/jobstat/:id" exact component={JobStatVis} />
       <Route path="/team/:id" exact component={Team} />
       <Route path="/sample-message" exact component={SampleMessage} />
       <Route path="/stories" exact component={Stories} />

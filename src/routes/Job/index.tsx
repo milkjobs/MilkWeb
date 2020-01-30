@@ -7,7 +7,8 @@ import {
   JobFooter,
   JobLocation,
   JobSideCard,
-  JobTitle
+  JobTitle,
+  JobStat
 } from "components/Job";
 import "firebase/analytics";
 import firebase from "firebase/app";
@@ -146,6 +147,7 @@ const Job: React.FC = () => {
                   />
                 )}
                 <JobLocation address={job.address} />
+                <JobStat jobId={params.id} createdAt={job.createdAt} />
               </div>
               {job.recruiter && (
                 <div className={classes.descriptionSide}>
