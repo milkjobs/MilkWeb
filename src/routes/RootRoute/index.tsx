@@ -16,10 +16,13 @@ import JobSearch from "routes/JobSearch";
 import JoinTeam from "routes/JoinTeam";
 import Message from "routes/Message";
 import Resume from "routes/Resume";
+import AwesomeList from "routes/AwesomeList";
 import SampleMessage from "routes/SampleMessage";
 import Team from "routes/Team";
-import JobStatVis from "routes/JobStatVis"
-import { useAuth } from "stores";
+import JobStatVis from "routes/JobStatVis";
+import { useAuth, ChannelProvider } from "stores";
+import Stories from "routes/Stories";
+import Chat from "routes/Chat";
 
 interface PrivateRouteProps extends RouteProps {
   component:
@@ -47,6 +50,17 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   );
 };
 
+const MessageRoute: React.FC = () => {
+  return (
+    <ChannelProvider>
+      <Switch>
+        <PrivateRoute path="/message/:id" exact component={Message} />
+        <PrivateRoute path="/message/" exact component={Message} />
+      </Switch>
+    </ChannelProvider>
+  );
+};
+
 const RootRoute: React.FC = () => {
   return (
     <Switch>
@@ -58,10 +72,12 @@ const RootRoute: React.FC = () => {
       <Route path="/jobstat/:id" exact component={JobStatVis} />
       <Route path="/team/:id" exact component={Team} />
       <Route path="/sample-message" exact component={SampleMessage} />
+      <Route path="/stories" exact component={Stories} />
+      <Route path="/chat" exact component={Chat} />
+      <Route path="/awesome/:name" exact component={AwesomeList} />
       <PrivateRoute path="/profile" exact component={ApplicantProfile} />
       <PrivateRoute path="/resume" exact component={Resume} />
-      <PrivateRoute path="/message/" exact component={Message} />
-      <PrivateRoute path="/message/:id" exact component={Message} />
+      <PrivateRoute path="/message/" component={MessageRoute} />
       <PrivateRoute path="/join" exact component={JoinTeam} />
       <Route path="/" component={NotFound} />
     </Switch>

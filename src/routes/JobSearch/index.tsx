@@ -4,13 +4,17 @@ import InputBase from "@material-ui/core/InputBase";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import algoliasearch from "algoliasearch/lite";
+import { AwesomeHeader } from "components/Awesome";
 import { Header } from "components/Header";
 import { JobList, SearchBar } from "components/JobSearch";
 import { algoliaConfig } from "config";
-import { AlgoliaService } from "helpers";
+import "firebase/analytics";
+import firebase from "firebase/app";
+import { AlgoliaService, checkUrl, openInNewTab } from "helpers";
 import React, { useEffect, useState } from "react";
 import { Configure, InstantSearch } from "react-instantsearch-dom";
 import { useInView } from "react-intersection-observer";
+import TextLoop from "react-text-loop";
 import { useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
@@ -37,39 +41,6 @@ const useStyles = makeStyles(theme => ({
       marginBottom: 8
     }
   },
-  cataloguesContainer: {
-    flexDirection: "column",
-    display: "none",
-    [theme.breakpoints.up("md")]: {
-      maxWidth: "100px",
-      display: "flex",
-      flex: 1
-    }
-  },
-  catalogue: {
-    fontSize: 16,
-    [theme.breakpoints.up("md")]: {
-      width: "100px",
-      paddingTop: 12,
-      paddingBottom: 12,
-      marginTop: 4,
-      marginBottom: 4,
-      "&:hover": {
-        backgroundColor: "#eeeeee",
-        borderRadius: 4,
-        cursor: "pointer"
-      }
-    }
-  },
-  jobsContainer: {
-    display: "flex",
-    flex: 4,
-    flexDirection: "column",
-    boxSizing: "border-box",
-    [theme.breakpoints.up("md")]: {
-      paddingLeft: 24
-    }
-  },
   searchBarRoot: {
     padding: "2px 4px",
     display: "flex",
@@ -88,8 +59,56 @@ const useStyles = makeStyles(theme => ({
   },
   iconButton: {
     padding: 10
+  },
+  latestJobs: {
+    width: 200,
+    marginLeft: "auto",
+    marginRight: "auto",
+    textAlign: "center",
+    height: 20
+  },
+  latestNews: {
+    width: 200,
+    textAlign: "center",
+    fontWeight: 800,
+    cursor: "pointer"
   }
 }));
+
+interface News {
+  name: string;
+  website: string;
+}
+
+const latestNews: News[] = [
+  {
+    name: "MixerBox 2020 新鮮人招募中",
+    website: "https://milk.jobs/job/2e2aa7dc13c542179559177d265f2183"
+  },
+  { name: "蝦皮 儲備幹部 1/31 截止", website: "https://careers.shopee.tw/GLP" },
+  {
+    name: "Garena 儲備幹部 3/8 截止",
+    website: "https://map.career.garena.tw/"
+  },
+  {
+    name: "Mckinsey 實習生 1/30 截止",
+    website: "https://www.facebook.com/NCCUCG/posts/936614543202599/"
+  },
+  {
+    name: "17 Media 1/18 工程招募日",
+    website:
+      "https://docs.google.com/forms/d/e/1FAIpQLSeA17OfMg2yLpUNWzhty8c3xVFHuMfTOLaBk0W76WqqYsnctg/viewform"
+  },
+  {
+    name: "華碩 AI 實習 4/30 截止",
+    website: "https://aics.asus.com/zh/homepage-tw/"
+  },
+  {
+    name: "Dell 儲備幹部",
+    website:
+      "https://dell.wd1.myworkdayjobs.com/External/job/Taipei-Taiwan/RG-Advisor--Project-Program-Management_R41987"
+  }
+];
 
 const JobSearch: React.FC = () => {
   const classes = useStyles();
@@ -124,10 +143,29 @@ const JobSearch: React.FC = () => {
     setClient();
   }, [user, getApi]);
 
+  const onClickTextLoop = (news: News) => {
+    firebase.analytics().logEvent("click_news", { name: news.name });
+    openInNewTab(checkUrl(news.website));
+  };
+
   return (
     <div className={classes.root}>
       <Header hideSearchBar={hideHeaderSearchBar} />
       <div className={classes.container}>
+        <TextLoop className={classes.latestJobs}>
+          {latestNews.map(n => (
+            <div
+              className={classes.latestNews}
+              key={n.name}
+              onClick={() => onClickTextLoop(n)}
+            >
+              {n.name}
+            </div>
+          ))}
+        </TextLoop>
+        <div style={{ padding: 16 }}>
+          <AwesomeHeader />
+        </div>
         {algoliaClient ? (
           <InstantSearch
             indexName={algoliaConfig.index}

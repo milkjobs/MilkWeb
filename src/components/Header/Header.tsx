@@ -230,6 +230,11 @@ const Header: React.FC<Props> = props => {
                 <span className={classes.tab}>關於我們</span>
               </Link>
             )}
+            {isRecruiter && (
+              <Link to={"/help/pricing"} className={classes.link}>
+                <span className={classes.tab}>付費方案</span>
+              </Link>
+            )}
 
             <div className={classes.grow} />
             {isRecruiter ? (

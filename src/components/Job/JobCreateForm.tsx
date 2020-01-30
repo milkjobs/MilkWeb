@@ -5,7 +5,7 @@ import {
   JobUnpublishedReason,
   SalaryType
 } from "@frankyjuang/milkapi-client";
-import { InputAdornment, Theme } from "@material-ui/core";
+import { InputAdornment } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
@@ -60,15 +60,11 @@ const ExperienceLevelTypes = [
 
 const range = n => Array.from(Array(n).keys());
 
-const HourlySalaryOptions = [...range(30).map(n => (n + 30) * 5)];
-const MonthlySalaryOptions = [23100, ...range(120).map(n => (n + 24) * 1000)];
+const HourlySalaryOptions = [158, ...range(30).map(n => 160 + n * 5)];
+const MonthlySalaryOptions = [23800, ...range(120).map(n => 24000 + n * 1000)];
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
-    container: {
-      display: "flex",
-      flexWrap: "wrap"
-    },
     menu: {
       width: 200
     }
@@ -104,6 +100,9 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
     string
   >();
   const [description, setDescription] = useState<string>();
+  const [descriptionErrorMessage, setDescriptionErrorMessage] = useState<
+    string
+  >();
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertType, setAlertType] = useState<AlertType>();
 
@@ -189,6 +188,10 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
   };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length > 50) {
+      setNameErrorMessage("職缺名稱最長不能超過 50 個字");
+      return;
+    }
     setName(event.target.value);
     setNameErrorMessage("");
   };
@@ -204,6 +207,10 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
   };
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length > 100) {
+      setStreetErrorMessage("地址最長不能超過 100 個字");
+      return;
+    }
     setStreet(event.target.value);
     setStreetErrorMessage("");
   };
@@ -254,7 +261,12 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
   const handleDescriptionChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    if (event.target.value.length > 2000) {
+      setDescriptionErrorMessage("介紹最長不能超過 2000 個字");
+      return;
+    }
     setDescription(event.target.value);
+    setDescriptionErrorMessage("");
   };
 
   useEffect(() => {
@@ -505,6 +517,8 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
             ))}
           </TextField>
           <TextField
+            error={Boolean(descriptionErrorMessage)}
+            helperText={descriptionErrorMessage}
             margin="normal"
             id="name"
             label="介紹（選填）"

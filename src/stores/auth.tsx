@@ -14,7 +14,9 @@ import {
   User,
   UserApi,
   VerificationApi,
-  ChannelApi
+  ChannelApi,
+  AwesomeApi,
+  SupportApi
 } from "@frankyjuang/milkapi-client";
 import { apiServiceConfig } from "config";
 import firebase from "firebase/app";
@@ -97,6 +99,10 @@ export const AuthProvider = ({ children }) => {
       return new VerificationApi(configuration) as any;
     } else if (type === "Channel") {
       return new ChannelApi(configuration) as any;
+    } else if (type === "Awesome") {
+      return new AwesomeApi(configuration) as any;
+    } else if (type === "Support") {
+      return new SupportApi(configuration) as any;
     }
     /* eslint-enable @typescript-eslint/no-explicit-any */
 
@@ -147,7 +153,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
-        getApi: getApi,
+        getApi,
         isAuthenticated,
         loading,
         reloadUser,

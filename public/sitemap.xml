@@ -3,115 +3,277 @@
   <url>
     <loc>https://milk.jobs/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/about/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/about/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/stories/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/stories/" />
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/help/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/help/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/help/tos/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/help/tos/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/help/privacy/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/help/privacy/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/help/faq/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/help/faq/" />
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/help/pricing/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/help/pricing/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/awesome/台大電機/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/awesome/台大電機/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/awesome/台大資工/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/awesome/台大資工/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/awesome/台大財金/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/awesome/台大財金/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/awesome/台大國企/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/awesome/台大國企/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/awesome/台大工管/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/awesome/台大工管/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/awesome/台大化工/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/awesome/台大化工/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/awesome/台大機械/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/awesome/台大機械/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/awesome/台大公衛/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/awesome/台大公衛/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/awesome/台大藥學/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/awesome/台大藥學/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/awesome/台大圖資/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/awesome/台大圖資/" />
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/team/00380d74a84e40b8bc251d33078b60fd/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/team/00380d74a84e40b8bc251d33078b60fd/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/team/2ea01256c9894d289d5b9546577aaf80/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/team/2ea01256c9894d289d5b9546577aaf80/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/team/c181b9e6e3914e73ac53899739d315cb/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/team/c181b9e6e3914e73ac53899739d315cb/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/team/763f330eb61141e6b77700f02cf68130/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/team/763f330eb61141e6b77700f02cf68130/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/team/f3ffa32e19b940b6b355cbb878793527/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/team/f3ffa32e19b940b6b355cbb878793527/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/team/d04644c12dff46099e21bfc6b9bf9ee5/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/team/d04644c12dff46099e21bfc6b9bf9ee5/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/team/d102548227ca436d87db0d9256219265/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/team/d102548227ca436d87db0d9256219265/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/team/e3670876ce3946e78fa58c0668c6065d/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/team/e3670876ce3946e78fa58c0668c6065d/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/team/b8f498f88fbc4a15889665e3bc5f7597/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/team/b8f498f88fbc4a15889665e3bc5f7597/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/team/bced2c7064664c7a82d0cefb772b0b58/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/team/bced2c7064664c7a82d0cefb772b0b58/" />
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/job/13bac5eef2f44edba26a099ea583dc04/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/13bac5eef2f44edba26a099ea583dc04/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/job/1b91ed81e3414c84ad3e2e4402b44ad1/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/1b91ed81e3414c84ad3e2e4402b44ad1/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/job/29978b1b6dc540f1957b8ceb16715658/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/29978b1b6dc540f1957b8ceb16715658/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/job/2df4e512b9874cb89440043f2f6590ec/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/2df4e512b9874cb89440043f2f6590ec/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/job/9a64e72123ef48d3b565654098d56c34/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/9a64e72123ef48d3b565654098d56c34/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/job/ea940431f82741499cd5fb97229c2857/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/ea940431f82741499cd5fb97229c2857/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/job/d02d4bbbaa56432f9f37e9ff71ee6ba9/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/d02d4bbbaa56432f9f37e9ff71ee6ba9/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://milk.jobs/job/b0942a9ab5664651b269938459d96d5f/</loc>
     <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/b0942a9ab5664651b269938459d96d5f/" />
-    <lastmod>2019-12-18</lastmod>
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/job/ce451128ba524e7c8303509d6b8c083c/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/ce451128ba524e7c8303509d6b8c083c/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/job/50690c02766d499a9da3fb156e4cfe0a/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/50690c02766d499a9da3fb156e4cfe0a/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/job/7e0e7f8c40264c989fb8d10922a08bd8/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/7e0e7f8c40264c989fb8d10922a08bd8/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/job/1eb933257d8d41deaa8199b07b43460e/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/1eb933257d8d41deaa8199b07b43460e/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/job/bec858717b6d4c348a494da37f121187/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/bec858717b6d4c348a494da37f121187/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/job/2739dee640f4409d83a938b8f9acfa2e/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/2739dee640f4409d83a938b8f9acfa2e/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/job/429ce6352cca495988e65be92ae20fe0/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/429ce6352cca495988e65be92ae20fe0/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/job/a56fdfe2aaa0496b9738a3351a4b51d6/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/a56fdfe2aaa0496b9738a3351a4b51d6/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/job/ccfac96aecaf4f98bb6d119f0f854e1a/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/ccfac96aecaf4f98bb6d119f0f854e1a/" />
+    <lastmod>2020-01-10</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://milk.jobs/job/aa1db5920f4e44fb9755c6807758f169/</loc>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://milk.jobs/job/aa1db5920f4e44fb9755c6807758f169/" />
+    <lastmod>2020-01-10</lastmod>
     <changefreq>daily</changefreq>
   </url>
 </urlset>

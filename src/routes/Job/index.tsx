@@ -15,7 +15,7 @@ import firebase from "firebase/app";
 import { JobPostingStructuredData, PageMetadata } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useAuth } from "stores";
+import { ChannelProvider, useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -48,8 +48,8 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "960px"
+    [theme.breakpoints.up("lg")]: {
+      width: "1120px"
     }
   },
   titleContainer: {
@@ -151,11 +151,13 @@ const Job: React.FC = () => {
               </div>
               {job.recruiter && (
                 <div className={classes.descriptionSide}>
-                  <JobSideCard
-                    recruiter={job.recruiter}
-                    jobId={job.uuid}
-                    team={job.team}
-                  />
+                  <ChannelProvider>
+                    <JobSideCard
+                      recruiter={job.recruiter}
+                      jobId={job.uuid}
+                      team={job.team}
+                    />
+                  </ChannelProvider>
                 </div>
               )}
             </div>

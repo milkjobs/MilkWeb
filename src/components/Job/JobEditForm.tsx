@@ -4,7 +4,7 @@ import {
   Job,
   SalaryType
 } from "@frankyjuang/milkapi-client";
-import { InputAdornment, Theme } from "@material-ui/core";
+import { InputAdornment } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
@@ -46,10 +46,18 @@ const ExperienceLevelTypes = [
   { value: ExperienceLevel.Senior, label: "資深" }
 ];
 
-let range = n => Array.from(Array(n).keys());
+const range = n => Array.from(Array(n).keys());
 
-const HourlySalaryOptions = [...range(30).map(n => (n + 30) * 5)];
-const MonthlySalaryOptions = [23100, ...range(120).map(n => (n + 24) * 1000)];
+const HourlySalaryOptions = [158, ...range(30).map(n => 160 + n * 5)];
+const MonthlySalaryOptions = [23800, ...range(120).map(n => 24000 + n * 1000)];
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    menu: {
+      width: 200
+    }
+  })
+);
 
 const JobEditForm: React.FC<JobEditFormProps> = ({
   open,
@@ -91,6 +99,9 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
   const [description, setDescription] = useState<string | undefined>(
     job.description
   );
+  const [descriptionErrorMessage, setDescriptionErrorMessage] = useState<
+    string
+  >();
 
   const publish = async () => {
     const jobApi = await getApi("Job");
@@ -159,6 +170,10 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
   };
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length > 100) {
+      setStreetErrorMessage("地址最長不能超過 100 個字");
+      return;
+    }
     setStreet(event.target.value);
     setStreetErrorMessage("");
   };
@@ -209,7 +224,12 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
   const handleDescriptionChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    if (event.target.value.length > 2000) {
+      setDescriptionErrorMessage("介紹最長不能超過 2000 個字");
+      return;
+    }
     setDescription(event.target.value);
+    setDescriptionErrorMessage("");
   };
 
   useEffect(() => {
@@ -222,6 +242,14 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
     setSubAreaOptions(selectedMainArea ? selectedMainArea.districts : []);
   }, [area]);
 
+  const handleDeleteDialogOpen = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteDialogClose = () => {
+    setDeleteDialogOpen(false);
+  };
+
   const removeJob = async () => {
     setDeleteLoading(true);
     const jobApi = await getApi("Job");
@@ -230,14 +258,6 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
     setDeleteLoading(false);
     handleDeleteDialogClose();
     history.push("/recruiter");
-  };
-
-  const handleDeleteDialogOpen = () => {
-    setDeleteDialogOpen(true);
-  };
-
-  const handleDeleteDialogClose = () => {
-    setDeleteDialogOpen(false);
   };
 
   return (
@@ -434,6 +454,8 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
             ))}
           </TextField>
           <TextField
+            error={Boolean(descriptionErrorMessage)}
+            helperText={descriptionErrorMessage}
             margin="normal"
             id="name"
             label="介紹（選填）"
@@ -503,17 +525,5 @@ const JobEditForm: React.FC<JobEditFormProps> = ({
     </div>
   );
 };
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: "flex",
-      flexWrap: "wrap"
-    },
-    menu: {
-      width: 200
-    }
-  })
-);
 
 export { JobEditForm };

@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { Dialog, DialogContent } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import React, { useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 

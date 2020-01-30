@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { createStyles, Theme } from "@material-ui/core/styles";
-import { makeStyles } from "@material-ui/core/styles";
 import { MessageCustomType } from "@frankyjuang/milkapi-client";
-import { useAuth } from "stores";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import to from "await-to-js";
 import { ResumeDialog } from "components/Util";
+import React, { useCallback, useEffect, useState } from "react";
+import { useAuth } from "stores";
+import { ApplicationMessage } from "./applicationMessage";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,23 +59,27 @@ const Message: React.FC<Props> = props => {
     setIsOpen(false);
   };
 
-  const getResumeUrl = async () => {
+  const getResumeUrl = useCallback(async () => {
     const data = JSON.parse(props.message.data);
     const channelApi = await getApi("Channel");
-    const [err, url] = await to(
+    const [, url] = await to(
       channelApi.getResumeUrlInChannel({
         resumeKey: data["resumeKey"],
         channelUrl: props.message.channelUrl
       })
     );
     setResumeUrl(url);
-  };
+  }, [getApi, props.message.channelUrl, props.message.data]);
 
   useEffect(() => {
     if (props.message.customType === MessageCustomType.Resume) {
       getResumeUrl();
     }
-  }, []);
+  }, [getResumeUrl, props.message.customType]);
+
+  if (props.message.customType === MessageCustomType.Application) {
+    return <ApplicationMessage {...props} />;
+  }
 
   if (props.message.customType === MessageCustomType.Resume) {
     return !fromMe ? (

@@ -1,9 +1,8 @@
 import { makeStyles } from "@material-ui/core";
 import { Header } from "components/Header";
+import { DownloadAppDialog } from "components/Util";
 import React, { useState } from "react";
 import { useRouteMatch } from "react-router-dom";
-import YouTube from "react-youtube";
-import { DownloadAppDialog } from "components/Util";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -62,51 +61,48 @@ const About: React.FC = () => {
     setIsDialogOpen(false);
   };
 
-  const opts = {
-    height: "390",
-    width: "640",
-    playerVars: {
-      // https://developers.google.com/youtube/player_parameters
-      autoplay: 0
-    }
-  };
-
   return (
     match && (
       <div className={classes.root}>
         <Header />
         <div className={classes.container}>
           <img
+            alt="app"
             className={classes.appImage}
             src={
               "https://drive.google.com/uc?id=1U9kokrW01T8JksoDAQN21-k80oo_9TWy"
             }
           />
           <img
+            alt="app"
             className={classes.appImage}
             src={
               "https://drive.google.com/uc?id=1eSOHvfUXxbBoA1ACMOOMUsEizTaIEXh6"
             }
           />
           <img
+            alt="app"
             className={classes.appImage}
             src={
               "https://drive.google.com/uc?id=1HQ2bPvx1AYxMDTN-VaSggevaIjIzFyRL"
             }
           />
           <img
+            alt="app"
             className={classes.appImage}
             src={
               "https://drive.google.com/uc?id=1CcUcfR7MZvvnljcSYKWepkEgenj-4cKk"
             }
           />
           <img
+            alt="app"
             className={classes.appImage}
             src={
               "https://drive.google.com/uc?id=1aztEr5KR3VZSqjvUnWYsKr_2iZksEQtz"
             }
           />
           <img
+            alt="app"
             className={classes.appImage}
             src={
               "https://drive.google.com/uc?id=1dYAVCZgh_xarMMbHi3CY9iZHrAoA1ytf"
@@ -142,7 +138,6 @@ const About: React.FC = () => {
               />
             </a>
           </div>
-          {/* <YouTube videoId="T_sZkl-O7Ck" opts={opts} /> */}
         </div>
         <DownloadAppDialog
           isOpen={isDialogOpen}
