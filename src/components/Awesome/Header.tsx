@@ -104,6 +104,12 @@ const AwesomeHeader: React.FC<Props> = ({ showStories, showChatRoom }) => {
         <Button>台大數學</Button>
       </Link>
       <Link
+        to={{ pathname: "/awesome/台大材料" }}
+        className={classes.majorButton}
+      >
+        <Button>台大材料</Button>
+      </Link>
+      <Link
         to={{ pathname: "/awesome/台大物理" }}
         className={classes.majorButton}
       >

@@ -85,19 +85,9 @@ const latestNews: News[] = [
     name: "MixerBox 2020 新鮮人招募中",
     website: "https://milk.jobs/job/2e2aa7dc13c542179559177d265f2183"
   },
-  { name: "蝦皮 儲備幹部 1/31 截止", website: "https://careers.shopee.tw/GLP" },
   {
     name: "Garena 儲備幹部 3/8 截止",
     website: "https://map.career.garena.tw/"
-  },
-  {
-    name: "Mckinsey 實習生 1/30 截止",
-    website: "https://www.facebook.com/NCCUCG/posts/936614543202599/"
-  },
-  {
-    name: "17 Media 1/18 工程招募日",
-    website:
-      "https://docs.google.com/forms/d/e/1FAIpQLSeA17OfMg2yLpUNWzhty8c3xVFHuMfTOLaBk0W76WqqYsnctg/viewform"
   },
   {
     name: "華碩 AI 實習 4/30 截止",

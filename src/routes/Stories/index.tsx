@@ -23,11 +23,6 @@ const videoList: Video[] = [
     youtubeId: "lZAagF7Sbp0"
   },
   {
-    name: "蝦皮 儲備幹部 1/31截止",
-    website: "https://careers.shopee.tw/GLP",
-    youtubeId: "BGCIQ2UgYho"
-  },
-  {
     name: "Gogoro",
     website: "https://www.gogoro.com/tw/career/",
     youtubeId: "NeJb1dzIqEk"
