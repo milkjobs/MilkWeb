@@ -56,22 +56,6 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
   >();
   const [secondaryField, setSecondaryField] = useState<string>();
 
-  useEffect(() => {
-    const getFieldTagOptions = async () => {
-      if (unifiedNumber) {
-        setLoading(true);
-        const verificationApiService = await getApi("Verification");
-        const [, result] = await to(
-          verificationApiService.getCommerce({ unifiedNumber })
-        );
-        result && setFieldTagOptions(result.fields);
-        setLoading(false);
-      }
-    };
-
-    getFieldTagOptions();
-  }, [unifiedNumber, getApi]);
-
   function isValidGUI(taxId) {
     const invalidList = "00000000,11111111";
     if (!/^\d{8}$/.test(taxId) || invalidList.indexOf(taxId) !== -1) {
@@ -93,9 +77,32 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
     return sum % 10 === 0 || (taxId[6] === "7" && (sum + 1) % 10 === 0);
   }
 
+  useEffect(() => {
+    const getFieldTagOptions = async () => {
+      if (unifiedNumber && isValidGUI(unifiedNumber)) {
+        setLoading(true);
+        const verificationApiService = await getApi("Verification");
+        const [, result] = await to(
+          verificationApiService.getCommerce({ unifiedNumber })
+        );
+        if (result) setFieldTagOptions(result.fields);
+        else {
+          const teamApi = await getApi("Team");
+          const [, fields] = await to(teamApi.getFields());
+          fields && setFieldTagOptions(fields);
+        }
+        setLoading(false);
+      } else {
+        setFieldTagOptions([]);
+      }
+    };
+
+    getFieldTagOptions();
+  }, [unifiedNumber, getApi]);
+
   const create = async () => {
     const teamApi = await getApi("Team");
-    if (!unifiedNumber || !isValidGUI(unifiedNumber)) {
+    if (!unifiedNumber) {
       setUnifiedNumberErrorMessage("請輸入統編");
       return;
     }
