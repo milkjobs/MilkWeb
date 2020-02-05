@@ -34,6 +34,10 @@ const JobTypes = [
   {
     value: JobType.Internship,
     label: "實習"
+  },
+  {
+    value: JobType.Parttime,
+    label: "兼職"
   }
 ];
 
@@ -180,7 +184,8 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
   const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (
       event.target.value === JobType.Fulltime ||
-      event.target.value === JobType.Internship
+      event.target.value === JobType.Internship ||
+      event.target.value === JobType.Parttime
     ) {
       setType(event.target.value);
       setTypeErrorMessage("");
@@ -272,6 +277,7 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
   useEffect(() => {
     if (type === JobType.Fulltime) setSalaryType(SalaryType.Monthly);
     if (type === JobType.Internship) setSalaryType(SalaryType.Hourly);
+    if (type === JobType.Parttime) setSalaryType(SalaryType.Hourly);
     setMinSalary(undefined);
     setMaxSalary(undefined);
   }, [type]);
