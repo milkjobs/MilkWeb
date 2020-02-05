@@ -87,7 +87,9 @@ const Verification: React.FC = () => {
       <Header />
       <div className={classes.container}>
         <div>
-          {"根據就業服務法第 41 條，牛奶找工作需要保存公司的事業登記字號。"}
+          {
+            "根據就業服務法第 41 條，牛奶找工作需要保存公司的事業登記字號或個人的身分證字號。"
+          }
         </div>
         <div>{"可以上傳以下文件："}</div>
         <div>
@@ -104,6 +106,8 @@ const Verification: React.FC = () => {
           {"6. 商業抄本"}
           <br />
           {"【統編、公司名稱、公司地址】須清楚拍攝。"}
+          <br />
+          {"若無法提供以上文件，可以上傳身分證正面照。身分證字號須清楚拍攝。"}
         </div>
         <div>
           {user &&
