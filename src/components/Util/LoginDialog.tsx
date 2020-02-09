@@ -15,6 +15,7 @@ import "firebase/auth";
 import { isIntlPhoneNumber, isValidVerificationCode } from "helpers";
 import React, { useCallback, useState } from "react";
 import Countdown from "react-countdown-now";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -24,6 +25,14 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 24,
     marginRight: 24,
     marginBottom: 36
+  },
+  footer: {
+    color: "grey",
+    flex: 1,
+    marginTop: 24,
+    [theme.breakpoints.up("sm")]: {
+      display: "flex"
+    }
   },
   row: {
     flex: 1,
@@ -246,6 +255,20 @@ const LoginDialog: React.FC<Props> = props => {
                 </Button>
               </>
             )}
+          </div>
+          <div className={classes.footer}>
+            發送驗證碼即表示你同意
+            <Link
+              to={"/help/privacy"}
+              target="_blank"
+              style={{ color: "grey" }}
+            >
+              隱私權政策
+            </Link>
+            、
+            <Link to={"/help/tos"} target="_blank" style={{ color: "grey" }}>
+              服務條款
+            </Link>
           </div>
         </form>
       </DialogContent>

@@ -103,11 +103,11 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
   const create = async () => {
     const teamApi = await getApi("Team");
     if (!unifiedNumber) {
-      setUnifiedNumberErrorMessage("請輸入統編");
+      setUnifiedNumberErrorMessage("請輸入統一編號");
       return;
     }
     if (!isValidGUI(unifiedNumber)) {
-      setUnifiedNumberErrorMessage("請輸入正確的統編");
+      setUnifiedNumberErrorMessage("請輸入正確的統一編號");
       return;
     }
     if (!nickname) {
@@ -240,7 +240,7 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
           <TextField
             margin="normal"
             id="name"
-            label="統編"
+            label="統一編號"
             error={Boolean(unifiedNumberErrorMessage)}
             helperText={unifiedNumberErrorMessage}
             value={unifiedNumber}

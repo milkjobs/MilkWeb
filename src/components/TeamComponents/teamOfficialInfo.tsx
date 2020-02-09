@@ -60,16 +60,16 @@ const TeamOfficialInfo: React.FC<Props> = props => {
   const { classes, unifiedNumber, name } = props;
   return (
     <div className={classes.container}>
-      <div className={classes.title}>工商信息</div>
+      <div className={classes.title}>工商訊息</div>
       {unifiedNumber && (
         <div className={classes.description}>
-          <div>公司統編</div>
+          <div>統一編號</div>
           <div style={{ marginLeft: "auto" }}>{unifiedNumber}</div>
         </div>
       )}
       {name && (
         <div className={classes.description}>
-          <div style={{ flex: 1 }}>公司全稱</div>
+          <div style={{ flex: 1 }}>全稱</div>
           <div
             style={{
               flex: 2,

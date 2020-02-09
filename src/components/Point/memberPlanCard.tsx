@@ -124,7 +124,7 @@ const MemberPlanDialog: React.FC<Props> = props => {
             ? user.recruiterInfo.team.nickname
             : ""}
           <br />
-          公司統編：{" "}
+          公司統一編號：{" "}
           {user && user.recruiterInfo && user.recruiterInfo.team
             ? user.recruiterInfo.team.unifiedNumber
             : ""}
