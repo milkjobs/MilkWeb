@@ -1,9 +1,12 @@
 import { Team as TeamType, UserApi } from "@frankyjuang/milkapi-client";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import algoliasearch, { SearchClient } from "algoliasearch/lite";
 import { Header } from "components/Header";
+import { JobList } from "components/JobSearch";
 import {
   TeamDescription,
   TeamInfo,
@@ -12,15 +15,12 @@ import {
   TeamSideCard,
   TeamWebsite
 } from "components/TeamComponents";
-import { JobList } from "components/JobSearch";
-import { AlgoliaService, PageMetadata } from "helpers";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { InstantSearch, connectRefinementList } from "react-instantsearch-dom";
-import { useAuth } from "stores";
-import algoliasearch from "algoliasearch";
 import { algoliaConfig } from "config";
+import { AlgoliaService, PageMetadata } from "helpers";
+import React, { useEffect, useState } from "react";
+import { connectRefinementList, InstantSearch } from "react-instantsearch-dom";
+import { useParams } from "react-router-dom";
+import { useAuth } from "stores";
 
 const useTabsStyles = makeStyles(theme => ({
   root: {
@@ -142,7 +142,7 @@ const TeamIntroduction: React.FC<Props> = props => {
 const TeamJobs: React.FC<Props> = props => {
   const { user, getApi } = useAuth();
   const { team } = props;
-  const [algoliaClient, setAlgoliaClient] = useState<algoliasearch.Client>();
+  const [algoliaClient, setAlgoliaClient] = useState<SearchClient>();
 
   useEffect(() => {
     const getApiKey = async () => {

@@ -3,7 +3,7 @@ import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
-import algoliasearch from "algoliasearch/lite";
+import algoliasearch, { SearchClient } from "algoliasearch/lite";
 import { AwesomeHeader } from "components/Awesome";
 import { Header } from "components/Header";
 import { JobList, SearchBar } from "components/JobSearch";
@@ -104,7 +104,7 @@ const JobSearch: React.FC = () => {
   const classes = useStyles();
   const { getApi, user } = useAuth();
   const [ref, inView] = useInView({ threshold: 1 });
-  const [algoliaClient, setAlgoliaClient] = useState<algoliasearch.Client>();
+  const [algoliaClient, setAlgoliaClient] = useState<SearchClient>();
   const [hideHeaderSearchBar, setHideHeaderSearchBar] = useState(true);
   const [loading, setLoading] = useState(true);
 
