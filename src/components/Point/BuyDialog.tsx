@@ -104,7 +104,7 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
             <div className={classes.infoContainer}>
               <div className={classes.info}>付款方式：</div>
               <div className={classes.info}>
-                {purchaseWay === PurchaseWay.Credit ? "信用卡" : "ATM"}
+                {purchaseWay === PurchaseWay.Credit ? "信用卡" : "ATM 轉帳"}
               </div>
             </div>
             <div className={classes.info}>
@@ -120,7 +120,11 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
                 }}
               />
               <div className={classes.info}>以詳閱並同意</div>
-              <Link to={"/help/tos"} target="_blank" className={classes.link}>
+              <Link
+                to={"/help/tos#第五章-商品購買"}
+                target="_blank"
+                className={classes.link}
+              >
                 服務條款
               </Link>
             </div>
@@ -154,7 +158,9 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
                   }}
                   color="primary"
                 >
-                  付款
+                  {purchaseWay === PurchaseWay.Credit
+                    ? "付款"
+                    : "取得 ATM 轉帳資訊"}
                 </Button>
               )}
             </>

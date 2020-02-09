@@ -2,8 +2,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import policyFile from "assets/faq.md";
 import to from "await-to-js";
 import { Header } from "components/Header";
-import React, { useEffect, useState, ReactType } from "react";
+import React, { ReactType, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,54 +33,49 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const elements = {
-  h1: "h1",
-  h2: "h2",
-  h3: "h3",
-  h4: "h4",
-  h5: "h5",
-  h6: "h6"
+const flatten = (text, child) => {
+  return typeof child === "string"
+    ? text + child
+    : React.Children.toArray(child.props.children).reduce(flatten, text);
 };
 
-function Heading({ level, children, ...props }) {
-  return React.createElement(elements[level] || elements.h1, props, children);
-}
+// https://github.com/rexxars/react-markdown/issues/69#issuecomment-289860367
+const HeadingRenderer: ReactType = props => {
+  const children = React.Children.toArray(props.children);
+  const text = children.reduce(flatten, "");
+  const slug = text.toLowerCase().replace(/\s/g, "-");
+  const anchorChildren = (
+    <a
+      href={`#${slug}`}
+      className="title"
+      style={{ color: "black", textDecoration: "none" }}
+    >
+      {props.children}
+    </a>
+  );
 
-const HeadingBlock: ReactType = props => {
-  const renderHtml = () => {
-    const { level, children } = props;
-
-    if (children && children.length > 0) {
-      const nodeValue = children[0].props.value;
-      return (
-        <Heading level={`h${level}`} id={nodeValue}>
-          <a
-            href={`#${nodeValue}`}
-            className="title"
-            style={{ color: "black", textDecoration: "none" }}
-          >
-            {children}
-          </a>
-        </Heading>
-      );
-    } else {
-      return <>{children}</>;
-    }
-  };
-  return <>{renderHtml()}</>;
+  return React.createElement("h" + props.level, { id: slug }, anchorChildren);
 };
 
-const TermsOfService: React.FC = () => {
+const Faq: React.FC = () => {
   const classes = useStyles();
+  const { hash } = useLocation();
   const [policy, setPolicy] = useState<string>();
 
   useEffect(() => {
     const init = async () => {
       const [, res] = await to(fetch(policyFile));
       res && setPolicy(await res.text());
+
+      // Jump to hash.
+      if (hash.length > 0) {
+        const anchorId = decodeURIComponent(hash.substring(1));
+        const element = document.getElementById(anchorId);
+        element?.scrollIntoView();
+      }
     };
     init();
-  }, []);
+  }, [hash]);
 
   return (
     <div className={classes.root}>
@@ -90,7 +86,7 @@ const TermsOfService: React.FC = () => {
           className={classes.markdownContainer}
           linkTarget="_blank"
           renderers={{
-            heading: HeadingBlock
+            heading: HeadingRenderer
           }}
         />
       </div>
@@ -98,4 +94,4 @@ const TermsOfService: React.FC = () => {
   );
 };
 
-export default TermsOfService;
+export default Faq;

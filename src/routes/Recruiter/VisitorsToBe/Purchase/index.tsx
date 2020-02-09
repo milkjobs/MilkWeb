@@ -86,7 +86,7 @@ const Purchase: React.FC = () => {
           onClick={() => setPurchaseWay(PurchaseWay.ATM)}
           variant={purchaseWay === PurchaseWay.ATM ? "contained" : undefined}
         >
-          ATM
+          ATM 轉帳
         </Button>
       </ButtonGroup>
       <div className={classes.plansContainer}>
