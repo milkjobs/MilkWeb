@@ -7,22 +7,22 @@ import {
   RouteProps,
   Switch
 } from "react-router-dom";
-import ApplicantProfile from "routes/ApplicantProfile";
 import About from "routes/About";
+import ApplicantProfile from "routes/ApplicantProfile";
+import AwesomeList from "routes/AwesomeList";
 import Captcha from "routes/Captcha";
+import Chat from "routes/Chat";
 import HelpRoute from "routes/HelpRoute";
 import Job from "routes/Job";
 import JobSearch from "routes/JobSearch";
+import JobStatistics from "routes/JobStatistics";
 import JoinTeam from "routes/JoinTeam";
 import Message from "routes/Message";
 import Resume from "routes/Resume";
-import AwesomeList from "routes/AwesomeList";
 import SampleMessage from "routes/SampleMessage";
-import Team from "routes/Team";
-import JobStatVis from "routes/JobStatVis";
-import { useAuth, ChannelProvider } from "stores";
 import Stories from "routes/Stories";
-import Chat from "routes/Chat";
+import Team from "routes/Team";
+import { ChannelProvider, useAuth } from "stores";
 
 interface PrivateRouteProps extends RouteProps {
   component:
@@ -69,7 +69,7 @@ const RootRoute: React.FC = () => {
       <Route path="/help" component={HelpRoute} />
       <Route path="/captcha" component={Captcha} />
       <Route path="/job/:id" exact component={Job} />
-      <Route path="/jobstat/:id" exact component={JobStatVis} />
+      <Route path="/job/:id/stat" exact component={JobStatistics} />
       <Route path="/team/:id" exact component={Team} />
       <Route path="/sample-message" exact component={SampleMessage} />
       <Route path="/stories" exact component={Stories} />
