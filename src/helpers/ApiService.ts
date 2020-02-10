@@ -1,5 +1,6 @@
 import {
   AwesomeApi,
+  ChannelApi,
   EducationApi,
   ExperienceApi,
   JobApi,
@@ -9,11 +10,11 @@ import {
   OrderApi,
   ProfileApi,
   ProjectApi,
+  RecruiterInfoApi,
+  SupportApi,
   TeamApi,
   UserApi,
-  VerificationApi,
-  ChannelApi,
-  SupportApi
+  VerificationApi
 } from "@frankyjuang/milkapi-client";
 
 // https://artsy.github.io/blog/2018/11/21/conditional-types-in-typescript/
@@ -32,6 +33,7 @@ export type Apis = {
   Order: OrderApi;
   Profile: ProfileApi;
   Project: ProjectApi;
+  RecruiterInfo: RecruiterInfoApi;
   Team: TeamApi;
   User: UserApi;
   Verification: VerificationApi;

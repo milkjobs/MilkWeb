@@ -16,7 +16,8 @@ import {
   VerificationApi,
   ChannelApi,
   AwesomeApi,
-  SupportApi
+  SupportApi,
+  RecruiterInfoApi
 } from "@frankyjuang/milkapi-client";
 import { apiServiceConfig } from "config";
 import firebase from "firebase/app";
@@ -103,6 +104,8 @@ export const AuthProvider = ({ children }) => {
       return new AwesomeApi(configuration) as any;
     } else if (type === "Support") {
       return new SupportApi(configuration) as any;
+    } else if (type === "RecruiterInfo") {
+      return new RecruiterInfoApi(configuration) as any;
     }
     /* eslint-enable @typescript-eslint/no-explicit-any */
 

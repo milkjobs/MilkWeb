@@ -11,13 +11,15 @@ import {
 } from "react-router-dom";
 import CreateJob from "routes/CreateJob";
 import RecruiterJob from "routes/Recruiter/Job";
+import Message from "routes/Recruiter/Message";
+import RecruiterProfile from "routes/Recruiter/Profile";
+import Verification from "routes/Recruiter/Verification";
 import RecruiterVisitorsToBe from "routes/Recruiter/VisitorsToBe";
 import RecruiterOrder from "routes/RecruiterOrder";
 import RecruiterPositionsHome from "routes/RecruiterPositionsHome";
-import RecruiterTeam from "routes/RecruiterTeam";
-import { useAuth } from "stores";
-import Verification from "routes/Recruiter/Verification";
 import RecruitersManagement from "routes/RecruitersManagement";
+import RecruiterTeam from "routes/RecruiterTeam";
+import { ChannelProvider, useAuth } from "stores";
 
 interface PrivateRouteProps extends RouteProps {
   component:
@@ -43,9 +45,29 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
           );
         }
 
-        return <LoginDialog isOpen={true} close={() => {}} />;
+        return (
+          <LoginDialog
+            isOpen={true}
+            close={() => {
+              // Do nothing.
+            }}
+          />
+        );
       }}
     />
+  );
+};
+
+const MessageRoute: React.FC = () => {
+  const match = useRouteMatch();
+
+  return (
+    <ChannelProvider>
+      <Switch>
+        <PrivateRoute path={match.path} exact component={Message} />
+        <PrivateRoute path={`${match.path}/:id`} exact component={Message} />
+      </Switch>
+    </ChannelProvider>
   );
 };
 
@@ -56,9 +78,14 @@ const RecruiterRoute: React.FC = () => {
     match && (
       <Switch>
         <PrivateRoute
-          path={`${match.path}`}
+          path={match.path}
           exact
           component={RecruiterPositionsHome}
+        />
+        <PrivateRoute
+          path={`${match.path}/profile`}
+          exact
+          component={RecruiterProfile}
         />
         <PrivateRoute
           path={`${match.path}/team`}
@@ -87,13 +114,10 @@ const RecruiterRoute: React.FC = () => {
           path={`${match.path}/create-a-job/`}
           component={CreateJob}
         />
+        <PrivateRoute path={`${match.path}/message`} component={MessageRoute} />
         {/* <PrivateRoute
           path={`${match.path}/recommend-candidates`}
           component={RecommendCandidatesHome}
-        />
-        <PrivateRoute
-          path={`${match.path}/message`}
-          component={RecruiterMessageHome}
         /> */}
         <Route path={`${match.path}`} component={NotFound} />
       </Switch>

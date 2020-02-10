@@ -5,7 +5,8 @@ import {
   Route,
   RouteComponentProps,
   RouteProps,
-  Switch
+  Switch,
+  useRouteMatch
 } from "react-router-dom";
 import About from "routes/About";
 import ApplicantProfile from "routes/ApplicantProfile";
@@ -44,18 +45,27 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
           return <Component {...props} />;
         }
 
-        return <LoginDialog isOpen={true} close={() => {}} />;
+        return (
+          <LoginDialog
+            isOpen={true}
+            close={() => {
+              // Do nothing.
+            }}
+          />
+        );
       }}
     />
   );
 };
 
 const MessageRoute: React.FC = () => {
+  const match = useRouteMatch();
+
   return (
     <ChannelProvider>
       <Switch>
-        <PrivateRoute path="/message/:id" exact component={Message} />
-        <PrivateRoute path="/message/" exact component={Message} />
+        <PrivateRoute path={match.path} exact component={Message} />
+        <PrivateRoute path={`${match.path}/:id`} exact component={Message} />
       </Switch>
     </ChannelProvider>
   );
@@ -77,7 +87,7 @@ const RootRoute: React.FC = () => {
       <Route path="/awesome/:name" exact component={AwesomeList} />
       <PrivateRoute path="/profile" exact component={ApplicantProfile} />
       <PrivateRoute path="/resume" exact component={Resume} />
-      <PrivateRoute path="/message/" component={MessageRoute} />
+      <PrivateRoute path="/message" component={MessageRoute} />
       <PrivateRoute path="/join" exact component={JoinTeam} />
       <Route path="/" component={NotFound} />
     </Switch>

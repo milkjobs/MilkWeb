@@ -75,11 +75,9 @@ const EditDialog: React.FC<DialogProps> = props => {
   const classes = useStyles();
   const { getApi, reloadUser, user } = useAuth();
   const [name, setName] = useState<string>();
-  const [introduction, setIntroduction] = useState<string>();
+  const [title, setTitle] = useState<string>();
   const [nameErrorMessage, setNameErrorMessage] = useState<string>();
-  const [introductionErrorMessage, setIntroductionErrorMessage] = useState<
-    string
-  >();
+  const [titleErrorMessage, setTitleErrorMessage] = useState<string>();
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.length > 20) {
@@ -90,15 +88,13 @@ const EditDialog: React.FC<DialogProps> = props => {
     setNameErrorMessage(undefined);
   };
 
-  const handleIntroductionChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (event.target.value.length > 2000) {
-      setIntroductionErrorMessage("自我介紹長度不能超過 2000 個字");
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length > 50) {
+      setTitleErrorMessage("職位長度不能超過 50 個字");
       return;
     }
-    setIntroduction(event.target.value);
-    setIntroductionErrorMessage(undefined);
+    setTitle(event.target.value);
+    setTitleErrorMessage(undefined);
   };
 
   const checkName = () => {
@@ -119,14 +115,14 @@ const EditDialog: React.FC<DialogProps> = props => {
       const userApi = await getApi("User");
       await userApi.updateUser({ userId: user.uuid, user: { ...user, name } });
     }
-    if (user && user.profile && user.profile.introduction !== introduction) {
+    if (user?.recruiterInfo?.uuid && user.recruiterInfo.title !== title) {
       changed = true;
-      const profileApi = await getApi("Profile");
-      await profileApi.updateProfile({
-        profileId: user.profile.uuid,
-        profile: {
-          ...user.profile,
-          introduction
+      const recruiterInfoApi = await getApi("RecruiterInfo");
+      await recruiterInfoApi.updateRecruiterInfo({
+        recruiterInfoId: user.recruiterInfo.uuid,
+        recruiterInfo: {
+          ...user.recruiterInfo,
+          title
         }
       });
     }
@@ -138,9 +134,7 @@ const EditDialog: React.FC<DialogProps> = props => {
   useEffect(() => {
     if (user) {
       setName(user.name);
-      if (user.profile) {
-        setIntroduction(user.profile.introduction);
-      }
+      setTitle(user.recruiterInfo?.title);
     }
   }, [user]);
 
@@ -162,17 +156,17 @@ const EditDialog: React.FC<DialogProps> = props => {
           value={name}
         />
         <TextField
-          error={!!introductionErrorMessage}
+          error={!!titleErrorMessage}
           fullWidth
-          helperText={introductionErrorMessage || ""}
-          id="introduction"
-          label="自我介紹"
+          helperText={titleErrorMessage || ""}
+          id="title"
+          label="職位"
           margin="normal"
           multiline
-          onBlur={() => setIntroductionErrorMessage(undefined)}
-          onChange={handleIntroductionChange}
+          onBlur={() => setTitleErrorMessage(undefined)}
+          onChange={handleTitleChange}
           rows="8"
-          value={introduction}
+          value={title}
         />
       </DialogContent>
       <DialogActions>
@@ -191,7 +185,7 @@ interface Props {
   user: User;
 }
 
-const ApplicantBasicInfo: React.FC<Props> = props => {
+const RecruiterBasicInfo: React.FC<Props> = props => {
   const { user } = props;
   const classes = useStyles();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -232,11 +226,11 @@ const ApplicantBasicInfo: React.FC<Props> = props => {
         </div>
       </div>
       <div className={classes.description}>
-        {user.profile?.introduction || "尚無自我介紹"}
+        {user.recruiterInfo?.title || "尚無職位"}
       </div>
       <EditDialog isOpen={isDialogOpen} close={closeDialog} />
     </div>
   );
 };
 
-export { ApplicantBasicInfo };
+export { RecruiterBasicInfo };
