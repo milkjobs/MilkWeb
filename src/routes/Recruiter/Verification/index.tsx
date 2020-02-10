@@ -5,7 +5,8 @@ import to from "await-to-js";
 import { Header } from "components/Header";
 import { DownloadAppDialog } from "components/Util";
 import { ImagePdfMimeType } from "helpers";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "stores";
@@ -27,7 +28,8 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 100
   },
   status: {
-    marginTop: 32
+    marginTop: 32,
+    fontWeight: 600
   },
   button: {
     marginTop: 16,
@@ -39,6 +41,7 @@ const useStyles = makeStyles(theme => ({
 const Verification: React.FC = () => {
   const { user, getApi, reloadUser } = useAuth();
   const classes = useStyles();
+  const history = useHistory();
   const [isDownloadAppDialogOpen, setIsDownloadAppDialogOpen] = useState(false);
 
   const showDownloadAppDialog = () => {
@@ -82,6 +85,14 @@ const Verification: React.FC = () => {
     [getApi, reloadUser, user]
   );
 
+  const team = user?.recruiterInfo?.team;
+
+  useEffect(() => {
+    if (team?.certificateVerified === VerificationState.Passed) {
+      history.replace("/recruiter");
+    }
+  }, [history, team]);
+
   return (
     <div className={classes.root}>
       <Header />
@@ -92,7 +103,9 @@ const Verification: React.FC = () => {
           }
           <br />
           <br />
-          {"請擇一上傳以下文件："}
+          {"請"}
+          <b>擇一</b>
+          {"上傳以下文件："}
           <br />
           <br />
           {"• 營利事業登記證"}
@@ -114,23 +127,11 @@ const Verification: React.FC = () => {
           {"若無法提供以上文件，可以上傳身分證正面照。身分證字號須清楚拍攝。"}
         </div>
         <div>
-          {user &&
-            user.recruiterInfo &&
-            user.recruiterInfo.team &&
-            user.recruiterInfo.team.certificateVerified ===
-              VerificationState.Processing && (
-              <div className={classes.status}>{"審核中"}</div>
-            )}
-          {user &&
-            user.recruiterInfo &&
-            user.recruiterInfo.team &&
-            user.recruiterInfo.team.certificateVerified ===
-              VerificationState.Failed && (
-              <div className={classes.status}>
-                {"審核失敗：" +
-                  user.recruiterInfo.team.certificateVerificationReason}
-              </div>
-            )}
+          {team?.certificateVerified === VerificationState.Failed && (
+            <div className={classes.status}>
+              {"審核失敗：" + team.certificateVerificationReason}
+            </div>
+          )}
           <input
             hidden
             accept={ImagePdfMimeType}
@@ -142,12 +143,17 @@ const Verification: React.FC = () => {
           />
           <label htmlFor="contained-button-file">
             <Button
+              disabled={
+                team?.certificateVerified === VerificationState.Processing
+              }
               className={classes.button}
               color={"primary"}
               component="span"
               variant={"contained"}
             >
-              上傳
+              {team?.certificateVerified === VerificationState.Processing
+                ? "審核中"
+                : "上傳"}
             </Button>
           </label>
           <Button
