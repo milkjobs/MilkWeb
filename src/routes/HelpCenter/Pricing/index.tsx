@@ -188,7 +188,7 @@ const Pricing: React.FC = () => {
         </Tabs>
         {Boolean(!value) && (
           <div>
-            <h3>為了讓網站可以順利運營，我們有兩種廣告服務：</h3>
+            <h3>為了讓網站可以順利運營，我們有三種廣告服務：</h3>
             <h3>
               1. 將你指定的徵才訊息，置頂在指定科系的
               <Link to={"/awesome/台大電機"} style={{ color: "black" }}>
@@ -199,6 +199,7 @@ const Pricing: React.FC = () => {
             <h3>
               2. 牛奶找工作 FB 粉專，轉發你指定的徵才訊息。一次 2000 元新台幣
             </h3>
+            <h3>3. 首頁的跑馬燈。一天價錢 500 元新台幣</h3>
             <h3>有興趣的公司，留言告訴我們，會有專人聯絡你。</h3>
             <TextField
               value={phoneNumber}
