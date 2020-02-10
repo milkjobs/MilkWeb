@@ -76,11 +76,34 @@ const EditDialog: React.FC<DialogProps> = props => {
   const { getApi, reloadUser, user } = useAuth();
   const [name, setName] = useState<string>();
   const [introduction, setIntroduction] = useState<string>();
-  const [nameHelperText, setNameHelperText] = useState<string>();
+  const [nameErrorMessage, setNameErrorMessage] = useState<string>();
+  const [introductionErrorMessage, setIntroductionErrorMessage] = useState<
+    string
+  >();
+
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length > 20) {
+      setNameErrorMessage("姓名長度不能超過 20 個字");
+      return;
+    }
+    setName(event.target.value);
+    setNameErrorMessage(undefined);
+  };
+
+  const handleIntroductionChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.target.value.length > 2000) {
+      setIntroductionErrorMessage("自我介紹長度不能超過 2000 個字");
+      return;
+    }
+    setIntroduction(event.target.value);
+    setIntroductionErrorMessage(undefined);
+  };
 
   const checkName = () => {
     const helperText = !name ? "姓名不得為空" : undefined;
-    setNameHelperText(helperText);
+    setNameErrorMessage(helperText);
 
     return !helperText;
   };
@@ -128,23 +151,26 @@ const EditDialog: React.FC<DialogProps> = props => {
         <TextField
           autoFocus
           className={classes.formTextInput}
-          error={!!nameHelperText}
+          error={!!nameErrorMessage}
           fullWidth
-          helperText={nameHelperText || ""}
+          helperText={nameErrorMessage || ""}
           id="name"
           label="姓名"
-          margin="dense"
+          margin="normal"
           onBlur={checkName}
-          onChange={e => setName(e.target.value)}
+          onChange={handleNameChange}
           value={name}
         />
         <TextField
+          error={!!introductionErrorMessage}
           fullWidth
+          helperText={introductionErrorMessage || ""}
           id="introduction"
           label="自我介紹"
-          margin="dense"
+          margin="normal"
           multiline
-          onChange={e => setIntroduction(e.target.value)}
+          onBlur={() => setIntroductionErrorMessage(undefined)}
+          onChange={handleIntroductionChange}
           rows="8"
           value={introduction}
         />
