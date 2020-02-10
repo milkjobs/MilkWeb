@@ -18,7 +18,7 @@ const Message: React.FC = () => {
   return (
     <div className={classes.root}>
       <Header />
-      <ChatRoom />
+      <ChatRoom isRecruiter />
     </div>
   );
 };
