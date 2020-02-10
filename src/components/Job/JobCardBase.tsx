@@ -112,6 +112,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   logoContainer: {
+    objectFit: "contain",
     marginRight: 16,
     borderRadius: 8,
     backgroundColor: theme.palette.background.paper,

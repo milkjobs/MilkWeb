@@ -34,6 +34,7 @@ const useStyles = makeStyles(() =>
       width: 200
     },
     logo: {
+      objectFit: "contain",
       width: 50,
       height: 50
     },

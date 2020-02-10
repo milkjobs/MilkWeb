@@ -50,6 +50,7 @@ const useStyles = makeStyles(theme => ({
     textAlign: "left"
   },
   logoContainer: {
+    objectFit: "contain",
     marginRight: 16,
     width: 72,
     height: 72,

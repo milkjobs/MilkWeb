@@ -116,6 +116,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   logoContainer: {
+    objectFit: "contain",
     marginRight: 16,
     width: 72,
     height: 72,
