@@ -46,6 +46,7 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
   const { user } = useAuth();
   const location = useLocation();
   const isRecruiterHome = location.pathname === "/recruiter";
+  const isRecruiterMessage = location.pathname.startsWith("/recruiter/message");
 
   return (
     <div className={classes.sectionDesktop}>
@@ -61,9 +62,11 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
           <span className={classes.tab}>職缺管理</span>
         </Link>
       )}
-      <Link to={"/message"} className={classes.link}>
-        <span className={classes.tab}>訊息</span>
-      </Link>
+      {!isRecruiterMessage && (
+        <Link to={"/recruiter/message"} className={classes.link}>
+          <span className={classes.tab}>訊息</span>
+        </Link>
+      )}
 
       {user && (
         <span

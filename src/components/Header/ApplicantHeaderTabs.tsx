@@ -52,6 +52,7 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
   const [isCreateTeamFormOpen, setIsCreateTeamFormOpen] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const isHome = location.pathname === "/";
+  const isMessage = location.pathname.startsWith("/message");
 
   const showCreateTeamForm = () => {
     setIsCreateTeamFormOpen(true);
@@ -95,9 +96,11 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
           <span className={classes.tab}>幫助中心</span>
         </Link>
       )}
-      <Link to={"/message"} className={classes.link}>
-        <span className={classes.tab}>訊息</span>
-      </Link>
+      {!isMessage && (
+        <Link to={"/message"} className={classes.link}>
+          <span className={classes.tab}>訊息</span>
+        </Link>
+      )}
 
       {user ? (
         <span

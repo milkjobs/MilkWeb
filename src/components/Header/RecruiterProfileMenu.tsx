@@ -44,7 +44,11 @@ const RecruiterProfileMenu: React.FC<Props> = props => {
           <Paper square={true}>
             <ClickAwayListener onClickAway={close}>
               <MenuList>
-                {user && <MenuItem>{user.name}</MenuItem>}
+                {user && (
+                  <Link to="/recruiter/profile" className={classes.link}>
+                    <MenuItem onClick={close}>{user.name}</MenuItem>
+                  </Link>
+                )}
                 {user &&
                   user.recruiterInfo &&
                   user.recruiterInfo.team &&
