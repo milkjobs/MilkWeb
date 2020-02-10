@@ -1,3 +1,4 @@
+import { VerificationState } from "@frankyjuang/milkapi-client";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import to from "await-to-js";
@@ -8,7 +9,6 @@ import React, { useCallback, useState } from "react";
 import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "stores";
-import { VerificationState } from "@frankyjuang/milkapi-client";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -90,22 +90,26 @@ const Verification: React.FC = () => {
           {
             "根據就業服務法第 41 條，牛奶找工作需要保存公司的事業登記字號或個人的身分證字號。"
           }
-        </div>
-        <div>{"可以上傳以下文件："}</div>
-        <div>
-          {"1. 營利事業登記證"}
           <br />
-          {"2. 統一編號配書 "}
           <br />
-          {"3. 立案證書／開業執照"}
+          {"請擇一上傳以下文件："}
           <br />
-          {"4. 財政部／經濟部／市政府公函"}
           <br />
-          {"5. 有限公司設立／變更登記本"}
+          {"• 營利事業登記證"}
           <br />
-          {"6. 商業抄本"}
+          {"• 統一編號配書"}
+          <br />
+          {"• 立案證書／開業執照"}
+          <br />
+          {"• 財政部／經濟部／市政府公函"}
+          <br />
+          {"• 有限公司設立／變更登記本"}
+          <br />
+          {"• 商業抄本"}
+          <br />
           <br />
           {"【統一編號、公司名稱、公司地址】須清楚拍攝。"}
+          <br />
           <br />
           {"若無法提供以上文件，可以上傳身分證正面照。身分證字號須清楚拍攝。"}
         </div>
