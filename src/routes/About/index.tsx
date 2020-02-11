@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     justifyContent: "center",
     [theme.breakpoints.up("md")]: {
-      width: "100%",
+      width: 900,
       marginRight: "auto",
       marginLeft: "auto"
     }

@@ -52,6 +52,7 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
   const [isCreateTeamFormOpen, setIsCreateTeamFormOpen] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const isHome = location.pathname === "/";
+  const isAbout = location.pathname === "/about";
   const isMessage = location.pathname.startsWith("/message");
 
   const showCreateTeamForm = () => {
@@ -80,7 +81,7 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
         handleClose={hideCreateTeamForm}
         open={isCreateTeamFormOpen}
       />
-      {isHome &&
+      {(isHome || isAbout) &&
         (user && !user.recruiterInfo ? (
           <div onClick={showCreateTeamForm} className={classes.link}>
             <span className={classes.tab}>刊登職缺</span>
