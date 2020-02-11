@@ -285,6 +285,22 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
               transition={Slide}
             />
           </div>
+          <TextField
+            disabled
+            fullWidth
+            id="unified-number"
+            label="統一編號"
+            margin="normal"
+            value={team.unifiedNumber}
+          />
+          <TextField
+            disabled
+            fullWidth
+            id="name"
+            label="名稱"
+            margin="normal"
+            value={team.nickname}
+          />
           <div style={{ display: "flex" }}>
             <TextField
               error={Boolean(areaErrorMessage)}

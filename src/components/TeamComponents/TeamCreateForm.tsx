@@ -225,32 +225,32 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
         <DialogTitle id="create-team">創建公司</DialogTitle>
         <DialogContent>
           <TextField
-            margin="normal"
-            id="name"
-            label="統一編號"
             error={Boolean(unifiedNumberErrorMessage)}
+            fullWidth
             helperText={unifiedNumberErrorMessage}
-            value={unifiedNumber || ""}
+            id="unified-number"
+            label="統一編號"
+            margin="normal"
             onChange={handleUnifiedNumberChange}
+            value={unifiedNumber || ""}
             onBlur={() => {
               if (unifiedNumber && !isValidUnifiedNumber(unifiedNumber)) {
                 setUnifiedNumberErrorMessage("請輸入正確的統一編號");
               }
             }}
-            fullWidth
           />
           <TextField
-            margin="normal"
-            id="name"
             error={Boolean(nicknameErrorMessage)}
+            fullWidth
+            id="name"
+            label="名稱"
+            margin="normal"
+            onChange={handleNameChange}
+            value={nickname || ""}
             helperText={
               nicknameErrorMessage ||
               "讓人才快速找到你，公司名稱可以是全名簡寫、知名產品名稱或品牌名稱，提交後不能修改。例：【牛奶找工作】是【牛奶網路有限公司】的簡稱"
             }
-            label="名稱"
-            value={nickname || ""}
-            onChange={handleNameChange}
-            fullWidth
           />
           <div style={{ display: "flex" }}>
             <TextField
