@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import to from "await-to-js";
 import { Header } from "components/Header";
 import { DownloadAppDialog } from "components/Util";
+import { VerificationStateBanner } from "components/Verification";
 import { ImagePdfMimeType } from "helpers";
 import React, { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -97,7 +98,7 @@ const Verification: React.FC = () => {
     <div className={classes.root}>
       <Header />
       <div className={classes.container}>
-        <div>
+        <div style={{ marginBottom: 24 }}>
           {
             "根據就業服務法第 41 條，牛奶找工作需要保存公司的事業登記字號或個人的身分證字號。"
           }
@@ -126,45 +127,38 @@ const Verification: React.FC = () => {
           <br />
           {"若無法提供以上文件，可以上傳身分證正面照。身分證字號須清楚拍攝。"}
         </div>
-        <div>
-          {team?.certificateVerified === VerificationState.Failed && (
-            <div className={classes.status}>
-              {"審核失敗：" + team.certificateVerificationReason}
-            </div>
-          )}
-          <input
-            hidden
-            accept={ImagePdfMimeType}
-            id="contained-button-file"
-            onChange={e => {
-              e.target.files && upload(e.target.files);
-            }}
-            type="file"
-          />
-          <label htmlFor="contained-button-file">
-            <Button
-              disabled={
-                team?.certificateVerified === VerificationState.Processing
-              }
-              className={classes.button}
-              color={"primary"}
-              component="span"
-              variant={"contained"}
-            >
-              {team?.certificateVerified === VerificationState.Processing
-                ? "審核中"
-                : "上傳"}
-            </Button>
-          </label>
-          <Button
-            className={classes.button}
-            color={"primary"}
-            variant={"contained"}
-            onClick={showDownloadAppDialog}
-          >
-            下載App：審核通過後，App內直接通知
-          </Button>
-        </div>
+        <VerificationStateBanner />
+        {team?.certificateVerified !== VerificationState.Processing && (
+          <>
+            <input
+              hidden
+              accept={ImagePdfMimeType}
+              id="upload-file"
+              onChange={e => {
+                e.target.files && upload(e.target.files);
+              }}
+              type="file"
+            />
+            <label htmlFor="upload-file">
+              <Button
+                className={classes.button}
+                color={"primary"}
+                component="span"
+                variant={"contained"}
+              >
+                上傳
+              </Button>
+            </label>
+          </>
+        )}
+        <Button
+          className={classes.button}
+          color={"primary"}
+          variant={"contained"}
+          onClick={showDownloadAppDialog}
+        >
+          下載App：審核通過後，App內直接通知
+        </Button>
       </div>
       <DownloadAppDialog
         isOpen={isDownloadAppDialogOpen}
