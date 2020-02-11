@@ -65,8 +65,8 @@ const RecruitersManagement: React.FC = () => {
 
   const getInvitationCode = async () => {
     if (user && user.recruiterInfo && user.recruiterInfo.team) {
-      const teamApiService = await getApi("Team");
-      const invitation = await teamApiService.generateInvitation({
+      const teamApi = await getApi("Team");
+      const invitation = await teamApi.generateInvitation({
         teamId: user.recruiterInfo.team.uuid
       });
       const data = JSON.stringify({
@@ -82,8 +82,8 @@ const RecruitersManagement: React.FC = () => {
   useEffect(() => {
     const getTeamRecruiters = async () => {
       if (user && user.recruiterInfo && user.recruiterInfo.team) {
-        const teamApiService = await getApi("Team");
-        const fetchedTeamRecruiters = await teamApiService.getTeamRecruiters({
+        const teamApi = await getApi("Team");
+        const fetchedTeamRecruiters = await teamApi.getTeamRecruiters({
           teamId: user.recruiterInfo.team.uuid
         });
         fetchedTeamRecruiters && setRecruiters(fetchedTeamRecruiters);

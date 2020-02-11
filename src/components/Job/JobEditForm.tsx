@@ -13,7 +13,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
-import { createStyles, makeStyles } from "@material-ui/styles";
 import { SubArea, TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
 import {
   EducationLevelOptions,
@@ -25,14 +24,6 @@ import { useHistory } from "react-router";
 import { useAuth } from "stores";
 import { HourlySalaryOptions, MonthlySalaryOptions } from "./utils";
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    menu: {
-      width: 200
-    }
-  })
-);
-
 interface Props {
   open: boolean;
   handleClose: () => void;
@@ -40,13 +31,12 @@ interface Props {
 }
 
 const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
-  const classes = useStyles();
   const history = useHistory();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { getApi, user, reloadUser } = useAuth();
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [area, setArea] = useState<string>(job.address.area);
+  const [area, setArea] = useState(job.address.area);
   const [areaErrorMessage, setAreaErrorMessage] = useState<string>();
   const [subArea, setSubArea] = useState<string | undefined>(
     job.address.subArea
@@ -55,18 +45,14 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
   const [subAreaOptions, setSubAreaOptions] = useState<SubArea[]>([]);
   const [street, setStreet] = useState(job.address.street);
   const [streetErrorMessage, setStreetErrorMessage] = useState<string>();
-  const [salaryType] = useState<SalaryType>(job.salaryType);
+  const [salaryType] = useState(job.salaryType);
   const [minSalary, setMinSalary] = useState(job.minSalary);
   const [maxSalary, setMaxSalary] = useState(job.maxSalary);
-  const [educationNeed, setEducationNeed] = useState<EducationLevel>(
-    job.educationNeed
-  );
+  const [educationNeed, setEducationNeed] = useState(job.educationNeed);
   const [educationNeedErrorMessage, setEducationNeedErrorMessage] = useState<
     string
   >();
-  const [experienceNeed, setExperienceNeed] = useState<ExperienceLevel>(
-    job.experienceNeed
-  );
+  const [experienceNeed, setExperienceNeed] = useState(job.experienceNeed);
   const [experienceNeedErrorMessage, setExperienceNeedErrorMessage] = useState<
     string
   >();
@@ -240,11 +226,6 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
               select
               style={{ marginRight: 4 }}
               value={area}
-              SelectProps={{
-                MenuProps: {
-                  className: classes.menu
-                }
-              }}
             >
               {TaiwanAreaJSON.map(option => (
                 <MenuItem key={option.name} value={option.name}>
@@ -262,12 +243,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
               onChange={handleSubAreaChange}
               select
               style={{ marginLeft: 4 }}
-              value={subArea}
-              SelectProps={{
-                MenuProps: {
-                  className: classes.menu
-                }
-              }}
+              value={subArea || ""}
             >
               {subAreaOptions.map(option => (
                 <MenuItem key={option.name} value={option.name}>
@@ -399,11 +375,6 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
             onChange={handleEducationLevelChange}
             select
             value={educationNeed}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu
-              }
-            }}
           >
             {EducationLevelOptions.map(option => (
               <MenuItem key={option.value} value={option.value}>
@@ -421,11 +392,6 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
             onChange={handleExperienceLevelChange}
             select
             value={experienceNeed}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu
-              }
-            }}
           >
             {ExperienceLevelOptions.map(option => (
               <MenuItem key={option.value} value={option.value}>
@@ -444,7 +410,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
             onChange={handleDescriptionChange}
             rows="10"
             rowsMax="10"
-            value={description}
+            value={description || ""}
           />
         </DialogContent>
         <DialogActions>
@@ -463,7 +429,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
               style={{ width: 20, height: 20, marginLeft: 20, marginRight: 20 }}
             />
           ) : (
-            <Button onClick={publish} color="primary">
+            <Button onClick={publish} color="primary" variant="contained">
               儲存
             </Button>
           )}

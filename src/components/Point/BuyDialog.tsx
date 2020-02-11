@@ -1,19 +1,47 @@
-import React, { useState, useEffect } from "react";
+import { VisitorPlan } from "@frankyjuang/milkapi-client";
+import { Theme } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { createStyles, makeStyles } from "@material-ui/styles";
-import { Theme } from "@material-ui/core";
-import { useAuth } from "stores";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import { paymentUrl } from "config";
 import { PurchaseWay } from "helpers";
-import { VisitorPlan } from "@frankyjuang/milkapi-client";
-import Checkbox from "@material-ui/core/Checkbox";
+import React, { useEffect, useState } from "react";
 import Iframe from "react-iframe";
 import { Link } from "react-router-dom";
-import { paymentUrl } from "config";
+import { useAuth } from "stores";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      display: "flex",
+      flexWrap: "wrap"
+    },
+    infoContainer: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center"
+    },
+    info: {
+      fontSize: 16,
+      color: theme.palette.text.primary
+    },
+    error: {
+      fontSize: 16,
+      color: theme.palette.error.main
+    },
+    link: {
+      fontSize: 16,
+      color: theme.palette.text.primary,
+      cursor: "pointer",
+      textDecoration: "underline"
+    }
+  })
+);
 
 interface BuyDialogProps {
   open: boolean;
@@ -38,8 +66,8 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
   const addOrder = async (plan: VisitorPlan) => {
     if (user && user.recruiterInfo && user.recruiterInfo.team) {
       setLoading(true);
-      const orderApiService = await getApi("Order");
-      const order = await orderApiService.addOrder({
+      const orderApi = await getApi("Order");
+      const order = await orderApi.addOrder({
         teamId: user.recruiterInfo.team.uuid,
         visitorPlanId: plan.uuid
       });
@@ -54,6 +82,7 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
       }
     }
   };
+
   useEffect(() => {
     read && setReadErrorMessage("");
   }, [read]);
@@ -170,33 +199,5 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
     </div>
   );
 };
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: "flex",
-      flexWrap: "wrap"
-    },
-    infoContainer: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center"
-    },
-    info: {
-      fontSize: 16,
-      color: theme.palette.text.primary
-    },
-    error: {
-      fontSize: 16,
-      color: theme.palette.error.main
-    },
-    link: {
-      fontSize: 16,
-      color: theme.palette.text.primary,
-      cursor: "pointer",
-      textDecoration: "underline"
-    }
-  })
-);
 
 export { BuyDialog };

@@ -1,8 +1,8 @@
 import { Job } from "@frankyjuang/milkapi-client";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
+import { Button, makeStyles } from "@material-ui/core";
 import { Header } from "components/Header";
 import { JobCreateForm, RecruiterJobCard } from "components/Job";
+import { VerificationStateBanner } from "components/Verification";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "stores";
 
@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper
   },
   container: {
-    marginTop: 30,
+    marginTop: 40,
     marginLeft: "auto",
     marginRight: "auto",
     display: "flex",
@@ -56,14 +56,15 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const RecruiterPositionsHome: React.FC = () => {
+  const classes = useStyles();
   const { user } = useAuth();
   const [positions, setPositions] = useState<Job[]>([]);
-  const [formOpen, setFormOpen] = useState<boolean>(false);
-  const classes = useStyles();
+  const [formOpen, setFormOpen] = useState(false);
 
   useEffect(() => {
-    if (user && user.recruiterInfo && user.recruiterInfo.jobs)
+    if (user?.recruiterInfo?.jobs) {
       setPositions(user.recruiterInfo.jobs);
+    }
   }, [user]);
 
   return (
@@ -71,6 +72,14 @@ const RecruiterPositionsHome: React.FC = () => {
       <Header />
       <JobCreateForm open={formOpen} handleClose={() => setFormOpen(false)} />
       <div className={classes.container}>
+        <div
+          style={{
+            marginBottom: 24,
+            textAlign: "left"
+          }}
+        >
+          <VerificationStateBanner showAction />
+        </div>
         <div className={classes.titleContainer}>
           <span className={classes.title}>職缺</span>
           <Button

@@ -14,7 +14,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
-import { createStyles, makeStyles } from "@material-ui/styles";
 import { SubArea, TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
 import { AlertDialog } from "components/Util";
 import {
@@ -27,21 +26,12 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "stores";
 import { HourlySalaryOptions, MonthlySalaryOptions } from "./utils";
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    menu: {
-      width: 200
-    }
-  })
-);
-
 interface Props {
   open: boolean;
   handleClose: () => void;
 }
 
 const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
-  const classes = useStyles();
   const { getApi, user, reloadUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState<JobType>();
@@ -244,21 +234,16 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
         <DialogTitle id="create-job">發布職缺</DialogTitle>
         <DialogContent>
           <TextField
-            error={Boolean(typeErrorMessage)}
-            id="job-type"
             autoFocus
-            select
+            error={Boolean(typeErrorMessage)}
             fullWidth
             helperText={typeErrorMessage}
+            id="job-type"
             label="類型"
-            value={type || ""}
-            onChange={handleTypeChange}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu
-              }
-            }}
             margin="normal"
+            onChange={handleTypeChange}
+            select
+            value={type || ""}
           >
             {JobTypeOptions.map(option => (
               <MenuItem key={option.value} value={option.value}>
@@ -288,11 +273,6 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
               select
               style={{ marginRight: 4 }}
               value={area || ""}
-              SelectProps={{
-                MenuProps: {
-                  className: classes.menu
-                }
-              }}
             >
               {TaiwanAreaJSON.map(option => (
                 <MenuItem key={option.name} value={option.name}>
@@ -301,6 +281,7 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
               ))}
             </TextField>
             <TextField
+              disabled={subAreaOptions.length === 0}
               error={Boolean(subAreaErrorMessage)}
               fullWidth
               helperText={subAreaErrorMessage}
@@ -311,11 +292,6 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
               select
               style={{ marginLeft: 4 }}
               value={subArea || ""}
-              SelectProps={{
-                MenuProps: {
-                  className: classes.menu
-                }
-              }}
             >
               {subAreaOptions.map(option => (
                 <MenuItem key={option.name} value={option.name}>
@@ -447,11 +423,6 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
             onChange={handleEducationLevelChange}
             select
             value={educationNeed || ""}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu
-              }
-            }}
           >
             {EducationLevelOptions.map(option => (
               <MenuItem key={option.value} value={option.value}>
@@ -469,11 +440,6 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
             onChange={handleExperienceLevelChange}
             select
             value={experienceNeed || ""}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu
-              }
-            }}
           >
             {ExperienceLevelOptions.map(option => (
               <MenuItem key={option.value} value={option.value}>
@@ -504,7 +470,7 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
               style={{ width: 20, height: 20, marginLeft: 20, marginRight: 20 }}
             />
           ) : (
-            <Button onClick={publish} color="primary">
+            <Button onClick={publish} color="primary" variant="contained">
               發布
             </Button>
           )}

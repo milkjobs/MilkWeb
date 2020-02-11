@@ -8,7 +8,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
-import { createStyles, makeStyles } from "@material-ui/styles";
 import { SubArea, TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
 import to from "await-to-js";
 import { TeamSizeOptions } from "helpers";
@@ -16,21 +15,12 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { useAuth } from "stores";
 
-interface TeamEditFormProps {
+interface Props {
   open: boolean;
   handleClose: () => void;
 }
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    menu: {
-      width: 200
-    }
-  })
-);
-
-const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
-  const classes = useStyles();
+const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
   const history = useHistory();
   const { getApi, user, reloadUser } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -45,7 +35,7 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
   const [subArea, setSubArea] = useState<string>();
   const [subAreaErrorMessage, setSubAreaErrorMessage] = useState<string>();
   const [subAreaOptions, setSubAreaOptions] = useState<SubArea[]>([]);
-  const [street, setStreet] = useState();
+  const [street, setStreet] = useState<string>();
   const [streetErrorMessage, setStreetErrorMessage] = useState<string>();
   const [size, setSize] = useState<TeamSize>();
   const [sizeErrorMessage, setSizeErrorMessage] = useState<string>();
@@ -56,9 +46,12 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
   >();
   const [secondaryField, setSecondaryField] = useState<string>();
 
-  function isValidGUI(taxId) {
+  const isValidUnifiedNumber = (unifiedNumber: string) => {
     const invalidList = "00000000,11111111";
-    if (!/^\d{8}$/.test(taxId) || invalidList.indexOf(taxId) !== -1) {
+    if (
+      !/^\d{8}$/.test(unifiedNumber) ||
+      invalidList.indexOf(unifiedNumber) !== -1
+    ) {
       return false;
     }
 
@@ -71,19 +64,18 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
       return ones + tens;
     };
     for (let i = 0; i < validateOperator.length; i++) {
-      sum += calculate(taxId[i] * validateOperator[i]);
+      sum += calculate(parseInt(unifiedNumber[i]) * validateOperator[i]);
     }
 
-    return sum % 10 === 0 || (taxId[6] === "7" && (sum + 1) % 10 === 0);
-  }
+    return sum % 10 === 0 || (unifiedNumber[6] === "7" && (sum + 1) % 10 === 0);
+  };
 
   useEffect(() => {
     const getFieldTagOptions = async () => {
-      if (unifiedNumber && isValidGUI(unifiedNumber)) {
-        setLoading(true);
-        const verificationApiService = await getApi("Verification");
+      if (unifiedNumber && isValidUnifiedNumber(unifiedNumber)) {
+        const verificationApi = await getApi("Verification");
         const [, result] = await to(
-          verificationApiService.getCommerce({ unifiedNumber })
+          verificationApi.getCommerce({ unifiedNumber })
         );
         if (result) setFieldTagOptions(result.fields);
         else {
@@ -91,7 +83,6 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
           const [, fields] = await to(teamApi.getFields());
           fields && setFieldTagOptions(fields);
         }
-        setLoading(false);
       } else {
         setFieldTagOptions([]);
       }
@@ -106,7 +97,7 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
       setUnifiedNumberErrorMessage("請輸入統一編號");
       return;
     }
-    if (!isValidGUI(unifiedNumber)) {
+    if (!isValidUnifiedNumber(unifiedNumber)) {
       setUnifiedNumberErrorMessage("請輸入正確的統一編號");
       return;
     }
@@ -205,7 +196,9 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
   const handleSecondaryFieldChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setSecondaryField(event.target.value);
+    setSecondaryField(
+      event.target.value === "無" ? undefined : event.target.value
+    );
   };
 
   const handleSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -228,14 +221,8 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
 
   return (
     <div>
-      <Dialog
-        maxWidth={"sm"}
-        fullWidth
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">創建公司</DialogTitle>
+      <Dialog maxWidth={"sm"} fullWidth open={open} onClose={handleClose}>
+        <DialogTitle id="create-team">創建公司</DialogTitle>
         <DialogContent>
           <TextField
             margin="normal"
@@ -243,8 +230,13 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
             label="統一編號"
             error={Boolean(unifiedNumberErrorMessage)}
             helperText={unifiedNumberErrorMessage}
-            value={unifiedNumber}
+            value={unifiedNumber || ""}
             onChange={handleUnifiedNumberChange}
+            onBlur={() => {
+              if (unifiedNumber && !isValidUnifiedNumber(unifiedNumber)) {
+                setUnifiedNumberErrorMessage("請輸入正確的統一編號");
+              }
+            }}
             fullWidth
           />
           <TextField
@@ -256,27 +248,22 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
               "讓人才快速找到你，公司名稱可以是全名簡寫、知名產品名稱或品牌名稱，提交後不能修改。例：【牛奶找工作】是【牛奶網路有限公司】的簡稱"
             }
             label="名稱"
-            value={nickname}
+            value={nickname || ""}
             onChange={handleNameChange}
             fullWidth
           />
           <div style={{ display: "flex" }}>
             <TextField
-              style={{ marginRight: 4 }}
               error={Boolean(areaErrorMessage)}
-              helperText={areaErrorMessage}
-              id="standard-select-currency"
-              select
               fullWidth
+              helperText={areaErrorMessage}
+              id="area"
               label="縣市"
-              value={area}
-              onChange={handleAreaChange}
-              SelectProps={{
-                MenuProps: {
-                  className: classes.menu
-                }
-              }}
               margin="normal"
+              onChange={handleAreaChange}
+              select
+              style={{ marginRight: 4 }}
+              value={area || ""}
             >
               {TaiwanAreaJSON.map(option => (
                 <MenuItem key={option.name} value={option.name}>
@@ -285,21 +272,17 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
               ))}
             </TextField>
             <TextField
-              style={{ marginLeft: 4 }}
+              disabled={subAreaOptions.length === 0}
               error={Boolean(subAreaErrorMessage)}
-              helperText={subAreaErrorMessage}
-              id="standard-select-currency"
-              select
               fullWidth
+              helperText={subAreaErrorMessage}
+              id="sub-area"
               label="地區"
-              value={subArea}
-              onChange={handleSubAreaChange}
-              SelectProps={{
-                MenuProps: {
-                  className: classes.menu
-                }
-              }}
               margin="normal"
+              onChange={handleSubAreaChange}
+              select
+              style={{ marginLeft: 4 }}
+              value={subArea || ""}
             >
               {subAreaOptions.map(option => (
                 <MenuItem key={option.name} value={option.name}>
@@ -310,7 +293,13 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
           </div>
           <TextField
             error={Boolean(streetErrorMessage)}
+            fullWidth
             helperText={streetErrorMessage}
+            id="street"
+            label="地址"
+            margin="normal"
+            onChange={handleAddressChange}
+            value={street || ""}
             InputProps={{
               startAdornment: (
                 <InputAdornment
@@ -321,32 +310,21 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
                   }}
                   position="start"
                 >
-                  {(area || "") + (subArea || "")}
+                  {(area || "縣市") + (subArea || "地區")}
                 </InputAdornment>
               )
             }}
-            margin="normal"
-            id="name"
-            label="地址"
-            value={street}
-            fullWidth
-            onChange={handleAddressChange}
           />
           <TextField
-            id="standard-select-currency"
             error={Boolean(sizeErrorMessage)}
-            helperText={sizeErrorMessage}
-            select
             fullWidth
+            helperText={sizeErrorMessage}
+            id="size"
             label="人數"
-            value={size}
-            onChange={handleSizeChange}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu
-              }
-            }}
             margin="normal"
+            onChange={handleSizeChange}
+            select
+            value={size || ""}
           >
             {TeamSizeOptions.map(option => (
               <MenuItem key={option.value} value={option.value}>
@@ -355,20 +333,16 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
             ))}
           </TextField>
           <TextField
-            id="standard-select-currency"
+            disabled={fieldTagOptions.length === 0}
             error={Boolean(primaryFieldErrorMessage)}
-            helperText={primaryFieldErrorMessage}
-            select
             fullWidth
+            helperText={primaryFieldErrorMessage}
+            id="primary-field"
             label="產業領域"
-            value={primaryField}
-            onChange={handlePrimaryFieldChange}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu
-              }
-            }}
             margin="normal"
+            onChange={handlePrimaryFieldChange}
+            select
+            value={primaryField || ""}
           >
             {fieldTagOptions.map(option => (
               <MenuItem key={option} value={option}>
@@ -377,19 +351,16 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
             ))}
           </TextField>
           <TextField
-            id="standard-select-currency"
-            select
+            disabled={fieldTagOptions.length === 0}
             fullWidth
+            id="secondary-field"
             label="產業次要領域（選填）"
-            value={secondaryField}
-            onChange={handleSecondaryFieldChange}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu
-              }
-            }}
             margin="normal"
+            onChange={handleSecondaryFieldChange}
+            select
+            value={secondaryField || ""}
           >
+            {secondaryField && <MenuItem value="無">無</MenuItem>}
             {fieldTagOptions
               .filter(o => o !== primaryField)
               .map(option => (
@@ -408,7 +379,7 @@ const TeamCreateForm: React.FC<TeamEditFormProps> = ({ open, handleClose }) => {
               style={{ width: 20, height: 20, marginLeft: 20, marginRight: 20 }}
             />
           ) : (
-            <Button onClick={create} color="primary">
+            <Button onClick={create} color="primary" variant="contained">
               創建
             </Button>
           )}

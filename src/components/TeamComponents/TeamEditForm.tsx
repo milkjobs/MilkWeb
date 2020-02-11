@@ -18,21 +18,8 @@ import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import { useHistory } from "react-router";
 import { useAuth } from "stores";
 
-interface TeamEditFormProps {
-  open: boolean;
-  handleClose: () => void;
-  team: Team;
-}
-
 const useStyles = makeStyles(() =>
   createStyles({
-    container: {
-      display: "flex",
-      flexWrap: "wrap"
-    },
-    menu: {
-      width: 200
-    },
     logo: {
       objectFit: "contain",
       width: 50,
@@ -45,18 +32,20 @@ const useStyles = makeStyles(() =>
   })
 );
 
-const TeamEditForm: React.FC<TeamEditFormProps> = ({
-  open,
-  handleClose,
-  team
-}) => {
+interface Props {
+  open: boolean;
+  handleClose: () => void;
+  team: Team;
+}
+
+const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
   const classes = useStyles();
   const history = useHistory();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { getApi, user, reloadUser } = useAuth();
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [area, setArea] = useState<string>(team.address.area);
+  const [area, setArea] = useState(team.address.area);
   const [areaErrorMessage, setAreaErrorMessage] = useState<string>();
   const [subArea, setSubArea] = useState<string | undefined>(
     team.address.subArea
@@ -65,10 +54,10 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
   const [subAreaOptions, setSubAreaOptions] = useState<SubArea[]>([]);
   const [street, setStreet] = useState(team.address.street);
   const [streetErrorMessage, setStreetErrorMessage] = useState<string>();
-  const [size, setSize] = useState<TeamSize>(team.size);
+  const [size, setSize] = useState(team.size);
   const [sizeErrorMessage, setSizeErrorMessage] = useState<string>();
   const [fieldTagOptions, setFieldTagOptions] = useState<string[]>([]);
-  const [primaryField, setPrimaryField] = useState<string>(team.primaryField);
+  const [primaryField, setPrimaryField] = useState(team.primaryField);
   const [primaryFieldErrorMessage, setPrimaryFieldErrorMessage] = useState<
     string
   >();
@@ -86,15 +75,13 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
 
   useEffect(() => {
     const getFieldTagOptions = async () => {
-      setLoading(true);
-      const verificationApiService = await getApi("Verification");
+      const verificationApi = await getApi("Verification");
       const [, result] = await to(
-        verificationApiService.getCommerce({
+        verificationApi.getCommerce({
           unifiedNumber: team.unifiedNumber
         })
       );
       result && setFieldTagOptions(result.fields);
-      setLoading(false);
     };
 
     getFieldTagOptions();
@@ -177,7 +164,9 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
   const handleSecondaryFieldChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setSecondaryField(event.target.value);
+    setSecondaryField(
+      event.target.value === "無" ? undefined : event.target.value
+    );
   };
 
   const handleSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -218,6 +207,9 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
     setSubAreaOptions(selectedMainArea ? selectedMainArea.districts : []);
   }, [area]);
 
+  const handleDeleteDialogOpen = () => setDeleteDialogOpen(true);
+  const handleDeleteDialogClose = () => setDeleteDialogOpen(false);
+
   const removeTeam = async () => {
     setDeleteLoading(true);
     const teamApi = await getApi("Team");
@@ -226,14 +218,6 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
     setDeleteLoading(false);
     handleDeleteDialogClose();
     history.push("/");
-  };
-
-  const handleDeleteDialogOpen = () => {
-    setDeleteDialogOpen(true);
-  };
-
-  const handleDeleteDialogClose = () => {
-    setDeleteDialogOpen(false);
   };
 
   const uploadLogo = useCallback(
@@ -246,8 +230,8 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
       }
 
       const file = files[0];
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error("檔案過大，大小上限為 5MB");
+      if (file.size > 1 * 1024 * 1024) {
+        toast.error("檔案過大，大小上限為 1MB");
         return;
       }
 
@@ -271,59 +255,48 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
 
   return (
     <div>
-      <Dialog
-        maxWidth={"sm"}
-        fullWidth
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">編輯公司</DialogTitle>
+      <Dialog maxWidth={"sm"} fullWidth open={open} onClose={handleClose}>
+        <DialogTitle id="edit-team">編輯公司</DialogTitle>
         <DialogContent>
           <div style={{ display: "flex" }}>
             <img alt="team logo" src={team.logoUrl} className={classes.logo} />
             <input
               hidden
               accept={ImageMimeType}
-              id="contained-button-file"
+              id="file-upload"
               onChange={e => {
                 e.target.files && uploadLogo(e.target.files);
               }}
               type="file"
             />
-            <label htmlFor="contained-button-file">
+            <label htmlFor="file-upload">
               <Button
                 className={classes.button}
-                color={"primary"}
+                color="primary"
                 component="span"
               >
                 上傳Logo
               </Button>
             </label>
             <ToastContainer
-              position={ToastPosition.BOTTOM_CENTER}
               draggable={false}
               hideProgressBar
+              position={ToastPosition.BOTTOM_CENTER}
               transition={Slide}
             />
           </div>
           <div style={{ display: "flex" }}>
             <TextField
-              style={{ marginRight: 4 }}
               error={Boolean(areaErrorMessage)}
-              helperText={areaErrorMessage}
-              id="standard-select-currency"
-              select
               fullWidth
+              helperText={areaErrorMessage}
+              id="area"
               label="縣市"
-              value={area}
-              onChange={handleAreaChange}
-              SelectProps={{
-                MenuProps: {
-                  className: classes.menu
-                }
-              }}
               margin="normal"
+              onChange={handleAreaChange}
+              select
+              style={{ marginRight: 4 }}
+              value={area}
             >
               {TaiwanAreaJSON.map(option => (
                 <MenuItem key={option.name} value={option.name}>
@@ -332,21 +305,16 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
               ))}
             </TextField>
             <TextField
-              style={{ marginLeft: 4 }}
               error={Boolean(subAreaErrorMessage)}
-              helperText={subAreaErrorMessage}
-              id="standard-select-currency"
-              select
               fullWidth
+              helperText={subAreaErrorMessage}
+              id="sub-area"
               label="地區"
-              value={subArea}
-              onChange={handleSubAreaChange}
-              SelectProps={{
-                MenuProps: {
-                  className: classes.menu
-                }
-              }}
               margin="normal"
+              onChange={handleSubAreaChange}
+              select
+              style={{ marginLeft: 4 }}
+              value={subArea || ""}
             >
               {subAreaOptions.map(option => (
                 <MenuItem key={option.name} value={option.name}>
@@ -357,7 +325,13 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
           </div>
           <TextField
             error={Boolean(streetErrorMessage)}
+            fullWidth
             helperText={streetErrorMessage}
+            id="street"
+            label="地址"
+            margin="normal"
+            onChange={handleAddressChange}
+            value={street}
             InputProps={{
               startAdornment: (
                 <InputAdornment
@@ -368,32 +342,21 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
                   }}
                   position="start"
                 >
-                  {(area || "") + (subArea || "")}
+                  {(area || "縣市") + (subArea || "地區")}
                 </InputAdornment>
               )
             }}
-            margin="normal"
-            id="name"
-            label="地址"
-            value={street}
-            fullWidth
-            onChange={handleAddressChange}
           />
           <TextField
-            id="standard-select-currency"
             error={Boolean(sizeErrorMessage)}
-            helperText={sizeErrorMessage}
-            select
             fullWidth
+            helperText={sizeErrorMessage}
+            id="size"
             label="人數"
-            value={size}
-            onChange={handleSizeChange}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu
-              }
-            }}
             margin="normal"
+            onChange={handleSizeChange}
+            select
+            value={size}
           >
             {TeamSizeOptions.map(option => (
               <MenuItem key={option.value} value={option.value}>
@@ -402,20 +365,16 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
             ))}
           </TextField>
           <TextField
-            id="standard-select-currency"
+            disabled={fieldTagOptions.length === 0}
             error={Boolean(primaryFieldErrorMessage)}
-            helperText={primaryFieldErrorMessage}
-            select
             fullWidth
+            helperText={primaryFieldErrorMessage}
+            id="primary-field"
             label="產業領域"
-            value={primaryField}
-            onChange={handlePrimaryFieldChange}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu
-              }
-            }}
             margin="normal"
+            onChange={handlePrimaryFieldChange}
+            select
+            value={primaryField}
           >
             {fieldTagOptions.map(option => (
               <MenuItem key={option} value={option}>
@@ -424,19 +383,16 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
             ))}
           </TextField>
           <TextField
-            id="standard-select-currency"
-            select
+            disabled={fieldTagOptions.length === 0}
             fullWidth
-            label="產業次要領域"
-            value={secondaryField}
-            onChange={handleSecondaryFieldChange}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu
-              }
-            }}
+            id="secondary-field"
+            label="產業次要領域（選填）"
             margin="normal"
+            onChange={handleSecondaryFieldChange}
+            select
+            value={secondaryField || ""}
           >
+            {secondaryField && <MenuItem value="無">無</MenuItem>}
             {fieldTagOptions
               .filter(o => o !== primaryField)
               .map(option => (
@@ -447,26 +403,26 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
           </TextField>
           <TextField
             error={Boolean(websiteErrorMessage)}
-            helperText={websiteErrorMessage}
-            margin="normal"
-            id="name"
-            label="網站（選填）"
-            value={website}
-            onChange={handleWebsiteChange}
             fullWidth
+            helperText={websiteErrorMessage}
+            id="website"
+            label="網站（選填）"
+            margin="normal"
+            onChange={handleWebsiteChange}
+            value={website || ""}
           />
           <TextField
             error={Boolean(introductionErrorMessage)}
+            fullWidth
             helperText={introductionErrorMessage}
-            margin="normal"
-            id="name"
+            id="introduction"
             label="介紹（選填）"
-            value={introduction}
-            onChange={handleIntroductionChange}
+            margin="normal"
             multiline
+            onChange={handleIntroductionChange}
             rows="10"
             rowsMax="10"
-            fullWidth
+            value={introduction || ""}
           />
         </DialogContent>
         <DialogActions>
@@ -485,18 +441,13 @@ const TeamEditForm: React.FC<TeamEditFormProps> = ({
               style={{ width: 20, height: 20, marginLeft: 20, marginRight: 20 }}
             />
           ) : (
-            <Button onClick={edit} color="primary">
+            <Button onClick={edit} color="primary" variant="contained">
               儲存
             </Button>
           )}
         </DialogActions>
       </Dialog>
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={handleDeleteDialogClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
         <DialogContent style={{ marginTop: 16, marginBottom: 16 }}>
           你確定要刪除公司嗎？刪除後，可使用的點閱人數也會全部刪除。
         </DialogContent>

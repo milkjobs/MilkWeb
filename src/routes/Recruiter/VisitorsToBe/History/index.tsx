@@ -22,8 +22,8 @@ const History: React.FC = () => {
   useEffect(() => {
     const getOrders = async () => {
       if (user && user.recruiterInfo && user.recruiterInfo.team && !hasNoMore) {
-        const orderApiService = await getApi("Order");
-        const fetchOrders = await orderApiService.getTeamOrders({
+        const orderApi = await getApi("Order");
+        const fetchOrders = await orderApi.getTeamOrders({
           teamId: user.recruiterInfo.team.uuid,
           pageNo,
           pageSize
