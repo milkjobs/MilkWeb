@@ -275,7 +275,7 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
                 color="primary"
                 component="span"
               >
-                上傳Logo
+                上傳 Logo
               </Button>
             </label>
             <ToastContainer

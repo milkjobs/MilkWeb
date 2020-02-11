@@ -2,7 +2,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Header } from "components/Header";
 import { RecruiterBasicInfo } from "components/Profile";
 import React from "react";
-import { useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -23,13 +22,12 @@ const useStyles = makeStyles(theme => ({
 
 const RecruiterProfile: React.FC = () => {
   const classes = useStyles();
-  const { user } = useAuth();
 
   return (
     <div className={classes.root}>
       <Header />
       <div className={classes.container}>
-        {user && <RecruiterBasicInfo user={user} />}
+        <RecruiterBasicInfo />
       </div>
     </div>
   );

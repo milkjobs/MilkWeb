@@ -1,4 +1,3 @@
-import { User } from "@frankyjuang/milkapi-client";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -7,7 +6,10 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import React, { useEffect, useState } from "react";
+import to from "await-to-js";
+import { ImageMimeType } from "helpers";
+import React, { useCallback, useEffect, useState } from "react";
+import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import { useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
@@ -131,6 +133,39 @@ const EditDialog: React.FC<DialogProps> = props => {
     close();
   };
 
+  const uploadProfileImage = useCallback(
+    async (files: File[] | FileList) => {
+      if (files.length === 0) {
+        return;
+      }
+      if (!user) {
+        return;
+      }
+
+      const file = files[0];
+      if (file.size > 1 * 1024 * 1024) {
+        toast.error("檔案過大，大小上限為 1MB");
+        return;
+      }
+
+      const userApi = await getApi("User");
+      const [err] = await to(
+        userApi.uploadUserProfileImage({
+          userId: user.uuid,
+          file,
+          filename: file.name
+        })
+      );
+      if (err) {
+        toast.error("上傳失敗，請稍後再試");
+        return;
+      }
+      toast.success("上傳成功");
+      await reloadUser();
+    },
+    [getApi, reloadUser, user]
+  );
+
   useEffect(() => {
     if (user) {
       setName(user.name);
@@ -142,6 +177,38 @@ const EditDialog: React.FC<DialogProps> = props => {
     <Dialog open={isOpen} onClose={close} fullWidth={true}>
       <DialogTitle>編輯個人資料</DialogTitle>
       <DialogContent>
+        {user && (
+          <div style={{ display: "flex", marginBottom: 24 }}>
+            <Avatar
+              src={user.profileImageUrl}
+              style={{ width: 60, height: 60 }}
+            />
+            <input
+              hidden
+              accept={ImageMimeType}
+              id="file-upload"
+              onChange={e => {
+                e.target.files && uploadProfileImage(e.target.files);
+              }}
+              type="file"
+            />
+            <label htmlFor="file-upload">
+              <Button
+                className={classes.button}
+                color="primary"
+                component="span"
+              >
+                上傳大頭貼
+              </Button>
+            </label>
+            <ToastContainer
+              draggable={false}
+              hideProgressBar
+              position={ToastPosition.BOTTOM_CENTER}
+              transition={Slide}
+            />
+          </div>
+        )}
         <TextField
           autoFocus
           className={classes.formTextInput}
@@ -181,12 +248,8 @@ const EditDialog: React.FC<DialogProps> = props => {
   );
 };
 
-interface Props {
-  user: User;
-}
-
-const RecruiterBasicInfo: React.FC<Props> = props => {
-  const { user } = props;
+const RecruiterBasicInfo: React.FC = () => {
+  const { user } = useAuth();
   const classes = useStyles();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -198,6 +261,10 @@ const RecruiterBasicInfo: React.FC<Props> = props => {
     setIsDialogOpen(false);
   };
 
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className={classes.container}>
       <div
@@ -208,7 +275,6 @@ const RecruiterBasicInfo: React.FC<Props> = props => {
         }}
       >
         <Avatar src={user.profileImageUrl} style={{ width: 60, height: 60 }} />
-
         <div className={classes.info}>
           <div
             style={{ display: "flex", flexDirection: "row", marginBottom: 8 }}
