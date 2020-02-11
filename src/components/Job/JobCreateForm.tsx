@@ -5,7 +5,7 @@ import {
   JobUnpublishedReason,
   SalaryType
 } from "@frankyjuang/milkapi-client";
-import { InputAdornment } from "@material-ui/core";
+import { InputAdornment, Slider } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
@@ -17,55 +17,15 @@ import TextField from "@material-ui/core/TextField";
 import { createStyles, makeStyles } from "@material-ui/styles";
 import { SubArea, TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
 import { AlertDialog } from "components/Util";
-import { AlertType } from "helpers";
+import {
+  AlertType,
+  EducationLevelOptions,
+  ExperienceLevelOptions,
+  JobTypeOptions
+} from "helpers";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "stores";
-
-interface JobCreateFormProps {
-  open: boolean;
-  handleClose: () => void;
-}
-
-const JobTypes = [
-  {
-    value: JobType.Fulltime,
-    label: "正職"
-  },
-  {
-    value: JobType.Internship,
-    label: "實習"
-  },
-  {
-    value: JobType.Parttime,
-    label: "兼職"
-  }
-];
-
-const EducationLevelTypes = [
-  { value: EducationLevel.Any, label: "不限" },
-  {
-    value: EducationLevel.HighSchool,
-    label: "高中／高職"
-  },
-  { value: EducationLevel.Bachelor, label: "大學／專科" },
-  { value: EducationLevel.Master, label: "碩士" },
-  { value: EducationLevel.PhD, label: "博士" }
-];
-
-const ExperienceLevelTypes = [
-  { value: ExperienceLevel.Any, label: "不限" },
-  {
-    value: ExperienceLevel.Entry,
-    label: "入門"
-  },
-  { value: ExperienceLevel.Mid, label: "中階" },
-  { value: ExperienceLevel.Senior, label: "資深" }
-];
-
-const range = n => Array.from(Array(n).keys());
-
-const HourlySalaryOptions = [158, ...range(30).map(n => 160 + n * 5)];
-const MonthlySalaryOptions = [23800, ...range(120).map(n => 24000 + n * 1000)];
+import { HourlySalaryOptions, MonthlySalaryOptions } from "./utils";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -75,7 +35,12 @@ const useStyles = makeStyles(() =>
   })
 );
 
-const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
+interface Props {
+  open: boolean;
+  handleClose: () => void;
+}
+
+const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
   const classes = useStyles();
   const { getApi, user, reloadUser } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -91,10 +56,8 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
   const [street, setStreet] = useState("");
   const [streetErrorMessage, setStreetErrorMessage] = useState<string>();
   const [salaryType, setSalaryType] = useState<SalaryType>();
-  const [minSalary, setMinSalary] = useState<number>();
-  const [minSalaryErrorMessage, setMinSalaryErrorMessage] = useState<string>();
-  const [maxSalary, setMaxSalary] = useState<number>();
-  const [maxSalaryErrorMessage, setMaxSalaryErrorMessage] = useState<string>();
+  const [minSalary, setMinSalary] = useState(0);
+  const [maxSalary, setMaxSalary] = useState(0);
   const [educationNeed, setEducationNeed] = useState<EducationLevel>();
   const [educationNeedErrorMessage, setEducationNeedErrorMessage] = useState<
     string
@@ -133,14 +96,6 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
     }
     if (!street) {
       setStreetErrorMessage("請輸入地址");
-      return;
-    }
-    if (!minSalary) {
-      setMinSalaryErrorMessage("請選擇");
-      return;
-    }
-    if (!maxSalary) {
-      setMaxSalaryErrorMessage("請選擇");
       return;
     }
     if (!educationNeed) {
@@ -220,20 +175,6 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
     setStreetErrorMessage("");
   };
 
-  const handleMinSalaryChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setMinSalary(parseInt(event.target.value));
-    setMinSalaryErrorMessage("");
-  };
-
-  const handleMaxSalaryChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setMaxSalary(parseInt(event.target.value));
-    setMaxSalaryErrorMessage("");
-  };
-
   const handleEducationLevelChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -275,17 +216,18 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
   };
 
   useEffect(() => {
-    if (type === JobType.Fulltime) setSalaryType(SalaryType.Monthly);
-    if (type === JobType.Internship) setSalaryType(SalaryType.Hourly);
-    if (type === JobType.Parttime) setSalaryType(SalaryType.Hourly);
-    setMinSalary(undefined);
-    setMaxSalary(undefined);
+    if (type === JobType.Fulltime) {
+      setSalaryType(SalaryType.Monthly);
+      setMinSalary(40000);
+      setMaxSalary(60000);
+    } else if (type === JobType.Internship || type === JobType.Parttime) {
+      setSalaryType(SalaryType.Hourly);
+      setMinSalary(180);
+      setMaxSalary(200);
+    } else {
+      setSalaryType(undefined);
+    }
   }, [type]);
-
-  useEffect(() => {
-    if (minSalary && maxSalary && minSalary > maxSalary)
-      setMaxSalary(undefined);
-  }, [minSalary, maxSalary]);
 
   useEffect(() => {
     const selectedMainArea = TaiwanAreaJSON.find(a => a.name === area);
@@ -298,24 +240,18 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
       {alertType !== undefined && (
         <AlertDialog isOpen={alertOpen} close={hideAlert} type={alertType} />
       )}
-      <Dialog
-        maxWidth={"sm"}
-        fullWidth
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">發布職缺</DialogTitle>
+      <Dialog maxWidth={"sm"} fullWidth open={open} onClose={handleClose}>
+        <DialogTitle id="create-job">發布職缺</DialogTitle>
         <DialogContent>
           <TextField
             error={Boolean(typeErrorMessage)}
-            id="standard-select-currency"
+            id="job-type"
             autoFocus
             select
             fullWidth
             helperText={typeErrorMessage}
             label="類型"
-            value={type}
+            value={type || ""}
             onChange={handleTypeChange}
             SelectProps={{
               MenuProps: {
@@ -324,7 +260,7 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
             }}
             margin="normal"
           >
-            {JobTypes.map(option => (
+            {JobTypeOptions.map(option => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
@@ -332,31 +268,31 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
           </TextField>
           <TextField
             error={Boolean(nameErrorMessage)}
+            fullWidth
             helperText={nameErrorMessage}
-            margin="normal"
             id="name"
             label="名稱"
-            value={name}
-            fullWidth
+            margin="normal"
             onChange={handleNameChange}
+            value={name || ""}
           />
           <div style={{ display: "flex" }}>
             <TextField
-              style={{ marginRight: 4 }}
               error={Boolean(areaErrorMessage)}
-              helperText={areaErrorMessage}
-              id="standard-select-currency"
-              select
               fullWidth
+              helperText={areaErrorMessage}
+              id="area"
               label="縣市"
-              value={area}
+              margin="normal"
               onChange={handleAreaChange}
+              select
+              style={{ marginRight: 4 }}
+              value={area || ""}
               SelectProps={{
                 MenuProps: {
                   className: classes.menu
                 }
               }}
-              margin="normal"
             >
               {TaiwanAreaJSON.map(option => (
                 <MenuItem key={option.name} value={option.name}>
@@ -365,21 +301,21 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
               ))}
             </TextField>
             <TextField
-              style={{ marginLeft: 4 }}
               error={Boolean(subAreaErrorMessage)}
-              helperText={subAreaErrorMessage}
-              id="standard-select-currency"
-              select
               fullWidth
+              helperText={subAreaErrorMessage}
+              id="sub-area"
               label="地區"
-              value={subArea}
+              margin="normal"
               onChange={handleSubAreaChange}
+              select
+              style={{ marginLeft: 4 }}
+              value={subArea || ""}
               SelectProps={{
                 MenuProps: {
                   className: classes.menu
                 }
               }}
-              margin="normal"
             >
               {subAreaOptions.map(option => (
                 <MenuItem key={option.name} value={option.name}>
@@ -390,7 +326,13 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
           </div>
           <TextField
             error={Boolean(streetErrorMessage)}
+            fullWidth
             helperText={streetErrorMessage}
+            id="street"
+            label="地址"
+            margin="normal"
+            onChange={handleAddressChange}
+            value={street || ""}
             InputProps={{
               startAdornment: (
                 <InputAdornment
@@ -401,122 +343,139 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
                   }}
                   position="start"
                 >
-                  {(area || "") + (subArea || "")}
+                  {(area || "縣市") + (subArea || "地區")}
                 </InputAdornment>
               )
             }}
-            margin="normal"
-            id="name"
-            label="地址"
-            value={street}
-            fullWidth
-            onChange={handleAddressChange}
           />
-          {salaryType && (
-            <div style={{ display: "flex" }}>
-              <TextField
-                style={{ marginRight: 4 }}
-                error={Boolean(minSalaryErrorMessage)}
-                helperText={minSalaryErrorMessage}
-                id="standard-select-currency"
-                select
-                fullWidth
-                label={`${
-                  salaryType === SalaryType.Monthly ? "月薪" : "時薪"
-                }下限`}
-                value={minSalary}
-                onChange={handleMinSalaryChange}
-                SelectProps={{
-                  MenuProps: {
-                    className: classes.menu
-                  }
-                }}
-                margin="normal"
-              >
-                {(salaryType === SalaryType.Monthly
-                  ? MonthlySalaryOptions
-                  : HourlySalaryOptions
-                ).map(option => (
-                  <MenuItem key={option} value={option}>
-                    {salaryType === SalaryType.Monthly
-                      ? option / 1000 + "K"
-                      : option}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                style={{ marginLeft: 4 }}
-                error={Boolean(maxSalaryErrorMessage)}
-                helperText={maxSalaryErrorMessage}
-                id="standard-select-currency"
-                select
-                fullWidth
-                label={`${
-                  salaryType === SalaryType.Monthly ? "月薪" : "時薪"
-                }上限`}
-                value={maxSalary}
-                onChange={handleMaxSalaryChange}
-                SelectProps={{
-                  MenuProps: {
-                    className: classes.menu
-                  }
-                }}
-                margin="normal"
-              >
-                {(salaryType === SalaryType.Monthly
-                  ? MonthlySalaryOptions
-                  : HourlySalaryOptions
-                )
-                  .filter(option => option > (minSalary || 0))
-                  .map(option => (
-                    <MenuItem key={option} value={option}>
-                      {salaryType === SalaryType.Monthly
-                        ? option / 1000 + "K"
-                        : option}
-                    </MenuItem>
-                  ))}
-              </TextField>
-            </div>
-          )}
+          <div style={{ display: "flex", marginTop: 24 }}>
+            <TextField
+              disabled={!salaryType}
+              fullWidth
+              id="min-salary"
+              label="最低薪資"
+              margin="normal"
+              style={{ marginRight: 4 }}
+              value={minSalary}
+              onChange={e => {
+                if (/\d+/.test(e.target.value)) {
+                  setMinSalary(parseInt(e.target.value));
+                }
+              }}
+              onBlur={() => {
+                const options =
+                  salaryType === SalaryType.Monthly
+                    ? MonthlySalaryOptions
+                    : HourlySalaryOptions;
+                let salary = minSalary;
+                if (salary < options[0]) {
+                  salary = options[0];
+                } else if (salary > options[options.length - 1]) {
+                  salary = options[options.length - 1];
+                }
+
+                setMinSalary(salary);
+                if (salary > maxSalary) {
+                  setMaxSalary(salary);
+                }
+              }}
+            />
+            <TextField
+              disabled={!salaryType}
+              fullWidth
+              id="max-salary"
+              label="最高薪資"
+              margin="normal"
+              style={{ marginLeft: 4 }}
+              value={maxSalary}
+              onChange={e => {
+                if (/\d+/.test(e.target.value)) {
+                  setMaxSalary(parseInt(e.target.value));
+                }
+              }}
+              onBlur={() => {
+                const options =
+                  salaryType === SalaryType.Monthly
+                    ? MonthlySalaryOptions
+                    : HourlySalaryOptions;
+                let salary = maxSalary;
+                if (salary < options[0]) {
+                  salary = options[0];
+                } else if (salary > options[options.length - 1]) {
+                  salary = options[options.length - 1];
+                }
+
+                setMaxSalary(salary);
+                if (salary < minSalary) {
+                  setMinSalary(salary);
+                }
+              }}
+            />
+          </div>
+          <Slider
+            disabled={!salaryType}
+            step={null}
+            value={[minSalary, maxSalary]}
+            valueLabelDisplay="off"
+            min={
+              salaryType === SalaryType.Monthly
+                ? MonthlySalaryOptions[0]
+                : HourlySalaryOptions[0]
+            }
+            max={
+              salaryType === SalaryType.Monthly
+                ? MonthlySalaryOptions[MonthlySalaryOptions.length - 1]
+                : HourlySalaryOptions[HourlySalaryOptions.length - 1]
+            }
+            marks={
+              salaryType === SalaryType.Monthly
+                ? MonthlySalaryOptions.map(value => ({ value }))
+                : HourlySalaryOptions.map(value => ({ value }))
+            }
+            onChange={(_e, newValue) => {
+              setMinSalary(newValue[0]);
+              setMaxSalary(newValue[1]);
+            }}
+          />
           <TextField
-            id="standard-select-currency"
             error={Boolean(educationNeedErrorMessage)}
-            helperText={educationNeedErrorMessage}
-            select
             fullWidth
+            helperText={educationNeedErrorMessage}
+            id="education-need"
             label="學歷要求"
-            value={educationNeed}
+            margin="normal"
             onChange={handleEducationLevelChange}
+            select
+            value={educationNeed || ""}
             SelectProps={{
               MenuProps: {
                 className: classes.menu
               }
             }}
-            margin="normal"
           >
-            {EducationLevelTypes.map(option => (
+            {EducationLevelOptions.map(option => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
             ))}
           </TextField>
           <TextField
-            id="standard-select-currency"
             error={Boolean(experienceNeedErrorMessage)}
-            helperText={experienceNeedErrorMessage}
-            select
             fullWidth
+            helperText={experienceNeedErrorMessage}
+            id="experience-need"
             label="經驗要求"
-            value={experienceNeed}
+            margin="normal"
             onChange={handleExperienceLevelChange}
+            select
+            value={experienceNeed || ""}
             SelectProps={{
               MenuProps: {
                 className: classes.menu
               }
             }}
-            margin="normal"
           >
-            {ExperienceLevelTypes.map(option => (
+            {ExperienceLevelOptions.map(option => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
@@ -524,16 +483,16 @@ const JobCreateForm: React.FC<JobCreateFormProps> = ({ open, handleClose }) => {
           </TextField>
           <TextField
             error={Boolean(descriptionErrorMessage)}
+            fullWidth
             helperText={descriptionErrorMessage}
-            margin="normal"
-            id="name"
+            id="description"
             label="介紹（選填）"
-            value={description}
-            onChange={handleDescriptionChange}
+            margin="normal"
             multiline
+            onChange={handleDescriptionChange}
             rows="10"
             rowsMax="10"
-            fullWidth
+            value={description || ""}
           />
         </DialogContent>
         <DialogActions>

@@ -9,7 +9,6 @@ import {
   Switch,
   useRouteMatch
 } from "react-router-dom";
-import CreateJob from "routes/CreateJob";
 import RecruiterJob from "routes/Recruiter/Job";
 import Message from "routes/Recruiter/Message";
 import RecruiterProfile from "routes/Recruiter/Profile";
@@ -110,15 +109,7 @@ const RecruiterRoute: React.FC = () => {
           component={RecruiterVisitorsToBe}
         />
         <PrivateRoute path={`${match.path}/order`} component={RecruiterOrder} />
-        <PrivateRoute
-          path={`${match.path}/create-a-job/`}
-          component={CreateJob}
-        />
         <PrivateRoute path={`${match.path}/message`} component={MessageRoute} />
-        {/* <PrivateRoute
-          path={`${match.path}/recommend-candidates`}
-          component={RecommendCandidatesHome}
-        /> */}
         <Route path={`${match.path}`} component={NotFound} />
       </Switch>
     )

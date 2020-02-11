@@ -29,7 +29,8 @@ const TeamSizeConvertor = (teamSize: TeamSize | undefined) => {
 
 const JobTypeOptions = [
   { value: JobType.Fulltime, label: "正職" },
-  { value: JobType.Internship, label: "實習" }
+  { value: JobType.Internship, label: "實習" },
+  { value: JobType.Parttime, label: "兼職" }
 ];
 
 const JobTypeConvertor = (jobType: JobType | undefined) => {
