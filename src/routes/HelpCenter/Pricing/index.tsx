@@ -135,23 +135,29 @@ const Pricing: React.FC = () => {
   const [value, setValue] = useState(0);
   const [phoneNumber, setPhoneNumber] = useState<string>();
   const [email, setEmail] = useState<string>();
+  const [emailErrorMessage, setEmailErrorMessage] = useState<string>();
   const [body, setBody] = useState<string>();
   const tabsStyle = useTabsStyles();
   const tabStyle = useTabStyles();
 
   const sendTicket = async () => {
+    if (emailErrorMessage) {
+      return;
+    }
+
     const supportApi = await getApi("Support");
     await supportApi.addAnonymousSupportTicket({
       newSupportTicket: {
         subject: "廣告",
-        body: phoneNumber || "" + body || "",
-        email: email || ""
+        phoneNumber,
+        email,
+        body
       }
     });
-    setPhoneNumber("");
-    setEmail("");
-    setBody("");
-    toast.success("送出成功");
+    setPhoneNumber(undefined);
+    setEmail(undefined);
+    setBody(undefined);
+    toast.success("成功送出");
   };
 
   function handleChange(event: React.ChangeEvent<{}>, newValue: number) {
@@ -188,44 +194,57 @@ const Pricing: React.FC = () => {
         </Tabs>
         {Boolean(!value) && (
           <div>
-            <h3>為了讓網站可以順利運營，我們有三種廣告服務：</h3>
+            <h3>為了讓網站可以順利運作，我們有三種廣告服務：</h3>
             <h3>
-              1. 將你指定的徵才訊息，置頂在指定科系的
+              1. 將你徵才訊息置頂在指定科系的
               <Link to={"/awesome/台大電機"} style={{ color: "black" }}>
                 就業精選版
               </Link>
-              。一天價錢 1000 元新台幣
+              ・新台幣 1000 元／天
             </h3>
             <h3>
-              2. 牛奶找工作 FB 粉專，轉發你指定的徵才訊息。一次 2000 元新台幣
+              2. 牛奶找工作臉書粉絲專頁，轉發你的徵才訊息・新台幣 2000 元／次
             </h3>
-            <h3>3. 首頁的跑馬燈。一天價錢 500 元新台幣</h3>
+            <h3>3. 首頁的跑馬燈・新台幣 500 元／天</h3>
             <h3>有興趣的公司，留言告訴我們，會有專人聯絡你。</h3>
             <TextField
-              value={phoneNumber}
-              label={"聯絡電話"}
               fullWidth
-              variant="outlined"
+              label="聯絡電話"
               onChange={e => setPhoneNumber(e.target.value)}
               style={{ marginBottom: 16 }}
-            />
-            <TextField
-              value={email}
-              label={"聯絡 Email"}
-              fullWidth
+              value={phoneNumber || ""}
               variant="outlined"
-              onChange={e => setEmail(e.target.value)}
-              style={{ marginBottom: 16 }}
             />
             <TextField
-              value={body}
-              placeholder={"告訴我們你想要什麼方案，以及你的需求"}
+              error={Boolean(emailErrorMessage)}
+              fullWidth
+              helperText={emailErrorMessage}
+              label="聯絡 Email"
+              onBlur={() => {
+                const emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+                if (email && !emailRegex.test(email)) {
+                  setEmailErrorMessage("請輸入正確的 Email");
+                } else {
+                  setEmailErrorMessage(undefined);
+                }
+              }}
+              onChange={e => {
+                setEmail(e.target.value);
+                setEmailErrorMessage(undefined);
+              }}
+              style={{ marginBottom: 16 }}
+              value={email || ""}
+              variant="outlined"
+            />
+            <TextField
+              fullWidth
               multiline
-              rows="8"
-              fullWidth
-              variant="outlined"
               onChange={e => setBody(e.target.value)}
+              placeholder="告訴我們你想要什麼方案，以及你的需求"
+              rows="8"
               style={{ marginBottom: 16 }}
+              value={body || ""}
+              variant="outlined"
             />
             <Button
               style={{ minWidth: 100, marginLeft: 8 }}
@@ -268,7 +287,7 @@ const Pricing: React.FC = () => {
                 ))}
             </div>
             <h3>登入牛奶找工作，創建公司後，即可在公司後台系統購買。</h3>
-            <h3> * 點閱人數是採不重複計算，一個使用者看10次，只會計算1次</h3>
+            <h3> * 點閱人數是採不重複計算，一個使用者看 10 次，只會計算 1 次</h3>
           </div>
         )}
       </div>
