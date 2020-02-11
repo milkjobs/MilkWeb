@@ -2,6 +2,7 @@ import {
   EducationLevel,
   ExperienceLevel,
   Job,
+  JobType,
   SalaryType
 } from "@frankyjuang/milkapi-client";
 import { InputAdornment, Slider } from "@material-ui/core";
@@ -17,7 +18,7 @@ import { SubArea, TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
 import {
   EducationLevelOptions,
   ExperienceLevelOptions,
-  JobTypeConvertor
+  JobTypeOptions
 } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
@@ -32,10 +33,14 @@ interface Props {
 
 const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
   const history = useHistory();
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { getApi, user, reloadUser } = useAuth();
-  const [deleteLoading, setDeleteLoading] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const [type, setType] = useState<JobType>(job.type);
+  const [name, setName] = useState<string | undefined>(job.name);
+  const [nameErrorMessage, setNameErrorMessage] = useState<string>();
   const [area, setArea] = useState(job.address.area);
   const [areaErrorMessage, setAreaErrorMessage] = useState<string>();
   const [subArea, setSubArea] = useState<string | undefined>(
@@ -45,7 +50,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
   const [subAreaOptions, setSubAreaOptions] = useState<SubArea[]>([]);
   const [street, setStreet] = useState(job.address.street);
   const [streetErrorMessage, setStreetErrorMessage] = useState<string>();
-  const [salaryType] = useState(job.salaryType);
+  const [salaryType, setSalaryType] = useState(job.salaryType);
   const [minSalary, setMinSalary] = useState(job.minSalary);
   const [maxSalary, setMaxSalary] = useState(job.maxSalary);
   const [educationNeed, setEducationNeed] = useState(job.educationNeed);
@@ -65,6 +70,10 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
 
   const publish = async () => {
     const jobApi = await getApi("Job");
+    if (!name) {
+      setNameErrorMessage("請輸入名稱");
+      return;
+    }
     if (!area) {
       setAreaErrorMessage("請選擇縣市");
       return;
@@ -85,12 +94,14 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
       setExperienceNeedErrorMessage("請選擇經驗要求");
       return;
     }
-    if (user && user.recruiterInfo && user.recruiterInfo.uuid && salaryType) {
+    if (user && user.recruiterInfo && user.recruiterInfo.uuid) {
       setLoading(true);
       await jobApi.updateJob({
         jobId: job.uuid,
         job: {
           ...job,
+          type,
+          name,
           minSalary,
           maxSalary,
           salaryType,
@@ -104,6 +115,25 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
       setLoading(false);
     }
     handleClose();
+  };
+
+  const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (
+      event.target.value === JobType.Fulltime ||
+      event.target.value === JobType.Internship ||
+      event.target.value === JobType.Parttime
+    ) {
+      setType(event.target.value);
+    }
+  };
+
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length > 50) {
+      setNameErrorMessage("職缺名稱最長不能超過 50 個字");
+      return;
+    }
+    setName(event.target.value);
+    setNameErrorMessage("");
   };
 
   const handleAreaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -193,26 +223,52 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
     history.push("/recruiter");
   };
 
+  useEffect(() => {
+    if (type === job.type) {
+      setSalaryType(job.salaryType);
+      setMinSalary(job.minSalary);
+      setMaxSalary(job.maxSalary);
+    } else if (type === JobType.Fulltime) {
+      setSalaryType(SalaryType.Monthly);
+      setMinSalary(40000);
+      setMaxSalary(60000);
+    } else if (type === JobType.Internship || type === JobType.Parttime) {
+      setSalaryType(SalaryType.Hourly);
+      setMinSalary(180);
+      setMaxSalary(200);
+    }
+  }, [type]);
+
   return (
     <div>
       <Dialog maxWidth={"sm"} fullWidth open={open} onClose={handleClose}>
         <DialogTitle id="edit-job">編輯職缺</DialogTitle>
         <DialogContent>
           <TextField
-            disabled
+            autoFocus
             fullWidth
             id="job-type"
             label="類型"
             margin="normal"
-            value={JobTypeConvertor(job.type)}
-          />
+            onChange={handleTypeChange}
+            select
+            value={type || ""}
+          >
+            {JobTypeOptions.map(option => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
           <TextField
-            disabled
+            error={Boolean(nameErrorMessage)}
             fullWidth
+            helperText={nameErrorMessage}
             id="name"
             label="名稱"
             margin="normal"
-            value={job.name}
+            onChange={handleNameChange}
+            value={name || ""}
           />
           <div style={{ display: "flex" }}>
             <TextField
