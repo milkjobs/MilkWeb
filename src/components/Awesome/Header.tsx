@@ -1,7 +1,10 @@
+import { AwesomeList } from "@frankyjuang/milkapi-client";
 import { Button, makeStyles, Theme, useMediaQuery } from "@material-ui/core";
+import to from "await-to-js";
 import { openInNewTab } from "helpers";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "stores";
 
 const useStyles = makeStyles(() => ({
   schoolContainer: {
@@ -26,7 +29,19 @@ interface Props {
 
 const AwesomeHeader: React.FC<Props> = ({ showStories, showChatRoom }) => {
   const classes = useStyles();
+  const { getApi } = useAuth();
+  const [awesomeLists, setAwesomeLists] = useState<AwesomeList[]>([]);
   const matched = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
+
+  useEffect(() => {
+    const getLists = async () => {
+      const awesomeApi = await getApi("Awesome");
+      const [, lists] = await to(awesomeApi.getAwesomeLists({}));
+      lists && setAwesomeLists(lists);
+    };
+
+    getLists();
+  }, [getApi]);
 
   return (
     <div className={classes.schoolContainer}>
@@ -37,96 +52,15 @@ const AwesomeHeader: React.FC<Props> = ({ showStories, showChatRoom }) => {
       ) : (
         <div className={classes.schoolTitle}>就業精選</div>
       )}
-      <Link
-        to={{ pathname: "/awesome/台大電機" }}
-        className={classes.majorButton}
-      >
-        <Button>台大電機</Button>
-      </Link>
-      <Link
-        to={{ pathname: "/awesome/台大資工" }}
-        className={classes.majorButton}
-      >
-        <Button>台大資工</Button>
-      </Link>
-      <Link
-        to={{ pathname: "/awesome/台大財金" }}
-        className={classes.majorButton}
-      >
-        <Button>台大財金</Button>
-      </Link>
-      <Link
-        to={{ pathname: "/awesome/台大國企" }}
-        className={classes.majorButton}
-      >
-        <Button>台大國企</Button>
-      </Link>
-      <Link
-        to={{ pathname: "/awesome/台大工管" }}
-        className={classes.majorButton}
-      >
-        <Button>台大工管</Button>
-      </Link>
-      <Link
-        to={{ pathname: "/awesome/台大化工" }}
-        className={classes.majorButton}
-      >
-        <Button>台大化工</Button>
-      </Link>
-      <Link
-        to={{ pathname: "/awesome/台大機械" }}
-        className={classes.majorButton}
-      >
-        <Button>台大機械</Button>
-      </Link>
-      <Link
-        to={{ pathname: "/awesome/台大公衛" }}
-        className={classes.majorButton}
-      >
-        <Button>台大公衛</Button>
-      </Link>
-      <Link
-        to={{ pathname: "/awesome/台大藥學" }}
-        className={classes.majorButton}
-      >
-        <Button>台大藥學</Button>
-      </Link>
-      <Link
-        to={{ pathname: "/awesome/台大圖資" }}
-        className={classes.majorButton}
-      >
-        <Button>台大圖資</Button>
-      </Link>
-      <Link
-        to={{ pathname: "/awesome/台大數學" }}
-        className={classes.majorButton}
-      >
-        <Button>台大數學</Button>
-      </Link>
-      <Link
-        to={{ pathname: "/awesome/台大材料" }}
-        className={classes.majorButton}
-      >
-        <Button>台大材料</Button>
-      </Link>
-      <Link
-        to={{ pathname: "/awesome/台大物理" }}
-        className={classes.majorButton}
-      >
-        <Button>台大物理</Button>
-      </Link>
-      <Link
-        to={{ pathname: "/awesome/台大經濟" }}
-        className={classes.majorButton}
-      >
-        <Button>台大經濟</Button>
-      </Link>
-      <Link to={{ pathname: "/awesome/電商" }} className={classes.majorButton}>
-        <Button>電商</Button>
-      </Link>
-      <Link to={{ pathname: "/awesome/遊戲" }} className={classes.majorButton}>
-        <Button>遊戲</Button>
-      </Link>
+      {awesomeLists.map(list => (
+        <Link
+          key={list.name}
+          to={{ pathname: `/awesome/${list.name}` }}
+          className={classes.majorButton}
+        >
+          <Button>{list.name}</Button>
+        </Link>
+      ))}
       {showChatRoom && matched && (
         <div
           onClick={() => openInNewTab("https://tlk.io/ntu")}

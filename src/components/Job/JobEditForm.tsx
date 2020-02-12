@@ -237,7 +237,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
       setMinSalary(180);
       setMaxSalary(200);
     }
-  }, [type]);
+  }, [job.maxSalary, job.minSalary, job.salaryType, job.type, type]);
 
   return (
     <div>
