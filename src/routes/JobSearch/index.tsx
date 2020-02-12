@@ -1,8 +1,6 @@
 import { UserApi } from "@frankyjuang/milkapi-client";
-import IconButton from "@material-ui/core/IconButton";
-import InputBase from "@material-ui/core/InputBase";
-import { makeStyles } from "@material-ui/core/styles";
-import SearchIcon from "@material-ui/icons/Search";
+import { IconButton, InputBase, makeStyles } from "@material-ui/core";
+import { Search } from "@material-ui/icons";
 import algoliasearch, { SearchClient } from "algoliasearch/lite";
 import { AwesomeHeader } from "components/Awesome";
 import { Header } from "components/Header";
@@ -174,7 +172,7 @@ const JobSearch: React.FC = () => {
               placeholder="搜尋工作、地區、公司"
             />
             <IconButton className={classes.iconButton} aria-label="Search">
-              <SearchIcon />
+              <Search />
             </IconButton>
           </div>
         )}

@@ -23,9 +23,7 @@ const AlertDialog: React.FC<Props> = props => {
       {type === AlertType.NotVerification && (
         <>
           <DialogContent>
-            {
-              "公司尚未驗證，職缺會暫時關閉。等公司驗證成功，你可以再把職缺開放。"
-            }
+            {"公司尚未驗證，職缺會暫時關閉。等公司驗證成功，可以再把職缺開放。"}
           </DialogContent>
           <DialogActions>
             <Button

@@ -221,7 +221,7 @@ const Pricing: React.FC = () => {
               helperText={emailErrorMessage}
               label="聯絡 Email"
               onBlur={() => {
-                const emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+                const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
                 if (email && !emailRegex.test(email)) {
                   setEmailErrorMessage("請輸入正確的 Email");
                 } else {
@@ -287,7 +287,10 @@ const Pricing: React.FC = () => {
                 ))}
             </div>
             <h3>登入牛奶找工作，創建公司後，即可在公司後台系統購買。</h3>
-            <h3> * 點閱人數是採不重複計算，一個使用者看 10 次，只會計算 1 次</h3>
+            <h3>
+              {" "}
+              * 點閱人數是採不重複計算，一個使用者看 10 次，只會計算 1 次
+            </h3>
           </div>
         )}
       </div>

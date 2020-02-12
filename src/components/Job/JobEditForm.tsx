@@ -493,7 +493,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
       </Dialog>
       <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
         <DialogContent style={{ marginTop: 16, marginBottom: 16 }}>
-          你確定要刪除這個職缺嗎？
+          確定要刪除{job.name}？
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteDialogClose} color="primary">
@@ -504,17 +504,8 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
               style={{ width: 20, height: 20, marginLeft: 20, marginRight: 20 }}
             />
           ) : (
-            <Button
-              style={{
-                boxShadow: "none",
-                color: "white"
-              }}
-              onClick={removeJob}
-              variant="contained"
-              color="secondary"
-              autoFocus
-            >
-              確定
+            <Button onClick={removeJob} variant="contained" color="secondary">
+              刪除
             </Button>
           )}
         </DialogActions>

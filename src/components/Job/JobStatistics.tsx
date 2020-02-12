@@ -11,7 +11,7 @@ import "moment/locale/zh-tw";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth, useTheme } from "stores";
-moment.locale();
+moment.locale("zh-tw");
 
 const useStyles = makeStyles(theme => ({
   container: {

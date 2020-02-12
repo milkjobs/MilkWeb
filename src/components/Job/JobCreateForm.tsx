@@ -5,15 +5,18 @@ import {
   JobUnpublishedReason,
   SalaryType
 } from "@frankyjuang/milkapi-client";
-import { InputAdornment, Slider } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  InputAdornment,
+  MenuItem,
+  Slider,
+  TextField
+} from "@material-ui/core";
 import { SubArea, TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
 import { AlertDialog } from "components/Util";
 import {
@@ -231,7 +234,7 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
         <AlertDialog isOpen={alertOpen} close={hideAlert} type={alertType} />
       )}
       <Dialog maxWidth={"sm"} fullWidth open={open} onClose={handleClose}>
-        <DialogTitle id="create-job">發布職缺</DialogTitle>
+        <DialogTitle id="create-job">刊登職缺</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -471,7 +474,7 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
             />
           ) : (
             <Button onClick={publish} color="primary" variant="contained">
-              發布
+              刊登
             </Button>
           )}
         </DialogActions>

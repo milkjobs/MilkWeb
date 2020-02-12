@@ -1,7 +1,8 @@
 import { Job } from "@frankyjuang/milkapi-client";
-import { Button, makeStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import { Header } from "components/Header";
 import { JobCreateForm, RecruiterJobCard } from "components/Job";
+import { Title } from "components/Util";
 import { VerificationStateBanner } from "components/Verification";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "stores";
@@ -12,46 +13,17 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper
   },
   container: {
-    marginTop: 40,
-    marginLeft: "auto",
-    marginRight: "auto",
     display: "flex",
-    paddingRight: 24,
-    paddingLeft: 24,
     flexDirection: "column",
     justifyContent: "center",
-
-    [theme.breakpoints.up("md")]: {
-      width: "860px"
-    }
-  },
-  title: {
-    display: "flex",
-    alignItems: "center",
-    fontSize: 24,
-    fontWeight: 400,
-    color: "#484848"
-  },
-  titleContainer: {
-    display: "flex",
-    paddingBottom: 12,
-    marginBottom: 12,
-    paddingRight: 24,
-    paddingLeft: 24,
-    borderBottom: "1px solid rgba(0, 0, 0, 0.1)"
-  },
-  addPositionButton: {
-    display: "flex",
     marginLeft: "auto",
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-    borderRadius: 4,
-    textDecoration: "none",
-    alignItems: "center",
-    color: "white",
-    fontSize: 14
+    marginRight: "auto",
+    marginTop: 40,
+    paddingLeft: 24,
+    paddingRight: 24,
+    [theme.breakpoints.up("md")]: {
+      width: "900px"
+    }
   }
 }));
 
@@ -72,25 +44,18 @@ const RecruiterPositionsHome: React.FC = () => {
       <Header />
       <JobCreateForm open={formOpen} handleClose={() => setFormOpen(false)} />
       <div className={classes.container}>
-        <div
-          style={{
+        <VerificationStateBanner
+          containerStyle={{
             marginBottom: 24,
             textAlign: "left"
           }}
-        >
-          <VerificationStateBanner showAction />
-        </div>
-        <div className={classes.titleContainer}>
-          <span className={classes.title}>職缺</span>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.addPositionButton}
-            onClick={() => setFormOpen(true)}
-          >
-            <span>發布職缺</span>
-          </Button>
-        </div>
+          showAction
+        />
+        <Title
+          text="職缺"
+          buttonText="刊登職缺"
+          buttonOnClick={() => setFormOpen(true)}
+        />
         <div>
           {positions.length !== 0 ? (
             positions.map((value, index) => {

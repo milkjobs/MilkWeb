@@ -7,6 +7,7 @@ import {
 } from "@material-ui/core";
 import appStoreBadge from "assets/app-store-badge.svg";
 import googlePlayBadge from "assets/google-play-badge.png";
+import logo from "assets/milk.png";
 import { getMobileOS, MobileOS } from "helpers";
 import QRCode from "qrcode.react";
 import React from "react";
@@ -28,13 +29,12 @@ const DownloadAppDialog: React.FC<Props> = props => {
         {isMobile ? (
           <>
             {getMobileOS() !== MobileOS.Android && (
-              // TODO: app store link
-              <a href="https://apps.apple.com/app/id1480033474">
+              <a href="https://to.milk.jobs/app">
                 <img alt="app store" src={appStoreBadge} width="200" />
               </a>
             )}
             {getMobileOS() !== MobileOS.Ios && (
-              <a href="https://play.google.com/store/apps/details?id=com.milkjobs.app">
+              <a href="https://to.milk.jobs/app">
                 <img alt="google play" src={googlePlayBadge} width="200" />
               </a>
             )}
@@ -44,7 +44,7 @@ const DownloadAppDialog: React.FC<Props> = props => {
             size={256}
             level="Q"
             value="https://to.milk.jobs/app"
-            // TODO: https://github.com/zpao/qrcode.react#imagesettings
+            imageSettings={{ src: logo, height: 50, width: 50 }}
           />
         )}
       </DialogContent>

@@ -1,12 +1,47 @@
-import React from "react";
-import { createStyles, Theme } from "@material-ui/core/styles";
-import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
-import SendBird from "sendbird";
 import Badge from "@material-ui/core/Badge";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import moment from "moment";
 import "moment/locale/zh-tw";
-moment.locale();
+import React from "react";
+import SendBird from "sendbird";
+moment.locale("zh-tw");
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      paddingTop: 16,
+      paddingBottom: 16,
+      paddingLeft: 24,
+      paddingRight: 24,
+      display: "flex",
+      flexDirection: "row",
+      borderBottom: "1px solid #EBEBEB"
+    },
+    name: {
+      marginRight: "auto",
+      fontSize: 16,
+      color: theme.palette.text.primary
+    },
+    badge: {
+      marginRight: theme.spacing(1)
+    },
+    date: {
+      fontSize: 12,
+      marginLeft: "auto",
+      color: theme.palette.text.hint
+    },
+    recentMessage: {
+      width: 250,
+      fontSize: 12,
+      textAlign: "left",
+      color: theme.palette.text.primary,
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis"
+    }
+  })
+);
 
 interface Props {
   recruiter: SendBird.Member;
@@ -71,41 +106,5 @@ const MessageCard: React.FC<Props> = props => {
     </div>
   );
 };
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      paddingTop: 16,
-      paddingBottom: 16,
-      paddingLeft: 24,
-      paddingRight: 24,
-      display: "flex",
-      flexDirection: "row",
-      borderBottom: "1px solid #EBEBEB"
-    },
-    name: {
-      marginRight: "auto",
-      fontSize: 16,
-      color: theme.palette.text.primary
-    },
-    badge: {
-      marginRight: theme.spacing(1)
-    },
-    date: {
-      fontSize: 12,
-      marginLeft: "auto",
-      color: theme.palette.text.hint
-    },
-    recentMessage: {
-      width: 250,
-      fontSize: 12,
-      textAlign: "left",
-      color: theme.palette.text.primary,
-      whiteSpace: "nowrap",
-      overflow: "hidden",
-      textOverflow: "ellipsis"
-    }
-  })
-);
 
 export { MessageCard };

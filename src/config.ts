@@ -3,6 +3,18 @@ type Config<T> = {
   [e in Environment]: T;
 };
 
+const webConfigs: Config<{ basePath: string }> = {
+  local: {
+    basePath: "https://staging.milk.jobs"
+  },
+  staging: {
+    basePath: "https://staging.milk.jobs"
+  },
+  production: {
+    basePath: "https://milk.jobs"
+  }
+};
+
 const apiServiceConfigs: Config<{ basePath: string }> = {
   local: {
     basePath: "https://api.staging.milk.jobs"
@@ -109,6 +121,7 @@ export const environment = (process.env.REACT_APP_ENV ||
   "local") as Environment;
 
 export const paymentUrl = paymentUrls[environment];
+export const webConfig = webConfigs[environment];
 export const apiServiceConfig = apiServiceConfigs[environment];
 export const algoliaConfig = algoliaConfigs[environment];
 export const sentryConfig = sentryConfigs[environment];

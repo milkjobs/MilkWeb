@@ -10,13 +10,13 @@ import {
   useRouteMatch
 } from "react-router-dom";
 import RecruiterJob from "routes/Recruiter/Job";
+import Member from "routes/Recruiter/Member";
 import Message from "routes/Recruiter/Message";
 import RecruiterProfile from "routes/Recruiter/Profile";
 import Verification from "routes/Recruiter/Verification";
 import RecruiterVisitorsToBe from "routes/Recruiter/VisitorsToBe";
 import RecruiterOrder from "routes/RecruiterOrder";
 import RecruiterPositionsHome from "routes/RecruiterPositionsHome";
-import RecruitersManagement from "routes/RecruitersManagement";
 import RecruiterTeam from "routes/RecruiterTeam";
 import { ChannelProvider, useAuth } from "stores";
 
@@ -100,16 +100,15 @@ const RecruiterRoute: React.FC = () => {
           path={`${match.path}/positions`}
           component={RecruiterPositionsHome}
         />
-        <PrivateRoute
-          path={`${match.path}/management`}
-          component={RecruitersManagement}
-        />
+        <PrivateRoute path={`${match.path}/member`} component={Member} />
         <PrivateRoute
           path={`${match.path}/visitorsToBe`}
           component={RecruiterVisitorsToBe}
         />
         <PrivateRoute path={`${match.path}/order`} component={RecruiterOrder} />
         <PrivateRoute path={`${match.path}/message`} component={MessageRoute} />
+        {/* TODO: remove deprecated route */}
+        <PrivateRoute path={`${match.path}/management`} component={Member} />
         <Route path={`${match.path}`} component={NotFound} />
       </Switch>
     )
