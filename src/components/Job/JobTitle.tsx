@@ -3,8 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   EducationLevelConvertor,
   ExperienceLevelConvertor,
-  salaryNumberToString,
-  SalaryTypeToWordInJobCard,
+  salaryToString,
   TeamSizeConvertor
 } from "helpers";
 import React, { useEffect, useState } from "react";
@@ -165,10 +164,7 @@ const JobTitle: React.FC<Props> = props => {
         <span className={classes.nameContainer}>
           <div className={classes.jobName}>{name}</div>
           <div className={classes.jobSalary}>
-            {salaryNumberToString(minSalary) +
-              "~" +
-              salaryNumberToString(maxSalary) +
-              SalaryTypeToWordInJobCard(salaryType)}
+            {salaryToString(minSalary, maxSalary, salaryType)}
           </div>
         </span>
         <span className={classes.location}>

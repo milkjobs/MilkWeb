@@ -102,14 +102,14 @@ const RecruiterRoute: React.FC = () => {
         />
         <PrivateRoute path={`${match.path}/member`} component={Member} />
         <PrivateRoute
-          path={`${match.path}/visitorsToBe`}
+          path={`${match.path}/visitors-to-be`}
           component={RecruiterVisitorsToBe}
         />
         <PrivateRoute path={`${match.path}/order`} component={RecruiterOrder} />
         <PrivateRoute path={`${match.path}/message`} component={MessageRoute} />
         {/* TODO: remove deprecated route */}
         <PrivateRoute path={`${match.path}/management`} component={Member} />
-        <Route path={`${match.path}`} component={NotFound} />
+        <Route path={match.path} component={NotFound} />
       </Switch>
     )
   );

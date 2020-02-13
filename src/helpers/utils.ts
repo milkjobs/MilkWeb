@@ -1,9 +1,9 @@
 import {
-  TeamSize,
-  JobType,
   EducationLevel,
   ExperienceLevel,
-  SalaryType
+  JobType,
+  SalaryType,
+  TeamSize
 } from "@frankyjuang/milkapi-client";
 import { MobileOS } from "helpers";
 
@@ -80,17 +80,6 @@ const ExperienceLevelConvertor = (
   return "";
 };
 
-const SalaryTypeToWord = (salaryType: SalaryType) => {
-  switch (salaryType) {
-    case SalaryType.Hourly:
-      return "/時";
-    case SalaryType.Monthly:
-      return "/月";
-    default:
-      return "";
-  }
-};
-
 const SalaryTypeToWordInJobCard = (salaryType: SalaryType) => {
   switch (salaryType) {
     case SalaryType.Hourly:
@@ -107,12 +96,18 @@ const salaryNumberToString = (salary: number) => {
   return String(salary / 1000) + "K";
 };
 
-const salaryStringToNumber = (salary: string) => {
-  if (salary.endsWith("K")) {
-    return Number(salary.slice(0, salary.length - 1)) * 1000;
-  }
-  return Number(salary);
-};
+const salaryToString = (
+  minSalary: number,
+  maxSalary: number,
+  salaryType: SalaryType
+) =>
+  minSalary === maxSalary
+    ? `${salaryNumberToString(minSalary)}${SalaryTypeToWordInJobCard(
+        salaryType
+      )}`
+    : `${salaryNumberToString(minSalary)}~${salaryNumberToString(
+        maxSalary
+      )}${SalaryTypeToWordInJobCard(salaryType)}`;
 
 /* phone number */
 const isLocalPhoneNumber = (phoneNumber: string) =>
@@ -177,10 +172,7 @@ export {
   PdfMimeType,
   ImageMimeType,
   ImagePdfMimeType,
-  salaryNumberToString,
-  salaryStringToNumber,
-  SalaryTypeToWord,
-  SalaryTypeToWordInJobCard,
+  salaryToString,
   TeamSizeConvertor,
   TeamSizeOptions
 };

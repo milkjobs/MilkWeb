@@ -1,4 +1,4 @@
-import { Job as JobModel } from "@frankyjuang/milkapi-client";
+import { Job as JobType } from "@frankyjuang/milkapi-client";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
 import { Header } from "components/Header";
@@ -85,12 +85,12 @@ const Job: React.FC = () => {
   const { getApi, isAuthenticated } = useAuth();
   const params = useParams<{ id: string }>();
   const classes = useStyles();
-  const [job, setJob] = useState<JobModel>();
+  const [job, setJob] = useState<JobType>();
 
   useEffect(() => {
     const fetchJob = async () => {
       const jobApi = await getApi("Job");
-      let fetchedJob: JobModel;
+      let fetchedJob: JobType;
       if (isAuthenticated) {
         fetchedJob = await jobApi.getJob({ jobId: params.id });
       } else {

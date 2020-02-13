@@ -1,11 +1,12 @@
 import { VisitorPlan } from "@frankyjuang/milkapi-client";
+import to from "await-to-js";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import { makeStyles } from "@material-ui/core/styles";
 import { mdiEyeCheckOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 import { BuyDialog } from "components/Point";
-import { PurchaseWay } from "helpers";
+import { PurchaseMethod } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "stores";
 
@@ -53,21 +54,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Purchase: React.FC = () => {
+const Buy: React.FC = () => {
   const { getApi } = useAuth();
   const classes = useStyles();
   const [visitorPlans, setVisitorPlans] = useState<VisitorPlan[]>();
   const [selectedPlan, setSelectedPlan] = useState<VisitorPlan>();
-  const [purchaseWay, setPurchaseWay] = useState<PurchaseWay>(
-    PurchaseWay.Credit
-  );
+  const [method, setMethod] = useState(PurchaseMethod.Credit);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const getVisitorPlans = async () => {
       const membershpiApi = await getApi("Membership");
-      const visitorPlans = await membershpiApi.getVisitorPlans();
-      setVisitorPlans(visitorPlans);
+      const [, fetchedPlans] = await to(membershpiApi.getVisitorPlans());
+      setVisitorPlans(fetchedPlans);
     };
 
     getVisitorPlans();
@@ -75,16 +74,16 @@ const Purchase: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      <ButtonGroup color="primary" aria-label="small outlined button group">
+      <ButtonGroup color="primary">
         <Button
-          onClick={() => setPurchaseWay(PurchaseWay.Credit)}
-          variant={purchaseWay === PurchaseWay.Credit ? "contained" : undefined}
+          onClick={() => setMethod(PurchaseMethod.Credit)}
+          variant={method === PurchaseMethod.Credit ? "contained" : undefined}
         >
           信用卡
         </Button>
         <Button
-          onClick={() => setPurchaseWay(PurchaseWay.ATM)}
-          variant={purchaseWay === PurchaseWay.ATM ? "contained" : undefined}
+          onClick={() => setMethod(PurchaseMethod.ATM)}
+          variant={method === PurchaseMethod.ATM ? "contained" : undefined}
         >
           ATM 轉帳
         </Button>
@@ -116,7 +115,7 @@ const Purchase: React.FC = () => {
         <BuyDialog
           open={open}
           handleClose={() => setOpen(false)}
-          purchaseWay={purchaseWay}
+          method={method}
           plan={selectedPlan}
         />
       )}
@@ -124,4 +123,4 @@ const Purchase: React.FC = () => {
   );
 };
 
-export default Purchase;
+export default Buy;

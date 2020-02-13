@@ -332,12 +332,18 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
               disabled={!salaryType}
               fullWidth
               id="min-salary"
-              label="最低薪資"
+              label={
+                salaryType === SalaryType.Monthly
+                  ? "最低月薪"
+                  : salaryType === SalaryType.Hourly
+                  ? "最低時薪"
+                  : "最低薪資"
+              }
               margin="normal"
               style={{ marginRight: 4 }}
               value={minSalary}
               onChange={e => {
-                if (/\d+/.test(e.target.value)) {
+                if (/^\d+$/.test(e.target.value)) {
                   setMinSalary(parseInt(e.target.value));
                 }
               }}
@@ -363,12 +369,18 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
               disabled={!salaryType}
               fullWidth
               id="max-salary"
-              label="最高薪資"
+              label={
+                salaryType === SalaryType.Monthly
+                  ? "最高月薪"
+                  : salaryType === SalaryType.Hourly
+                  ? "最高時薪"
+                  : "最高薪資"
+              }
               margin="normal"
               style={{ marginLeft: 4 }}
               value={maxSalary}
               onChange={e => {
-                if (/\d+/.test(e.target.value)) {
+                if (/^\d+$/.test(e.target.value)) {
                   setMaxSalary(parseInt(e.target.value));
                 }
               }}

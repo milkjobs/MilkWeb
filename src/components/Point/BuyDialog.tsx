@@ -9,7 +9,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { createStyles, makeStyles } from "@material-ui/styles";
 import { paymentUrl } from "config";
-import { PurchaseWay } from "helpers";
+import { PurchaseMethod } from "helpers";
 import React, { useEffect, useState } from "react";
 import Iframe from "react-iframe";
 import { Link } from "react-router-dom";
@@ -47,14 +47,14 @@ interface BuyDialogProps {
   open: boolean;
   handleClose: () => void;
   plan: VisitorPlan;
-  purchaseWay: PurchaseWay;
+  method: PurchaseMethod;
 }
 
 const BuyDialog: React.FC<BuyDialogProps> = ({
   open,
   handleClose,
   plan,
-  purchaseWay
+  method
 }) => {
   const classes = useStyles();
   const { getApi, user } = useAuth();
@@ -75,7 +75,7 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
       if (order && order.token) {
         setUrl(
           paymentUrl(
-            purchaseWay === PurchaseWay.Credit ? "CREDIT" : "ATM",
+            method === PurchaseMethod.Credit ? "CREDIT" : "ATM",
             order.token
           )
         );
@@ -133,7 +133,7 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
             <div className={classes.infoContainer}>
               <div className={classes.info}>付款方式：</div>
               <div className={classes.info}>
-                {purchaseWay === PurchaseWay.Credit ? "信用卡" : "ATM 轉帳"}
+                {method === PurchaseMethod.Credit ? "信用卡" : "ATM 轉帳"}
               </div>
             </div>
             <div className={classes.info}>
@@ -187,7 +187,7 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
                   }}
                   color="primary"
                 >
-                  {purchaseWay === PurchaseWay.Credit
+                  {method === PurchaseMethod.Credit
                     ? "付款"
                     : "取得 ATM 轉帳資訊"}
                 </Button>

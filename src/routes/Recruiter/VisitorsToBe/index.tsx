@@ -1,11 +1,14 @@
-import { Membership, VisitorPlan } from "@frankyjuang/milkapi-client";
+import { Membership } from "@frankyjuang/milkapi-client";
 import { makeStyles } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import { mdiEyeCheckOutline } from "@mdi/js";
 import Icon from "@mdi/react";
+import to from "await-to-js";
 import { Header } from "components/Header";
-import React, { useEffect, useState } from "react";
+import { Title } from "components/Util";
+import { NotFound } from "helpers";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Link,
   Route,
@@ -14,8 +17,8 @@ import {
   useRouteMatch
 } from "react-router-dom";
 import { useAuth, useTheme } from "stores";
+import Buy from "./Buy";
 import History from "./History";
-import Purchase from "./Purchase";
 import Usage from "./Usage";
 
 const useTabsStyles = makeStyles(theme => ({
@@ -73,58 +76,23 @@ const useStyles = makeStyles(theme => ({
   container: {
     display: "flex",
     flexDirection: "column",
-    marginRight: "auto",
-    marginLeft: "auto",
     justifyContent: "center",
-    alignContent: "stretch",
-    width: 960,
-    [theme.breakpoints.down("sm")]: {
-      width: "100%"
-    },
-    marginBottom: 100
-  },
-  memberPlanCardContainer: {
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "row",
-    [theme.breakpoints.down("sm")]: {
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center"
+    marginBottom: 100,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: 40,
+    paddingLeft: 24,
+    paddingRight: 24,
+    [theme.breakpoints.up("md")]: {
+      width: "960px"
     }
   },
-  titleContainer: {
-    display: "flex",
-    flexDirection: "row",
-    marginBottom: 24
-  },
-  title: {
-    color: theme.palette.text.primary,
-    fontSize: 24,
-    marginRight: 12,
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 16
-    }
-  },
-  pointIcon: {
+  icon: {
     marginTop: "auto",
     marginBottom: "auto",
+    marginLeft: 8,
     marginRight: 8,
     color: theme.palette.text.primary
-  },
-  point: {
-    color: theme.palette.text.primary,
-    fontSize: 24,
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 16
-    }
-  },
-  link: {
-    color: theme.palette.text.primary,
-    cursor: "pointer",
-    marginBottom: 32,
-    textDecoration: "none"
   }
 }));
 
@@ -133,74 +101,81 @@ const RecruiterAccount: React.FC = () => {
   const location = useLocation();
   const { getApi, user } = useAuth();
   const { theme } = useTheme();
-  const [, setPointPlans] = useState<VisitorPlan[]>();
-  const [membership, setMembership] = useState<Membership>();
   const classes = useStyles();
-  const [value, setValue] = useState(0);
+  const [membership, setMembership] = useState<Membership>();
+  const [tabIndex, setTabIndex] = useState(0);
 
-  function handleChange(event: React.ChangeEvent<{}>, newValue: number) {
-    setValue(newValue);
-  }
+  const getTeamMembership = useCallback(async () => {
+    const teamId = user?.recruiterInfo?.team?.uuid;
+    if (teamId) {
+      const membershipApi = await getApi("Membership");
+      const [, fetchedMembership] = await to(
+        membershipApi.getTeamMembership({
+          teamId
+        })
+      );
+      setMembership(fetchedMembership);
+    }
+  }, [getApi, user]);
 
   useEffect(() => {
-    const getPointPlans = async () => {
-      const membershipApi = await getApi("Membership");
-      const fetchPointPlans = await membershipApi.getVisitorPlans();
-      fetchPointPlans && setPointPlans(fetchPointPlans);
-    };
+    getTeamMembership();
+  }, [getTeamMembership]);
 
-    const getTeamMembership = async () => {
-      if (user && user.recruiterInfo && user.recruiterInfo.team) {
-        const membershipApi = await getApi("Membership");
-        const fetchMembership = await membershipApi.getTeamMembership({
-          teamId: user.recruiterInfo.team.uuid
-        });
-        setMembership(fetchMembership);
-      }
-    };
+  useEffect(() => {
+    if (location.pathname === "/recruiter/visitors-to-be/usage") {
+      setTabIndex(0);
+    } else if (location.pathname === "/recruiter/visitors-to-be/buy") {
+      setTabIndex(1);
+    } else if (location.pathname === "/recruiter/visitors-to-be/history") {
+      setTabIndex(2);
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
     const listener = (e: MessageEvent) => {
       try {
+        console.log(e, e.data);
         const eventData = JSON.parse(e.data);
         if ("MerchantID" in eventData) {
           getTeamMembership();
         }
       } catch {
-        console.error("Payment listener failed");
+        console.warn("Unknown message event");
       }
     };
 
-    getPointPlans();
-    getTeamMembership();
     window.addEventListener("message", listener);
-    if (location.pathname === "/recruiter/visitorsToBe/purchase") setValue(1);
-    if (location.pathname === "/recruiter/visitorsToBe/history") setValue(2);
 
     return () => {
       window.removeEventListener("message", listener);
     };
-  }, [getApi, user, location.pathname]);
+  }, [getTeamMembership]);
 
   return (
     <div className={classes.root}>
       <Header />
       <div className={classes.container}>
         {membership && (
-          <div className={classes.titleContainer}>
-            <div className={classes.title}>可使用的點閱人數</div>
-            <Icon
-              className={classes.pointIcon}
-              path={mdiEyeCheckOutline}
-              size={1}
-              color={theme.palette.text.primary}
-            />
-            <div className={classes.point}>
-              {membership.visitorsToBe.toLocaleString()}
-            </div>
-          </div>
+          <Title
+            customTextComponent={
+              <>
+                可使用的點閱人數
+                <Icon
+                  className={classes.icon}
+                  path={mdiEyeCheckOutline}
+                  size={1}
+                  color={theme.palette.text.primary}
+                />
+                {membership.visitorsToBe.toLocaleString()}
+              </>
+            }
+            hideBottomLine
+          />
         )}
         <Tabs
-          value={value}
-          onChange={handleChange}
+          value={tabIndex}
+          onChange={(_e, value) => setTabIndex(value)}
           indicatorColor="primary"
           textColor="primary"
           classes={useTabsStyles()}
@@ -208,38 +183,32 @@ const RecruiterAccount: React.FC = () => {
           <Tab
             disableRipple
             label="使用紀錄"
-            to="/recruiter/visitorsToBe"
+            to="/recruiter/visitors-to-be/usage"
             component={Link}
             classes={useTabStyles()}
           />
           <Tab
             disableRipple
             label="購買點閱人數"
-            to="/recruiter/visitorsToBe/purchase"
+            to="/recruiter/visitors-to-be/buy"
             component={Link}
             classes={useTabStyles()}
           />
           <Tab
             disableRipple
-            label="儲值紀錄"
-            to="/recruiter/visitorsToBe/history"
+            label="購買紀錄"
+            to="/recruiter/visitors-to-be/history"
             component={Link}
             classes={useTabStyles()}
           />
         </Tabs>
         {match && (
           <Switch>
-            <Route
-              path={"/recruiter/visitorsToBe/history"}
-              exact
-              component={History}
-            />
-            <Route
-              path={"/recruiter/visitorsToBe/purchase"}
-              exact
-              component={Purchase}
-            />
-            <Route path={"/recruiter/visitorsToBe"} exact component={Usage} />
+            <Route path={match.path} exact component={Usage} />
+            <Route path={`${match.path}/usage`} exact component={Usage} />
+            <Route path={`${match.path}/buy`} exact component={Buy} />
+            <Route path={`${match.path}/history`} exact component={History} />
+            <Route path={match.path} component={NotFound} />
           </Switch>
         )}
       </div>

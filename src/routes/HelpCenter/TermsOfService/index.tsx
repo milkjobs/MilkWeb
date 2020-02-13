@@ -12,20 +12,17 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.default
   },
   container: {
-    marginTop: 8,
-    marginLeft: 24,
-    marginRight: 24,
-    marginBottom: 30,
     display: "flex",
-    flexGrow: 1,
-    alignContent: "stretch",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
+    marginBottom: 100,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: 40,
+    paddingLeft: 24,
+    paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: 900,
-      marginRight: "auto",
-      marginLeft: "auto"
+      width: "960px"
     }
   },
   markdownContainer: {
@@ -48,7 +45,7 @@ const HeadingRenderer: ReactType = props => {
     <a
       href={`#${slug}`}
       className="title"
-      style={{ color: "black", textDecoration: "none" }}
+      style={{ color: "#484848", textDecoration: "none" }}
     >
       {props.children}
     </a>

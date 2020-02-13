@@ -1,7 +1,16 @@
-import { makeStyles } from "@material-ui/core";
+import {
+  Card,
+  CardHeader,
+  GridList,
+  GridListTile,
+  makeStyles,
+  useMediaQuery
+} from "@material-ui/core";
 import { Header } from "components/Header";
+import { Title } from "components/Util";
 import React from "react";
 import { Link, useRouteMatch } from "react-router-dom";
+import { useTheme } from "stores";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -9,58 +18,79 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.default
   },
   container: {
-    marginTop: 8,
-    marginLeft: 24,
-    marginRight: 24,
-    marginBottom: 30,
     display: "flex",
-    flexGrow: 1,
     flexDirection: "column",
-    width: "100%",
-    alignItems: "start",
-    justifyContent: "start",
+    justifyContent: "center",
+    marginBottom: 100,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: 40,
+    paddingLeft: 24,
+    paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: 900,
-      marginRight: "auto",
-      marginLeft: "auto"
+      width: "960px"
     }
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 800,
-    textAlign: "left",
-    marginBottom: 12
-  },
-  item: {
-    fontSize: 18,
-    padding: 4,
+  link: {
     color: theme.palette.text.primary,
     textDecoration: "none"
+  },
+  card: {
+    display: "flex",
+    height: "100%"
+  },
+  cardHeader: {
+    flex: 1
   }
 }));
 
 const HelpCenter: React.FC = () => {
   const match = useRouteMatch();
   const classes = useStyles();
+  const { theme } = useTheme();
+  const small = useMediaQuery(theme.breakpoints.down("xs"));
+  const large = useMediaQuery(theme.breakpoints.up("md"));
 
   return (
     match && (
       <div className={classes.root}>
         <Header />
         <div className={classes.container}>
-          <div className={classes.title}>幫助中心</div>
-          <Link to={`${match.path}/privacy`} className={classes.item}>
-            <div>隱私權政策</div>
-          </Link>
-          <Link to={`${match.path}/tos`} className={classes.item}>
-            <div>服務條款</div>
-          </Link>
-          <Link to={`${match.path}/pricing`} className={classes.item}>
-            <div>收費方案</div>
-          </Link>
-          <Link to={`${match.path}/faq`} className={classes.item}>
-            <div>常見問題</div>
-          </Link>
+          <Title text="幫助中心" />
+          <GridList cellHeight={100} cols={large ? 4 : small ? 1 : 2}>
+            <GridListTile cols={1}>
+              <Link to={`${match.path}/privacy`} className={classes.link}>
+                <Card variant="outlined" className={classes.card}>
+                  <CardHeader
+                    title="隱私權政策"
+                    className={classes.cardHeader}
+                  />
+                </Card>
+              </Link>
+            </GridListTile>
+            <GridListTile cols={1}>
+              <Link to={`${match.path}/tos`} className={classes.link}>
+                <Card variant="outlined" className={classes.card}>
+                  <CardHeader title="服務條款" className={classes.cardHeader} />
+                </Card>
+              </Link>
+            </GridListTile>
+            <GridListTile cols={1}>
+              <Link to={`${match.path}/pricing`} className={classes.link}>
+                <Card variant="outlined" className={classes.card}>
+                  <CardHeader title="收費方案" className={classes.cardHeader} />
+                </Card>
+              </Link>
+            </GridListTile>
+            <GridListTile cols={1}>
+              <Link to={`${match.path}/faq`} className={classes.link}>
+                <Card variant="outlined" className={classes.card}>
+                  <CardHeader title="常見問題" className={classes.cardHeader} />
+                </Card>
+              </Link>
+            </GridListTile>
+          </GridList>
+          <div style={{ display: "flex" }}></div>
         </div>
       </div>
     )

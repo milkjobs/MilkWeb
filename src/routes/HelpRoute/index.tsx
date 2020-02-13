@@ -23,7 +23,7 @@ const HelpRoute: React.FC = () => {
     match && (
       <div className={classes.root}>
         <Switch>
-          <Route path={`${match.path}`} exact component={HelpCenter} />
+          <Route path={match.path} exact component={HelpCenter} />
           <Route
             path={[`${match.path}/privacy`, `${match.path}/privacy-policy`]}
             exact
@@ -40,7 +40,7 @@ const HelpRoute: React.FC = () => {
             component={Pricing}
           />
           <Route path={`${match.path}/faq`} exact component={FAQ} />
-          <Route path={`${match.path}`} component={NotFound} />
+          <Route path={match.path} component={NotFound} />
         </Switch>
       </div>
     )

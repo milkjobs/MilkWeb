@@ -3,19 +3,20 @@ import {
   MembershipApi,
   VisitorPlan
 } from "@frankyjuang/milkapi-client";
+import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import { mdiEyeCheckOutline } from "@mdi/js";
-import { Link } from "react-router-dom";
-import Icon from "@mdi/react";
-import { Header } from "components/Header";
-import { apiServiceConfig } from "config";
-import TextField from "@material-ui/core/TextField";
-import React, { useEffect, useState } from "react";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
-import Button from "@material-ui/core/Button";
-import { useAuth } from "stores";
+import TextField from "@material-ui/core/TextField";
+import { mdiEyeCheckOutline } from "@mdi/js";
+import Icon from "@mdi/react";
+import { Header } from "components/Header";
+import { Title } from "components/Util";
+import { apiServiceConfig } from "config";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
+import { useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,20 +24,17 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.default
   },
   container: {
-    marginTop: 8,
-    marginLeft: 24,
-    marginRight: 24,
-    marginBottom: 30,
     display: "flex",
-    flexGrow: 1,
-    alignContent: "stretch",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
+    marginBottom: 100,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: 40,
+    paddingLeft: 24,
+    paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: 900,
-      marginRight: "auto",
-      marginLeft: "auto"
+      width: "960px"
     }
   },
   title: {},
@@ -132,7 +130,7 @@ const Pricing: React.FC = () => {
   const classes = useStyles();
   const { getApi } = useAuth();
   const [visitorPlans, setVisitorPlans] = useState<VisitorPlan[]>();
-  const [value, setValue] = useState(0);
+  const [tabIndex, setTabIndex] = useState(0);
   const [phoneNumber, setPhoneNumber] = useState<string>();
   const [email, setEmail] = useState<string>();
   const [emailErrorMessage, setEmailErrorMessage] = useState<string>();
@@ -160,16 +158,117 @@ const Pricing: React.FC = () => {
     toast.success("成功送出");
   };
 
-  function handleChange(event: React.ChangeEvent<{}>, newValue: number) {
-    setValue(newValue);
-  }
-
   const getVisitorPlans = async () => {
     const membershpiApi = new MembershipApi(
       new Configuration({ basePath: apiServiceConfig.basePath })
     );
     const visitorPlans = await membershpiApi.getVisitorPlans();
     setVisitorPlans(visitorPlans);
+  };
+
+  const renderGeneralTab = () => {
+    return (
+      <div style={{ textAlign: "left", margin: 24 }}>
+        <h3>牛奶找工作，依職缺的點閱人數收費</h3>
+        <h3>企業根據自己刊登職缺的需求，用多少付多少</h3>
+        <h3>不再有付了錢，卻沒有曝光的窘境</h3>
+        <Link to={"/recruiter"} style={{ textDecoration: "none" }}>
+          <h3 className={classes.free}>現在加入，立刻送 1000 個免費點閱人數</h3>
+        </Link>
+        <div className={classes.plansContainer}>
+          {visitorPlans &&
+            visitorPlans.map((p, i) => (
+              <div key={i} className={classes.plan}>
+                <div className={classes.visitorToBe}>
+                  <Icon
+                    path={mdiEyeCheckOutline}
+                    size={0.7}
+                    style={{ marginRight: 4 }}
+                  />
+                  {p.visitorsToBe.toLocaleString()}
+                </div>
+                <div>{p.price.toLocaleString() + " 元"}</div>
+              </div>
+            ))}
+        </div>
+        <h3>登入牛奶找工作，創建公司後，即可在公司後台系統購買。</h3>
+        <h3>* 點閱人數是採不重複計算，一個使用者看 10 次，只會計算 1 次</h3>
+      </div>
+    );
+  };
+
+  const renderAdvertiseTab = () => {
+    return (
+      <div style={{ textAlign: "left", margin: 24 }}>
+        <h3>為了讓網站可以順利運作，我們有三種廣告服務：</h3>
+        <h3>
+          1. 將你徵才訊息置頂在指定科系的
+          <Link
+            to={"/awesome/台大電機"}
+            style={{ color: "#fa6c71", textDecoration: "none" }}
+          >
+            就業精選版
+          </Link>
+          ・新台幣 1000 元／天
+        </h3>
+        <h3>2. 牛奶找工作臉書粉絲專頁，轉發你的徵才訊息・新台幣 2000 元／次</h3>
+        <h3>3. 首頁的跑馬燈・新台幣 500 元／天</h3>
+        <h3>有興趣的公司，留言告訴我們，會有專人聯絡你。</h3>
+        <TextField
+          fullWidth
+          label="聯絡電話"
+          onChange={e => setPhoneNumber(e.target.value)}
+          style={{ marginBottom: 16 }}
+          value={phoneNumber || ""}
+          variant="outlined"
+        />
+        <TextField
+          error={Boolean(emailErrorMessage)}
+          fullWidth
+          helperText={emailErrorMessage}
+          label="聯絡 Email"
+          onBlur={() => {
+            const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+            if (email && !emailRegex.test(email)) {
+              setEmailErrorMessage("請輸入正確的 Email");
+            } else {
+              setEmailErrorMessage(undefined);
+            }
+          }}
+          onChange={e => {
+            setEmail(e.target.value);
+            setEmailErrorMessage(undefined);
+          }}
+          style={{ marginBottom: 16 }}
+          value={email || ""}
+          variant="outlined"
+        />
+        <TextField
+          fullWidth
+          multiline
+          onChange={e => setBody(e.target.value)}
+          placeholder="告訴我們你想要什麼方案，以及你的需求"
+          rows="8"
+          style={{ marginBottom: 16 }}
+          value={body || ""}
+          variant="outlined"
+        />
+        <Button
+          style={{ minWidth: 100, marginLeft: 8 }}
+          variant="contained"
+          color="primary"
+          onClick={sendTicket}
+        >
+          送出
+        </Button>
+        <ToastContainer
+          position={ToastPosition.BOTTOM_CENTER}
+          draggable={false}
+          hideProgressBar
+          transition={Slide}
+        />
+      </div>
+    );
   };
 
   useEffect(() => {
@@ -180,119 +279,22 @@ const Pricing: React.FC = () => {
     <div className={classes.root}>
       <Header />
       <div className={classes.container}>
-        <h1>收費方案</h1>
+        <Title text="收費方案" hideBottomLine />
         <Tabs
-          value={value}
-          onChange={handleChange}
-          // indicatorColor="primary"
-          textColor="primary"
           classes={tabsStyle}
-          centered
+          indicatorColor="primary"
+          onChange={(_e, value) => setTabIndex(value)}
+          textColor="primary"
+          value={tabIndex}
         >
-          <Tab disableRipple label="廣告" classes={tabStyle} />
           <Tab disableRipple label="一般" classes={tabStyle} />
+          <Tab disableRipple label="廣告" classes={tabStyle} />
         </Tabs>
-        {Boolean(!value) && (
-          <div>
-            <h3>為了讓網站可以順利運作，我們有三種廣告服務：</h3>
-            <h3>
-              1. 將你徵才訊息置頂在指定科系的
-              <Link to={"/awesome/台大電機"} style={{ color: "black" }}>
-                就業精選版
-              </Link>
-              ・新台幣 1000 元／天
-            </h3>
-            <h3>
-              2. 牛奶找工作臉書粉絲專頁，轉發你的徵才訊息・新台幣 2000 元／次
-            </h3>
-            <h3>3. 首頁的跑馬燈・新台幣 500 元／天</h3>
-            <h3>有興趣的公司，留言告訴我們，會有專人聯絡你。</h3>
-            <TextField
-              fullWidth
-              label="聯絡電話"
-              onChange={e => setPhoneNumber(e.target.value)}
-              style={{ marginBottom: 16 }}
-              value={phoneNumber || ""}
-              variant="outlined"
-            />
-            <TextField
-              error={Boolean(emailErrorMessage)}
-              fullWidth
-              helperText={emailErrorMessage}
-              label="聯絡 Email"
-              onBlur={() => {
-                const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-                if (email && !emailRegex.test(email)) {
-                  setEmailErrorMessage("請輸入正確的 Email");
-                } else {
-                  setEmailErrorMessage(undefined);
-                }
-              }}
-              onChange={e => {
-                setEmail(e.target.value);
-                setEmailErrorMessage(undefined);
-              }}
-              style={{ marginBottom: 16 }}
-              value={email || ""}
-              variant="outlined"
-            />
-            <TextField
-              fullWidth
-              multiline
-              onChange={e => setBody(e.target.value)}
-              placeholder="告訴我們你想要什麼方案，以及你的需求"
-              rows="8"
-              style={{ marginBottom: 16 }}
-              value={body || ""}
-              variant="outlined"
-            />
-            <Button
-              style={{ minWidth: 100, marginLeft: 8 }}
-              variant="contained"
-              color="primary"
-              onClick={sendTicket}
-            >
-              送出
-            </Button>
-            <ToastContainer
-              position={ToastPosition.BOTTOM_CENTER}
-              draggable={false}
-              hideProgressBar
-              transition={Slide}
-            />
-          </div>
-        )}
-        {Boolean(value) && (
-          <div>
-            <h3>牛奶找工作，依職缺的點閱人數收費</h3>
-            <h3>企業根據自己刊登職缺的需求，用多少付多少</h3>
-            <h3>不再有付了錢，卻沒有曝光的窘境</h3>
-            <h3 className={classes.free}>
-              現在加入，立刻送 1000 個免費點閱人數
-            </h3>
-            <div className={classes.plansContainer}>
-              {visitorPlans &&
-                visitorPlans.map((p, i) => (
-                  <div key={i} className={classes.plan}>
-                    <div className={classes.visitorToBe}>
-                      <Icon
-                        path={mdiEyeCheckOutline}
-                        size={0.7}
-                        style={{ marginRight: 4 }}
-                      />
-                      {p.visitorsToBe.toLocaleString()}
-                    </div>
-                    <div>{p.price.toLocaleString() + " 元"}</div>
-                  </div>
-                ))}
-            </div>
-            <h3>登入牛奶找工作，創建公司後，即可在公司後台系統購買。</h3>
-            <h3>
-              {" "}
-              * 點閱人數是採不重複計算，一個使用者看 10 次，只會計算 1 次
-            </h3>
-          </div>
-        )}
+        {tabIndex === 0
+          ? renderGeneralTab()
+          : tabIndex === 1
+          ? renderAdvertiseTab()
+          : null}
       </div>
     </div>
   );

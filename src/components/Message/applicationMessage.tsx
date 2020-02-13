@@ -1,7 +1,7 @@
 import { Job, PublicUser, Role, User } from "@frankyjuang/milkapi-client";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import to from "await-to-js";
-import { salaryNumberToString, SalaryTypeToWordInJobCard } from "helpers";
+import { salaryToString } from "helpers";
 import React, { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "stores";
@@ -107,10 +107,7 @@ const ApplicationMessage: React.FC<Props> = props => {
           >
             <div>{job.name}</div>
             <div style={{ marginLeft: 8 }}>
-              {salaryNumberToString(job.minSalary) +
-                "~" +
-                salaryNumberToString(job.maxSalary) +
-                SalaryTypeToWordInJobCard(job.salaryType)}
+              {salaryToString(job.minSalary, job.maxSalary, job.salaryType)}
             </div>
           </div>
         )}
@@ -142,10 +139,7 @@ const ApplicationMessage: React.FC<Props> = props => {
           >
             <div>{job.name}</div>
             <div style={{ marginLeft: 8 }}>
-              {salaryNumberToString(job.minSalary) +
-                "~" +
-                salaryNumberToString(job.maxSalary) +
-                SalaryTypeToWordInJobCard(job.salaryType)}
+              {salaryToString(job.minSalary, job.maxSalary, job.salaryType)}
             </div>
           </div>
         )}
@@ -162,3 +156,4 @@ interface Props {
 }
 
 export { ApplicationMessage };
+

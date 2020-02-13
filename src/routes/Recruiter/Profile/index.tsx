@@ -5,14 +5,15 @@ import React from "react";
 
 const useStyles = makeStyles(theme => ({
   container: {
+    alignContent: "stretch",
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "column",
+    flexGrow: 1,
+    marginBottom: 30,
     marginLeft: 48,
     marginRight: 24,
-    marginBottom: 30,
-    display: "flex",
-    alignItems: "center",
-    flexGrow: 1,
-    alignContent: "stretch",
-    flexDirection: "column"
+    marginTop: 40
   },
   root: {
     flex: 1,

@@ -1,10 +1,6 @@
 import { JobType, SalaryType, Team } from "@frankyjuang/milkapi-client";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  salaryNumberToString,
-  SalaryTypeToWordInJobCard,
-  TeamSizeConvertor
-} from "helpers";
+import { salaryToString, TeamSizeConvertor } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useTheme } from "stores";
@@ -211,10 +207,7 @@ const RecruiterJobCardBase: React.FC<Props> = props => {
             className={classes.jobSalary}
             style={{ color: published ? undefined : theme.palette.text.hint }}
           >
-            {salaryNumberToString(minSalary) +
-              "~" +
-              salaryNumberToString(maxSalary) +
-              SalaryTypeToWordInJobCard(salaryType)}
+            {salaryToString(minSalary, maxSalary, salaryType)}
           </div>
         </div>
         <div className={classes.infoContainer}>

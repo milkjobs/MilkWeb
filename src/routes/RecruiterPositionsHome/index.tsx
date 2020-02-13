@@ -16,13 +16,14 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    marginBottom: 100,
     marginLeft: "auto",
     marginRight: "auto",
     marginTop: 40,
     paddingLeft: 24,
     paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: "900px"
+      width: "960px"
     }
   }
 }));

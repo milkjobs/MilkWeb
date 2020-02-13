@@ -1,8 +1,8 @@
 import { MembershipUsage } from "@frankyjuang/milkapi-client";
-import React, { useEffect, useState } from "react";
-import { useAuth } from "stores";
 import { makeStyles } from "@material-ui/core/styles";
 import { CostEntry } from "components/Point";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,7 +45,9 @@ const Usage: React.FC = () => {
         />
       )}
       {membershipUsage &&
-        membershipUsage.entries.map(e => <CostEntry entry={e} />)}
+        membershipUsage.entries.map(e => (
+          <CostEntry key={`${e.name}${e.recruiterName}`} entry={e} />
+        ))}
     </div>
   );
 };

@@ -1,12 +1,12 @@
+import { Job as JobType } from "@frankyjuang/milkapi-client";
 import { makeStyles } from "@material-ui/core/styles";
+import { Header } from "components/Header";
 import {
   JobDescription,
   JobLocation,
   JobTitle,
   RecruiterJobSideCard
 } from "components/Job";
-import { Header } from "components/Header";
-import { InitialJob } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useAuth } from "stores";
@@ -69,13 +69,12 @@ const RecruiterJob: React.FC = () => {
   const params = useParams<{ id: string }>();
   const history = useHistory();
   const classes = useStyles();
-  const [job, setJob] = useState(InitialJob);
+  const [job, setJob] = useState<JobType>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (
-      user &&
-      user.recruiterInfo &&
+      user?.recruiterInfo &&
       user.recruiterInfo.jobs &&
       user.recruiterInfo.team
     ) {
@@ -86,13 +85,14 @@ const RecruiterJob: React.FC = () => {
         return;
       }
     }
+
     history.push("/");
   }, [history, params.id, user]);
 
   return (
     <div className={classes.root}>
       <Header />
-      {!loading && (
+      {!loading && job && (
         <div className={classes.container}>
           <div className={classes.infoContainer}>
             <div className={classes.titleContainer}>

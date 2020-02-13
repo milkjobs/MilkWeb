@@ -10,7 +10,6 @@ const useStyles = makeStyles(() => ({
     color: "#484848"
   },
   container: {
-    borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
     display: "flex",
     justifyContent: "space-between",
     marginBottom: 12,
@@ -18,24 +17,41 @@ const useStyles = makeStyles(() => ({
     paddingLeft: 24,
     paddingRight: 24,
     paddingTop: 12
+  },
+  bottomLine: {
+    borderBottom: "1px solid rgba(0, 0, 0, 0.1)"
   }
 }));
 
 interface Props {
-  text: string;
-  buttonText: string;
-  buttonOnClick: () => void;
+  text?: string;
+  customTextComponent?: React.ReactNode;
+  buttonText?: string;
+  buttonOnClick?: () => void;
+  hideBottomLine?: boolean;
 }
 
-const Title: React.FC<Props> = ({ text, buttonText, buttonOnClick }) => {
+const Title: React.FC<Props> = ({
+  text,
+  customTextComponent,
+  buttonText,
+  buttonOnClick,
+  hideBottomLine
+}) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.container}>
-      <span className={classes.title}>{text}</span>
-      <Button color="primary" onClick={buttonOnClick} variant="contained">
-        {buttonText}
-      </Button>
+    <div
+      className={`${classes.container} ${
+        hideBottomLine ? "" : classes.bottomLine
+      }`}
+    >
+      <span className={classes.title}>{text || customTextComponent}</span>
+      {buttonText && (
+        <Button color="primary" onClick={buttonOnClick} variant="contained">
+          {buttonText}
+        </Button>
+      )}
     </div>
   );
 };
