@@ -113,11 +113,9 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
           <Avatar className={classes.avatar} src={user.profileImageUrl} />
         </span>
       ) : (
-        <>
-          <div onClick={showLoginDialog} className={classes.link}>
-            <span className={classes.tab}>登入</span>
-          </div>
-        </>
+        <div onClick={showLoginDialog} className={classes.link}>
+          <span className={classes.tab}>登入</span>
+        </div>
       )}
       <DownloadAppDialog
         isOpen={isDownloadAppDialogOpen}

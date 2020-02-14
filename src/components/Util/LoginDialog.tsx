@@ -223,39 +223,37 @@ const LoginDialog: React.FC<Props> = props => {
               )}
             </Button>
           </div>
-          <div className={classes.row}>
-            {codeSent && (
-              <>
-                <TextField
-                  autoFocus
-                  className={classes.textColumn}
-                  error={!!codeHelperText}
-                  fullWidth={isMobile}
-                  helperText={codeHelperText || ""}
-                  id="phone-number-verification-code-input"
-                  margin="dense"
-                  placeholder="驗證碼"
-                  type="number"
-                  value={code || ""}
-                  variant="outlined"
-                  onChange={e => {
-                    setCode(e.target.value);
-                    setCodeHelperText(undefined);
-                  }}
-                  onBlur={checkCode}
-                />
-                <Button
-                  className={classes.buttonColumn}
-                  color="primary"
-                  fullWidth={isMobile}
-                  onClick={login}
-                  variant="contained"
-                >
-                  登入
-                </Button>
-              </>
-            )}
-          </div>
+          {codeSent && (
+            <div className={classes.row}>
+              <TextField
+                autoFocus
+                className={classes.textColumn}
+                error={!!codeHelperText}
+                fullWidth={isMobile}
+                helperText={codeHelperText || ""}
+                id="phone-number-verification-code-input"
+                margin="dense"
+                placeholder="驗證碼"
+                type="number"
+                value={code || ""}
+                variant="outlined"
+                onChange={e => {
+                  setCode(e.target.value);
+                  setCodeHelperText(undefined);
+                }}
+                onBlur={checkCode}
+              />
+              <Button
+                className={classes.buttonColumn}
+                color="primary"
+                fullWidth={isMobile}
+                onClick={login}
+                variant="contained"
+              >
+                登入
+              </Button>
+            </div>
+          )}
           <div className={classes.footer}>
             發送驗證碼即表示你同意
             <Link

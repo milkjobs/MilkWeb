@@ -83,11 +83,11 @@ const ApplicantProfileMenu: React.FC<Props> = props => {
                           showDownloadAppDialog();
                         }}
                       >
-                        發佈職缺
+                        刊登職缺
                       </MenuItem>
                     ) : (
                       <Link to={"/recruiter"} className={classes.link}>
-                        <MenuItem onClick={close}>發佈職缺</MenuItem>
+                        <MenuItem onClick={close}>刊登職缺</MenuItem>
                       </Link>
                     ))}
 

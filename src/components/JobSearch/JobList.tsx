@@ -27,15 +27,13 @@ const JobList: React.FC<InfiniteHitsProvided> = props => {
     <div className={classes.jobsContainer}>
       {hits.length !== 0 ? (
         <>
-          {hits.map((value, index) => {
-            return (
-              <JobRecordCard
-                {...value}
-                key={index}
-                targetPath={`/job/${value.objectID}`}
-              />
-            );
-          })}
+          {hits.map((value, index) => (
+            <JobRecordCard
+              {...value}
+              key={index}
+              targetPath={`/job/${value.objectID}`}
+            />
+          ))}
           <div ref={ref}></div>
         </>
       ) : (
