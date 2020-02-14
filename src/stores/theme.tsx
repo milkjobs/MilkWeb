@@ -37,7 +37,16 @@ export const ThemeProvider = ({ children }) => {
         text: { primary: "#484848" },
         type
       },
-      breakpoints: { values: breakpointValues }
+      breakpoints: {
+        values: breakpointValues
+      },
+      overrides: {
+        MuiTooltip: {
+          tooltip: {
+            fontSize: "1em"
+          }
+        }
+      }
     })
   );
 

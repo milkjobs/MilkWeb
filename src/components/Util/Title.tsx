@@ -28,6 +28,7 @@ interface Props {
   customTextComponent?: React.ReactNode;
   buttonText?: string;
   buttonOnClick?: () => void;
+  customButtonComponent?: React.ReactNode;
   hideBottomLine?: boolean;
 }
 
@@ -36,6 +37,7 @@ const Title: React.FC<Props> = ({
   customTextComponent,
   buttonText,
   buttonOnClick,
+  customButtonComponent,
   hideBottomLine
 }) => {
   const classes = useStyles();
@@ -47,11 +49,12 @@ const Title: React.FC<Props> = ({
       }`}
     >
       <span className={classes.title}>{text || customTextComponent}</span>
-      {buttonText && (
+      {(buttonText && (
         <Button color="primary" onClick={buttonOnClick} variant="contained">
           {buttonText}
         </Button>
-      )}
+      )) ||
+        customButtonComponent}
     </div>
   );
 };
