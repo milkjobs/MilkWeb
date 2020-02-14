@@ -2,10 +2,11 @@ import { JobType, SalaryType, Team } from "@frankyjuang/milkapi-client";
 import { makeStyles } from "@material-ui/core/styles";
 import { salaryToString, TeamSizeConvertor } from "helpers";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   container: {
+    textDecoration: "none",
     paddingLeft: 24,
     paddingRight: 24,
     paddingTop: 16,
@@ -155,7 +156,6 @@ const JobCardBase: React.FC<Props> = props => {
     targetPath
   } = props;
   const classes = useStyles();
-  const history = useHistory();
   const [fields, setFields] = useState("");
 
   useEffect(() => {
@@ -169,12 +169,7 @@ const JobCardBase: React.FC<Props> = props => {
   }, [team]);
 
   return (
-    <div
-      className={classes.container}
-      onClick={() => {
-        history.push(targetPath);
-      }}
-    >
+    <Link to={targetPath} className={classes.container} target="_blank">
       <div className={classes.jobContainer}>
         <div className={classes.nameContainer}>
           <div className={classes.jobName}>
@@ -209,7 +204,7 @@ const JobCardBase: React.FC<Props> = props => {
           </div>
         </div>
       )}
-    </div>
+    </Link>
   );
 };
 
