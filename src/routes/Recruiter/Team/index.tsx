@@ -1,4 +1,4 @@
-import { Team, UserApi } from "@frankyjuang/milkapi-client";
+import { Team as TeamType, UserApi } from "@frankyjuang/milkapi-client";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
@@ -106,8 +106,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface Props {
-  team: Team;
+  team: TeamType;
 }
+
 const TeamIntroduction: React.FC<Props> = props => {
   const { team } = props;
   const classes = useStyles();
@@ -180,10 +181,10 @@ const TeamJobs: React.FC<Props> = props => {
   );
 };
 
-const RecruiterTeam: React.FC = () => {
+const Team: React.FC = () => {
   const [value, setValue] = useState(0);
   const { user, getApi } = useAuth();
-  const [team, setTeam] = useState<Team>();
+  const [team, setTeam] = useState<TeamType>();
   const classes = useStyles();
 
   function handleChange(event: React.ChangeEvent<{}>, newValue: number) {
@@ -223,4 +224,4 @@ const RecruiterTeam: React.FC = () => {
   );
 };
 
-export default RecruiterTeam;
+export default Team;

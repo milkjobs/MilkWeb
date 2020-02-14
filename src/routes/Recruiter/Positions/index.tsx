@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const RecruiterPositionsHome: React.FC = () => {
+const Positions: React.FC = () => {
   const classes = useStyles();
   const { user } = useAuth();
   const [positions, setPositions] = useState<Job[]>([]);
@@ -79,4 +79,4 @@ const RecruiterPositionsHome: React.FC = () => {
   );
 };
 
-export default RecruiterPositionsHome;
+export default Positions;

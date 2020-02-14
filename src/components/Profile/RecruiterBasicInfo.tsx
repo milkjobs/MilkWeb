@@ -183,16 +183,15 @@ const EditDialog: React.FC<DialogProps> = props => {
               src={user.profileImageUrl}
               style={{ width: 60, height: 60 }}
             />
-            <input
-              hidden
-              accept={ImageMimeType}
-              id="file-upload"
-              onChange={e => {
-                e.target.files && uploadProfileImage(e.target.files);
-              }}
-              type="file"
-            />
-            <label htmlFor="file-upload">
+            <label>
+              <input
+                hidden
+                accept={ImageMimeType}
+                onChange={e => {
+                  e.target.files && uploadProfileImage(e.target.files);
+                }}
+                type="file"
+              />
               <Button
                 className={classes.button}
                 color="primary"

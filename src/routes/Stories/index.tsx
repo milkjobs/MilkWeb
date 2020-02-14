@@ -1,6 +1,7 @@
 import { Button, useMediaQuery } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Header } from "components/Header";
+import { Title } from "components/Util";
 import { checkUrl, openInNewTab, PageMetadata } from "helpers";
 import React from "react";
 import YouTube from "react-youtube";
@@ -50,28 +51,31 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper
   },
   container: {
-    marginTop: 40,
-    marginBottom: 40,
     display: "flex",
-    justifyContent: "center",
-    marginRight: "auto",
-    marginLeft: "auto",
     flexDirection: "column",
-    backgroundColor: theme.palette.background.paper,
+    justifyContent: "center",
+    marginBottom: 100,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: 40,
+    paddingLeft: 24,
+    paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: "640px"
-    },
-    [theme.breakpoints.down("xs")]: {
-      width: "100%"
+      width: "960px"
     }
   },
   cardContainer: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-    paddingBottom: 32,
+    alignSelf: "center",
+    marginBottom: 32,
+    marginTop: 16,
+    [theme.breakpoints.up("md")]: {
+      width: 640
+    },
     [theme.breakpoints.down("xs")]: {
-      paddingBottom: 16
+      marginBottom: 16,
+      marginTop: 0
     }
   },
   nameContainer: {
@@ -105,7 +109,7 @@ const VideoCard: React.FC<Video> = props => {
   const opts = matched
     ? {}
     : {
-        height: "390",
+        height: "360",
         width: "640"
       };
 
@@ -137,9 +141,10 @@ const Stories: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      <PageMetadata title={"故事－牛奶找工作"} />
+      <PageMetadata title="故事－牛奶找工作" />
       <Header />
       <div className={classes.container}>
+        <Title text="故事" />
         {videoList.map(v => (
           <VideoCard {...v} key={v.youtubeId} />
         ))}

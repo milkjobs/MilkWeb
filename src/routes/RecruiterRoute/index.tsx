@@ -12,12 +12,11 @@ import {
 import RecruiterJob from "routes/Recruiter/Job";
 import Member from "routes/Recruiter/Member";
 import Message from "routes/Recruiter/Message";
+import RecruiterPositionsHome from "routes/Recruiter/Positions";
 import RecruiterProfile from "routes/Recruiter/Profile";
+import RecruiterTeam from "routes/Recruiter/Team";
 import Verification from "routes/Recruiter/Verification";
 import RecruiterVisitorsToBe from "routes/Recruiter/VisitorsToBe";
-import RecruiterOrder from "routes/RecruiterOrder";
-import RecruiterPositionsHome from "routes/RecruiterPositionsHome";
-import RecruiterTeam from "routes/RecruiterTeam";
 import { ChannelProvider, useAuth } from "stores";
 
 interface PrivateRouteProps extends RouteProps {
@@ -105,7 +104,6 @@ const RecruiterRoute: React.FC = () => {
           path={`${match.path}/visitors-to-be`}
           component={RecruiterVisitorsToBe}
         />
-        <PrivateRoute path={`${match.path}/order`} component={RecruiterOrder} />
         <PrivateRoute path={`${match.path}/message`} component={MessageRoute} />
         {/* TODO: remove deprecated route */}
         <PrivateRoute path={`${match.path}/management`} component={Member} />

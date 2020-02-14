@@ -5,6 +5,7 @@ import {
 import { useMediaQuery } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Header } from "components/Header";
+import { Title } from "components/Util";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -20,15 +21,22 @@ import { useAuth, useTheme } from "stores";
 
 const useStyles = makeStyles(theme => ({
   header: {
-    textAlign: "left"
+    fontSize: "1.2rem",
+    textAlign: "left",
+    margin: 12,
+    marginTop: 32,
+    marginBottom: 18
   },
   container: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-    marginBottom: 40,
+    justifyContent: "center",
+    marginBottom: 100,
     marginLeft: "auto",
     marginRight: "auto",
+    marginTop: 40,
+    paddingLeft: 24,
+    paddingRight: 24,
     [theme.breakpoints.up("md")]: {
       width: "960px"
     }
@@ -60,11 +68,11 @@ const JobStatistics: React.FC = () => {
   const renderChart = (name: string, data: DateBin[]) => {
     return (
       <>
-        <h1 className={classes.header}>
+        <div className={classes.header}>
           {name +
             " " +
             data.reduce((result, bin) => result + (bin.count || 0), 0)}
-        </h1>
+        </div>
         <ResponsiveContainer width="80%" height={300}>
           <LineChart data={data}>
             <CartesianGrid />
@@ -103,13 +111,16 @@ const JobStatistics: React.FC = () => {
   return (
     <div>
       <Header />
-      {jobStatistics && (
-        <div className={classes.container}>
-          {renderChart("點閱次數", jobStatistics.views)}
-          {renderChart("點閱人數", jobStatistics.visitors)}
-          {renderChart("詢問人數", jobStatistics.queries)}
-        </div>
-      )}
+      <div className={classes.container}>
+        <Title text="統計" />
+        {jobStatistics && (
+          <>
+            {renderChart("點閱次數", jobStatistics.views)}
+            {renderChart("點閱人數", jobStatistics.visitors)}
+            {renderChart("詢問人數", jobStatistics.queries)}
+          </>
+        )}
+      </div>
     </div>
   );
 };

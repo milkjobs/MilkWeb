@@ -1,8 +1,15 @@
-import { Button } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  makeStyles
+} from "@material-ui/core";
 import { CloudUploadOutlined } from "@material-ui/icons";
 import to from "await-to-js";
 import { Header } from "components/Header";
+import { Title } from "components/Util";
 import { PdfMimeType } from "helpers";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -20,41 +27,22 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper
   },
   container: {
-    backgroundColor: theme.palette.background.paper,
     display: "flex",
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
+    marginBottom: 100,
     marginLeft: "auto",
     marginRight: "auto",
-    marginTop: 30,
-    marginBottom: 30,
+    marginTop: 40,
     paddingLeft: 24,
     paddingRight: 24,
-    width: "100%",
     [theme.breakpoints.up("md")]: {
-      width: "900px",
-      paddingRight: 0,
-      paddingLeft: 0
-    }
-  },
-  titleContainer: {
-    display: "flex",
-    marginBottom: 12
-  },
-  title: {
-    display: "flex",
-    flex: 1,
-    alignItems: "center",
-    color: theme.palette.text.primary,
-    fontSize: 24,
-    fontWeight: 400,
-    [theme.breakpoints.down("xs")]: {
-      fontSize: 18
+      width: "960px"
     }
   },
   button: {
-    marginLeft: 8
+    marginLeft: 16
   },
   body: {
     display: "flex",
@@ -64,7 +52,8 @@ const useStyles = makeStyles(theme => ({
     flex: 1
   },
   pdfPage: {
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.2)"
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.2)",
+    marginBottom: 24
   },
   dropzone: {
     display: "flex",
@@ -97,6 +86,8 @@ const Resume: React.FC = () => {
   const [bodyWidth, setBodyWidth] = useState<number>();
   const [numPages, setNumPages] = useState<number>();
   const [resumeUrl, setResumeUrl] = useState<string>();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const upload = useCallback(
     async (files: File[] | FileList) => {
@@ -133,13 +124,16 @@ const Resume: React.FC = () => {
 
   const remove = useCallback(async () => {
     if (user && user.profile && user.profile.resumeKey) {
+      setDeleteLoading(true);
       const profileApi = await getApi("Profile");
       await profileApi.removeResume({
         profileId: user.profile.uuid,
         resumeKey: user.profile.resumeKey
       });
       setResumeUrl(undefined);
+      setDeleteLoading(false);
     }
+    setDeleteDialogOpen(false);
   }, [getApi, user]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -169,48 +163,49 @@ const Resume: React.FC = () => {
     <div className={classes.root}>
       <Header />
       <div className={classes.container}>
-        <div className={classes.titleContainer}>
-          <div className={classes.title}>履歷</div>
-          {resumeUrl && (
-            <>
-              <input
-                accept={PdfMimeType}
-                hidden
-                id="contained-button-file"
-                onChange={e => {
-                  e.target.files && upload(e.target.files);
-                }}
-                type="file"
-              />
-              <label htmlFor="contained-button-file">
+        <Title
+          text="履歷"
+          customButtonComponent={
+            resumeUrl && (
+              <div>
+                <label>
+                  <input
+                    accept={PdfMimeType}
+                    hidden
+                    onChange={e => {
+                      e.target.files && upload(e.target.files);
+                    }}
+                    type="file"
+                  />
+                  <Button
+                    className={classes.button}
+                    color="primary"
+                    component="span"
+                    variant="contained"
+                  >
+                    重新上傳
+                  </Button>
+                </label>
                 <Button
                   className={classes.button}
                   color="primary"
-                  component="span"
+                  variant="contained"
+                  href={resumeUrl}
+                >
+                  下載
+                </Button>
+                <Button
+                  className={classes.button}
+                  color="primary"
+                  onClick={() => setDeleteDialogOpen(true)}
                   variant="contained"
                 >
-                  重新上傳
+                  刪除
                 </Button>
-              </label>
-              <Button
-                className={classes.button}
-                color="primary"
-                variant="contained"
-                href={resumeUrl}
-              >
-                下載
-              </Button>
-              <Button
-                className={classes.button}
-                color="primary"
-                onClick={remove}
-                variant="contained"
-              >
-                刪除
-              </Button>
-            </>
-          )}
-        </div>
+              </div>
+            )
+          }
+        />
         <div className={classes.body} ref={bodyRef}>
           {resumeUrl ? (
             <Document
@@ -254,6 +249,33 @@ const Resume: React.FC = () => {
           hideProgressBar
           transition={Slide}
         />
+        <Dialog
+          open={deleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+        >
+          <DialogContent style={{ marginTop: 16, marginBottom: 16 }}>
+            確定要刪除履歷？
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
+              取消
+            </Button>
+            {deleteLoading ? (
+              <CircularProgress
+                style={{
+                  width: 20,
+                  height: 20,
+                  marginLeft: 20,
+                  marginRight: 20
+                }}
+              />
+            ) : (
+              <Button onClick={remove} variant="contained" color="secondary">
+                刪除
+              </Button>
+            )}
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
   );

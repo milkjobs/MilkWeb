@@ -260,16 +260,15 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
         <DialogContent>
           <div style={{ display: "flex" }}>
             <img alt="team logo" src={team.logoUrl} className={classes.logo} />
-            <input
-              hidden
-              accept={ImageMimeType}
-              id="file-upload"
-              onChange={e => {
-                e.target.files && uploadLogo(e.target.files);
-              }}
-              type="file"
-            />
-            <label htmlFor="file-upload">
+            <label>
+              <input
+                hidden
+                accept={ImageMimeType}
+                onChange={e => {
+                  e.target.files && uploadLogo(e.target.files);
+                }}
+                type="file"
+              />
               <Button
                 className={classes.button}
                 color="primary"

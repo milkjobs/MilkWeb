@@ -353,6 +353,10 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
                     ? MonthlySalaryOptions
                     : HourlySalaryOptions;
                 let salary = minSalary;
+                // Round to hundreds.
+                if (salaryType === SalaryType.Monthly) {
+                  salary = Math.round(salary / 100) * 100;
+                }
                 if (salary < options[0]) {
                   salary = options[0];
                 } else if (salary > options[options.length - 1]) {
@@ -390,6 +394,10 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
                     ? MonthlySalaryOptions
                     : HourlySalaryOptions;
                 let salary = maxSalary;
+                // Round to hundreds.
+                if (salaryType === SalaryType.Monthly) {
+                  salary = Math.round(salary / 100) * 100;
+                }
                 if (salary < options[0]) {
                   salary = options[0];
                 } else if (salary > options[options.length - 1]) {
