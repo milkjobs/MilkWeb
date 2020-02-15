@@ -6,9 +6,9 @@ import React from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { BrowserRouter, Route, RouteProps, Switch } from "react-router-dom";
 import PageView from "routes/PageView";
-import RecruiterRoute from "routes/RecruiterRoute";
+import Recruiter from "routes/Recruiter";
 import RootRoute from "routes/RootRoute";
-import { AuthProvider, ThemeProvider, useAuth } from "stores";
+import { AuthProvider, ChannelProvider, ThemeProvider, useAuth } from "stores";
 import "./App.css";
 
 const LoadingRoute: React.FC<RouteProps> = props => {
@@ -35,7 +35,7 @@ const AppRouter: React.FC<{}> = () => {
         <ErrorCatcher>
           <LoadingRoute path="/" component={PageView} />
           <Switch>
-            <LoadingRoute path="/recruiter" component={RecruiterRoute} />
+            <LoadingRoute path="/recruiter" component={Recruiter} />
             <LoadingRoute path="/" component={RootRoute} />
           </Switch>
         </ErrorCatcher>
@@ -49,8 +49,10 @@ const App: React.FC<{}> = () => {
     <ThemeProvider>
       <HelmetProvider>
         <AuthProvider>
-          <CssBaseline />
-          <AppRouter />
+          <ChannelProvider>
+            <CssBaseline />
+            <AppRouter />
+          </ChannelProvider>
         </AuthProvider>
       </HelmetProvider>
     </ThemeProvider>
