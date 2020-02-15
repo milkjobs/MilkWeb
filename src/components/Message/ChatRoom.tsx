@@ -47,23 +47,23 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
   >(params.id);
   const [, setState] = useState();
 
-  function onChannelChanged(channel) {
-    const newGroupChannelList = channels.current.filter(
-      c => c.name !== channel.name
-    );
-    channels.current = [channel, ...newGroupChannelList];
-    setState({});
-  }
+  // function onChannelChanged(channel) {
+  //   const newGroupChannelList = channels.current.filter(
+  //     c => c.name !== channel.name
+  //   );
+  //   channels.current = [channel, ...newGroupChannelList];
+  //   setState({});
+  // }
 
-  useEffect(() => {
-    if (sb) {
-      setSelectedChannelId(params.id);
-      const handler = new sb.ChannelHandler();
-      handler.onChannelChanged = onChannelChanged;
-      const channelHandlerId = uuid4();
-      sb.addChannelHandler(channelHandlerId, handler);
-    }
-  }, [params.id, sb]);
+  // useEffect(() => {
+  //   if (sb) {
+  //     setSelectedChannelId(params.id);
+  //     const handler = new sb.ChannelHandler();
+  //     handler.onChannelChanged = onChannelChanged;
+  //     const channelHandlerId = uuid4();
+  //     sb.addChannelHandler(channelHandlerId, handler);
+  //   }
+  // }, [params.id, sb]);
 
   useEffect(() => {
     if (sb) {

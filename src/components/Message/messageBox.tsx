@@ -130,23 +130,25 @@ const MessageBox: React.FC<Props> = ({ channel, isRecruiter }) => {
       setScrollHeight(messagesEl.current.scrollHeight);
       messagesEl.current.scrollTop =
         messagesEl.current.scrollHeight - messagesEl.current.offsetHeight;
+      console.log("markasread1");
       channel.markAsRead();
     };
-    if (channel) {
-      getPreviousMessages();
-      const onMessageReceived = (c, m) => {
-        if (channel.url === c.url) {
-          c.markAsRead();
-          messages.current = [m].concat(messages.current);
-          forceUpdate();
-        }
-      };
-      const sb = SendBird.getInstance();
-      const handler = new sb.ChannelHandler();
-      handler.onMessageReceived = onMessageReceived;
-      const messageHandlerId = uuid4();
-      sb.addChannelHandler(messageHandlerId, handler);
-    }
+    // if (channel) {
+    //   getPreviousMessages();
+    //   const onMessageReceived = (c, m) => {
+    //     if (channel.url === c.url) {
+    //       console.log("markasread2");
+    //       c.markAsRead();
+    //       messages.current = [m].concat(messages.current);
+    //       forceUpdate();
+    //     }
+    //   };
+    //   const sb = SendBird.getInstance();
+    //   const handler = new sb.ChannelHandler();
+    //   handler.onMessageReceived = onMessageReceived;
+    //   const messageHandlerId = uuid4();
+    //   sb.addChannelHandler(messageHandlerId, handler);
+    // }
   }, [channel]);
 
   const sendUserMessage = ({ channel, message }) => {
