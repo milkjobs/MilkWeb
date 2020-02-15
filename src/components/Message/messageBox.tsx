@@ -5,7 +5,7 @@ import { uuid4 } from "@sentry/utils";
 import { Messages } from "components/Message";
 import { AlertDialog } from "components/Util";
 import { AlertType } from "helpers";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useReducer } from "react";
 import SendBird from "sendbird";
 import { useAuth } from "stores";
 
@@ -77,18 +77,16 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const MessageBox: React.FC<Props> = props => {
+interface Props {
+  channel: SendBird.GroupChannel;
+  isRecruiter: boolean;
+}
+
+const MessageBox: React.FC<Props> = ({ channel, isRecruiter }) => {
   const classes = useStyles();
-  const { channel, isRecruiter } = props;
-
   const { userId, user } = useAuth();
-
   const [input, setInput] = useState("");
-  const useForceUpdate = () => {
-    const [, setState] = useState();
-    return () => setState({});
-  };
-  const forceUpdate = useForceUpdate();
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
   const messages = useRef<any>([]);
   const messagesEl = useRef<any>(null);
   const recruiter = channel.members.filter(m => m.userId !== userId)[0];
@@ -262,10 +260,5 @@ const MessageBox: React.FC<Props> = props => {
     </div>
   );
 };
-
-interface Props {
-  channel: SendBird.GroupChannel;
-  isRecruiter: boolean;
-}
 
 export { MessageBox };

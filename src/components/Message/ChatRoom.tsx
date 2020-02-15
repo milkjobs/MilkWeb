@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { uuid4 } from "@sentry/utils";
-import { MessageBox, MessageCard } from "components/Message";
+import { MessageBox, ChannelListCard } from "components/Message";
 import React, { useEffect, useRef, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import SendBird from "sendbird";
@@ -11,26 +11,21 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
     display: "flex",
     flex: 1,
-    flexDirection: "row",
-    width: "100%"
+    flexDirection: "row"
   },
-  title: {
-    display: "flex",
-    flex: 1,
-    alignItems: "center",
-    color: theme.palette.text.primary,
-    fontSize: 24,
-    fontWeight: 400,
-    [theme.breakpoints.down("xs")]: {
-      fontSize: 18
-    }
-  },
-  contacts: {
+  channelListContainer: {
     border: "1px solid #EBEBEB",
     flex: 1,
+    minWidth: 320,
+    maxWidth: 420,
     [theme.breakpoints.down("xs")]: {
       display: "none"
     }
+  },
+  chatContainer: {
+    display: "flex",
+    flex: 3,
+    position: "relative"
   }
 }));
 
@@ -68,7 +63,7 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
       const channelHandlerId = uuid4();
       sb.addChannelHandler(channelHandlerId, handler);
     }
-  }, [sb]);
+  }, [params.id, sb]);
 
   useEffect(() => {
     if (sb) {
@@ -133,56 +128,57 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
     );
   };
 
+  const renderChannelList = () => (
+    <div className={classes.channelListContainer}>
+      {channelsFilter(channels.current).map((c, index) => {
+        const myId = user?.uuid;
+        const they = c.members.filter(m => m.userId !== myId)[0];
+
+        return (
+          <div
+            key={index}
+            onClick={() => {
+              setSelectedChannelId(c.url);
+              if (isRecruiter) {
+                history.push(`/recruiter/message/${c.url}`);
+              } else {
+                history.push(`/message/${c.url}`);
+              }
+            }}
+          >
+            <ChannelListCard
+              name={they.nickname}
+              profileImageUrl={they.profileUrl}
+              teamName={
+                isRecruiter ? "" : user?.recruiterInfo?.team?.nickname || ""
+              }
+              selected={c.url === selectedChannelId}
+              unreadMessageCount={
+                channelsFilter(channels.current)[index].unreadMessageCount
+              }
+              lastMessage={channelsFilter(channels.current)[index].lastMessage}
+            />
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  const renderChat = () => (
+    <div className={classes.chatContainer}>
+      {channels.current.filter(c => c.url === selectedChannelId).length > 0 && (
+        <MessageBox
+          channel={channels.current.filter(c => c.url === selectedChannelId)[0]}
+          isRecruiter={!!isRecruiter}
+        />
+      )}
+    </div>
+  );
+
   return channels.current.length === 0 ? null : (
     <div className={classes.container}>
-      <div className={classes.contacts}>
-        {channelsFilter(channels.current).map((c, index) => {
-          const applicantId = user ? user.uuid : "";
-          const recruiter = c.members.filter(m => m.userId !== applicantId)[0];
-          return (
-            <div
-              key={index}
-              onClick={() => {
-                setSelectedChannelId(c.url);
-                if (isRecruiter) {
-                  history.push(`/recruiter/message/${c.url}`);
-                } else {
-                  history.push(`/message/${c.url}`);
-                }
-              }}
-            >
-              <MessageCard
-                recruiter={recruiter}
-                teamName={""}
-                selected={c.url === selectedChannelId}
-                unreadMessageCount={
-                  channelsFilter(channels.current)[index].unreadMessageCount
-                }
-                lastMessage={
-                  channelsFilter(channels.current)[index].lastMessage
-                }
-              />
-            </div>
-          );
-        })}
-      </div>
-      <div
-        style={{
-          display: "flex",
-          flex: 3,
-          position: "relative"
-        }}
-      >
-        {channels.current.filter(c => c.url === selectedChannelId).length >
-          0 && (
-          <MessageBox
-            channel={
-              channels.current.filter(c => c.url === selectedChannelId)[0]
-            }
-            isRecruiter={!!isRecruiter}
-          />
-        )}
-      </div>
+      {renderChannelList()}
+      {renderChat()}
     </div>
   );
 };

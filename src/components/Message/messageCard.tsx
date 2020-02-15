@@ -4,7 +4,6 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import moment from "moment";
 import "moment/locale/zh-tw";
 import React from "react";
-import SendBird from "sendbird";
 moment.locale("zh-tw");
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -32,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.hint
     },
     recentMessage: {
-      width: 250,
+      // width: 250,
       fontSize: 12,
       textAlign: "left",
       color: theme.palette.text.primary,
@@ -44,17 +43,19 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  recruiter: SendBird.Member;
+  name: string;
+  profileImageUrl: string;
   teamName: string;
   selected: boolean;
   unreadMessageCount: number;
   lastMessage: any;
 }
 
-const MessageCard: React.FC<Props> = props => {
+const ChannelListCard: React.FC<Props> = props => {
   const classes = useStyles();
   const {
-    recruiter,
+    name,
+    profileImageUrl,
     teamName,
     selected,
     unreadMessageCount,
@@ -70,7 +71,7 @@ const MessageCard: React.FC<Props> = props => {
         badgeContent={unreadMessageCount}
         color="secondary"
       >
-        <Avatar src={recruiter.profileUrl} style={{ width: 40, height: 40 }} />
+        <Avatar src={profileImageUrl} style={{ width: 40, height: 40 }} />
       </Badge>
       <div
         style={{
@@ -91,7 +92,7 @@ const MessageCard: React.FC<Props> = props => {
           }}
         >
           <div className={classes.name}>
-            {recruiter.nickname + (teamName ? `@${teamName}` : "")}
+            {name + (teamName ? `@${teamName}` : "")}
           </div>
           <div className={classes.date}>
             {lastMessage
@@ -107,4 +108,4 @@ const MessageCard: React.FC<Props> = props => {
   );
 };
 
-export { MessageCard };
+export { ChannelListCard };
