@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "stores";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   schoolContainer: {
     display: "flex",
     flexDirection: "row",
@@ -31,6 +31,7 @@ const AwesomeHeader: React.FC<Props> = ({ showStories, showChatRoom }) => {
   const classes = useStyles();
   const { getApi } = useAuth();
   const [awesomeLists, setAwesomeLists] = useState<AwesomeList[]>([]);
+  const [showMore, setShowMore] = useState<boolean>(false);
   const matched = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
 
   useEffect(() => {
@@ -52,7 +53,7 @@ const AwesomeHeader: React.FC<Props> = ({ showStories, showChatRoom }) => {
       ) : (
         <div className={classes.schoolTitle}>就業精選</div>
       )}
-      {awesomeLists.map(list => (
+      {awesomeLists.slice(0, showMore ? awesomeLists.length : 20).map(list => (
         <Link
           key={list.name}
           to={{ pathname: `/awesome/${list.name}` }}
@@ -61,6 +62,10 @@ const AwesomeHeader: React.FC<Props> = ({ showStories, showChatRoom }) => {
           <Button>{list.name}</Button>
         </Link>
       ))}
+      {!showMore && (
+        <Button onClick={() => setShowMore(true)}>{"看更多"}</Button>
+      )}
+      {showMore && <Button onClick={() => setShowMore(false)}>{"收回"}</Button>}
       {showChatRoom && matched && (
         <div
           onClick={() => openInNewTab("https://tlk.io/ntu")}
