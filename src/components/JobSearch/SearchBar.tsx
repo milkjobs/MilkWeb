@@ -5,6 +5,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import "firebase/analytics";
 import firebase from "firebase/app";
 import qs from "qs";
+import { useLocalStorage } from "helpers";
 import React, { useEffect, useState } from "react";
 import { SearchBoxProvided } from "react-instantsearch-core";
 import { connectSearchBox } from "react-instantsearch-dom";
@@ -41,6 +42,10 @@ const SearchBar: React.FC<SearchBoxProvided> = props => {
   const classes = useStyles();
   const { refine, currentRefinement } = props;
   const [query, setQuery] = useState<string>(currentRefinement);
+  const [searchHistory, setSearchHistory] = useLocalStorage(
+    "searchHistory",
+    ""
+  );
 
   useEffect(() => {
     const params = qs.parse(location.search, { ignoreQueryPrefix: true });
@@ -48,16 +53,23 @@ const SearchBar: React.FC<SearchBoxProvided> = props => {
       const jobQuery = Array.isArray(params.job)
         ? params.job.join(" ")
         : params.job;
-      refine(jobQuery || "");
+      // If not query, use searchHistory as default
+      refine(jobQuery || searchHistory + " 正職 實習 兼職");
       setQuery(jobQuery || "");
       // eslint-disable-next-line @typescript-eslint/camelcase
       firebase.analytics().logEvent("search", { search_term: jobQuery || "" });
+    } else {
+      refine(searchHistory + " 正職 實習 兼職");
     }
   }, [location.search, refine]);
 
   const search = () => {
     const params = qs.parse(location.search, { ignoreQueryPrefix: true });
     params.job = query;
+    if (query)
+      setSearchHistory(
+        [query, ...searchHistory.split(" ").splice(0, 5)].join(" ")
+      );
     history.push({ search: qs.stringify(params, { addQueryPrefix: true }) });
   };
 

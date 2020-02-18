@@ -14,6 +14,8 @@ import { Configure, InstantSearch } from "react-instantsearch-dom";
 import { useInView } from "react-intersection-observer";
 import TextLoop from "react-text-loop";
 import { useAuth } from "stores";
+import { useLocalStorage } from "helpers";
+import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -100,11 +102,17 @@ const latestNews: News[] = [
 
 const JobSearch: React.FC = () => {
   const classes = useStyles();
+  const location = useLocation();
   const { getApi, user } = useAuth();
   const [ref, inView] = useInView({ threshold: 1 });
   const [algoliaClient, setAlgoliaClient] = useState<SearchClient>();
   const [hideHeaderSearchBar, setHideHeaderSearchBar] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [searchHistoryConfig, setSearchHistoryConfig] = useState<string>("");
+
+  useEffect(() => {
+    setSearchHistoryConfig(localStorage.getItem("searchHistory") || "");
+  }, [location.search]);
 
   useEffect(() => {
     !loading && setHideHeaderSearchBar(inView);
@@ -159,7 +167,15 @@ const JobSearch: React.FC = () => {
             indexName={algoliaConfig.index}
             searchClient={algoliaClient}
           >
-            <Configure hitsPerPage={20} />
+            <Configure
+              hitsPerPage={20}
+              optionalWords={[
+                ...searchHistoryConfig.split(" "),
+                "正職",
+                "實習",
+                "兼職"
+              ]}
+            />
             <div ref={ref}>
               <SearchBar />
             </div>
