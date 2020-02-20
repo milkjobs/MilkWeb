@@ -14,7 +14,6 @@ import { Configure, InstantSearch } from "react-instantsearch-dom";
 import { useInView } from "react-intersection-observer";
 import TextLoop from "react-text-loop";
 import { useAuth } from "stores";
-import { useLocalStorage } from "helpers";
 import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
@@ -169,12 +168,7 @@ const JobSearch: React.FC = () => {
           >
             <Configure
               hitsPerPage={20}
-              optionalWords={[
-                ...searchHistoryConfig.split(" "),
-                "正職",
-                "實習",
-                "兼職"
-              ]}
+              optionalWords={[...searchHistoryConfig.split(" "), "正職"]}
             />
             <div ref={ref}>
               <SearchBar />

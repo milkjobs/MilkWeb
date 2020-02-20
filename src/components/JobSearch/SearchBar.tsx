@@ -54,12 +54,12 @@ const SearchBar: React.FC<SearchBoxProvided> = props => {
         ? params.job.join(" ")
         : params.job;
       // If not query, use searchHistory as default
-      refine(jobQuery || searchHistory + " 正職 實習 兼職");
+      refine(jobQuery || searchHistory + " 正職");
       setQuery(jobQuery || "");
       // eslint-disable-next-line @typescript-eslint/camelcase
       firebase.analytics().logEvent("search", { search_term: jobQuery || "" });
     } else {
-      refine(searchHistory + " 正職 實習 兼職");
+      refine(searchHistory + " 正職");
     }
   }, [location.search, refine]);
 
