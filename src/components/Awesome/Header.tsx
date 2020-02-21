@@ -53,19 +53,29 @@ const AwesomeHeader: React.FC<Props> = ({ showStories, showChatRoom }) => {
       ) : (
         <div className={classes.schoolTitle}>就業精選</div>
       )}
-      {awesomeLists.slice(0, showMore ? awesomeLists.length : 20).map(list => (
+      {[
+        { name: "中興獸醫", link: "中興獸醫" },
+        { name: "台大電機", link: "台大電機" },
+        { name: "政大政治", link: "政大政治" },
+        { name: "成大建築", link: "成大建築" },
+        { name: "台大資工", link: "台大資工" },
+        { name: "中央數學", link: "國立中央大學數學系" },
+        { name: "東華中文", link: "國立東華大學中國文學系" },
+        { name: "交大電子", link: "國立交通大學電子學系" },
+        { name: "陽明醫學", link: "國立陽明大學醫學系" },
+        { name: "高大資管", link: "國立高雄大學資訊管理學系" }
+      ].map(list => (
         <Link
           key={list.name}
-          to={{ pathname: `/awesome/${list.name}` }}
+          to={{ pathname: `/awesome/${list.link}` }}
           className={classes.majorButton}
         >
           <Button>{list.name}</Button>
         </Link>
       ))}
-      {!showMore && (
-        <Button onClick={() => setShowMore(true)}>{"看更多"}</Button>
-      )}
-      {showMore && <Button onClick={() => setShowMore(false)}>{"收回"}</Button>}
+      <Link to={{ pathname: "/departments" }} className={classes.majorButton}>
+        <Button>{"看更多"}</Button>
+      </Link>
       {showChatRoom && matched && (
         <div
           onClick={() => openInNewTab("https://tlk.io/ntu")}

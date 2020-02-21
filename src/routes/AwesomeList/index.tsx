@@ -348,7 +348,8 @@ const AwesomeList: React.FC = () => {
           <DialogTitle id="form-dialog-title">我要建議</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              這些數據是牛奶找工作詢問系上教授、同學，及統計 LinkedIn 上 2010
+              這些數據是牛奶找工作詢問系上教授、同學、104 公開資料及統計
+              LinkedIn 上 2010
               年後入學的學生，自行整理的名單，並沒有受公司委託進行廣告。如果有任何與事實不符的地方，或想補充、新增、刪除公司，歡迎留言告訴我們，一起幫助大學生畢業更有方向！
             </DialogContentText>
             <TextField
