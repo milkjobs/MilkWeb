@@ -101,6 +101,17 @@ const DepartmentList: React.FC = () => {
       ]);
   };
 
+  const fuzzyMatch = (s: string, q: string) => {
+    const matchChar = q.split("").reduce((count, char) => {
+      if (s.includes(char)) {
+        return count + 1;
+      } else {
+        return count;
+      }
+    }, 0);
+    return matchChar >= q.length - 1;
+  };
+
   useEffect(() => {
     getSchools();
   }, []);
@@ -133,7 +144,7 @@ const DepartmentList: React.FC = () => {
           aria-label="main mailbox folders"
         >
           {schools
-            .filter(s => s.includes(query))
+            .filter(s => fuzzyMatch(s, query))
             .map(s => (
               <ListItem
                 className={classes.item}
@@ -148,7 +159,10 @@ const DepartmentList: React.FC = () => {
         <List
           style={{
             marginTop: hoverSchool
-              ? 41 * schools.findIndex(s => s === hoverSchool)
+              ? 41 *
+                schools
+                  .filter(s => fuzzyMatch(s, query))
+                  .findIndex(s => s === hoverSchool)
               : 0
           }}
           className={classes.departmentContainer}
