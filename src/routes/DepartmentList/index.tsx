@@ -120,6 +120,10 @@ const DepartmentList: React.FC = () => {
     if (!departments.find(d => d.school === hoverSchool)) getDepartments();
   }, [hoverSchool]);
 
+  useEffect(() => {
+    setHoverSchool("");
+  }, [query]);
+
   return (
     <div>
       <Header />
