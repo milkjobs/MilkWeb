@@ -27,7 +27,8 @@ import {
   AlertType,
   EducationLevelOptions,
   ExperienceLevelOptions,
-  JobTypeOptions
+  JobTypeOptions,
+  normalizeSchoolName
 } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "stores";
@@ -74,16 +75,14 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
   >();
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertType, setAlertType] = useState<AlertType>();
-
-  const showAlert = () => setAlertOpen(true);
-  const hideAlert = () => setAlertOpen(false);
-  const [tags, setTags] = useState<FuzzyTag[]>([]);
-  const [tagOptions, setTagOptions] = useState<FuzzyTag[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [tagOptions, setTagOptions] = useState<Tag[]>([]);
   const [fuse, setFuse] = useState<
     Fuse<FuzzyTag, Fuse.FuseOptions<FuzzyTag>>
   >();
 
-  const normalizeSchoolName = (name: string) => name.replace("臺", "台");
+  const showAlert = () => setAlertOpen(true);
+  const hideAlert = () => setAlertOpen(false);
 
   useEffect(() => {
     const getTags = async () => {
@@ -108,7 +107,7 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
         keys: ["normalizedLabel"]
       };
       setFuse(new Fuse([...schoolEntries, ...departmentEntries], options));
-      setTagOptions([...schoolEntries, ...departmentEntries]);
+      setTagOptions([...(schoolTags || []), ...(departmentTags || [])]);
     };
 
     getTags();
@@ -158,7 +157,7 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
           educationNeed,
           experienceNeed,
           description,
-          tags: tags.map(t => t.tag)
+          tags
         }
       });
       if (
@@ -523,20 +522,21 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
             clearText="清除已選的校系"
             closeText="收起清單"
             defaultValue={[]}
-            getOptionLabel={option => option.tag.label}
+            getOptionLabel={option => option.label}
             id="tags"
             multiple
             noOptionsText="找不到學校、系所"
-            openText="開啟清單"
+            openText="展開清單"
             options={tagOptions}
             value={tags}
             onChange={(_event, newValue) => {
-              console.log(newValue);
               setTags(newValue);
             }}
             filterOptions={(_options, { inputValue }) =>
               inputValue && fuse
-                ? fuse.search<FuzzyTag, false, false>(inputValue)
+                ? fuse
+                    .search<FuzzyTag, false, false>(inputValue)
+                    .map(ft => ft.tag)
                 : tagOptions
             }
             renderInput={params => (
@@ -544,7 +544,7 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
                 {...params}
                 margin="normal"
                 label="相關的學校、系所（選填）"
-                helperText="幫助相關校系的畢業生看到此職缺，可以是招募的期望、公司同事的背景或有關技能等"
+                helperText="幫助相關校系的學生看到此職缺，可以是可能的招募對象、公司同事的背景等"
               />
             )}
           />

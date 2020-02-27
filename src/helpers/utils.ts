@@ -205,6 +205,8 @@ const useLocalStorage = (key, initialValue) => {
   return [storedValue, setValue];
 };
 
+const normalizeSchoolName = (name: string) => name.replace("臺", "台");
+
 export {
   checkUrl,
   convertToIntlPhoneNumber,
@@ -214,16 +216,17 @@ export {
   ExperienceLevelConvertor,
   ExperienceLevelOptions,
   getMobileOS,
+  ImageMimeType,
+  ImagePdfMimeType,
   isIntlPhoneNumber,
   isLocalPhoneNumber,
   isValidPassword,
   isValidVerificationCode,
   JobTypeConvertor,
   JobTypeOptions,
+  normalizeSchoolName,
   openInNewTab,
   PdfMimeType,
-  ImageMimeType,
-  ImagePdfMimeType,
   salaryToString,
   TeamSizeConvertor,
   TeamSizeOptions,
