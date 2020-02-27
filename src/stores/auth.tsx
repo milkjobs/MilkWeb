@@ -1,4 +1,6 @@
 import {
+  AwesomeApi,
+  ChannelApi,
   Configuration,
   EducationApi,
   ExperienceApi,
@@ -9,19 +11,18 @@ import {
   OrderApi,
   ProfileApi,
   ProjectApi,
+  RecruiterInfoApi,
   Role,
+  SupportApi,
+  TagApi,
   TeamApi,
   User,
   UserApi,
-  VerificationApi,
-  ChannelApi,
-  AwesomeApi,
-  SupportApi,
-  RecruiterInfoApi
+  VerificationApi
 } from "@frankyjuang/milkapi-client";
 import { apiServiceConfig } from "config";
-import firebase from "firebase/app";
 import "firebase/analytics";
+import firebase from "firebase/app";
 import "firebase/auth";
 import { Apis, ExtractApi, LocalStorageItem, TypedApis } from "helpers";
 import React, {
@@ -105,6 +106,8 @@ export const AuthProvider = ({ children }) => {
       return new SupportApi(configuration) as any;
     } else if (type === "RecruiterInfo") {
       return new RecruiterInfoApi(configuration) as any;
+    } else if (type === "Tag") {
+      return new TagApi(configuration) as any;
     }
     /* eslint-enable @typescript-eslint/no-explicit-any */
 

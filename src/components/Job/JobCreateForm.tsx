@@ -3,7 +3,9 @@ import {
   ExperienceLevel,
   JobType,
   JobUnpublishedReason,
-  SalaryType
+  SalaryType,
+  Tag,
+  TagType
 } from "@frankyjuang/milkapi-client";
 import {
   Button,
@@ -14,11 +16,13 @@ import {
   DialogTitle,
   InputAdornment,
   MenuItem,
-  Slider,
   TextField
 } from "@material-ui/core";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import { SubArea, TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
+import to from "await-to-js";
 import { AlertDialog } from "components/Util";
+import Fuse from "fuse.js";
 import {
   AlertType,
   EducationLevelOptions,
@@ -28,6 +32,11 @@ import {
 import React, { useEffect, useState } from "react";
 import { useAuth } from "stores";
 import { HourlySalaryOptions, MonthlySalaryOptions } from "./utils";
+
+interface FuzzyTag {
+  normalizedLabel: string;
+  tag: Tag;
+}
 
 interface Props {
   open: boolean;
@@ -68,6 +77,42 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
 
   const showAlert = () => setAlertOpen(true);
   const hideAlert = () => setAlertOpen(false);
+  const [tags, setTags] = useState<FuzzyTag[]>([]);
+  const [tagOptions, setTagOptions] = useState<FuzzyTag[]>([]);
+  const [fuse, setFuse] = useState<
+    Fuse<FuzzyTag, Fuse.FuseOptions<FuzzyTag>>
+  >();
+
+  const normalizeSchoolName = (name: string) => name.replace("臺", "台");
+
+  useEffect(() => {
+    const getTags = async () => {
+      const tagApi = await getApi("Tag");
+      const [[, schoolTags], [, departmentTags]] = await Promise.all([
+        to(tagApi.getTags({ type: TagType.School })),
+        to(tagApi.getTags({ type: TagType.Department }))
+      ]);
+
+      const schoolEntries = (schoolTags || []).map<FuzzyTag>(t => ({
+        normalizedLabel: normalizeSchoolName(t.label),
+        tag: t
+      }));
+      const departmentEntries = (departmentTags || []).map<FuzzyTag>(t => ({
+        normalizedLabel: t.label,
+        tag: t
+      }));
+      const options: Fuse.FuseOptions<FuzzyTag> = {
+        shouldSort: true,
+        tokenize: true,
+        matchAllTokens: true,
+        keys: ["normalizedLabel"]
+      };
+      setFuse(new Fuse([...schoolEntries, ...departmentEntries], options));
+      setTagOptions([...schoolEntries, ...departmentEntries]);
+    };
+
+    getTags();
+  }, [getApi]);
 
   const publish = async () => {
     const jobApi = await getApi("Job");
@@ -112,7 +157,8 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
           address: { area, subArea, street },
           educationNeed,
           experienceNeed,
-          description
+          description,
+          tags: tags.map(t => t.tag)
         }
       });
       if (
@@ -326,7 +372,7 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
               )
             }}
           />
-          <div style={{ display: "flex", marginTop: 24 }}>
+          <div style={{ display: "flex" }}>
             <TextField
               disabled={!salaryType}
               fullWidth
@@ -410,7 +456,7 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
               }}
             />
           </div>
-          <Slider
+          {/* <Slider
             disabled={!salaryType}
             step={null}
             value={[minSalary, maxSalary]}
@@ -434,41 +480,74 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
               setMinSalary(newValue[0]);
               setMaxSalary(newValue[1]);
             }}
+          /> */}
+          <div style={{ display: "flex" }}>
+            <TextField
+              error={Boolean(educationNeedErrorMessage)}
+              fullWidth
+              helperText={educationNeedErrorMessage}
+              id="education-need"
+              label="學歷要求"
+              margin="normal"
+              onChange={handleEducationLevelChange}
+              select
+              style={{ marginRight: 4 }}
+              value={educationNeed || ""}
+            >
+              {EducationLevelOptions.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              error={Boolean(experienceNeedErrorMessage)}
+              fullWidth
+              helperText={experienceNeedErrorMessage}
+              id="experience-need"
+              label="經驗要求"
+              margin="normal"
+              onChange={handleExperienceLevelChange}
+              select
+              style={{ marginLeft: 4 }}
+              value={experienceNeed || ""}
+            >
+              {ExperienceLevelOptions.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </div>
+          <Autocomplete
+            clearText="清除已選的校系"
+            closeText="收起清單"
+            defaultValue={[]}
+            getOptionLabel={option => option.tag.label}
+            id="tags"
+            multiple
+            noOptionsText="找不到學校、系所"
+            openText="開啟清單"
+            options={tagOptions}
+            value={tags}
+            onChange={(_event, newValue) => {
+              console.log(newValue);
+              setTags(newValue);
+            }}
+            filterOptions={(_options, { inputValue }) =>
+              inputValue && fuse
+                ? fuse.search<FuzzyTag, false, false>(inputValue)
+                : tagOptions
+            }
+            renderInput={params => (
+              <TextField
+                {...params}
+                margin="normal"
+                label="相關的學校、系所（選填）"
+                helperText="幫助相關校系的畢業生看到此職缺，可以是招募的期望、公司同事的背景或有關技能等"
+              />
+            )}
           />
-          <TextField
-            error={Boolean(educationNeedErrorMessage)}
-            fullWidth
-            helperText={educationNeedErrorMessage}
-            id="education-need"
-            label="學歷要求"
-            margin="normal"
-            onChange={handleEducationLevelChange}
-            select
-            value={educationNeed || ""}
-          >
-            {EducationLevelOptions.map(option => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            error={Boolean(experienceNeedErrorMessage)}
-            fullWidth
-            helperText={experienceNeedErrorMessage}
-            id="experience-need"
-            label="經驗要求"
-            margin="normal"
-            onChange={handleExperienceLevelChange}
-            select
-            value={experienceNeed || ""}
-          >
-            {ExperienceLevelOptions.map(option => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
           <TextField
             error={Boolean(descriptionErrorMessage)}
             fullWidth
