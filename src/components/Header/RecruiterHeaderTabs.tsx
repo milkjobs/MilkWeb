@@ -50,6 +50,9 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
 
   return (
     <div className={classes.sectionDesktop}>
+      <Link to="/" className={classes.link}>
+        <span className={classes.tab}>瀏覽工作</span>
+      </Link>
       {!isRecruiterHome && (
         <Link
           to="/recruiter"
@@ -63,15 +66,14 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
         </Link>
       )}
       {!isRecruiterMessage && (
-        <Link to={"/recruiter/message"} className={classes.link}>
+        <Link to="/recruiter/message" className={classes.link}>
           <span className={classes.tab}>訊息</span>
         </Link>
       )}
-
       {user && (
         <span
           className={classes.tab}
-          aria-owns={"material-appbar"}
+          aria-owns="material-appbar"
           aria-haspopup="true"
           onClick={openProfileMenu}
         >

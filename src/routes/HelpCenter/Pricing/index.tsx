@@ -172,7 +172,7 @@ const Pricing: React.FC = () => {
         <h3>牛奶找工作，依職缺的點閱人數收費</h3>
         <h3>企業根據自己刊登職缺的需求，用多少付多少</h3>
         <h3>不再有付了錢，卻沒有曝光的窘境</h3>
-        <Link to={"/recruiter"} style={{ textDecoration: "none" }}>
+        <Link to="/recruiter" style={{ textDecoration: "none" }}>
           <h3 className={classes.free}>現在加入，立刻送 1000 個免費點閱人數</h3>
         </Link>
         <div className={classes.plansContainer}>
@@ -204,7 +204,7 @@ const Pricing: React.FC = () => {
         <h3>
           1. 將你徵才訊息置頂在指定科系的
           <Link
-            to={"/awesome/台大電機"}
+            to="/awesome/台大電機"
             style={{ color: "#fa6c71", textDecoration: "none" }}
           >
             就業精選版

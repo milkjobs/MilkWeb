@@ -23,7 +23,7 @@ const AlertDialog: React.FC<Props> = props => {
       {type === AlertType.NotVerification && (
         <>
           <DialogContent>
-            {"公司尚未驗證，職缺會暫時關閉。等公司驗證成功，可以再把職缺開放。"}
+            公司尚未驗證，職缺會暫時關閉。等公司驗證成功，可以再把職缺開放。
           </DialogContent>
           <DialogActions>
             <Button
@@ -37,7 +37,7 @@ const AlertDialog: React.FC<Props> = props => {
       )}
       {type === AlertType.NoResume && (
         <>
-          <DialogContent>{"尚未上傳履歷"}</DialogContent>
+          <DialogContent>尚未上傳履歷</DialogContent>
           <DialogActions>
             <Button onClick={() => history.push("/resume")} color="primary">
               前往上傳

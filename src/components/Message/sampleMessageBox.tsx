@@ -128,7 +128,7 @@ const SampleMessageBox: React.FC = () => {
   return (
     <div className={classes.container}>
       <div className={classes.jobContainer}>
-        <div className={classes.jobName}>{"牛奶找工作（聊天功能體驗版）"}</div>
+        <div className={classes.jobName}>牛奶找工作（聊天功能體驗版）</div>
       </div>
       <div
         className={classes.messages}

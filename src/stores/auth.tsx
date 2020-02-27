@@ -23,8 +23,7 @@ import { apiServiceConfig } from "config";
 import firebase from "firebase/app";
 import "firebase/analytics";
 import "firebase/auth";
-import { Apis, ExtractApi, TypedApis } from "helpers/ApiService";
-import { LocalStorageItem } from "helpers/types";
+import { Apis, ExtractApi, LocalStorageItem, TypedApis } from "helpers";
 import React, {
   createContext,
   useCallback,

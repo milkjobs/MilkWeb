@@ -106,7 +106,6 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
         newJob: {
           type,
           name,
-          skillTags: [],
           minSalary,
           maxSalary,
           salaryType,
@@ -233,7 +232,7 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
       {alertType !== undefined && (
         <AlertDialog isOpen={alertOpen} close={hideAlert} type={alertType} />
       )}
-      <Dialog maxWidth={"sm"} fullWidth open={open} onClose={handleClose}>
+      <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose}>
         <DialogTitle id="create-job">刊登職缺</DialogTitle>
         <DialogContent>
           <TextField

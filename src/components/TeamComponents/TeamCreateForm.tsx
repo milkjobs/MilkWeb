@@ -221,7 +221,7 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
 
   return (
     <div>
-      <Dialog maxWidth={"sm"} fullWidth open={open} onClose={handleClose}>
+      <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose}>
         <DialogTitle id="create-team">創建公司</DialogTitle>
         <DialogContent>
           <TextField

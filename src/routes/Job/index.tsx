@@ -141,10 +141,7 @@ const Job: React.FC = () => {
             <div className={classes.descriptionContainer}>
               <div className={classes.descriptionContent}>
                 {job.description && (
-                  <JobDescription
-                    description={job.description}
-                    skillTags={job.skillTags}
-                  />
+                  <JobDescription description={job.description} tags={[]} />
                 )}
                 <JobLocation address={job.address} />
                 <JobStatistics jobId={params.id} createdAt={job.createdAt} />

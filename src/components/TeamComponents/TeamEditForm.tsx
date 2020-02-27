@@ -255,7 +255,7 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
 
   return (
     <div>
-      <Dialog maxWidth={"sm"} fullWidth open={open} onClose={handleClose}>
+      <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose}>
         <DialogTitle id="edit-team">編輯公司</DialogTitle>
         <DialogContent>
           <div style={{ display: "flex" }}>

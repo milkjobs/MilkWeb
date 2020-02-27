@@ -205,7 +205,7 @@ const Header: React.FC<Props> = props => {
     <Headroom>
       <div className={classes.root}>
         <AppBar
-          color={"inherit"}
+          color="inherit"
           position="static"
           classes={{ root: classes.appBarRoot }}
         >
@@ -226,12 +226,12 @@ const Header: React.FC<Props> = props => {
               title && <div className={classes.title}>{title}</div>
             )}
             {isHome && (
-              <Link to={"/about"} className={classes.link}>
+              <Link to="/about" className={classes.link}>
                 <span className={classes.tab}>關於我們</span>
               </Link>
             )}
             {isRecruiter && (
-              <Link to={"/help/pricing"} className={classes.link}>
+              <Link to="/help/pricing" className={classes.link}>
                 <span className={classes.tab}>付費方案</span>
               </Link>
             )}

@@ -98,7 +98,7 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
   return (
     <div>
       <Dialog
-        maxWidth={"sm"}
+        maxWidth="sm"
         fullWidth
         open={open}
         onClose={handleClose}
@@ -150,7 +150,7 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
               />
               <div className={classes.info}>以詳閱並同意</div>
               <Link
-                to={"/help/tos#第五章-商品購買"}
+                to="/help/tos#第五章-商品購買"
                 target="_blank"
                 className={classes.link}
               >

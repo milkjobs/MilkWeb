@@ -127,7 +127,7 @@ const DepartmentList: React.FC = () => {
   return (
     <div>
       <Header />
-      <div className={classes.title}>{"就業精選"}</div>
+      <div className={classes.title}>就業精選</div>
       <div className={classes.searchRoot}>
         <InputBase
           value={query}

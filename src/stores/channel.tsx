@@ -1,7 +1,7 @@
 import { sendbirdConfig } from "config";
 import "firebase/analytics";
 import "firebase/auth";
-import { LocalStorageItem } from "helpers/types";
+import { LocalStorageItem } from "helpers";
 import SendBird from "sendbird";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./auth";

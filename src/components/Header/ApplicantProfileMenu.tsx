@@ -86,13 +86,13 @@ const ApplicantProfileMenu: React.FC<Props> = props => {
                         刊登職缺
                       </MenuItem>
                     ) : (
-                      <Link to={"/recruiter"} className={classes.link}>
+                      <Link to="/recruiter" className={classes.link}>
                         <MenuItem onClick={close}>刊登職缺</MenuItem>
                       </Link>
                     ))}
 
                   {isMobile && isHome && (
-                    <Link to={"/help"} className={classes.link}>
+                    <Link to="/help" className={classes.link}>
                       <MenuItem onClick={close}>幫助中心</MenuItem>
                     </Link>
                   )}

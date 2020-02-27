@@ -112,29 +112,27 @@ const About: React.FC = () => {
             <div className={classes.app} onClick={showDownloadAppDialog}>
               App
             </div>
-            <a href={"https://fb.me/themilkjobs"}>
+            <a href="https://fb.me/themilkjobs">
               <img
                 className={classes.icon}
-                src={"https://image.flaticon.com/icons/png/512/174/174848.png"}
-                alt={"FB"}
+                src="https://image.flaticon.com/icons/png/512/174/174848.png"
+                alt="FB"
               />
             </a>
-            <a href={"https://instagr.am/milkjobs"}>
+            <a href="https://instagr.am/milkjobs">
               <img
                 className={classes.icon}
                 src={
                   "https://image.flaticon.com/icons/png/512/2111/2111463.png"
                 }
-                alt={"IG"}
+                alt="IG"
               />
             </a>
-            <a
-              href={"https://www.youtube.com/channel/UClQbsw6sZhwIrctTUFrx7Og"}
-            >
+            <a href="https://www.youtube.com/channel/UClQbsw6sZhwIrctTUFrx7Og">
               <img
                 className={classes.icon}
-                src={"https://image.flaticon.com/icons/png/512/174/174883.png"}
-                alt={"Youtube"}
+                src="https://image.flaticon.com/icons/png/512/174/174883.png"
+                alt="Youtube"
               />
             </a>
           </div>

@@ -87,18 +87,18 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
             <span className={classes.tab}>刊登職缺</span>
           </div>
         ) : (
-          <Link to={"/recruiter"} className={classes.link}>
+          <Link to="/recruiter" className={classes.link}>
             <span className={classes.tab}>刊登職缺</span>
           </Link>
         ))}
 
       {isHome && (
-        <Link to={"/help"} className={classes.link}>
+        <Link to="/help" className={classes.link}>
           <span className={classes.tab}>幫助中心</span>
         </Link>
       )}
       {!isMessage && (
-        <Link to={"/message"} className={classes.link}>
+        <Link to="/message" className={classes.link}>
           <span className={classes.tab}>訊息</span>
         </Link>
       )}
@@ -106,7 +106,7 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
       {user ? (
         <span
           className={classes.tab}
-          aria-owns={"material-appbar"}
+          aria-owns="material-appbar"
           aria-haspopup="true"
           onClick={openProfileMenu}
         >

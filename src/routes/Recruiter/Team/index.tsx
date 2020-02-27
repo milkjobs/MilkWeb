@@ -170,7 +170,7 @@ const TeamJobs: React.FC<Props> = props => {
             searchClient={algoliaClient}
           >
             <RefinementList
-              attribute={"team.uuid"}
+              attribute="team.uuid"
               defaultRefinement={[team.uuid]}
             />
             <JobList />

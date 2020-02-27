@@ -256,15 +256,11 @@ const LoginDialog: React.FC<Props> = props => {
           )}
           <div className={classes.footer}>
             發送驗證碼即表示你同意
-            <Link
-              to={"/help/privacy"}
-              target="_blank"
-              style={{ color: "grey" }}
-            >
+            <Link to="/help/privacy" target="_blank" style={{ color: "grey" }}>
               隱私權政策
             </Link>
             、
-            <Link to={"/help/tos"} target="_blank" style={{ color: "grey" }}>
+            <Link to="/help/tos" target="_blank" style={{ color: "grey" }}>
               服務條款
             </Link>
           </div>

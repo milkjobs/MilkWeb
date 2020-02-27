@@ -241,7 +241,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
 
   return (
     <div>
-      <Dialog maxWidth={"sm"} fullWidth open={open} onClose={handleClose}>
+      <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose}>
         <DialogTitle id="edit-job">編輯職缺</DialogTitle>
         <DialogContent>
           <TextField

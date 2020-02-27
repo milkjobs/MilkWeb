@@ -1,3 +1,4 @@
+import { Tag } from "@frankyjuang/milkapi-client";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
@@ -64,12 +65,12 @@ const useStyles = makeStyles(theme => ({
 
 interface Props {
   description: string;
-  skillTags: Array<string>;
+  tags?: Tag[];
 }
 
 const JobDescription: React.FC<Props> = props => {
   const classes = useStyles();
-  const { description, skillTags } = props;
+  const { description, tags } = props;
 
   return (
     <div className={classes.container}>
@@ -85,13 +86,15 @@ const JobDescription: React.FC<Props> = props => {
             })
           : "尚無詳情"}
       </div>
-      <div className={classes.tags}>
-        {skillTags.map((skill, index) => (
-          <div className={classes.tag} key={index}>
-            {skill}
-          </div>
-        ))}
-      </div>
+      {tags && (
+        <div className={classes.tags}>
+          {tags.map(tag => (
+            <div className={classes.tag} key={tag.uuid}>
+              {tag.label}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

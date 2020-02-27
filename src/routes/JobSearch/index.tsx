@@ -5,6 +5,7 @@ import algoliasearch, { SearchClient } from "algoliasearch/lite";
 import { AwesomeHeader } from "components/Awesome";
 import { Header } from "components/Header";
 import { JobList, SearchBar } from "components/JobSearch";
+import { SearchResult } from "components/JobSearch/SearchResult";
 import { algoliaConfig } from "config";
 import "firebase/analytics";
 import firebase from "firebase/app";
@@ -12,9 +13,9 @@ import { AlgoliaService, checkUrl, openInNewTab } from "helpers";
 import React, { useEffect, useState } from "react";
 import { Configure, InstantSearch } from "react-instantsearch-dom";
 import { useInView } from "react-intersection-observer";
+import { useLocation } from "react-router-dom";
 import TextLoop from "react-text-loop";
 import { useAuth } from "stores";
-import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -174,6 +175,7 @@ const JobSearch: React.FC = () => {
               <SearchBar />
             </div>
             <JobList />
+            <SearchResult />
           </InstantSearch>
         ) : (
           <div className={classes.searchBarRoot}>

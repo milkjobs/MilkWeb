@@ -103,7 +103,7 @@ const RecruiterJob: React.FC = () => {
                 {job.description && (
                   <JobDescription
                     description={job.description}
-                    skillTags={job.skillTags}
+                    tags={job.tags}
                   />
                 )}
                 <JobLocation address={job.address} />

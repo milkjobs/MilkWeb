@@ -73,7 +73,7 @@ const JobLocation: React.FC<Props> = props => {
             );
           }}
         >
-          {"查看地圖"}
+          查看地圖
         </div>
       </div>
     </div>

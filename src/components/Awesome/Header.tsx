@@ -1,12 +1,9 @@
-import { AwesomeList } from "@frankyjuang/milkapi-client";
 import { Button, makeStyles, Theme, useMediaQuery } from "@material-ui/core";
-import to from "await-to-js";
 import { openInNewTab } from "helpers";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "stores";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   schoolContainer: {
     display: "flex",
     flexDirection: "row",
@@ -29,20 +26,7 @@ interface Props {
 
 const AwesomeHeader: React.FC<Props> = ({ showStories, showChatRoom }) => {
   const classes = useStyles();
-  const { getApi } = useAuth();
-  const [awesomeLists, setAwesomeLists] = useState<AwesomeList[]>([]);
-  const [showMore, setShowMore] = useState<boolean>(false);
   const matched = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
-
-  useEffect(() => {
-    const getLists = async () => {
-      const awesomeApi = await getApi("Awesome");
-      const [, lists] = await to(awesomeApi.getAwesomeLists({}));
-      lists && setAwesomeLists(lists);
-    };
-
-    getLists();
-  }, [getApi]);
 
   return (
     <div className={classes.schoolContainer}>
@@ -74,7 +58,7 @@ const AwesomeHeader: React.FC<Props> = ({ showStories, showChatRoom }) => {
         </Link>
       ))}
       <Link to={{ pathname: "/departments" }} className={classes.majorButton}>
-        <Button>{"看更多"}</Button>
+        <Button>看更多</Button>
       </Link>
       {showChatRoom && matched && (
         <div

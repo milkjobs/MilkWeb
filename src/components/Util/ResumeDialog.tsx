@@ -38,7 +38,7 @@ const ResumeDialog: React.FC<Props> = props => {
   const [numPages, setNumPages] = useState<number>();
 
   return (
-    <Dialog fullWidth maxWidth={"md"} open={isOpen} onClose={close}>
+    <Dialog fullWidth maxWidth="md" open={isOpen} onClose={close}>
       <DialogContent className={classes.dialogContent}>
         {resumeUrl ? (
           <>
@@ -66,7 +66,7 @@ const ResumeDialog: React.FC<Props> = props => {
             </a>
           </>
         ) : (
-          <div>{"連結已經失效"}</div>
+          <div>連結已經失效</div>
         )}
       </DialogContent>
     </Dialog>
