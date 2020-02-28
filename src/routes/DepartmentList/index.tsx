@@ -1,28 +1,34 @@
-import React, { useEffect, useState } from "react";
+import { Department } from "@frankyjuang/milkapi-client";
+import { makeStyles } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
-import SearchIcon from "@material-ui/icons/Search";
-import { makeStyles } from "@material-ui/core";
-import { Header } from "components/Header";
-import { useAuth } from "stores";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import { Department } from "@frankyjuang/milkapi-client";
+import SearchIcon from "@material-ui/icons/Search";
+import { Header } from "components/Header";
+import { Title } from "components/Util";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
   container: {
-    marginTop: 32,
     display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    marginBottom: 100,
     marginLeft: "auto",
     marginRight: "auto",
-    width: 900,
-    backgroundColor: theme.palette.background.paper,
-    flexDirection: "row",
-    paddingBottom: 1000,
-    [theme.breakpoints.down("xs")]: {
-      width: "90%"
+    marginTop: 40,
+    paddingLeft: 24,
+    paddingRight: 24,
+    [theme.breakpoints.up("md")]: {
+      width: "960px"
     }
+  },
+  listContainer: {
+    display: "flex",
+    flexDirection: "row"
   },
   title: {
     fontSize: 24,
@@ -82,23 +88,14 @@ const DepartmentList: React.FC = () => {
   const classes = useStyles();
   const [schools, setSchools] = useState<string[]>([]);
   const [hoverSchool, setHoverSchool] = useState<string>();
-  const [departments, setDepartments] = useState<Department[]>([]);
+  const [departments, setDepartments] = useState<{
+    [school: string]: Department[];
+  }>({});
   const [query, setQuery] = useState<string>("");
 
   const getSchools = async () => {
     const awesomeApi = await getApi("Awesome");
     setSchools(await awesomeApi.getSchools());
-  };
-
-  const getDepartments = async () => {
-    const awesomeApi = await getApi("Awesome");
-    hoverSchool &&
-      setDepartments([
-        ...departments,
-        ...(await awesomeApi.getDepartmentsBySchoolName({
-          schoolName: hoverSchool
-        }))
-      ]);
   };
 
   const fuzzyMatch = (s: string, q: string) => {
@@ -117,75 +114,91 @@ const DepartmentList: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!departments.find(d => d.school === hoverSchool)) getDepartments();
-  }, [hoverSchool]);
+    const getDepartments = async (schoolName: string) => {
+      const awesomeApi = await getApi("Awesome");
+      const fetchedDepartments = await awesomeApi.getDepartmentsBySchoolName({
+        schoolName
+      });
+      setDepartments(prev => ({ ...prev, [schoolName]: fetchedDepartments }));
+    };
+
+    if (
+      hoverSchool &&
+      !Object.prototype.hasOwnProperty.call(departments, hoverSchool)
+    ) {
+      getDepartments(hoverSchool);
+    }
+  }, [hoverSchool, getApi, departments]);
 
   useEffect(() => {
-    setHoverSchool("");
+    setHoverSchool(undefined);
   }, [query]);
 
   return (
     <div>
       <Header />
-      <div className={classes.title}>就業精選</div>
-      <div className={classes.searchRoot}>
-        <InputBase
-          value={query}
-          onChange={e => {
-            setQuery(e.target.value);
-          }}
-          className={classes.input}
-          placeholder="搜尋學校"
-        />
-        <IconButton className={classes.iconButton} aria-label="Search">
-          <SearchIcon />
-        </IconButton>
-      </div>
       <div className={classes.container}>
-        <List
-          className={classes.schoolContainer}
-          component="nav"
-          aria-label="main mailbox folders"
-        >
-          {schools
-            .filter(s => fuzzyMatch(s, query))
-            .map(s => (
-              <ListItem
-                className={classes.item}
-                key={s}
-                button
-                onMouseOver={() => setHoverSchool(s)}
-              >
-                {s}
-              </ListItem>
-            ))}
-        </List>
-        <List
-          style={{
-            marginTop: hoverSchool
-              ? 41 *
-                schools
-                  .filter(s => fuzzyMatch(s, query))
-                  .findIndex(s => s === hoverSchool)
-              : 0
-          }}
-          className={classes.departmentContainer}
-          component="nav"
-          aria-label="main mailbox folders"
-        >
-          {departments
-            .filter(d => d.school === hoverSchool)
-            .map(d => (
-              <ListItem className={classes.item} key={d.name + d.school} button>
+        <Title text="就業精選" />
+        <div className={classes.searchRoot}>
+          <InputBase
+            value={query}
+            onChange={e => {
+              setQuery(e.target.value);
+            }}
+            className={classes.input}
+            placeholder="搜尋學校"
+          />
+          <IconButton className={classes.iconButton} aria-label="Search">
+            <SearchIcon />
+          </IconButton>
+        </div>
+        <div className={classes.listContainer}>
+          <List
+            className={classes.schoolContainer}
+            component="nav"
+            aria-label="main mailbox folders"
+          >
+            {schools
+              .filter(s => fuzzyMatch(s, query))
+              .map(s => (
+                <ListItem
+                  className={classes.item}
+                  key={s}
+                  button
+                  onMouseOver={() => setHoverSchool(s)}
+                >
+                  {s}
+                </ListItem>
+              ))}
+          </List>
+          <List
+            style={{
+              marginTop: hoverSchool
+                ? 41 *
+                  schools
+                    .filter(s => fuzzyMatch(s, query))
+                    .findIndex(s => s === hoverSchool)
+                : 0
+            }}
+            className={classes.departmentContainer}
+            component="nav"
+            aria-label="main mailbox folders"
+          >
+            {hoverSchool &&
+              departments[hoverSchool] &&
+              departments[hoverSchool].map(d => (
                 <Link
+                  key={d.name + d.school}
                   className={classes.Link}
                   to={`/awesome/${d.school + d.name}`}
                 >
-                  {d.name}
+                  <ListItem className={classes.item} button>
+                    {d.name}
+                  </ListItem>
                 </Link>
-              </ListItem>
-            ))}
-        </List>
+              ))}
+          </List>
+        </div>
       </div>
     </div>
   );
