@@ -137,7 +137,12 @@ const Resume: React.FC = () => {
   }, [getApi, user]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: upload,
+    onDropAccepted: upload,
+    onDropRejected: files => {
+      if (files[0].type !== "application/pdf") {
+        toast.error("目前僅可上傳 pdf 檔");
+      }
+    },
     accept: PdfMimeType
   });
 
@@ -240,6 +245,7 @@ const Resume: React.FC = () => {
                   ? "放開後立即上傳履歷"
                   : "將檔案拖放到這裡或點一下上傳"}
               </div>
+              <div style={{ fontSize: 16 }}>目前僅支援 pdf 檔</div>
             </div>
           )}
         </div>
