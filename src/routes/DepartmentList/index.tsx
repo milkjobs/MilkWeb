@@ -5,8 +5,11 @@ import InputBase from "@material-ui/core/InputBase";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import SearchIcon from "@material-ui/icons/Search";
+import to from "await-to-js";
 import { Header } from "components/Header";
 import { Title } from "components/Util";
+import Fuse from "fuse.js";
+import { normalizeSchoolName } from "helpers";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "stores";
@@ -29,10 +32,6 @@ const useStyles = makeStyles(theme => ({
   listContainer: {
     display: "flex",
     flexDirection: "row"
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold"
   },
   schoolContainer: {
     flex: 1
@@ -69,7 +68,6 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     alignItems: "center",
     flex: 1,
-    marginTop: 16,
     marginBottom: 16,
     border: "1px solid #dfe1e5",
     borderRadius: 10,
@@ -83,35 +81,45 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+interface School {
+  name: string;
+  normalizedName: string;
+}
+
 const DepartmentList: React.FC = () => {
   const { getApi } = useAuth();
   const classes = useStyles();
-  const [schools, setSchools] = useState<string[]>([]);
-  const [hoverSchool, setHoverSchool] = useState<string>();
+  const [schools, setSchools] = useState<School[]>([]);
+  const [fuse, setFuse] = useState<Fuse<School, Fuse.FuseOptions<School>>>();
+  const [selectedSchool, setSelectedSchool] = useState<string>();
+  const [selectedSchoolIndex, setSelectedSchoolIndex] = useState<number>();
   const [departments, setDepartments] = useState<{
     [school: string]: Department[];
   }>({});
   const [query, setQuery] = useState<string>("");
 
-  const getSchools = async () => {
-    const awesomeApi = await getApi("Awesome");
-    setSchools(await awesomeApi.getSchools());
-  };
-
-  const fuzzyMatch = (s: string, q: string) => {
-    const matchChar = q.split("").reduce((count, char) => {
-      if (s.includes(char)) {
-        return count + 1;
-      } else {
-        return count;
-      }
-    }, 0);
-    return matchChar >= q.length - 1;
-  };
-
   useEffect(() => {
+    const getSchools = async () => {
+      const awesomeApi = await getApi("Awesome");
+      const [, fetchedSchools] = await to(awesomeApi.getSchools());
+      if (fetchedSchools) {
+        const schoolEntries = fetchedSchools.map<School>(s => ({
+          name: s,
+          normalizedName: normalizeSchoolName(s)
+        }));
+        const options: Fuse.FuseOptions<School> = {
+          shouldSort: true,
+          tokenize: true,
+          matchAllTokens: true,
+          keys: ["normalizedName"]
+        };
+        setFuse(new Fuse(schoolEntries, options));
+        setSchools(schoolEntries);
+      }
+    };
+
     getSchools();
-  }, []);
+  }, [getApi]);
 
   useEffect(() => {
     const getDepartments = async (schoolName: string) => {
@@ -123,22 +131,23 @@ const DepartmentList: React.FC = () => {
     };
 
     if (
-      hoverSchool &&
-      !Object.prototype.hasOwnProperty.call(departments, hoverSchool)
+      selectedSchool &&
+      !Object.prototype.hasOwnProperty.call(departments, selectedSchool)
     ) {
-      getDepartments(hoverSchool);
+      getDepartments(selectedSchool);
     }
-  }, [hoverSchool, getApi, departments]);
+  }, [selectedSchool, getApi, departments]);
 
   useEffect(() => {
-    setHoverSchool(undefined);
+    setSelectedSchool(undefined);
+    setSelectedSchoolIndex(undefined);
   }, [query]);
 
   return (
     <div>
       <Header />
       <div className={classes.container}>
-        <Title text="就業精選" />
+        <Title text="就業精選" hideBottomLine />
         <div className={classes.searchRoot}>
           <InputBase
             value={query}
@@ -158,35 +167,34 @@ const DepartmentList: React.FC = () => {
             component="nav"
             aria-label="main mailbox folders"
           >
-            {schools
-              .filter(s => fuzzyMatch(s, query))
-              .map(s => (
-                <ListItem
-                  className={classes.item}
-                  key={s}
-                  button
-                  onMouseOver={() => setHoverSchool(s)}
-                >
-                  {s}
-                </ListItem>
-              ))}
+            {(query && fuse
+              ? fuse.search<School, false, false>(query)
+              : schools
+            ).map((item, index) => (
+              <ListItem
+                className={classes.item}
+                key={item.name}
+                button
+                onMouseOver={() => {
+                  setSelectedSchool(item.name);
+                  setSelectedSchoolIndex(index);
+                }}
+              >
+                {item.name}
+              </ListItem>
+            ))}
           </List>
           <List
             style={{
-              marginTop: hoverSchool
-                ? 41 *
-                  schools
-                    .filter(s => fuzzyMatch(s, query))
-                    .findIndex(s => s === hoverSchool)
-                : 0
+              marginTop: 41 * (selectedSchoolIndex || 0)
             }}
             className={classes.departmentContainer}
             component="nav"
             aria-label="main mailbox folders"
           >
-            {hoverSchool &&
-              departments[hoverSchool] &&
-              departments[hoverSchool].map(d => (
+            {selectedSchool &&
+              departments[selectedSchool] &&
+              departments[selectedSchool].map(d => (
                 <Link
                   key={d.name + d.school}
                   className={classes.Link}
