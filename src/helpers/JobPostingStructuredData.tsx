@@ -72,6 +72,9 @@ const JobPostingStructuredData: React.FC<Props> = props => {
     "@context": "http://schema.org",
     "@type": "JobPosting",
     datePosted: createdAt.toISOString(),
+    validThrough: new Date(
+      createdAt.setUTCFullYear(createdAt.getUTCFullYear() + 1)
+    ),
     description: description,
     hiringOrganization: {
       "@type": "Organization",

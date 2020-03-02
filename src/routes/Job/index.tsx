@@ -12,7 +12,7 @@ import {
 } from "components/Job";
 import "firebase/analytics";
 import firebase from "firebase/app";
-import { JobPostingStructuredData, PageMetadata } from "helpers";
+import { JobPostingStructuredData, PageMetadata, getPostCode } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ChannelProvider, useAuth } from "stores";
@@ -124,6 +124,7 @@ const Job: React.FC = () => {
             area={job.address.area}
             subArea={job.address.subArea}
             street={job.address.street}
+            postCode={getPostCode(job.address)}
             salaryType={job.salaryType}
             minSalary={job.minSalary}
             maxSalary={job.maxSalary}

@@ -4,5 +4,6 @@ export { default as JobPostingStructuredData } from "./JobPostingStructuredData"
 export { default as NotFound } from "./NotFound";
 export { default as PageMetadata } from "./PageMetadata";
 export * from "./ApiService";
+export * from "./postCode";
 export * from "./types";
 export * from "./utils";
