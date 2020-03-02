@@ -8,7 +8,8 @@ const useStyles = makeStyles(() => ({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    flexWrap: "wrap"
+    flexWrap: "wrap",
+    justifyContent: "space-between"
   },
   schoolTitle: {
     fontWeight: 800,
@@ -68,6 +69,7 @@ const AwesomeHeader: React.FC<Props> = ({ showStories, showChatRoom }) => {
           <Button>找工作聊天室</Button>
         </div>
       )}
+      <div style={{ flex: 1 }}></div>
     </div>
   );
 };

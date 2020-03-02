@@ -27,16 +27,16 @@
   "dependencies": {
     "2": "^3.0.0",
     "@frankyjuang/milkapi-client": "git+ssh://git@github.com/frankyjuang/MilkAPI-Client.git#2.15.1",
-    "@material-ui/core": "^4.9.4",
+    "@material-ui/core": "^4.9.5",
     "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.44",
+    "@material-ui/lab": "^4.0.0-alpha.45",
     "@mdi/js": "^4.9.95",
     "@mdi/react": "^1.3.0",
-    "@sentry/browser": "^5.12.5",
+    "@sentry/browser": "^5.13.0",
     "algoliasearch": "^4.0.3",
     "autosuggest-highlight": "^3.1.1",
     "await-to-js": "^2.1.1",
-    "firebase": "^7.9.1",
+    "firebase": "^7.9.3",
     "fuse.js": "^3.4.6",
     "intersection-observer": "^0.7.0",
     "lodash": "^4.17.15",
@@ -71,7 +71,7 @@
     "url-join": "^4.0.1"
   },
   "devDependencies": {
-    "@types/node": "^13.7.6",
+    "@types/node": "^13.7.7",
     "@types/qrcode.react": "^1.0.0",
     "@types/qs": "^6.9.1",
     "@types/react": "^16.9.23",
@@ -84,7 +84,7 @@
     "@types/react-router-dom": "^5.1.0",
     "@types/react-select": "^3.0.10",
     "@types/react-stickynode": "^2.1.0",
-    "@types/recharts": "^1.8.5",
+    "@types/recharts": "^1.8.6",
     "@types/url-join": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^2.21.0",
     "@typescript-eslint/parser": "^2.21.0",
@@ -97,7 +97,7 @@
     "eslint-plugin-react-hooks": "^2.5.0",
     "prettier": "^1.19.1",
     "ts-node-dev": "^1.0.0-pre.44",
-    "typescript": "^3.8.2",
+    "typescript": "^3.8.3",
     "xmlbuilder": "^14.0.0"
   }
 }

@@ -88,11 +88,12 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       marginLeft: 0
     },
-    flexDirection: "column"
+    flexDirection: "column",
+    flex: 1
   },
   logo: {
-    maxWidth: 100,
-    height: 100,
+    width: 100,
+    maxHeight: 100,
     [theme.breakpoints.down("xs")]: {
       maxWidth: 40,
       height: 40
