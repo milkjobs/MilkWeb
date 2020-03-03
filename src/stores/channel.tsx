@@ -16,15 +16,23 @@ import React, {
   useState
 } from "react";
 import SendBird from "sendbird";
-import uuidv4 from "uuid/v4";
+import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "./auth";
 
 interface ChannelContextProps {
-  unreadMessageCount?: number;
+  addChannelHandler: (handler: SendBird.ChannelHandler) => string | undefined;
+  removeChannelHandler: (handlerId: string) => void;
   sb?: SendBird.SendBirdInstance;
+  unreadMessageCount: number;
 }
 
-const ChannelContext = createContext<ChannelContextProps>({});
+const ChannelContext = createContext<ChannelContextProps>({
+  addChannelHandler: () => "",
+  removeChannelHandler: () => {
+    // do nothing.
+  },
+  unreadMessageCount: 0
+});
 
 export const useChannel = () => useContext(ChannelContext);
 
@@ -91,7 +99,6 @@ export const ChannelProvider = ({ children }) => {
     (handler: SendBird.UserEventHandler) => {
       if (sb) {
         const handlerId = uuidv4();
-        console.log("adduserhandler", sb, handlerId);
         sb.addUserEventHandler(handlerId, handler);
         return handlerId;
       }
@@ -152,14 +159,15 @@ export const ChannelProvider = ({ children }) => {
     }
   }, [sendbirdCredential]);
 
-  // useEffect(() => {
-  //   if (sb) {
-  //     // Set unread message count.
-  //     sb.getTotalUnreadMessageCount(count => {
-  //       setUnreadMessageCount(count);
-  //     });
-  //   }
-  // }, [sb]);
+  useEffect(() => {
+    if (sb) {
+      console.log("initTotalUnreadCount");
+      // Set initial unread message count.
+      sb.getTotalUnreadMessageCount(count => {
+        setUnreadMessageCount(count);
+      });
+    }
+  }, [sb]);
 
   useEffect(() => {
     console.log("userhandler");
@@ -169,7 +177,6 @@ export const ChannelProvider = ({ children }) => {
       const newHandler = new sb.UserEventHandler();
       newHandler.onTotalUnreadMessageCountUpdated = onTotalUnreadMessageCountUpdated;
       handlerId = addUserHandler(newHandler);
-      console.log(handlerId);
     }
 
     return () => {
@@ -193,7 +200,14 @@ export const ChannelProvider = ({ children }) => {
   }, [addChannelHandler, onMessageReceived, removeChannelHandler, sb]);
 
   return (
-    <ChannelContext.Provider value={{ sb, unreadMessageCount }}>
+    <ChannelContext.Provider
+      value={{
+        addChannelHandler,
+        removeChannelHandler,
+        sb,
+        unreadMessageCount
+      }}
+    >
       {children}
     </ChannelContext.Provider>
   );

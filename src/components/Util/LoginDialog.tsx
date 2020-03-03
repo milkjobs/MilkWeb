@@ -138,11 +138,11 @@ const LoginDialog: React.FC<Props> = props => {
     if (node) {
       const recaptchaVerifier = new firebase.auth.RecaptchaVerifier(node, {
         size: "invisible",
-        callback: function(response) {
+        callback: response => {
           // reCAPTCHA solved, allow signInWithPhoneNumber.
           // ...
         },
-        "expired-callback": function() {
+        "expired-callback": () => {
           // Response expired. Ask user to solve reCAPTCHA again.
           // ...
         }

@@ -187,9 +187,9 @@ const Team: React.FC = () => {
   const [team, setTeam] = useState<TeamType>();
   const classes = useStyles();
 
-  function handleChange(event: React.ChangeEvent<{}>, newValue: number) {
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
-  }
+  };
 
   useEffect(() => {
     const getTeam = async () => {
