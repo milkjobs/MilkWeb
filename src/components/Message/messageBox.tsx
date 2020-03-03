@@ -1,7 +1,6 @@
 import Button from "@material-ui/core/Button";
 import Input, { InputProps } from "@material-ui/core/Input";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { Messages } from "components/Message";
 import { AlertDialog } from "components/Util";
 import { AlertType } from "helpers";
 import React, {
@@ -20,6 +19,7 @@ import {
   UserMessage
 } from "sendbird";
 import { useAuth, useChannel } from "stores";
+import { MessageList } from "./MessageList";
 import { isGroupChannel, isUserMessage, SendBirdMessage } from "./utils";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -105,6 +105,7 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
   const [channel, setChannel] = useState<GroupChannel>();
   const [they, setThey] = useState<Member>();
   const [scrollHeight, setScrollHeight] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [prevMessageListQuery, setPrevMessageListQuery] = useState<
     PreviousMessageListQuery
   >();
@@ -157,10 +158,12 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
 
   const handleScroll: DOMAttributes<HTMLDivElement>["onScroll"] = async e => {
     if (
+      !loading &&
       prevMessageListQuery &&
       channel &&
-      (e.target as HTMLDivElement).scrollTop === 0
+      (e.target as HTMLDivElement).scrollTop < 100
     ) {
+      setLoading(true);
       const fetchedMessages = await loadPreviousMessages(prevMessageListQuery);
       messages.current.push(...fetchedMessages.filter(isUserMessage));
       forceUpdate();
@@ -171,6 +174,7 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
           messagesEl.current.scrollHeight - scrollHeight;
         setScrollHeight(messagesEl.current.scrollHeight);
       }
+      setLoading(false);
     }
   };
 
@@ -316,7 +320,7 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
         onScroll={handleScroll}
         ref={messagesEl}
       >
-        <Messages messages={messages.current} userId={userId || ""} />
+        <MessageList messages={messages.current} userId={userId || ""} />
       </div>
       <div className={classes.messageInput}>
         {!isRecruiter && (
@@ -325,15 +329,14 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
           </div>
         )}
         <Input
-          value={input}
-          id="standard-multiline-static"
           autoFocus
-          multiline
-          rows="4"
-          onChange={e => setInput(e.target.value)}
           className={classes.textField}
-          onKeyDown={onKeyDown}
           disableUnderline={true}
+          multiline
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={onKeyDown}
+          rows="4"
+          value={input}
         />
       </div>
     </div>

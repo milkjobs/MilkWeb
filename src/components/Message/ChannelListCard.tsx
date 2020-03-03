@@ -20,10 +20,15 @@ const useStyles = makeStyles((theme: Theme) =>
     name: {
       marginRight: "auto",
       fontSize: 16,
-      color: theme.palette.text.primary
+      color: theme.palette.text.primary,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap"
     },
     badge: {
-      marginRight: theme.spacing(1)
+      marginRight: theme.spacing(1),
+      display: "flex",
+      alignItems: "center"
     },
     date: {
       fontSize: 12,
@@ -31,7 +36,6 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.hint
     },
     recentMessage: {
-      // width: 250,
       fontSize: 12,
       textAlign: "left",
       color: theme.palette.text.primary,
@@ -79,7 +83,8 @@ const ChannelListCard: React.FC<Props> = props => {
           flexDirection: "column",
           flex: 1,
           marginLeft: 8,
-          justifyContent: "space-around"
+          justifyContent: "space-around",
+          overflow: "hidden"
         }}
       >
         <div

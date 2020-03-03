@@ -13,7 +13,7 @@ import {
   createStyles
 } from "@material-ui/core/styles";
 
-const suggestions: Array<any> = [];
+const suggestions: any[] = [];
 
 const CssTextField = withStyles((theme: Theme) =>
   createStyles({
