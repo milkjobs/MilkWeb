@@ -160,7 +160,7 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
           bottom: 0
         }}
       >
-        <div style={{ overflow: "auto" }}>
+        <div style={{ overflow: "auto", flex: 1 }}>
           {channels.current.map(c => {
             const myId = user?.uuid;
             const they = c.members.filter(m => m.userId !== myId)[0];
