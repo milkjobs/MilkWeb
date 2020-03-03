@@ -202,17 +202,28 @@ const Pricing: React.FC = () => {
       <div style={{ textAlign: "left", margin: 24 }}>
         <h3>為了讓網站可以順利運作，我們有三種廣告服務：</h3>
         <h3>
-          1. 將你徵才訊息置頂在指定科系的
+          1. 將你的徵才訊息置頂在指定校系的
           <Link
             to="/awesome/台大電機"
             style={{ color: "#fa6c71", textDecoration: "none" }}
           >
             就業精選版
           </Link>
-          ・新台幣 1000 元／天
+          ・熱門校系 新台幣 5000 元／月・其他校系 新台幣 1000 元／月
         </h3>
-        <h3>2. 牛奶找工作臉書粉絲專頁，轉發你的徵才訊息・新台幣 2000 元／次</h3>
-        <h3>3. 首頁的跑馬燈・新台幣 500 元／天</h3>
+        <h3>
+          2. 牛奶找工作臉書
+          <a
+            href="https://www.facebook.com/themilkjobs/"
+            style={{ color: "#fa6c71", textDecoration: "none" }}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            粉絲專頁
+          </a>
+          ，轉發你的徵才訊息・新台幣 2000 元／次
+        </h3>
+        <h3>3. 首頁的跑馬燈・新台幣 2000 元／月</h3>
         <h3>有興趣的公司，留言告訴我們，會有專人聯絡你。</h3>
         <TextField
           fullWidth
