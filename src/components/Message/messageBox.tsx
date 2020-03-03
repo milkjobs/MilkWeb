@@ -4,13 +4,13 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { AlertDialog } from "components/Util";
 import { AlertType } from "helpers";
 import React, {
-  DOMAttributes,
   useCallback,
   useEffect,
   useReducer,
   useRef,
   useState
 } from "react";
+import { useInView } from "react-intersection-observer";
 import {
   ChannelHandler,
   GroupChannel,
@@ -99,13 +99,13 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
   const classes = useStyles();
   const { userId, user } = useAuth();
   const { sb, addChannelHandler, removeChannelHandler } = useChannel();
+  const [ref, inView] = useInView();
   const [input, setInput] = useState("");
   const [resumeDialogOpen, setResumeDialogOpen] = useState(false);
   const [, forceUpdate] = useReducer(x => x + 1, 0);
   const [channel, setChannel] = useState<GroupChannel>();
   const [they, setThey] = useState<Member>();
   const [scrollHeight, setScrollHeight] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [prevMessageListQuery, setPrevMessageListQuery] = useState<
     PreviousMessageListQuery
   >();
@@ -156,27 +156,35 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
     }
   };
 
-  const handleScroll: DOMAttributes<HTMLDivElement>["onScroll"] = async e => {
-    if (
-      !loading &&
-      prevMessageListQuery &&
-      channel &&
-      (e.target as HTMLDivElement).scrollTop < 100
-    ) {
-      setLoading(true);
-      const fetchedMessages = await loadPreviousMessages(prevMessageListQuery);
-      messages.current.push(...fetchedMessages.filter(isUserMessage));
-      forceUpdate();
+  useEffect(() => {
+    const loadMoreMessages = async () => {
+      console.log(
+        inView,
+        prevMessageListQuery?.hasMore,
+        prevMessageListQuery?.isLoading
+      );
+      if (
+        inView &&
+        prevMessageListQuery?.hasMore &&
+        !prevMessageListQuery.isLoading
+      ) {
+        const fetchedMessages = await loadPreviousMessages(
+          prevMessageListQuery
+        );
+        messages.current.push(...fetchedMessages.filter(isUserMessage));
+        forceUpdate();
 
-      if (messagesEl.current) {
-        // keep scroll position
-        messagesEl.current.scrollTop =
-          messagesEl.current.scrollHeight - scrollHeight;
-        setScrollHeight(messagesEl.current.scrollHeight);
+        if (messagesEl.current) {
+          // keep scroll position
+          messagesEl.current.scrollTop =
+            messagesEl.current.scrollHeight - scrollHeight;
+          setScrollHeight(messagesEl.current.scrollHeight);
+        }
       }
-      setLoading(false);
-    }
-  };
+    };
+
+    loadMoreMessages();
+  }, [inView, prevMessageListQuery, scrollHeight]);
 
   const sendResume = async () => {
     if (!sb || !channel) {
@@ -315,11 +323,8 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
       <div className={classes.jobContainer}>
         <div className={classes.jobName}>{they?.nickname || ""}</div>
       </div>
-      <div
-        className={classes.messages}
-        onScroll={handleScroll}
-        ref={messagesEl}
-      >
+      <div className={classes.messages} ref={messagesEl}>
+        <div ref={ref}></div>
         <MessageList messages={messages.current} userId={userId || ""} />
       </div>
       <div className={classes.messageInput}>
@@ -332,6 +337,7 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
           autoFocus
           className={classes.textField}
           disableUnderline={true}
+          placeholder="Enter 鍵送出訊息"
           multiline
           onChange={e => setInput(e.target.value)}
           onKeyDown={onKeyDown}

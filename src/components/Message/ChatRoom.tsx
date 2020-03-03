@@ -21,6 +21,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "row"
   },
   channelListContainer: {
+    position: "relative",
     border: "1px solid #EBEBEB",
     flex: 1,
     minWidth: 320,
@@ -149,35 +150,48 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
 
   const renderChannelList = () => (
     <div className={classes.channelListContainer}>
-      {channels.current.map(c => {
-        const myId = user?.uuid;
-        const they = c.members.filter(m => m.userId !== myId)[0];
+      <div
+        style={{
+          display: "flex",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0
+        }}
+      >
+        <div style={{ overflow: "auto" }}>
+          {channels.current.map(c => {
+            const myId = user?.uuid;
+            const they = c.members.filter(m => m.userId !== myId)[0];
 
-        return (
-          <div
-            key={c.url}
-            onClick={() => {
-              if (isRecruiter) {
-                history.push(`/recruiter/message/${c.url}`);
-              } else {
-                history.push(`/message/${c.url}`);
-              }
-            }}
-          >
-            <ChannelListCard
-              name={they.nickname}
-              profileImageUrl={they.profileUrl}
-              teamName={
-                isRecruiter ? "" : user?.recruiterInfo?.team?.nickname || ""
-              }
-              selected={c.url === currentChannelUrl}
-              unreadMessageCount={c.unreadMessageCount}
-              lastMessage={c.lastMessage}
-            />
-          </div>
-        );
-      })}
-      <div ref={ref}></div>
+            return (
+              <div
+                key={c.url}
+                onClick={() => {
+                  if (isRecruiter) {
+                    history.push(`/recruiter/message/${c.url}`);
+                  } else {
+                    history.push(`/message/${c.url}`);
+                  }
+                }}
+              >
+                <ChannelListCard
+                  name={they.nickname}
+                  profileImageUrl={they.profileUrl}
+                  teamName={
+                    isRecruiter ? "" : user?.recruiterInfo?.team?.nickname || ""
+                  }
+                  selected={c.url === currentChannelUrl}
+                  unreadMessageCount={c.unreadMessageCount}
+                  lastMessage={c.lastMessage}
+                />
+              </div>
+            );
+          })}
+          <div ref={ref}></div>
+        </div>
+      </div>
     </div>
   );
 
