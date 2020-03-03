@@ -4,7 +4,7 @@ import to from "await-to-js";
 import { ResumeDialog } from "components/Util";
 import React, { useCallback, useEffect, useState } from "react";
 import { useAuth } from "stores";
-import { ApplicationMessage } from "./applicationMessage";
+import { ApplicationMessage } from ".";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,10 +20,15 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: 16,
       paddingLeft: 16,
       paddingRight: 16,
+      paddingTop: 8,
+      paddingBottom: 8,
       fontSize: 14,
       backgroundColor: "#eee",
       border: 1,
-      borderRadius: 5
+      borderRadius: 5,
+      textAlign: "left",
+      overflowWrap: "anywhere",
+      maxWidth: "60%"
     },
     resumeMessageBody: {
       width: "auto",
@@ -44,11 +49,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+interface Props {
+  profileUrl: string;
+  message: SendBird.UserMessage;
+  fromMe: boolean;
+}
+
 const Message: React.FC<Props> = props => {
   // Was the message sent by the current user. If so, add a css class
   const classes = useStyles();
   const { getApi } = useAuth();
-  const { fromMe } = props;
+  const { fromMe, profileUrl, message } = props;
   const [resumeUrl, setResumeUrl] = useState<string>();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -60,33 +71,33 @@ const Message: React.FC<Props> = props => {
   };
 
   const getResumeUrl = useCallback(async () => {
-    const data = JSON.parse(props.message.data);
+    const data = JSON.parse(message.data);
     const channelApi = await getApi("Channel");
     const [, url] = await to(
       channelApi.getResumeUrlInChannel({
         resumeKey: data["resumeKey"],
-        channelUrl: props.message.channelUrl
+        channelUrl: message.channelUrl
       })
     );
     setResumeUrl(url);
-  }, [getApi, props.message.channelUrl, props.message.data]);
+  }, [getApi, message.channelUrl, message.data]);
 
   useEffect(() => {
-    if (props.message.customType === MessageCustomType.Resume) {
+    if (message.customType === MessageCustomType.Resume) {
       getResumeUrl();
     }
-  }, [getResumeUrl, props.message.customType]);
+  }, [getResumeUrl, message.customType]);
 
-  if (props.message.customType === MessageCustomType.Application) {
+  if (message.customType === MessageCustomType.Application) {
     return <ApplicationMessage {...props} />;
   }
 
-  if (props.message.customType === MessageCustomType.Resume) {
+  if (message.customType === MessageCustomType.Resume) {
     return !fromMe ? (
       <div className={classes.message}>
-        <img alt="" src={props.profileUrl} width={40} height={40} />
+        <img alt="" src={profileUrl} width={40} height={40} />
         <div onClick={handleOpen} className={classes.resumeMessageBody}>
-          {props.message.message}
+          {message.message}
         </div>
         <ResumeDialog
           isOpen={isOpen}
@@ -102,9 +113,9 @@ const Message: React.FC<Props> = props => {
         className={classes.message}
       >
         <div onClick={handleOpen} className={classes.resumeMessageBody}>
-          {props.message.message}
+          {message.message}
         </div>
-        <img alt="" src={props.profileUrl} width={40} height={40} />
+        <img alt="" src={profileUrl} width={40} height={40} />
         <ResumeDialog
           isOpen={isOpen}
           close={handleClose}
@@ -116,8 +127,8 @@ const Message: React.FC<Props> = props => {
 
   return !fromMe ? (
     <div className={classes.message}>
-      <img alt="" src={props.profileUrl} width={40} height={40} />
-      <div className={classes.messageBody}>{props.message.message}</div>
+      <img alt="" src={profileUrl} width={40} height={40} />
+      <div className={classes.messageBody}>{message.message}</div>
     </div>
   ) : (
     <div
@@ -126,16 +137,12 @@ const Message: React.FC<Props> = props => {
       }}
       className={classes.message}
     >
-      <div className={classes.messageBody}>{props.message.message}</div>
-      <img alt="" src={props.profileUrl} width={40} height={40} />
+      <div className={classes.messageBody} style={{ textAlign: "right" }}>
+        {message.message}
+      </div>
+      <img alt="" src={profileUrl} width={40} height={40} />
     </div>
   );
 };
-
-interface Props {
-  profileUrl: string;
-  message: SendBird.UserMessage;
-  fromMe: boolean;
-}
 
 export { Message };

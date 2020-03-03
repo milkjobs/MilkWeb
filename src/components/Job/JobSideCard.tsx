@@ -131,7 +131,7 @@ const JobSideCard: React.FC<Props> = props => {
       // Check there is an application or not
       const filteredQuery = sb.GroupChannel.createMyGroupChannelListQuery();
       filteredQuery.userIdsIncludeFilter = members;
-      filteredQuery.next(async (groupChannels, error) => {
+      filteredQuery.next(async groupChannels => {
         let applicationChannel = groupChannels.find(
           c =>
             c.name === members.join("_") &&
@@ -186,7 +186,7 @@ const JobSideCard: React.FC<Props> = props => {
       // Check there is an application or not
       const filteredQuery = sb.GroupChannel.createMyGroupChannelListQuery();
       filteredQuery.userIdsIncludeFilter = members;
-      filteredQuery.next(function(groupChannels, error) {
+      filteredQuery.next(groupChannels => {
         const applicationChannel = groupChannels.find(
           c =>
             c.name === members.join("_") &&
@@ -209,9 +209,13 @@ const JobSideCard: React.FC<Props> = props => {
   }, [user, sb, recruiter.uuid, jobId]);
 
   const chat = async () => {
-    if (!user) showLoginDialog();
-    if (channel) history.push("/message/" + channel.url);
-    else apply();
+    if (!user) {
+      showLoginDialog();
+    } else if (channel) {
+      history.push("/message/" + channel.url);
+    } else {
+      apply();
+    }
   };
 
   return (

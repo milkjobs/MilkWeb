@@ -1,10 +1,9 @@
-import Avatar from "@material-ui/core/Avatar";
-import { makeStyles } from "@material-ui/core/styles";
+import { Avatar, Badge, makeStyles } from "@material-ui/core";
 import { TeamCreateForm } from "components/TeamComponents";
 import { DownloadAppDialog, LoginDialog } from "components/Util";
 import React, { MouseEvent, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "stores";
+import { useAuth, useChannel } from "stores";
 
 const useStyles = makeStyles(theme => ({
   link: {
@@ -48,6 +47,7 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
   const classes = useStyles();
   const location = useLocation();
   const { user } = useAuth();
+  const { unreadMessageCount } = useChannel();
   const [isDownloadAppDialogOpen, setIsDownloadAppDialogOpen] = useState(false);
   const [isCreateTeamFormOpen, setIsCreateTeamFormOpen] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
@@ -99,17 +99,20 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
       )}
       {!isMessage && (
         <Link to="/message" className={classes.link}>
-          <span className={classes.tab}>訊息</span>
+          <span className={classes.tab}>
+            <Badge
+              color="secondary"
+              variant="dot"
+              invisible={(unreadMessageCount || 0) === 0}
+            >
+              訊息
+            </Badge>
+          </span>
         </Link>
       )}
 
       {user ? (
-        <span
-          className={classes.tab}
-          aria-owns="material-appbar"
-          aria-haspopup="true"
-          onClick={openProfileMenu}
-        >
+        <span className={classes.tab} onClick={openProfileMenu}>
           <Avatar className={classes.avatar} src={user.profileImageUrl} />
         </span>
       ) : (

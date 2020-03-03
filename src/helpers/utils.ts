@@ -122,10 +122,10 @@ const convertToIntlPhoneNumber = (phoneNumber: string) =>
 const convertToLocalPhoneNumber = (phoneNumber: string) =>
   isIntlPhoneNumber(phoneNumber) && "09" + phoneNumber.substring(4);
 
-function openInNewTab(url) {
+const openInNewTab = (url: string) => {
   const win = window.open(url, "_blank");
   win && win.focus();
-}
+};
 
 const checkUrl = (url: string) => {
   if (url.startsWith("http://") || url.startsWith("https://")) {

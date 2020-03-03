@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ApplicantProfile: React.FC = () => {
+const Profile: React.FC = () => {
   const classes = useStyles();
 
   return (
@@ -34,4 +34,4 @@ const ApplicantProfile: React.FC = () => {
   );
 };
 
-export default ApplicantProfile;
+export default Profile;

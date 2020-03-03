@@ -260,13 +260,13 @@ const AwesomeList: React.FC = () => {
     setHelperText("已儲存");
   };
 
-  function handleChange(event: React.ChangeEvent<{}>, newValue: number) {
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     firebase.analytics().logEvent("click_tab", {
       // eslint-disable-next-line @typescript-eslint/camelcase
       tab_name: newValue === 0 ? "備忘錄" : "聊天室"
     });
     setValue(newValue);
-  }
+  };
 
   const handleClickOpen = () => {
     setOpen(true);

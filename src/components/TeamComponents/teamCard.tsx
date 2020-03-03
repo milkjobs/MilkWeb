@@ -73,7 +73,7 @@ const styles = (theme: Theme) =>
   });
 interface Props extends WithStyles<typeof styles> {
   teamName: string;
-  teamFieldTags: Array<string>;
+  teamFieldTags: string[];
   teamSize: string;
   teamLocation: string;
   teamDescription: string;

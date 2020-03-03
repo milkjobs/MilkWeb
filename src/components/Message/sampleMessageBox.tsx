@@ -1,9 +1,8 @@
-import React, { useState, useRef } from "react";
-import { createStyles, Theme } from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";
-import { makeStyles } from "@material-ui/core/styles";
-import { Messages } from "components/Message";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import React, { useRef, useState } from "react";
 import { useAuth } from "stores";
+import { MessageList } from ".";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -136,7 +135,7 @@ const SampleMessageBox: React.FC = () => {
           messagesEl.current = el;
         }}
       >
-        <Messages messages={messages.current} userId={userId!} />
+        <MessageList messages={messages.current} userId={userId!} />
       </div>
       <div className={classes.messageInput}>
         {/* <div style={{ display: "flex", marginLeft: 8, marginTop: 4 }}>

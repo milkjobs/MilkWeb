@@ -194,9 +194,9 @@ const Team: React.FC = () => {
   const tabsStyle = useTabsStyles();
   const tabStyle = useTabStyles();
 
-  function handleChange(event: React.ChangeEvent<{}>, newValue: number) {
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
-  }
+  };
 
   useEffect(() => {
     const updateTeam = async () => {
