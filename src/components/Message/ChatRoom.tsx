@@ -72,20 +72,6 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
   const currentChannelUrl = params.id;
   const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-  const onChannelChanged: ChannelHandler["onChannelChanged"] = useCallback(
-    channel => {
-      if (!isGroupChannel(channel)) {
-        return;
-      }
-      const newChannelList = channels.current.filter(
-        c => c.url !== channel.url
-      );
-      channels.current = [channel, ...newChannelList];
-      forceUpdate();
-    },
-    []
-  );
-
   const filterChannels = useCallback(
     (chs: GroupChannel[]) =>
       chs.reduce<GroupChannel[]>((result, c) => {
@@ -113,6 +99,24 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
         return result;
       }, []),
     [isRecruiter, user]
+  );
+
+  const onChannelChanged: ChannelHandler["onChannelChanged"] = useCallback(
+    channel => {
+      if (!isGroupChannel(channel)) {
+        return;
+      }
+      if (filterChannels([channel]).length === 0) {
+        return;
+      }
+
+      const newChannelList = channels.current.filter(
+        c => c.url !== channel.url
+      );
+      channels.current = [channel, ...newChannelList];
+      forceUpdate();
+    },
+    [filterChannels]
   );
 
   useEffect(() => {
