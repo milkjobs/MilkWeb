@@ -79,12 +79,7 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
         </Link>
       )}
       {user && (
-        <span
-          className={classes.tab}
-          aria-owns="material-appbar"
-          aria-haspopup="true"
-          onClick={openProfileMenu}
-        >
+        <span className={classes.tab} onClick={openProfileMenu}>
           <Avatar className={classes.avatar} src={user.profileImageUrl} />
         </span>
       )}

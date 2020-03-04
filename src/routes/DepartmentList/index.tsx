@@ -157,16 +157,12 @@ const DepartmentList: React.FC = () => {
             className={classes.input}
             placeholder="搜尋學校"
           />
-          <IconButton className={classes.iconButton} aria-label="Search">
+          <IconButton className={classes.iconButton}>
             <SearchIcon />
           </IconButton>
         </div>
         <div className={classes.listContainer}>
-          <List
-            className={classes.schoolContainer}
-            component="nav"
-            aria-label="main mailbox folders"
-          >
+          <List className={classes.schoolContainer} component="nav">
             {(query && fuse
               ? fuse.search<School, false, false>(query)
               : schools
@@ -190,7 +186,6 @@ const DepartmentList: React.FC = () => {
             }}
             className={classes.departmentContainer}
             component="nav"
-            aria-label="main mailbox folders"
           >
             {selectedSchool &&
               departments[selectedSchool] &&

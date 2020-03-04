@@ -7,7 +7,10 @@ const useStyles = makeStyles(() => ({
     alignItems: "end",
     fontSize: 24,
     fontWeight: 400,
-    color: "#484848"
+    color: "#484848",
+    textAlign: "left",
+    marginRight: 16,
+    flex: 1
   },
   container: {
     display: "flex",

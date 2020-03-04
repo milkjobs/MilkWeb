@@ -135,7 +135,6 @@ const RecruiterAccount: React.FC = () => {
   useEffect(() => {
     const listener = (e: MessageEvent) => {
       try {
-        console.log(e, e.data);
         const eventData = JSON.parse(e.data);
         if ("MerchantID" in eventData) {
           getTeamMembership();

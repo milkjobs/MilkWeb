@@ -77,9 +77,7 @@ export const ChannelProvider = ({ children }) => {
 
   const onMessageReceived: SendBird.ChannelHandler["onMessageReceived"] = useCallback(
     ch => {
-      // console.log(ch);
       sb?.getTotalUnreadMessageCount(count => {
-        console.log("unreadddd", count);
         setUnreadMessageCount(count);
       });
       ch.customType === ChannelCustomType.System && reloadUser();
@@ -89,7 +87,6 @@ export const ChannelProvider = ({ children }) => {
 
   const onTotalUnreadMessageCountUpdated: SendBird.UserEventHandler["onTotalUnreadMessageCountUpdated"] = useCallback(
     count => {
-      console.log("unread", count);
       setUnreadMessageCount(+count);
     },
     []
@@ -132,12 +129,10 @@ export const ChannelProvider = ({ children }) => {
   );
 
   useEffect(() => {
-    console.log("credential");
     user && getSendbirdCredential();
   }, [getSendbirdCredential, user]);
 
   useEffect(() => {
-    console.log("connect");
     if (user && sendbirdCredential) {
       const sb = new SendBird({ appId: sendbirdConfig.appId });
       sb.connect(user.uuid, sendbirdCredential.sessionToken, sbUser => {
@@ -147,7 +142,6 @@ export const ChannelProvider = ({ children }) => {
   }, [sendbirdCredential, user]);
 
   useEffect(() => {
-    console.log("localstorage");
     if (sendbirdCredential) {
       const rawCredential = JSON.stringify(
         SendbirdCredentialToJSON(sendbirdCredential)
@@ -161,7 +155,6 @@ export const ChannelProvider = ({ children }) => {
 
   useEffect(() => {
     if (sb) {
-      console.log("initTotalUnreadCount");
       // Set initial unread message count.
       sb.getTotalUnreadMessageCount(count => {
         setUnreadMessageCount(count);
@@ -170,7 +163,6 @@ export const ChannelProvider = ({ children }) => {
   }, [sb]);
 
   useEffect(() => {
-    console.log("userhandler");
     let handlerId: string | undefined;
     if (sb) {
       // Register onTotalUnreadMessageCountUpdated listener.
@@ -185,7 +177,6 @@ export const ChannelProvider = ({ children }) => {
   }, [addUserHandler, onTotalUnreadMessageCountUpdated, removeUserHandler, sb]);
 
   useEffect(() => {
-    console.log("channelhandler");
     let handlerId: string | undefined;
     if (sb) {
       // Register onMessageReceived listener.

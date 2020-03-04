@@ -57,7 +57,6 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
 
   const onChannelChanged: ChannelHandler["onChannelChanged"] = useCallback(
     channel => {
-      console.log("onchannelchanged", channel);
       if (!isGroupChannel(channel)) {
         return;
       }

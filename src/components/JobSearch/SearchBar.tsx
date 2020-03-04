@@ -88,11 +88,7 @@ const SearchBar: React.FC<SearchBoxProvided> = props => {
         className={classes.input}
         placeholder="搜尋工作、地區、公司"
       />
-      <IconButton
-        className={classes.iconButton}
-        aria-label="Search"
-        onClick={search}
-      >
+      <IconButton className={classes.iconButton} onClick={search}>
         <SearchIcon />
       </IconButton>
     </div>

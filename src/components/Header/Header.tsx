@@ -110,11 +110,7 @@ const SearchBar: React.FC = () => {
 
   return (
     <div className={classes.search}>
-      <IconButton
-        className={classes.searchIcon}
-        aria-label="Search"
-        onClick={search}
-      >
+      <IconButton className={classes.searchIcon} onClick={search}>
         <Search />
       </IconButton>
       <InputBase
@@ -283,11 +279,7 @@ const Header: React.FC<Props> = props => {
                   <Search />
                 </IconButton>
               )}
-              <IconButton
-                aria-haspopup="true"
-                onClick={openMobileMenu}
-                color="inherit"
-              >
+              <IconButton onClick={openMobileMenu} color="inherit">
                 <Dehaze />
               </IconButton>
             </div>

@@ -97,14 +97,8 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
 
   return (
     <div>
-      <Dialog
-        maxWidth="sm"
-        fullWidth
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">購買點閱人數</DialogTitle>
+      <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose}>
+        <DialogTitle>購買點閱人數</DialogTitle>
         {url ? (
           <DialogContent>
             <Iframe
@@ -144,9 +138,6 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
                 checked={read}
                 onChange={() => setRead(!read)}
                 color="primary"
-                inputProps={{
-                  "aria-label": "primary checkbox"
-                }}
               />
               <div className={classes.info}>以詳閱並同意</div>
               <Link

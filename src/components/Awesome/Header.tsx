@@ -1,74 +1,47 @@
-import { Button, makeStyles, Theme, useMediaQuery } from "@material-ui/core";
-import { openInNewTab } from "helpers";
-import React from "react";
+import { Button, makeStyles } from "@material-ui/core";
+import _ from "lodash";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { awesomes, AwesomeEntry } from "./awesomes";
 
 const useStyles = makeStyles(() => ({
-  schoolContainer: {
+  container: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     flexWrap: "wrap",
     justifyContent: "space-between"
   },
-  schoolTitle: {
-    fontWeight: 800,
-    marginRight: 16
-  },
-  majorButton: {
+  link: {
     textDecoration: "none"
   }
 }));
 
 interface Props {
-  showStories?: boolean;
-  showChatRoom?: boolean;
+  containerStyle?: React.CSSProperties;
 }
 
-const AwesomeHeader: React.FC<Props> = ({ showStories, showChatRoom }) => {
+const AwesomeHeader: React.FC<Props> = ({ containerStyle }) => {
   const classes = useStyles();
-  const matched = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
+  const [lists] = useState<AwesomeEntry[]>(_.sampleSize(awesomes, 9));
 
   return (
-    <div className={classes.schoolContainer}>
-      {showStories ? (
-        <Link to={{ pathname: "/stories" }} className={classes.majorButton}>
-          <Button>故事</Button>
-        </Link>
-      ) : (
-        <div className={classes.schoolTitle}>就業精選</div>
-      )}
-      {[
-        { name: "中興獸醫", link: "中興獸醫" },
-        { name: "台大電機", link: "台大電機" },
-        { name: "政大政治", link: "政大政治" },
-        { name: "成大建築", link: "成大建築" },
-        { name: "台大資工", link: "台大資工" },
-        { name: "中央數學", link: "國立中央大學數學系" },
-        { name: "東華中文", link: "國立東華大學中國文學系" },
-        { name: "交大電子", link: "國立交通大學電子學系" },
-        { name: "陽明醫學", link: "國立陽明大學醫學系" },
-        { name: "高大資管", link: "國立高雄大學資訊管理學系" }
-      ].map(list => (
+    <div className={classes.container} style={containerStyle}>
+      <Link to={{ pathname: "/departments" }} className={classes.link}>
+        <Button>就業精選</Button>
+      </Link>
+      {lists.map(list => (
         <Link
-          key={list.name}
+          key={list.link}
           to={{ pathname: `/awesome/${list.link}` }}
-          className={classes.majorButton}
+          className={classes.link}
         >
           <Button>{list.name}</Button>
         </Link>
       ))}
-      <Link to={{ pathname: "/departments" }} className={classes.majorButton}>
+      <Link to={{ pathname: "/departments" }} className={classes.link}>
         <Button>看更多</Button>
       </Link>
-      {showChatRoom && matched && (
-        <div
-          onClick={() => openInNewTab("https://tlk.io/ntu")}
-          className={classes.majorButton}
-        >
-          <Button>找工作聊天室</Button>
-        </div>
-      )}
       <div style={{ flex: 1 }}></div>
     </div>
   );

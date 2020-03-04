@@ -183,7 +183,7 @@ const JobSearch: React.FC = () => {
               className={classes.input}
               placeholder="搜尋工作、地區、公司"
             />
-            <IconButton className={classes.iconButton} aria-label="Search">
+            <IconButton className={classes.iconButton}>
               <Search />
             </IconButton>
           </div>

@@ -158,11 +158,6 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
 
   useEffect(() => {
     const loadMoreMessages = async () => {
-      console.log(
-        inView,
-        prevMessageListQuery?.hasMore,
-        prevMessageListQuery?.isLoading
-      );
       if (
         inView &&
         prevMessageListQuery?.hasMore &&

@@ -72,6 +72,7 @@
     "uuid": "^7.0.1"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.149",
     "@types/node": "^13.7.7",
     "@types/qrcode.react": "^1.0.0",
     "@types/qs": "^6.9.1",

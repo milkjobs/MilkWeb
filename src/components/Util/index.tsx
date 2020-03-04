@@ -4,5 +4,6 @@ export * from "./DownloadAppDialog";
 export * from "./ErrorStatus";
 export * from "./LoginDialog";
 export * from "./ResumeDialog";
+export * from "./ScrollTop";
 export * from "./Select";
 export * from "./Title";
