@@ -1,3 +1,4 @@
+import { Backdrop, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { ChannelListCard, MessageBox } from "components/Message";
 import React, {
@@ -11,7 +12,7 @@ import { useInView } from "react-intersection-observer";
 import { useHistory, useParams } from "react-router-dom";
 import { ChannelHandler, GroupChannel, GroupChannelListQuery } from "sendbird";
 import { useAuth, useChannel } from "stores";
-import { isGroupChannel } from "./utils";
+import { isGroupChannel, parseChannel } from "./utils";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -34,6 +35,21 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flex: 3,
     position: "relative"
+  },
+  permissionButton: {
+    backgroundColor: theme.palette.secondary.main,
+    padding: 16,
+    color: "white",
+    fontSize: 16,
+    fontWeight: 700,
+    "&:hover": {
+      cursor: "pointer"
+    }
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+    backgroundColor: "rgba(0, 0, 0, 0.8)"
   }
 }));
 
@@ -48,6 +64,7 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
   const history = useHistory();
   const [ref, inView] = useInView();
   const params = useParams<{ id?: string }>();
+  const [permissionHintOpen, setPermissionHintOpen] = useState(false);
   const [channelListQuery, setChannelListQuery] = useState<
     GroupChannelListQuery
   >();
@@ -68,17 +85,6 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
     },
     []
   );
-
-  const parseChannel = (channel: GroupChannel) => {
-    const memberIds = channel.name.split("_");
-    if (channel.members.length !== 2 || memberIds.length !== 2) {
-      return [undefined, undefined];
-    }
-
-    const applicantUser = channel.members.find(m => m.userId === memberIds[0]);
-    const recruiterUser = channel.members.find(m => m.userId === memberIds[1]);
-    return [applicantUser, recruiterUser];
-  };
 
   const filterChannels = useCallback(
     (chs: GroupChannel[]) =>
@@ -160,6 +166,22 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
         }}
       >
         <div style={{ overflow: "auto", flex: 1 }}>
+          {Notification.permission === "default" && (
+            <div
+              className={classes.permissionButton}
+              onClick={async () => {
+                setPermissionHintOpen(true);
+                await Notification.requestPermission();
+                setPermissionHintOpen(false);
+                forceUpdate();
+              }}
+            >
+              有新訊息時立即得知
+              <div style={{ fontSize: 14, fontWeight: 600, marginTop: 8 }}>
+                開啟通知功能
+              </div>
+            </div>
+          )}
           {channels.current.map(c => {
             const myId = user?.uuid;
             const they = c.members.filter(m => m.userId !== myId)[0];
@@ -206,10 +228,28 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
   );
 
   return (
-    <div className={classes.container}>
-      {renderChannelList()}
-      {renderChat()}
-    </div>
+    <>
+      <div className={classes.container}>
+        {renderChannelList()}
+        {renderChat()}
+      </div>
+      <Backdrop
+        className={classes.backdrop}
+        open={permissionHintOpen}
+        onClick={() => setPermissionHintOpen(false)}
+      >
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ fontSize: 24, fontWeight: 700, margin: 16 }}>
+            點選左上角的允許通知，在第一時間收到訊息通知。
+          </div>
+          <div>
+            <Button size="medium" variant="contained" color="primary">
+              知道了
+            </Button>
+          </div>
+        </div>
+      </Backdrop>
+    </>
   );
 };
 

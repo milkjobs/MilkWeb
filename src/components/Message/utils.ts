@@ -50,3 +50,14 @@ export const getMetadata = (m: SendBirdMessage) => {
     // Do nothing.
   }
 };
+
+export const parseChannel = (channel: GroupChannel) => {
+  const memberIds = channel.name.split("_");
+  if (channel.members.length !== 2 || memberIds.length !== 2) {
+    return [undefined, undefined];
+  }
+
+  const applicantUser = channel.members.find(m => m.userId === memberIds[0]);
+  const recruiterUser = channel.members.find(m => m.userId === memberIds[1]);
+  return [applicantUser, recruiterUser];
+};

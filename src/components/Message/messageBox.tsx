@@ -240,6 +240,11 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
         ch.markAsRead();
         isUserMessage(msg) && messages.current.unshift(msg);
         forceUpdate();
+        if (messagesEl.current) {
+          // scroll to bottom
+          messagesEl.current.scrollTop =
+            messagesEl.current.scrollHeight - messagesEl.current.offsetHeight;
+        }
       }
     },
     [channel]

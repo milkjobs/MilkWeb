@@ -4,6 +4,12 @@ import {
   SendbirdCredentialFromJSON,
   SendbirdCredentialToJSON
 } from "@frankyjuang/milkapi-client";
+import logo from "assets/milk.png";
+import {
+  isGroupChannel,
+  isUserMessage,
+  parseChannel
+} from "components/Message/utils";
 import { sendbirdConfig } from "config";
 import "firebase/analytics";
 import "firebase/auth";
@@ -76,13 +82,40 @@ export const ChannelProvider = ({ children }) => {
   }, [getApi, user]);
 
   const onMessageReceived: SendBird.ChannelHandler["onMessageReceived"] = useCallback(
-    ch => {
+    (ch, msg) => {
+      if (!isGroupChannel(ch) || !isUserMessage(msg) || !user) {
+        return;
+      }
+
+      if (Notification.permission === "granted") {
+        const [, recruiterMember] = parseChannel(ch);
+        const href =
+          user.uuid === recruiterMember?.userId
+            ? `/recruiter/message/${ch.url}`
+            : `/message/${ch.url}`;
+
+        // Suppress notification if already at the channel page.
+        if (window.location.pathname !== href) {
+          const notification = new Notification(
+            `牛奶找工作・${msg.sender.nickname}`,
+            {
+              badge: logo,
+              body: msg.message,
+              icon: msg.sender.profileUrl
+            }
+          );
+          notification.onclick = () => {
+            window.location.href = href;
+          };
+        }
+      }
+
       sb?.getTotalUnreadMessageCount(count => {
         setUnreadMessageCount(count);
       });
       ch.customType === ChannelCustomType.System && reloadUser();
     },
-    [reloadUser, sb]
+    [reloadUser, sb, user]
   );
 
   const onTotalUnreadMessageCountUpdated: SendBird.UserEventHandler["onTotalUnreadMessageCountUpdated"] = useCallback(
