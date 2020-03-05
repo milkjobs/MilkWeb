@@ -5,8 +5,7 @@ import {
   useMediaQuery,
   useTheme
 } from "@material-ui/core";
-import appStoreBadge from "assets/app-store-badge.svg";
-import googlePlayBadge from "assets/google-play-badge.png";
+import { AppStore, GooglePlay } from "assets/icons";
 import logo from "assets/milk.png";
 import { getMobileOS, MobileOS } from "helpers";
 import QRCode from "qrcode.react";
@@ -30,12 +29,12 @@ const DownloadAppDialog: React.FC<Props> = props => {
           <>
             {getMobileOS() !== MobileOS.Android && (
               <a href="https://to.milk.jobs/app">
-                <img alt="app store" src={appStoreBadge} width="200" />
+                <img alt="app store" src={AppStore} width="200" />
               </a>
             )}
             {getMobileOS() !== MobileOS.Ios && (
               <a href="https://to.milk.jobs/app">
-                <img alt="google play" src={googlePlayBadge} width="200" />
+                <img alt="google play" src={GooglePlay} width="200" />
               </a>
             )}
           </>

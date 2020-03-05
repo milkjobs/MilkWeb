@@ -1,7 +1,14 @@
 import { makeStyles } from "@material-ui/core";
+import { Chat, Dark, Download, Job, Manage, Slogan } from "assets/about";
+import {
+  AppStore,
+  Facebook,
+  GooglePlay,
+  Instagram,
+  Youtube
+} from "assets/icons";
 import { Header } from "components/Header";
-import { DownloadAppDialog } from "components/Util";
-import React, { useState } from "react";
+import React from "react";
 import { useRouteMatch } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
@@ -21,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     justifyContent: "center",
     [theme.breakpoints.up("md")]: {
-      width: 900,
+      width: 960,
       marginRight: "auto",
       marginLeft: "auto"
     }
@@ -35,12 +42,8 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 100,
     width: 640,
     padding: 40,
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     alignItems: "center"
-  },
-  icon: {
-    width: 40,
-    height: 40
   },
   app: {
     fontSize: 24,
@@ -51,96 +54,56 @@ const useStyles = makeStyles(theme => ({
 const About: React.FC = () => {
   const match = useRouteMatch();
   const classes = useStyles();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const showDownloadAppDialog = () => {
-    setIsDialogOpen(true);
-  };
-
-  const hideDownloadAppDialog = () => {
-    setIsDialogOpen(false);
-  };
 
   return (
     match && (
       <div className={classes.root}>
         <Header />
         <div className={classes.container}>
-          <img
-            alt="app"
-            className={classes.appImage}
-            src={
-              "https://drive.google.com/uc?id=1U9kokrW01T8JksoDAQN21-k80oo_9TWy"
-            }
-          />
-          <img
-            alt="app"
-            className={classes.appImage}
-            src={
-              "https://drive.google.com/uc?id=1eSOHvfUXxbBoA1ACMOOMUsEizTaIEXh6"
-            }
-          />
-          <img
-            alt="app"
-            className={classes.appImage}
-            src={
-              "https://drive.google.com/uc?id=1HQ2bPvx1AYxMDTN-VaSggevaIjIzFyRL"
-            }
-          />
-          <img
-            alt="app"
-            className={classes.appImage}
-            src={
-              "https://drive.google.com/uc?id=1CcUcfR7MZvvnljcSYKWepkEgenj-4cKk"
-            }
-          />
-          <img
-            alt="app"
-            className={classes.appImage}
-            src={
-              "https://drive.google.com/uc?id=1aztEr5KR3VZSqjvUnWYsKr_2iZksEQtz"
-            }
-          />
-          <img
-            alt="app"
-            className={classes.appImage}
-            src={
-              "https://drive.google.com/uc?id=1dYAVCZgh_xarMMbHi3CY9iZHrAoA1ytf"
-            }
-          />
+          <img alt="app" className={classes.appImage} src={Slogan} />
+          <img alt="app" className={classes.appImage} src={Dark} />
+          <img alt="app" className={classes.appImage} src={Job} />
+          <img alt="app" className={classes.appImage} src={Manage} />
+          <img alt="app" className={classes.appImage} src={Chat} />
+          <img alt="app" className={classes.appImage} src={Download} />
           <div className={classes.iconsContainer}>
-            <div className={classes.app} onClick={showDownloadAppDialog}>
-              App
-            </div>
-            <a href="https://fb.me/themilkjobs">
-              <img
-                className={classes.icon}
-                src="https://image.flaticon.com/icons/png/512/174/174848.png"
-                alt="FB"
-              />
+            <a
+              rel="noreferrer noopener"
+              target="_blank"
+              href="https://apps.apple.com/tw/app/id1480033474"
+            >
+              <img style={{ height: 40 }} src={AppStore} alt="app-store" />
             </a>
-            <a href="https://instagr.am/milkjobs">
-              <img
-                className={classes.icon}
-                src={
-                  "https://image.flaticon.com/icons/png/512/2111/2111463.png"
-                }
-                alt="IG"
-              />
+            <a
+              rel="noreferrer noopener"
+              target="_blank"
+              href="https://play.google.com/store/apps/details?id=com.milkjobs.app"
+            >
+              <img style={{ height: 60 }} src={GooglePlay} alt="google-play" />
             </a>
-            <a href="https://www.youtube.com/channel/UClQbsw6sZhwIrctTUFrx7Og">
-              <img
-                className={classes.icon}
-                src="https://image.flaticon.com/icons/png/512/174/174883.png"
-                alt="Youtube"
-              />
+            <a
+              rel="noreferrer noopener"
+              target="_blank"
+              href="https://www.facebook.com/themilkjobs"
+            >
+              <img style={{ height: 40 }} src={Facebook} alt="facebook" />
+            </a>
+            <a
+              rel="noreferrer noopener"
+              target="_blank"
+              href="https://www.instagram.com/milkjobs/"
+            >
+              <img style={{ height: 40 }} src={Instagram} alt="instagram" />
+            </a>
+            <a
+              rel="noreferrer noopener"
+              target="_blank"
+              href="https://www.youtube.com/channel/UClQbsw6sZhwIrctTUFrx7Og"
+            >
+              <img style={{ height: 48 }} src={Youtube} alt="youtube" />
             </a>
           </div>
         </div>
-        <DownloadAppDialog
-          isOpen={isDialogOpen}
-          close={hideDownloadAppDialog}
-        />
       </div>
     )
   );
