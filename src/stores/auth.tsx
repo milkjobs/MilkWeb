@@ -119,8 +119,10 @@ export const AuthProvider = ({ children }) => {
     if (firebaseUser) {
       const userId = firebaseUser.uid;
       const userApi = await getApi("User");
-      const user = await userApi.getUser({ userId, role: Role.Applicant });
-      const recruiter = await userApi.getUser({ userId, role: Role.Recruiter });
+      const [user, recruiter] = await Promise.all([
+        userApi.getUser({ userId, role: Role.Applicant }),
+        userApi.getUser({ userId, role: Role.Recruiter })
+      ]);
       firebase.analytics().setUserId(userId);
       setIsAuthenticated(true);
       setUserId(userId);
