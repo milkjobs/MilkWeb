@@ -2,7 +2,7 @@ import { PublicUser } from "@frankyjuang/milkapi-client";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import { DownloadAppDialog } from "components/Util";
+import { DownloadApp } from "components/Util";
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 
@@ -88,7 +88,7 @@ const JobFooter: React.FC<Props> = props => {
       <Button className={classes.button} onClick={showDownloadAppDialog}>
         立即詢問
       </Button>
-      <DownloadAppDialog isOpen={isDialogOpen} close={hideDownloadAppDialog} />
+      <DownloadApp isOpen={isDialogOpen} close={hideDownloadAppDialog} />
     </div>
   );
 };

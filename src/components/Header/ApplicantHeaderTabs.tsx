@@ -1,6 +1,6 @@
 import { Avatar, Badge, makeStyles } from "@material-ui/core";
 import { TeamCreateForm } from "components/TeamComponents";
-import { DownloadAppDialog, LoginDialog } from "components/Util";
+import { LoginDialog } from "components/Util";
 import React, { MouseEvent, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth, useChannel } from "stores";
@@ -48,7 +48,6 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
   const location = useLocation();
   const { user } = useAuth();
   const { unreadMessageCount } = useChannel();
-  const [isDownloadAppDialogOpen, setIsDownloadAppDialogOpen] = useState(false);
   const [isCreateTeamFormOpen, setIsCreateTeamFormOpen] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const isHome = location.pathname === "/";
@@ -61,10 +60,6 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
 
   const hideCreateTeamForm = () => {
     setIsCreateTeamFormOpen(false);
-  };
-
-  const hideDownloadAppDialog = () => {
-    setIsDownloadAppDialogOpen(false);
   };
 
   const showLoginDialog = () => {
@@ -124,10 +119,6 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
           <span className={classes.tab}>登入</span>
         </div>
       )}
-      <DownloadAppDialog
-        isOpen={isDownloadAppDialogOpen}
-        close={hideDownloadAppDialog}
-      />
       <LoginDialog isOpen={isLoginDialogOpen} close={hideLoginDialog} />
     </div>
   );

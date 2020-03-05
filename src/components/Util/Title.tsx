@@ -15,6 +15,7 @@ const useStyles = makeStyles(() => ({
   container: {
     display: "flex",
     justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 12,
     paddingBottom: 12,
     paddingLeft: 24,

@@ -2,7 +2,7 @@ import { VerificationState } from "@frankyjuang/milkapi-client";
 import { Button, makeStyles, Tooltip } from "@material-ui/core";
 import to from "await-to-js";
 import { Header } from "components/Header";
-import { DownloadAppDialog, Title } from "components/Util";
+import { DownloadApp, Title } from "components/Util";
 import { VerificationStateBanner } from "components/Verification";
 import { ImagePdfMimeType } from "helpers";
 import React, { useCallback, useEffect, useState } from "react";
@@ -36,15 +36,7 @@ const Verification: React.FC = () => {
   const { user, getApi, reloadUser } = useAuth();
   const classes = useStyles();
   const history = useHistory();
-  const [isDownloadAppDialogOpen, setIsDownloadAppDialogOpen] = useState(false);
-
-  const showDownloadAppDialog = () => {
-    setIsDownloadAppDialogOpen(true);
-  };
-
-  const hideDownloadAppDialog = () => {
-    setIsDownloadAppDialogOpen(false);
-  };
+  const [isDownloadAppOpen, setIsDownloadAppOpen] = useState(false);
 
   const upload = useCallback(
     async (files: File[] | FileList) => {
@@ -123,9 +115,9 @@ const Verification: React.FC = () => {
                     color="primary"
                     component="span"
                     variant="outlined"
-                    onClick={showDownloadAppDialog}
+                    onClick={() => setIsDownloadAppOpen(true)}
                   >
-                    下載 App
+                    接收審核結果通知
                   </Button>
                 </Tooltip>
               </div>
@@ -162,9 +154,9 @@ const Verification: React.FC = () => {
           {"若無法提供以上文件，可以上傳身分證正面照。身分證字號須清楚拍攝。"}
         </div>
       </div>
-      <DownloadAppDialog
-        isOpen={isDownloadAppDialogOpen}
-        close={hideDownloadAppDialog}
+      <DownloadApp
+        isOpen={isDownloadAppOpen}
+        close={() => setIsDownloadAppOpen(false)}
       />
       <ToastContainer
         position={ToastPosition.BOTTOM_CENTER}

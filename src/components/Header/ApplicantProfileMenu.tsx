@@ -7,7 +7,7 @@ import Paper from "@material-ui/core/Paper";
 import Popper from "@material-ui/core/Popper";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import to from "await-to-js";
-import { DownloadAppDialog, LoginDialog } from "components/Util";
+import { DownloadApp, LoginDialog } from "components/Util";
 import firebase from "firebase/app";
 import "firebase/auth";
 import React, { useState } from "react";
@@ -134,7 +134,7 @@ const ApplicantProfileMenu: React.FC<Props> = props => {
           </Grow>
         )}
       </Popper>
-      <DownloadAppDialog
+      <DownloadApp
         isOpen={isDownloadAppDialogOpen}
         close={hideDownloadAppDialog}
       />
