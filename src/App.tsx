@@ -33,10 +33,11 @@ const AppRouter: React.FC<{}> = () => {
       />
       <BrowserRouter>
         <ErrorCatcher>
+          {/* Wait until auth loaded to log event with user id. */}
           <LoadingRoute path="/" component={PageView} />
           <Switch>
-            <LoadingRoute path="/recruiter" component={Recruiter} />
-            <LoadingRoute path="/" component={RootRoute} />
+            <Route path="/recruiter" component={Recruiter} />
+            <Route path="/" component={RootRoute} />
           </Switch>
         </ErrorCatcher>
       </BrowserRouter>

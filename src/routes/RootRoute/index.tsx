@@ -35,12 +35,15 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   component: Component,
   ...rest
 }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
 
   return (
     <Route
       {...rest}
       render={props => {
+        if (loading) {
+          return null;
+        }
         if (isAuthenticated) {
           return <Component {...props} />;
         }
