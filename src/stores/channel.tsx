@@ -5,6 +5,7 @@ import {
   SendbirdCredentialToJSON
 } from "@frankyjuang/milkapi-client";
 import logo from "assets/milk.png";
+import to from "await-to-js";
 import {
   isGroupChannel,
   isUserMessage,
@@ -63,21 +64,23 @@ export const ChannelProvider = ({ children }) => {
         throw new Error();
       }
 
-      const sendbirdCredential = SendbirdCredentialFromJSON(
-        JSON.parse(rawCredential)
-      );
-      if (sendbirdCredential.expiresAt.getTime() < new Date().getTime()) {
+      const credential = SendbirdCredentialFromJSON(JSON.parse(rawCredential));
+      if (credential.expiresAt.getTime() < new Date().getTime()) {
         throw new Error();
       }
 
-      setSendbirdCredential(sendbirdCredential);
+      return credential;
     } catch (error) {
-      setSendbirdCredential(undefined);
+      window.localStorage.removeItem(LocalStorageItem.SendbirdCredential);
+
       const userApi = await getApi("User");
-      const sendbirdCredential = await userApi.getSendbirdCredential({
-        userId: user.uuid
-      });
-      setSendbirdCredential(sendbirdCredential);
+      const [, credential] = await to(
+        userApi.getSendbirdCredential({
+          userId: user.uuid
+        })
+      );
+
+      return credential;
     }
   }, [getApi, user]);
 
@@ -110,38 +113,19 @@ export const ChannelProvider = ({ children }) => {
         }
       }
 
-      sb?.getTotalUnreadMessageCount(count => {
-        setUnreadMessageCount(count);
-      });
       ch.customType === ChannelCustomType.System && reloadUser();
     },
-    [reloadUser, sb, user]
+    [reloadUser, user]
   );
 
-  const onTotalUnreadMessageCountUpdated: SendBird.UserEventHandler["onTotalUnreadMessageCountUpdated"] = useCallback(
-    count => {
-      setUnreadMessageCount(+count);
-    },
-    []
-  );
-
-  const addUserHandler = useCallback(
-    (handler: SendBird.UserEventHandler) => {
-      if (sb) {
-        const handlerId = uuidv4();
-        sb.addUserEventHandler(handlerId, handler);
-        return handlerId;
-      }
-    },
-    [sb]
-  );
-
-  const removeUserHandler = useCallback(
-    (handlerId: string) => {
-      sb?.removeUserEventHandler(handlerId);
-    },
-    [sb]
-  );
+  const onChannelChanged: SendBird.ChannelHandler["onChannelChanged"] = useCallback(() => {
+    // UserEventHandler.onTotalUnreadMessageCountUpdated() somehow doesn't work, so we fetch total
+    // unread message count every time a channel is changed.
+    // https://docs.sendbird.com/javascript/event_handler#3_add_and_remove_a_user_event_handler
+    sb?.getTotalUnreadMessageCount(count => {
+      setUnreadMessageCount(count);
+    });
+  }, [sb]);
 
   const addChannelHandler = useCallback(
     (handler: SendBird.ChannelHandler) => {
@@ -162,15 +146,27 @@ export const ChannelProvider = ({ children }) => {
   );
 
   useEffect(() => {
-    user && getSendbirdCredential();
+    const loadCredential = async () => {
+      if (user) {
+        const credential = await getSendbirdCredential();
+        setSendbirdCredential(credential);
+      } else {
+        setSendbirdCredential(undefined);
+      }
+    };
+
+    loadCredential();
   }, [getSendbirdCredential, user]);
 
   useEffect(() => {
+    const sb =
+      SendBird.getInstance() || new SendBird({ appId: sendbirdConfig.appId });
     if (user && sendbirdCredential) {
-      const sb = new SendBird({ appId: sendbirdConfig.appId });
       sb.connect(user.uuid, sendbirdCredential.sessionToken, sbUser => {
         sbUser && setSb(sb);
       });
+    } else {
+      sb.disconnect(() => setSb(undefined));
     }
   }, [sendbirdCredential, user]);
 
@@ -192,36 +188,31 @@ export const ChannelProvider = ({ children }) => {
       sb.getTotalUnreadMessageCount(count => {
         setUnreadMessageCount(count);
       });
+    } else {
+      setUnreadMessageCount(0);
     }
   }, [sb]);
 
   useEffect(() => {
     let handlerId: string | undefined;
     if (sb) {
-      // Register onTotalUnreadMessageCountUpdated listener.
-      const newHandler = new sb.UserEventHandler();
-      newHandler.onTotalUnreadMessageCountUpdated = onTotalUnreadMessageCountUpdated;
-      handlerId = addUserHandler(newHandler);
-    }
-
-    return () => {
-      handlerId && removeUserHandler(handlerId);
-    };
-  }, [addUserHandler, onTotalUnreadMessageCountUpdated, removeUserHandler, sb]);
-
-  useEffect(() => {
-    let handlerId: string | undefined;
-    if (sb) {
       // Register onMessageReceived listener.
-      const newHandler = new sb.ChannelHandler();
-      newHandler.onMessageReceived = onMessageReceived;
-      handlerId = addChannelHandler(newHandler);
+      const handler = new sb.ChannelHandler();
+      handler.onMessageReceived = onMessageReceived;
+      handler.onChannelChanged = onChannelChanged;
+      handlerId = addChannelHandler(handler);
     }
 
     return () => {
       handlerId && removeChannelHandler(handlerId);
     };
-  }, [addChannelHandler, onMessageReceived, removeChannelHandler, sb]);
+  }, [
+    addChannelHandler,
+    onChannelChanged,
+    onMessageReceived,
+    removeChannelHandler,
+    sb
+  ]);
 
   return (
     <ChannelContext.Provider

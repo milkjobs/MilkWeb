@@ -101,19 +101,17 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
     [isRecruiter, user]
   );
 
-  const onChannelChanged: ChannelHandler["onChannelChanged"] = useCallback(
-    channel => {
-      if (!isGroupChannel(channel)) {
+  const onMessageReceived: ChannelHandler["onMessageReceived"] = useCallback(
+    ch => {
+      if (!isGroupChannel(ch)) {
         return;
       }
-      if (filterChannels([channel]).length === 0) {
+      if (filterChannels([ch]).length === 0) {
         return;
       }
 
-      const newChannelList = channels.current.filter(
-        c => c.url !== channel.url
-      );
-      channels.current = [channel, ...newChannelList];
+      const newChannelList = channels.current.filter(c => c.url !== ch.url);
+      channels.current = [ch, ...newChannelList];
       forceUpdate();
     },
     [filterChannels]
@@ -136,16 +134,16 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
     let handlerId: string | undefined;
 
     if (sb) {
-      // Register onChannelChanged listener.
+      // Register onMessageReceived listener.
       const handler = new sb.ChannelHandler();
-      handler.onChannelChanged = onChannelChanged;
+      handler.onMessageReceived = onMessageReceived;
       handlerId = addChannelHandler(handler);
     }
 
     return () => {
       handlerId && removeChannelHandler(handlerId);
     };
-  }, [addChannelHandler, onChannelChanged, removeChannelHandler, sb]);
+  }, [addChannelHandler, onMessageReceived, removeChannelHandler, sb]);
 
   useEffect(() => {
     if (sb) {
