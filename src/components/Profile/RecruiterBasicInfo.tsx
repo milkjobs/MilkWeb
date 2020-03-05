@@ -180,6 +180,7 @@ const EditDialog: React.FC<DialogProps> = props => {
         {user && (
           <div style={{ display: "flex", marginBottom: 24 }}>
             <Avatar
+              alt="profile image"
               src={user.profileImageUrl}
               style={{ width: 60, height: 60 }}
             />
@@ -273,7 +274,11 @@ const RecruiterBasicInfo: React.FC = () => {
           alignItems: "center"
         }}
       >
-        <Avatar src={user.profileImageUrl} style={{ width: 60, height: 60 }} />
+        <Avatar
+          alt="profile image"
+          src={user.profileImageUrl}
+          style={{ width: 60, height: 60 }}
+        />
         <div className={classes.info}>
           <div
             style={{ display: "flex", flexDirection: "row", marginBottom: 8 }}

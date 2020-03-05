@@ -226,6 +226,7 @@ const JobSideCard: React.FC<Props> = props => {
         <div className={classes.card}>
           <div className={classes.recruiterContainer}>
             <Avatar
+              alt="recruiter profile image"
               src={recruiter.profileImageUrl}
               style={{ width: 30, height: 30, marginRight: 16 }}
             />

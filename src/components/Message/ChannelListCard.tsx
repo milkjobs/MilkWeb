@@ -75,7 +75,11 @@ const ChannelListCard: React.FC<Props> = props => {
         badgeContent={unreadMessageCount}
         color="secondary"
       >
-        <Avatar src={profileImageUrl} style={{ width: 40, height: 40 }} />
+        <Avatar
+          alt="profile image"
+          src={profileImageUrl}
+          style={{ width: 40, height: 40 }}
+        />
       </Badge>
       <div
         style={{

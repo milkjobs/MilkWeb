@@ -80,7 +80,11 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
       )}
       {user && (
         <span className={classes.tab} onClick={openProfileMenu}>
-          <Avatar className={classes.avatar} src={user.profileImageUrl} />
+          <Avatar
+            alt="profile image"
+            className={classes.avatar}
+            src={user.profileImageUrl}
+          />
         </span>
       )}
     </div>

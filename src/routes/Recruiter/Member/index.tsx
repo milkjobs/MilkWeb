@@ -200,7 +200,10 @@ const Member: React.FC = () => {
               {recruiters.map(r => (
                 <TableRow key={r.uuid}>
                   <TableCell className={classes.avatarCell}>
-                    <Avatar src={r.profileImageUrl} />
+                    <Avatar
+                      alt="recruiter profile image"
+                      src={r.profileImageUrl}
+                    />
                   </TableCell>
                   <TableCell>{r.name}</TableCell>
                   <TableCell>{r.title || "-"}</TableCell>
