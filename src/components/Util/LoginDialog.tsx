@@ -81,6 +81,19 @@ const LoginDialog: React.FC<Props> = props => {
   const [recaptcha, setRecaptcha] = useState<firebase.auth.RecaptchaVerifier>();
   const [verifier, setVerifier] = useState<firebase.auth.ConfirmationResult>();
 
+  const reset = () => {
+    setPhoneNumber(undefined);
+    setPhoneNumberHelperText(undefined);
+    setCodeSent(false);
+    setCodeHelperText(undefined);
+    setCode(undefined);
+    setCountdown(0);
+    setCountdownKey(0);
+    setCountdownCompleted(true);
+    setRecaptcha(undefined);
+    setVerifier(undefined);
+  };
+
   const checkPhoneNumber = () => {
     const helperText =
       !phoneNumber || !isIntlPhoneNumber(phoneNumber)
@@ -132,6 +145,7 @@ const LoginDialog: React.FC<Props> = props => {
     }
 
     close();
+    reset();
   };
 
   const recaptchaButton = useCallback(async node => {
