@@ -22,6 +22,7 @@ const PageMetadata: React.FC<Props> = props => {
   return (
     <Helmet>
       <title>{title}</title>
+      <meta name="description" content={description} />
       <meta
         property="og:url"
         content={`${location.protocol}//${location.host}${location.pathname}`}

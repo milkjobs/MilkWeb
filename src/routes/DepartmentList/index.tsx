@@ -9,7 +9,7 @@ import to from "await-to-js";
 import { Header } from "components/Header";
 import { Title } from "components/Util";
 import Fuse from "fuse.js";
-import { normalizeSchoolName } from "helpers";
+import { normalizeSchoolName, PageMetadata } from "helpers";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "stores";
@@ -145,6 +145,7 @@ const DepartmentList: React.FC = () => {
 
   return (
     <div>
+      <PageMetadata title="就業精選－牛奶找工作" />
       <Header />
       <div className={classes.container}>
         <Title text="就業精選" hideBottomLine />

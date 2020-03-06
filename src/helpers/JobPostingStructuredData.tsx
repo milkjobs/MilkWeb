@@ -119,4 +119,4 @@ const JobPostingStructuredData: React.FC<Props> = props => {
   );
 };
 
-export default JobPostingStructuredData;
+export { JobPostingStructuredData };

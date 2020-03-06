@@ -9,7 +9,7 @@ import {
 } from "assets/icons";
 import { Header } from "components/Header";
 import React from "react";
-import { useRouteMatch } from "react-router-dom";
+import { PageMetadata } from "helpers";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -52,60 +52,58 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const About: React.FC = () => {
-  const match = useRouteMatch();
   const classes = useStyles();
 
   return (
-    match && (
-      <div className={classes.root}>
-        <Header />
-        <div className={classes.container}>
-          <img alt="app" className={classes.appImage} src={Slogan} />
-          <img alt="app" className={classes.appImage} src={Dark} />
-          <img alt="app" className={classes.appImage} src={Job} />
-          <img alt="app" className={classes.appImage} src={Manage} />
-          <img alt="app" className={classes.appImage} src={Chat} />
-          <img alt="app" className={classes.appImage} src={Download} />
-          <div className={classes.iconsContainer}>
-            <a
-              rel="noreferrer noopener"
-              target="_blank"
-              href="https://apps.apple.com/tw/app/id1480033474"
-            >
-              <img style={{ height: 40 }} src={AppStore} alt="app-store" />
-            </a>
-            <a
-              rel="noreferrer noopener"
-              target="_blank"
-              href="https://play.google.com/store/apps/details?id=com.milkjobs.app"
-            >
-              <img style={{ height: 60 }} src={GooglePlay} alt="google-play" />
-            </a>
-            <a
-              rel="noreferrer noopener"
-              target="_blank"
-              href="https://www.facebook.com/themilkjobs"
-            >
-              <img style={{ height: 40 }} src={Facebook} alt="facebook" />
-            </a>
-            <a
-              rel="noreferrer noopener"
-              target="_blank"
-              href="https://www.instagram.com/milkjobs/"
-            >
-              <img style={{ height: 40 }} src={Instagram} alt="instagram" />
-            </a>
-            <a
-              rel="noreferrer noopener"
-              target="_blank"
-              href="https://www.youtube.com/channel/UClQbsw6sZhwIrctTUFrx7Og"
-            >
-              <img style={{ height: 48 }} src={Youtube} alt="youtube" />
-            </a>
-          </div>
+    <div className={classes.root}>
+      <PageMetadata title="關於我們－牛奶找工作" />
+      <Header />
+      <div className={classes.container}>
+        <img alt="app" className={classes.appImage} src={Slogan} />
+        <img alt="app" className={classes.appImage} src={Dark} />
+        <img alt="app" className={classes.appImage} src={Job} />
+        <img alt="app" className={classes.appImage} src={Manage} />
+        <img alt="app" className={classes.appImage} src={Chat} />
+        <img alt="app" className={classes.appImage} src={Download} />
+        <div className={classes.iconsContainer}>
+          <a
+            rel="noreferrer noopener"
+            target="_blank"
+            href="https://apps.apple.com/tw/app/id1480033474"
+          >
+            <img style={{ height: 40 }} src={AppStore} alt="app-store" />
+          </a>
+          <a
+            rel="noreferrer noopener"
+            target="_blank"
+            href="https://play.google.com/store/apps/details?id=com.milkjobs.app"
+          >
+            <img style={{ height: 60 }} src={GooglePlay} alt="google-play" />
+          </a>
+          <a
+            rel="noreferrer noopener"
+            target="_blank"
+            href="https://www.facebook.com/themilkjobs"
+          >
+            <img style={{ height: 40 }} src={Facebook} alt="facebook" />
+          </a>
+          <a
+            rel="noreferrer noopener"
+            target="_blank"
+            href="https://www.instagram.com/milkjobs/"
+          >
+            <img style={{ height: 40 }} src={Instagram} alt="instagram" />
+          </a>
+          <a
+            rel="noreferrer noopener"
+            target="_blank"
+            href="https://www.youtube.com/channel/UClQbsw6sZhwIrctTUFrx7Og"
+          >
+            <img style={{ height: 48 }} src={Youtube} alt="youtube" />
+          </a>
         </div>
       </div>
-    )
+    </div>
   );
 };
 

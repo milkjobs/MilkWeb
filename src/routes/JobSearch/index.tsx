@@ -9,7 +9,12 @@ import { SearchResult } from "components/JobSearch/SearchResult";
 import { algoliaConfig } from "config";
 import "firebase/analytics";
 import firebase from "firebase/app";
-import { AlgoliaService, checkUrl, openInNewTab } from "helpers";
+import {
+  AlgoliaService,
+  checkUrl,
+  openInNewTab,
+  SitelinksSearchboxStructuredData
+} from "helpers";
 import React, { useEffect, useState } from "react";
 import { Configure, InstantSearch } from "react-instantsearch-dom";
 import { useInView } from "react-intersection-observer";
@@ -146,6 +151,7 @@ const JobSearch: React.FC = () => {
 
   return (
     <div className={classes.root}>
+      <SitelinksSearchboxStructuredData />
       <Header hideSearchBar={hideHeaderSearchBar} />
       <div className={classes.container}>
         <TextLoop className={classes.latestJobs}>

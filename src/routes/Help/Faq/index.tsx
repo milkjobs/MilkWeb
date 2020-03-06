@@ -2,6 +2,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import policyFile from "assets/faq.md";
 import to from "await-to-js";
 import { Header } from "components/Header";
+import { PageMetadata } from "helpers";
 import React, { ReactType, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useLocation } from "react-router-dom";
@@ -76,6 +77,7 @@ const Faq: React.FC = () => {
 
   return (
     <div className={classes.root}>
+      <PageMetadata title="常見問題－牛奶找工作" />
       <Header />
       <div className={classes.container}>
         <ReactMarkdown

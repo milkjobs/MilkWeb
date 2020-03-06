@@ -8,6 +8,7 @@ import {
 } from "@material-ui/core";
 import { Header } from "components/Header";
 import { Title } from "components/Util";
+import { PageMetadata } from "helpers";
 import React from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import { useTheme } from "stores";
@@ -54,6 +55,7 @@ const HelpCenter: React.FC = () => {
   return (
     match && (
       <div className={classes.root}>
+        <PageMetadata title="幫助中心－牛奶找工作" />
         <Header />
         <div className={classes.container}>
           <Title text="幫助中心" />
@@ -78,7 +80,7 @@ const HelpCenter: React.FC = () => {
             <GridListTile cols={1}>
               <Link to={`${match.path}/pricing`} className={classes.link}>
                 <Card variant="outlined" className={classes.card}>
-                  <CardHeader title="收費方案" className={classes.cardHeader} />
+                  <CardHeader title="付費方案" className={classes.cardHeader} />
                 </Card>
               </Link>
             </GridListTile>

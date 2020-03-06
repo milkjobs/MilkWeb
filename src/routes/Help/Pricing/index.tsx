@@ -17,6 +17,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import { useAuth } from "stores";
+import { PageMetadata } from "helpers";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -288,9 +289,10 @@ const Pricing: React.FC = () => {
 
   return (
     <div className={classes.root}>
+      <PageMetadata title="付費方案－牛奶找工作" />
       <Header />
       <div className={classes.container}>
-        <Title text="收費方案" hideBottomLine />
+        <Title text="付費方案" hideBottomLine />
         <Tabs
           classes={tabsStyle}
           indicatorColor="primary"
