@@ -7,7 +7,7 @@ import to from "await-to-js";
 import { TokenExpiredBufferTime } from "config";
 import { LocalStorageItem } from "helpers";
 
-export default class AlgoliaService {
+class AlgoliaService {
   userId: string;
   userApi: UserApi;
 
@@ -53,3 +53,5 @@ export default class AlgoliaService {
     }
   };
 }
+
+export { AlgoliaService };

@@ -2,10 +2,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import policyFile from "assets/terms-of-service-cht.md";
 import to from "await-to-js";
 import { Header } from "components/Header";
-import { PageMetadata } from "helpers";
+import { webConfig } from "config";
+import { BreadcrumbListStructuredData, PageMetadata } from "helpers";
 import React, { ReactType, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useLocation } from "react-router-dom";
+import urljoin from "url-join";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -78,6 +80,15 @@ const TermsOfService: React.FC = () => {
   return (
     <div className={classes.root}>
       <PageMetadata title="服務條款－牛奶找工作" />
+      <BreadcrumbListStructuredData
+        breadcrumbs={[
+          { name: "幫助中心", url: urljoin(webConfig.basePath, "help") },
+          {
+            name: "服務條款",
+            url: urljoin(webConfig.basePath, "help", "tos")
+          }
+        ]}
+      />
       <Header />
       <div className={classes.container}>
         <ReactMarkdown

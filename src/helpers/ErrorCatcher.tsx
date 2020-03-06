@@ -50,4 +50,6 @@ class ErrorCatcher extends Component<WithStyles<typeof styles>, States> {
   }
 }
 
-export default withStyles(styles)(ErrorCatcher);
+const styledErrorCatcher = withStyles(styles)(ErrorCatcher);
+
+export { styledErrorCatcher as ErrorCatcher };

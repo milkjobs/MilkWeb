@@ -12,12 +12,13 @@ import { mdiEyeCheckOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Header } from "components/Header";
 import { Title } from "components/Util";
-import { apiServiceConfig } from "config";
+import { apiServiceConfig, webConfig } from "config";
+import { BreadcrumbListStructuredData, PageMetadata } from "helpers";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import { useAuth } from "stores";
-import { PageMetadata } from "helpers";
+import urljoin from "url-join";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -290,6 +291,15 @@ const Pricing: React.FC = () => {
   return (
     <div className={classes.root}>
       <PageMetadata title="付費方案－牛奶找工作" />
+      <BreadcrumbListStructuredData
+        breadcrumbs={[
+          { name: "幫助中心", url: urljoin(webConfig.basePath, "help") },
+          {
+            name: "付費方案",
+            url: urljoin(webConfig.basePath, "help", "pricing")
+          }
+        ]}
+      />
       <Header />
       <div className={classes.container}>
         <Title text="付費方案" hideBottomLine />

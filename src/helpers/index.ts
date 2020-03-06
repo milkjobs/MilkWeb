@@ -1,9 +1,10 @@
-export { default as AlgoliaService } from "./AlgoliaService";
-export { default as ErrorCatcher } from "./ErrorCatcher";
-export { default as NotFound } from "./NotFound";
-export { default as PageMetadata } from "./PageMetadata";
+export * from "./AlgoliaService";
 export * from "./ApiService";
+export * from "./BreadcrumbListStructuredData";
+export * from "./ErrorCatcher";
 export * from "./JobPostingStructuredData";
+export * from "./NotFound";
+export * from "./PageMetadata";
 export * from "./postCode";
 export * from "./SitelinksSearchboxStructuredData";
 export * from "./types";

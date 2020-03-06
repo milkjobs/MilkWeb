@@ -41,4 +41,4 @@ const PageMetadata: React.FC<Props> = props => {
   );
 };
 
-export default PageMetadata;
+export { PageMetadata };

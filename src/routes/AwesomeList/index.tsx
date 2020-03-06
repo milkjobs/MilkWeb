@@ -1,5 +1,5 @@
 import { AwesomeList as AwesomeListType } from "@frankyjuang/milkapi-client";
-import { Fab, CircularProgress } from "@material-ui/core";
+import { CircularProgress, Fab } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -14,10 +14,12 @@ import to from "await-to-js";
 import { AwesomeHeader, CompanyCard } from "components/Awesome";
 import { Header } from "components/Header";
 import { ScrollTop, Title } from "components/Util";
-import { PageMetadata } from "helpers";
+import { webConfig } from "config";
+import { BreadcrumbListStructuredData, PageMetadata } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useAuth } from "stores";
+import urljoin from "url-join";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -66,7 +68,7 @@ const AwesomeList: React.FC = () => {
       newSupportTicket: {
         subject: params.name || "我要建議",
         body: suggestion,
-        email: "awesomeSuggestion@milk.jobs"
+        email: "awesome-suggestion@milk.jobs"
       }
     });
     setSuggestion(undefined);
@@ -91,6 +93,15 @@ const AwesomeList: React.FC = () => {
       <PageMetadata
         title={`${params.name}－牛奶找工作`}
         description={introduction}
+      />
+      <BreadcrumbListStructuredData
+        breadcrumbs={[
+          { name: "就業精選", url: urljoin(webConfig.basePath, "departments") },
+          {
+            name: params.name,
+            url: urljoin(webConfig.basePath, "awesome", params.name)
+          }
+        ]}
       />
       <Header />
       <div className={classes.container}>
