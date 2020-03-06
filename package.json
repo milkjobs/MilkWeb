@@ -74,6 +74,7 @@
   "devDependencies": {
     "@mysql/xdevapi": "^8.0.19",
     "@types/lodash": "^4.14.149",
+    "@types/mysql": "^2.15.9",
     "@types/node": "^13.7.7",
     "@types/qrcode.react": "^1.0.0",
     "@types/qs": "^6.9.1",
@@ -99,6 +100,7 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^2.5.0",
+    "mysql": "^2.18.1",
     "prettier": "^1.19.1",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.8.3",
