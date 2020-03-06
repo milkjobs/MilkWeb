@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "baseUrl": "src",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -17,6 +16,5 @@
     "noEmit": true,
     "jsx": "preserve"
   },
-  "include": ["src/**/*"],
-  "exclude": ["src/tlk.js"]
+  "include": ["sitemap.ts"]
 }
