@@ -10,12 +10,19 @@ import {
   JobStatistics,
   JobTitle
 } from "components/Job";
+import { webConfig } from "config";
 import "firebase/analytics";
 import firebase from "firebase/app";
-import { JobPostingStructuredData, PageMetadata, getPostCode } from "helpers";
+import {
+  BreadcrumbListStructuredData,
+  getPostCode,
+  JobPostingStructuredData,
+  PageMetadata
+} from "helpers";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "stores";
+import urljoin from "url-join";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,14 +30,13 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper
   },
   container: {
+    alignItems: "center",
+    backgroundColor: theme.palette.background.paper,
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-    paddingTop: 40,
-    paddingBottom: 100,
     height: "100%",
-    flex: 1,
-    backgroundColor: theme.palette.background.paper,
+    paddingBottom: 100,
+    paddingTop: 40,
     [theme.breakpoints.down("xs")]: {
       paddingTop: 0,
       paddingBottom: 0
@@ -129,6 +135,22 @@ const Job: React.FC = () => {
             minSalary={job.minSalary}
             maxSalary={job.maxSalary}
             type={job.type}
+          />
+          <BreadcrumbListStructuredData
+            breadcrumbs={[
+              {
+                name: job.team.name,
+                url: urljoin(webConfig.basePath, "team", job.team.uuid)
+              },
+              {
+                name: "工作機會",
+                url: urljoin(webConfig.basePath, "team", job.team.uuid, "jobs")
+              },
+              {
+                name: job.name,
+                url: urljoin(webConfig.basePath, "job", job.uuid)
+              }
+            ]}
           />
         </>
       )}

@@ -48,6 +48,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
 
         return (
           <LoginDialog
+            {...props}
             isOpen={true}
             close={() => {
               // Do nothing.

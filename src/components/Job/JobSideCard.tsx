@@ -196,7 +196,6 @@ const JobSideCard: React.FC<Props> = props => {
         if (applicationChannel) {
           applicationChannel.getMetaData([jobId], res => {
             try {
-              console.warn(res);
               res[jobId] === "job" && setChannel(applicationChannel);
             } catch (err) {
               return;

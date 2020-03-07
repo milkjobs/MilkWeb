@@ -182,14 +182,12 @@ const TeamJobs: React.FC<Props> = props => {
 };
 
 const Team: React.FC = () => {
-  const [value, setValue] = useState(0);
-  const { user, getApi } = useAuth();
-  const [team, setTeam] = useState<TeamType>();
   const classes = useStyles();
-
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setValue(newValue);
-  };
+  const tabsStyle = useTabsStyles();
+  const tabStyle = useTabStyles();
+  const { user, getApi } = useAuth();
+  const [tabIndex, setTabIndex] = useState(0);
+  const [team, setTeam] = useState<TeamType>();
 
   useEffect(() => {
     const getTeam = async () => {
@@ -208,17 +206,17 @@ const Team: React.FC = () => {
       <div className={classes.container}>
         {team && <TeamInfo {...team} />}
         <Tabs
-          value={value}
-          onChange={handleChange}
+          classes={tabsStyle}
           indicatorColor="primary"
+          onChange={(_e, value) => setTabIndex(value)}
           textColor="primary"
-          classes={useTabsStyles()}
+          value={tabIndex}
         >
-          <Tab disableRipple label="團隊介紹" classes={useTabStyles()} />
-          <Tab disableRipple label="人才招募" classes={useTabStyles()} />
+          <Tab disableRipple label="公司介紹" classes={tabStyle} />
+          <Tab disableRipple label="人才招募" classes={tabStyle} />
         </Tabs>
-        {value === 0 && team && <TeamIntroduction team={team} />}
-        {value === 1 && team && <TeamJobs team={team} />}
+        {tabIndex === 0 && team && <TeamIntroduction team={team} />}
+        {tabIndex === 1 && team && <TeamJobs team={team} />}
       </div>
     </div>
   );

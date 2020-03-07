@@ -50,6 +50,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
 
         return (
           <LoginDialog
+            {...props}
             isOpen={true}
             close={() => {
               // Do nothing.
@@ -75,7 +76,7 @@ const RootRoute: React.FC = () => {
       <Route path="/job/:id/stat" exact component={JobStatistics} />
       <Route path="/sample-message" exact component={SampleMessage} />
       <Route path="/stories" exact component={Stories} />
-      <Route path="/team/:id" exact component={Team} />
+      <Route path="/team/:id" component={Team} />
       <PrivateRoute path="/join" exact component={JoinTeam} />
       <PrivateRoute path="/message" exact component={Message} />
       <PrivateRoute path="/message/:id" exact component={Message} />

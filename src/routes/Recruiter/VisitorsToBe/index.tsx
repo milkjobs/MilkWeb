@@ -96,12 +96,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const RecruiterAccount: React.FC = () => {
+const VisitorsToBe: React.FC = () => {
+  const classes = useStyles();
+  const tabsStyle = useTabsStyles();
+  const tabStyle = useTabStyles();
   const match = useRouteMatch();
   const location = useLocation();
   const { getApi, user } = useAuth();
   const { theme } = useTheme();
-  const classes = useStyles();
   const [membership, setMembership] = useState<Membership>();
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -173,38 +175,41 @@ const RecruiterAccount: React.FC = () => {
           />
         )}
         <Tabs
-          value={tabIndex}
-          onChange={(_e, value) => setTabIndex(value)}
+          classes={tabsStyle}
           indicatorColor="primary"
+          onChange={(_e, value) => setTabIndex(value)}
           textColor="primary"
-          classes={useTabsStyles()}
+          value={tabIndex}
         >
           <Tab
             disableRipple
             label="使用紀錄"
-            to="/recruiter/visitors-to-be/usage"
+            to={`${match.url}/usage`}
             component={Link}
-            classes={useTabStyles()}
+            classes={tabStyle}
           />
           <Tab
             disableRipple
             label="購買點閱人數"
-            to="/recruiter/visitors-to-be/buy"
+            to={`${match.url}/buy`}
             component={Link}
-            classes={useTabStyles()}
+            classes={tabStyle}
           />
           <Tab
             disableRipple
             label="購買紀錄"
-            to="/recruiter/visitors-to-be/history"
+            to={`${match.url}/history`}
             component={Link}
-            classes={useTabStyles()}
+            classes={tabStyle}
           />
         </Tabs>
         {match && (
           <Switch>
-            <Route path={match.path} exact component={Usage} />
-            <Route path={`${match.path}/usage`} exact component={Usage} />
+            <Route
+              path={[match.path, `${match.path}/usage`]}
+              exact
+              component={Usage}
+            />
             <Route path={`${match.path}/buy`} exact component={Buy} />
             <Route path={`${match.path}/history`} exact component={History} />
             <Route path={match.path} component={NotFound} />
@@ -215,4 +220,4 @@ const RecruiterAccount: React.FC = () => {
   );
 };
 
-export default RecruiterAccount;
+export default VisitorsToBe;

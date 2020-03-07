@@ -38,9 +38,11 @@ const History: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      {orders.map((o, i) => (
-        <OrderEntry key={i} order={o} />
-      ))}
+      {orders.length > 0 ? (
+        orders.map(o => <OrderEntry key={o.uuid} order={o} />)
+      ) : (
+        <div style={{ margin: 16 }}>無購買紀錄</div>
+      )}
     </div>
   );
 };

@@ -1,4 +1,3 @@
-export { default as TeamCard } from "./teamCard";
 export { default as TeamDescription } from "./teamDescription";
 export { default as TeamInfo } from "./teamInfo";
 export { default as TeamLocation } from "./teamLocation";

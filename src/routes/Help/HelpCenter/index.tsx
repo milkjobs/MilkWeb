@@ -61,7 +61,7 @@ const HelpCenter: React.FC = () => {
           <Title text="幫助中心" />
           <GridList cellHeight={100} cols={large ? 4 : small ? 1 : 2}>
             <GridListTile cols={1}>
-              <Link to={`${match.path}/privacy`} className={classes.link}>
+              <Link to={`${match.url}/privacy`} className={classes.link}>
                 <Card variant="outlined" className={classes.card}>
                   <CardHeader
                     title="隱私權政策"
@@ -71,21 +71,21 @@ const HelpCenter: React.FC = () => {
               </Link>
             </GridListTile>
             <GridListTile cols={1}>
-              <Link to={`${match.path}/tos`} className={classes.link}>
+              <Link to={`${match.url}/tos`} className={classes.link}>
                 <Card variant="outlined" className={classes.card}>
                   <CardHeader title="服務條款" className={classes.cardHeader} />
                 </Card>
               </Link>
             </GridListTile>
             <GridListTile cols={1}>
-              <Link to={`${match.path}/pricing`} className={classes.link}>
+              <Link to={`${match.url}/pricing`} className={classes.link}>
                 <Card variant="outlined" className={classes.card}>
                   <CardHeader title="付費方案" className={classes.cardHeader} />
                 </Card>
               </Link>
             </GridListTile>
             <GridListTile cols={1}>
-              <Link to={`${match.path}/faq`} className={classes.link}>
+              <Link to={`${match.url}/faq`} className={classes.link}>
                 <Card variant="outlined" className={classes.card}>
                   <CardHeader title="常見問題" className={classes.cardHeader} />
                 </Card>

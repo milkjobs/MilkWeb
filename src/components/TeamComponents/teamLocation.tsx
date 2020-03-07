@@ -33,14 +33,16 @@ const styles = (theme: Theme) =>
       }
     },
     location: {
+      alignItems: "center",
+      color: theme.palette.text.primary,
       display: "flex",
       flex: 1,
       fontSize: 16,
-      color: theme.palette.text.primary,
-      marginRight: "auto",
       justifyContent: "center",
-      alignItems: "center",
       marginBottom: 16,
+      marginRight: "auto",
+      wordBreak: "break-all",
+      textAlign: "left",
       [theme.breakpoints.down("xs")]: {
         fontSize: 14
       }
@@ -48,10 +50,11 @@ const styles = (theme: Theme) =>
     mapLink: {
       marginLeft: 16,
       color: theme.palette.secondary.main,
+      cursor: "pointer",
+      wordBreak: "keep-all",
       [theme.breakpoints.down("xs")]: {
         fontSize: 14
-      },
-      cursor: "pointer"
+      }
     }
   });
 
