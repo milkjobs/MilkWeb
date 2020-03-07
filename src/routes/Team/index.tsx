@@ -5,13 +5,13 @@ import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import { Header } from "components/Header";
 import { TeamInfo } from "components/TeamComponents";
-import { NotFound, PageMetadata } from "helpers";
+import { PageMetadata } from "helpers";
 import React, { useEffect, useState } from "react";
 import {
   Link,
+  Redirect,
   Route,
   Switch,
-  useLocation,
   useParams,
   useRouteMatch
 } from "react-router-dom";
@@ -109,7 +109,6 @@ const Team: React.FC = () => {
   const tabStyle = useTabStyles();
   const match = useRouteMatch();
   const params = useParams<{ id: string }>();
-  const location = useLocation();
   const { getApi } = useAuth();
   const [tabIndex, setTabIndex] = useState(0);
   const [team, setTeam] = useState<TeamType>();
@@ -125,14 +124,6 @@ const Team: React.FC = () => {
 
     updateTeam();
   }, [getApi, params.id]);
-
-  useEffect(() => {
-    if (location.pathname === `${match.url}/intro`) {
-      setTabIndex(0);
-    } else if (location.pathname === `${match.url}/jobs`) {
-      setTabIndex(1);
-    }
-  }, [location.pathname, match.url]);
 
   return (
     <div className={classes.root}>
@@ -159,14 +150,14 @@ const Team: React.FC = () => {
               component={Link}
               disableRipple
               label="公司介紹"
-              to={`${match.url}/intro`}
+              to={`/team/${params.id}/intro`}
             />
             <Tab
               classes={tabStyle}
               component={Link}
               disableRipple
               label="工作機會"
-              to={`${match.url}/jobs`}
+              to={`/team/${params.id}/jobs`}
             />
           </Tabs>
           {match && (
@@ -174,14 +165,23 @@ const Team: React.FC = () => {
               <Route
                 path={[match.path, `${match.path}/intro`]}
                 exact
-                render={props => <Intro {...props} team={team} />}
+                render={props => {
+                  setTabIndex(0);
+                  return <Intro {...props} team={team} />;
+                }}
               />
               <Route
                 path={`${match.path}/jobs`}
                 exact
-                render={props => <Jobs {...props} team={team} />}
+                render={props => {
+                  setTabIndex(1);
+                  return <Jobs {...props} team={team} />;
+                }}
               />
-              <Route path={match.path} component={NotFound} />
+              <Route
+                path={match.path}
+                render={() => <Redirect to={`/team/${params.id}`} />}
+              />
             </Switch>
           )}
         </div>

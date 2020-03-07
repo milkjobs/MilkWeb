@@ -7,15 +7,8 @@ import Icon from "@mdi/react";
 import to from "await-to-js";
 import { Header } from "components/Header";
 import { Title } from "components/Util";
-import { NotFound } from "helpers";
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  Link,
-  Route,
-  Switch,
-  useLocation,
-  useRouteMatch
-} from "react-router-dom";
+import { Link, Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { useAuth, useTheme } from "stores";
 import Buy from "./Buy";
 import History from "./History";
@@ -101,7 +94,6 @@ const VisitorsToBe: React.FC = () => {
   const tabsStyle = useTabsStyles();
   const tabStyle = useTabStyles();
   const match = useRouteMatch();
-  const location = useLocation();
   const { getApi, user } = useAuth();
   const { theme } = useTheme();
   const [membership, setMembership] = useState<Membership>();
@@ -123,16 +115,6 @@ const VisitorsToBe: React.FC = () => {
   useEffect(() => {
     getTeamMembership();
   }, [getTeamMembership]);
-
-  useEffect(() => {
-    if (location.pathname === "/recruiter/visitors-to-be/usage") {
-      setTabIndex(0);
-    } else if (location.pathname === "/recruiter/visitors-to-be/buy") {
-      setTabIndex(1);
-    } else if (location.pathname === "/recruiter/visitors-to-be/history") {
-      setTabIndex(2);
-    }
-  }, [location.pathname]);
 
   useEffect(() => {
     const listener = (e: MessageEvent) => {
@@ -184,21 +166,21 @@ const VisitorsToBe: React.FC = () => {
           <Tab
             disableRipple
             label="使用紀錄"
-            to={`${match.url}/usage`}
+            to="/recruiter/visitors-to-be/usage"
             component={Link}
             classes={tabStyle}
           />
           <Tab
             disableRipple
             label="購買點閱人數"
-            to={`${match.url}/buy`}
+            to="/recruiter/visitors-to-be/buy"
             component={Link}
             classes={tabStyle}
           />
           <Tab
             disableRipple
             label="購買紀錄"
-            to={`${match.url}/history`}
+            to="/recruiter/visitors-to-be/history"
             component={Link}
             classes={tabStyle}
           />
@@ -208,11 +190,31 @@ const VisitorsToBe: React.FC = () => {
             <Route
               path={[match.path, `${match.path}/usage`]}
               exact
-              component={Usage}
+              render={() => {
+                setTabIndex(0);
+                return <Usage />;
+              }}
             />
-            <Route path={`${match.path}/buy`} exact component={Buy} />
-            <Route path={`${match.path}/history`} exact component={History} />
-            <Route path={match.path} component={NotFound} />
+            <Route
+              path={`${match.path}/buy`}
+              exact
+              render={() => {
+                setTabIndex(1);
+                return <Buy />;
+              }}
+            />
+            <Route
+              path={`${match.path}/history`}
+              exact
+              render={() => {
+                setTabIndex(2);
+                return <History />;
+              }}
+            />
+            <Route
+              path={match.path}
+              render={() => <Redirect to="/recruiter/visitors-to-be" />}
+            />
           </Switch>
         )}
       </div>
