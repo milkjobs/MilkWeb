@@ -142,6 +142,7 @@ const getPaths = async () => {
       )
     );
     paths.push(...teamUuids.map(uuid => `/team/${uuid}`));
+    paths.push(...teamUuids.map(uuid => `/team/${uuid}/jobs`));
 
     const jobUuids: string[] = await new Promise((resolve, reject) =>
       connection.query(
