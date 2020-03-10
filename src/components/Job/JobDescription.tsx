@@ -1,4 +1,5 @@
 import { Tag } from "@frankyjuang/milkapi-client";
+import { Chip } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
@@ -50,16 +51,6 @@ const useStyles = makeStyles(theme => ({
   tags: {
     display: "flex",
     marginTop: 16
-  },
-  tag: {
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: theme.palette.text.primary,
-    color: theme.palette.text.primary,
-    padding: 2,
-    fontSize: 14,
-    margin: 4,
-    borderRadius: 4
   }
 }));
 
@@ -68,9 +59,8 @@ interface Props {
   tags?: Tag[];
 }
 
-const JobDescription: React.FC<Props> = props => {
+const JobDescription: React.FC<Props> = ({ description, tags }) => {
   const classes = useStyles();
-  const { description, tags } = props;
 
   return (
     <div className={classes.container}>
@@ -89,9 +79,12 @@ const JobDescription: React.FC<Props> = props => {
       {tags && (
         <div className={classes.tags}>
           {tags.map(tag => (
-            <div className={classes.tag} key={tag.uuid}>
-              {tag.label}
-            </div>
+            <Chip
+              key={tag.uuid}
+              variant="outlined"
+              label={tag.label}
+              style={{ margin: 4 }}
+            />
           ))}
         </div>
       )}
