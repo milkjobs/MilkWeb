@@ -1,10 +1,8 @@
 import { PublicUser } from "@frankyjuang/milkapi-client";
 import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { DownloadApp } from "components/Util";
 import React, { useState } from "react";
-import { useHistory } from "react-router";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -21,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       display: "flex",
       width: "100%",
-      justifyContent: "center",
+      justifyContent: "space-between",
       alignItems: "center"
     }
   },
@@ -58,19 +56,8 @@ interface Props {
 
 const JobFooter: React.FC<Props> = props => {
   const { recruiter } = props;
-  const history = useHistory();
   const classes = useStyles();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const showDownloadAppDialog = () => {
-    if (recruiter.uuid === "us3nb3W190WtXQd3NKQzVtDTZOa2")
-      history.push("/sample-message");
-    setIsDialogOpen(true);
-  };
-
-  const hideDownloadAppDialog = () => {
-    setIsDialogOpen(false);
-  };
 
   return (
     <div className={classes.card}>
@@ -85,10 +72,11 @@ const JobFooter: React.FC<Props> = props => {
           <div className={classes.recruiterTitle}>{recruiter.title}</div>
         </div>
       </div>
-      <Button className={classes.button} onClick={showDownloadAppDialog}>
+      <div></div>
+      {/* <Button className={classes.button} onClick={() => setIsDialogOpen(true)}>
         立即詢問
-      </Button>
-      <DownloadApp isOpen={isDialogOpen} close={hideDownloadAppDialog} />
+      </Button> */}
+      <DownloadApp isOpen={isDialogOpen} close={() => setIsDialogOpen(false)} />
     </div>
   );
 };

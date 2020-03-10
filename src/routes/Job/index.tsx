@@ -3,6 +3,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
 import { Header } from "components/Header";
 import {
+  JobContact,
   JobDescription,
   JobFooter,
   JobLocation,
@@ -167,17 +168,12 @@ const Job: React.FC = () => {
                   <JobDescription description={job.description} tags={[]} />
                 )}
                 <JobLocation address={job.address} />
+                {job.contact && <JobContact contact={job.contact} />}
                 <JobStatistics jobId={params.id} createdAt={job.createdAt} />
               </div>
-              {job.recruiter && (
-                <div className={classes.descriptionSide}>
-                  <JobSideCard
-                    recruiter={job.recruiter}
-                    jobId={job.uuid}
-                    team={job.team}
-                  />
-                </div>
-              )}
+              <div className={classes.descriptionSide}>
+                <JobSideCard job={job} />
+              </div>
             </div>
             {job.recruiter && <JobFooter recruiter={job.recruiter} />}
           </div>

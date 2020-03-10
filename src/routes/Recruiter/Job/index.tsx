@@ -2,6 +2,7 @@ import { Job as JobType } from "@frankyjuang/milkapi-client";
 import { makeStyles } from "@material-ui/core/styles";
 import { Header } from "components/Header";
 import {
+  JobContact,
   JobDescription,
   JobLocation,
   JobTitle,
@@ -107,6 +108,7 @@ const RecruiterJob: React.FC = () => {
                   />
                 )}
                 <JobLocation address={job.address} />
+                {job.contact && <JobContact contact={job.contact} />}
               </div>
               <div className={classes.descriptionSide}>
                 <RecruiterJobSideCard job={job} />

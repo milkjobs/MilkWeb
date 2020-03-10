@@ -1,9 +1,4 @@
-import {
-  Backdrop,
-  makeStyles,
-  useMediaQuery,
-  useTheme
-} from "@material-ui/core";
+import { Dialog, makeStyles, useMediaQuery, useTheme } from "@material-ui/core";
 import { AppStore, GooglePlay } from "assets/icons";
 import { Chat, Dark, Home, Job } from "assets/mockup";
 import { getMobileOS, MobileOS } from "helpers";
@@ -11,10 +6,12 @@ import QRCode from "qrcode.react";
 import React, { useEffect, useState } from "react";
 
 const useStyles = makeStyles(theme => ({
-  backdrop: {
+  root: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
-    backgroundColor: "rgba(0, 0, 0, 0.8)"
+    justifyContent: "center",
+    textAlign: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.7)"
   },
   title: {
     fontSize: 24,
@@ -70,7 +67,12 @@ const DownloadApp: React.FC<Props> = ({ isOpen, close }) => {
   }, [isOpen, slides.length]);
 
   return (
-    <Backdrop className={classes.backdrop} open={isOpen} onClick={close}>
+    <Dialog
+      fullScreen
+      open={isOpen}
+      PaperProps={{ className: classes.root }}
+      onClick={close}
+    >
       <div
         style={{
           display: "flex",
@@ -151,7 +153,7 @@ const DownloadApp: React.FC<Props> = ({ isOpen, close }) => {
           </div>
         </div>
       </div>
-    </Backdrop>
+    </Dialog>
   );
 };
 

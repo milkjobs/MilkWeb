@@ -1,7 +1,7 @@
-import { Avatar, Badge, makeStyles } from "@material-ui/core";
+import { Avatar, makeStyles } from "@material-ui/core";
 import React, { MouseEvent } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth, useChannel } from "stores";
+import { useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
   link: {
@@ -43,10 +43,10 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
   const { openProfileMenu } = props;
   const classes = useStyles();
   const { user } = useAuth();
-  const { unreadMessageCount } = useChannel();
+  // const { unreadMessageCount } = useChannel();
   const location = useLocation();
   const isRecruiterHome = location.pathname === "/recruiter";
-  const isRecruiterMessage = location.pathname.startsWith("/recruiter/message");
+  // const isRecruiterMessage = location.pathname.startsWith("/recruiter/message");
 
   return (
     <div className={classes.sectionDesktop}>
@@ -65,7 +65,7 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
           <span className={classes.tab}>職缺管理</span>
         </Link>
       )}
-      {!isRecruiterMessage && (
+      {/* {!isRecruiterMessage && (
         <Link to="/recruiter/message" className={classes.link}>
           <span className={classes.tab}>
             <Badge
@@ -77,7 +77,7 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
             </Badge>
           </span>
         </Link>
-      )}
+      )} */}
       {user && (
         <span className={classes.tab} onClick={openProfileMenu}>
           <Avatar

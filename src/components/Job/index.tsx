@@ -1,4 +1,5 @@
 export * from "./JobCard";
+export * from "./JobContact";
 export * from "./JobCreateForm";
 export * from "./JobDescription";
 export * from "./JobEditForm";

@@ -1,4 +1,3 @@
-import { DetailedAddress } from "@frankyjuang/milkapi-client";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
@@ -27,7 +26,7 @@ const useStyles = makeStyles(theme => ({
       marginBottom: 4
     }
   },
-  location: {
+  description: {
     alignItems: "center",
     color: theme.palette.text.primary,
     display: "flex",
@@ -41,46 +40,22 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       fontSize: 14
     }
-  },
-  mapLink: {
-    marginLeft: 16,
-    color: theme.palette.secondary.main,
-    cursor: "pointer",
-    wordBreak: "keep-all",
-    [theme.breakpoints.down("xs")]: {
-      fontSize: 14
-    }
   }
 }));
 
 interface Props {
-  address: DetailedAddress;
+  contact: string;
 }
 
-const JobLocation: React.FC<Props> = props => {
-  const { address } = props;
+const JobContact: React.FC<Props> = ({ contact }) => {
   const classes = useStyles();
-  const fullAddress = address.area + address.subArea + address.street;
 
   return (
     <div className={classes.container}>
-      <div className={classes.title}>地點</div>
-      <div className={classes.location}>
-        {fullAddress}
-        <div
-          className={classes.mapLink}
-          onClick={() => {
-            window.open(
-              `https://www.google.com.tw/maps/search/${fullAddress}`,
-              "_blank"
-            );
-          }}
-        >
-          查看地圖
-        </div>
-      </div>
+      <div className={classes.title}>聯絡方式</div>
+      <div className={classes.description}>{contact}</div>
     </div>
   );
 };
 
-export { JobLocation };
+export { JobContact };
