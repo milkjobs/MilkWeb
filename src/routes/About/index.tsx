@@ -59,12 +59,12 @@ const About: React.FC = () => {
       <PageMetadata title="關於我們－牛奶找工作" />
       <Header />
       <div className={classes.container}>
-        <img alt="app" className={classes.appImage} src={Slogan} />
-        <img alt="app" className={classes.appImage} src={Dark} />
-        <img alt="app" className={classes.appImage} src={Job} />
         <img alt="app" className={classes.appImage} src={Manage} />
-        {/* <img alt="app" className={classes.appImage} src={Chat} /> */}
+        <img alt="app" className={classes.appImage} src={Job} />
         <img alt="app" className={classes.appImage} src={Download} />
+        {/* <img alt="app" className={classes.appImage} src={Dark} /> */}
+        {/* <img alt="app" className={classes.appImage} src={Slogan} /> */}
+        {/* <img alt="app" className={classes.appImage} src={Chat} /> */}
         <div className={classes.iconsContainer}>
           <a
             rel="noreferrer noopener"
