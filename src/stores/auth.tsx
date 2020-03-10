@@ -20,6 +20,7 @@ import {
   UserApi,
   VerificationApi
 } from "@frankyjuang/milkapi-client";
+import branch from "branch-sdk";
 import { apiServiceConfig } from "config";
 import "firebase/analytics";
 import firebase from "firebase/app";
@@ -35,30 +36,26 @@ import React, {
 
 interface AuthContextProps {
   getApi: <T extends keyof Apis>(type: T) => Promise<ExtractApi<TypedApis, T>>;
-  isAuthenticated: boolean;
   loading: boolean;
   reloadUser: () => Promise<void>;
   user: User | null;
-  userId: string | null;
 }
 
 const AuthContext = createContext<AuthContextProps>({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getApi: () => undefined as any,
-  isAuthenticated: false,
   loading: true,
-  reloadUser: async () => {},
-  user: null,
-  userId: null
+  reloadUser: async () => {
+    // Do nothing.
+  },
+  user: null
 });
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
-  const [userId, setUserId] = useState<string | null>(null);
 
   const getApi: <T extends keyof Apis>(
     type: T
@@ -124,8 +121,7 @@ export const AuthProvider = ({ children }) => {
         userApi.getUser({ userId, role: Role.Recruiter })
       ]);
       firebase.analytics().setUserId(userId);
-      setIsAuthenticated(true);
-      setUserId(userId);
+      branch.setIdentity(userId);
       setUser({ ...user, recruiterInfo: recruiter.recruiterInfo });
     }
   }, [getApi]);
@@ -135,8 +131,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem(item);
     }
     firebase.analytics().setUserId("");
-    setIsAuthenticated(false);
-    setUserId(null);
+    branch.logout();
     setUser(null);
   }, []);
 
@@ -161,11 +156,9 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         getApi,
-        isAuthenticated,
         loading,
         reloadUser,
-        user,
-        userId
+        user
       }}
     >
       {children}

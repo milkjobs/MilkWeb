@@ -111,7 +111,8 @@ const DownloadApp: React.FC<Props> = ({ isOpen, close }) => {
             isMobile
               ? {
                   marginTop: "auto",
-                  marginBottom: "auto"
+                  marginBottom: "auto",
+                  padding: 0
                 }
               : {
                   display: "flex",
@@ -128,13 +129,7 @@ const DownloadApp: React.FC<Props> = ({ isOpen, close }) => {
               {slides[currentSlideIndex].title}
             </div>
             {isMobile ? (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center"
-                }}
-              >
+              <>
                 {getMobileOS() !== MobileOS.Android && (
                   <a href="https://to.milk.jobs/app">
                     <img alt="app store" src={AppStore} width="200" />
@@ -145,7 +140,7 @@ const DownloadApp: React.FC<Props> = ({ isOpen, close }) => {
                     <img alt="google play" src={GooglePlay} width="230" />
                   </a>
                 )}
-              </div>
+              </>
             ) : (
               <QRCode
                 size={240}

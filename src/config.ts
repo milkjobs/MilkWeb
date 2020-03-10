@@ -75,6 +75,18 @@ const sentryConfigs: Config<{ dsn: string }> = {
   }
 };
 
+const branchConfigs: Config<{ key: string }> = {
+  local: {
+    key: "key_test_ghUB5PhDzj8Rn8S0J79jvfdhvwkB0Blw"
+  },
+  staging: {
+    key: "key_test_ghUB5PhDzj8Rn8S0J79jvfdhvwkB0Blw"
+  },
+  production: {
+    key: "key_live_lcVv5RjCyfWHi8N3J9TJHildqzhA7zlb"
+  }
+};
+
 const firebaseConfigs: Config<{
   apiKey: string;
   authDomain: string;
@@ -125,6 +137,7 @@ export const webConfig = webConfigs[environment];
 export const apiServiceConfig = apiServiceConfigs[environment];
 export const algoliaConfig = algoliaConfigs[environment];
 export const sentryConfig = sentryConfigs[environment];
+export const branchConfig = branchConfigs[environment];
 export const firebaseConfig = firebaseConfigs[environment];
 export const sendbirdConfig = sendbirdConfigs[environment];
 

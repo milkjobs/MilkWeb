@@ -1,13 +1,20 @@
-import "./polyfills";
 import * as Sentry from "@sentry/browser";
-import { environment, firebaseConfig, sentryConfig } from "config";
+import branch from "branch-sdk";
+import {
+  branchConfig,
+  environment,
+  firebaseConfig,
+  sentryConfig
+} from "config";
 import firebase from "firebase/app";
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import "./index.css";
+import "./polyfills";
 import * as serviceWorker from "./serviceWorker";
 
+branch.init(branchConfig.key);
 firebase.initializeApp(firebaseConfig);
 
 Sentry.init({

@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogContent,
   InputAdornment,
@@ -10,12 +11,15 @@ import {
 } from "@material-ui/core";
 import { Smartphone } from "@material-ui/icons";
 import to from "await-to-js";
+import branch from "branch-sdk";
+import { environment } from "config";
 import firebase, { FirebaseError } from "firebase/app";
 import "firebase/auth";
 import { isIntlPhoneNumber, isValidVerificationCode } from "helpers";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Countdown from "react-countdown-now";
 import { Link } from "react-router-dom";
+import { useAuth } from "stores";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -61,12 +65,13 @@ interface Props {
   close: () => void;
 }
 
-const LoginDialog: React.FC<Props> = props => {
-  const { isOpen, close } = props;
+const LoginDialog: React.FC<Props> = ({ isOpen, close }) => {
   const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { user } = useAuth();
 
+  const [loading, setLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>();
   const [phoneNumberHelperText, setPhoneNumberHelperText] = useState<string>();
 
@@ -82,6 +87,7 @@ const LoginDialog: React.FC<Props> = props => {
   const [verifier, setVerifier] = useState<firebase.auth.ConfirmationResult>();
 
   const reset = () => {
+    setLoading(false);
     setPhoneNumber(undefined);
     setPhoneNumberHelperText(undefined);
     setCodeSent(false);
@@ -136,23 +142,45 @@ const LoginDialog: React.FC<Props> = props => {
       return;
     }
 
-    const [err] = await to<firebase.auth.UserCredential, FirebaseError>(
-      verifier.confirm(code)
-    );
-    if (err && err.code === "auth/invalid-verification-code") {
-      setCodeHelperText("驗證碼錯誤");
-      return;
+    setLoading(true);
+    const [err, credential] = await to<
+      firebase.auth.UserCredential,
+      FirebaseError
+    >(verifier.confirm(code));
+    if (err) {
+      setLoading(false);
+      if (err.code === "auth/invalid-verification-code") {
+        setCodeHelperText("驗證碼錯誤");
+        return;
+      }
+      if (err.code === "auth/unknown") {
+        setCodeHelperText("系統異常，請稍後再試");
+        return;
+      }
+      if (err.code === "auth/code-expired") {
+        setCodeHelperText("驗證碼失效，請重新發送後再試");
+        return;
+      }
+
+      console.error(err.code);
+      throw err;
     }
 
-    close();
-    reset();
+    // Send app download text to new users.
+    if (
+      environment === "production" &&
+      credential?.additionalUserInfo?.isNewUser &&
+      credential.user?.phoneNumber
+    ) {
+      branch.sendSMS(credential.user.phoneNumber, {});
+    }
   };
 
   const recaptchaButton = useCallback(async node => {
     if (node) {
       const recaptchaVerifier = new firebase.auth.RecaptchaVerifier(node, {
         size: "invisible",
-        callback: response => {
+        callback: () => {
           // reCAPTCHA solved, allow signInWithPhoneNumber.
           // ...
         },
@@ -166,8 +194,15 @@ const LoginDialog: React.FC<Props> = props => {
     }
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      close();
+      reset();
+    }
+  }, [close, user]);
+
   return (
-    <Dialog open={isOpen} onClose={() => close()}>
+    <Dialog open={isOpen} onClose={close}>
       <DialogContent>
         <form
           noValidate
@@ -263,6 +298,9 @@ const LoginDialog: React.FC<Props> = props => {
                 fullWidth={isMobile}
                 onClick={login}
                 variant="contained"
+                startIcon={
+                  loading && <CircularProgress color="inherit" size={16} />
+                }
               >
                 登入
               </Button>
