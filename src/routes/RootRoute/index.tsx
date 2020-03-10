@@ -35,7 +35,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   component: Component,
   ...rest
 }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { user, loading } = useAuth();
 
   return (
     <Route
@@ -44,7 +44,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
         if (loading) {
           return null;
         }
-        if (isAuthenticated) {
+        if (user) {
           return <Component {...props} />;
         }
 

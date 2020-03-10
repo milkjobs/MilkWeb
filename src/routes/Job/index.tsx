@@ -91,7 +91,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Job: React.FC = () => {
-  const { getApi, isAuthenticated } = useAuth();
+  const { getApi, user } = useAuth();
   const params = useParams<{ id: string }>();
   const classes = useStyles();
   const [job, setJob] = useState<JobType>();
@@ -102,7 +102,7 @@ const Job: React.FC = () => {
       setLoading(true);
       const jobApi = await getApi("Job");
       let fetchedJob: JobType | undefined;
-      if (isAuthenticated) {
+      if (user) {
         [, fetchedJob] = await to(jobApi.getJob({ jobId: params.id }));
       } else {
         [, fetchedJob] = await to(
@@ -118,7 +118,7 @@ const Job: React.FC = () => {
       setLoading(false);
     };
     fetchJob();
-  }, [getApi, isAuthenticated, params.id]);
+  }, [getApi, user, params.id]);
 
   return (
     <div className={classes.root}>

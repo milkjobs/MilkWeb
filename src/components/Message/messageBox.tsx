@@ -97,7 +97,7 @@ interface Props {
 
 const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
   const classes = useStyles();
-  const { userId, user } = useAuth();
+  const { user } = useAuth();
   const { sb, addChannelHandler, removeChannelHandler } = useChannel();
   const [ref, inView] = useInView();
   const [input, setInput] = useState("");
@@ -325,7 +325,7 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
       </div>
       <div className={classes.messages} ref={messagesEl}>
         <div ref={ref}></div>
-        <MessageList messages={messages.current} userId={userId || ""} />
+        <MessageList messages={messages.current} userId={user?.uuid || ""} />
       </div>
       <div className={classes.messageInput}>
         {!isRecruiter && (

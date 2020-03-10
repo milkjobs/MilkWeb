@@ -29,7 +29,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   component: Component,
   ...rest
 }) => {
-  const { isAuthenticated, loading, user } = useAuth();
+  const { loading, user } = useAuth();
 
   return (
     <Route
@@ -38,8 +38,8 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
         if (loading) {
           return null;
         }
-        if (isAuthenticated) {
-          return user && user.recruiterInfo ? (
+        if (user) {
+          return user.recruiterInfo ? (
             <Component {...props} />
           ) : (
             <Redirect to="/" />

@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const SampleMessageBox: React.FC = () => {
   const classes = useStyles();
 
-  const { userId } = useAuth();
+  const { user } = useAuth();
 
   const [input, setInput] = useState("");
   const messages = useRef<any>([
@@ -135,7 +135,7 @@ const SampleMessageBox: React.FC = () => {
           messagesEl.current = el;
         }}
       >
-        <MessageList messages={messages.current} userId={userId!} />
+        <MessageList messages={messages.current} userId={user?.uuid || ""} />
       </div>
       <div className={classes.messageInput}>
         {/* <div style={{ display: "flex", marginLeft: 8, marginTop: 4 }}>
