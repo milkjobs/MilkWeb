@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core";
-import { Chat, Dark, Download, Job, Manage, Slogan } from "assets/about";
+import { Dark, Download, Job, Manage, Slogan } from "assets/about";
 import {
   AppStore,
   Facebook,
@@ -8,8 +8,8 @@ import {
   Youtube
 } from "assets/icons";
 import { Header } from "components/Header";
-import React from "react";
 import { PageMetadata } from "helpers";
+import React from "react";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -63,7 +63,7 @@ const About: React.FC = () => {
         <img alt="app" className={classes.appImage} src={Dark} />
         <img alt="app" className={classes.appImage} src={Job} />
         <img alt="app" className={classes.appImage} src={Manage} />
-        <img alt="app" className={classes.appImage} src={Chat} />
+        {/* <img alt="app" className={classes.appImage} src={Chat} /> */}
         <img alt="app" className={classes.appImage} src={Download} />
         <div className={classes.iconsContainer}>
           <a

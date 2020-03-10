@@ -1,6 +1,6 @@
 import { Dialog, makeStyles, useMediaQuery, useTheme } from "@material-ui/core";
 import { AppStore, GooglePlay } from "assets/icons";
-import { Chat, Dark, Home, Job } from "assets/mockup";
+import { Dark, Home, Job } from "assets/mockup";
 import { getMobileOS, MobileOS } from "helpers";
 import QRCode from "qrcode.react";
 import React, { useEffect, useState } from "react";
@@ -50,7 +50,7 @@ const DownloadApp: React.FC<Props> = ({ isOpen, close }) => {
   const slides: Slide[] = [
     { title: "手機完成，輕鬆自在", image: Home },
     { title: "簡單，直覺", image: Job },
-    { title: "不漏接任何訊息", image: Chat },
+    // { title: "不漏接任何訊息", image: Chat },
     { title: "保護眼睛，更加專注", image: Dark }
   ];
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
