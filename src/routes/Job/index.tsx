@@ -1,6 +1,7 @@
 import { Job as JobType } from "@frankyjuang/milkapi-client";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
+import to from "await-to-js";
 import { Header } from "components/Header";
 import {
   JobContact,
@@ -11,6 +12,7 @@ import {
   JobStatistics,
   JobTitle
 } from "components/Job";
+import { ErrorStatus } from "components/Util";
 import { webConfig } from "config";
 import "firebase/analytics";
 import firebase from "firebase/app";
@@ -93,20 +95,27 @@ const Job: React.FC = () => {
   const params = useParams<{ id: string }>();
   const classes = useStyles();
   const [job, setJob] = useState<JobType>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchJob = async () => {
+      setLoading(true);
       const jobApi = await getApi("Job");
-      let fetchedJob: JobType;
+      let fetchedJob: JobType | undefined;
       if (isAuthenticated) {
-        fetchedJob = await jobApi.getJob({ jobId: params.id });
+        [, fetchedJob] = await to(jobApi.getJob({ jobId: params.id }));
       } else {
-        fetchedJob = await jobApi.getJobAnonymously({ jobId: params.id });
+        [, fetchedJob] = await to(
+          jobApi.getJobAnonymously({ jobId: params.id })
+        );
       }
-      setJob(fetchedJob);
-      firebase
-        .analytics()
-        .logEvent("view_item", { items: [{ id: fetchedJob.uuid }] });
+      if (fetchedJob) {
+        setJob(fetchedJob);
+        firebase
+          .analytics()
+          .logEvent("view_item", { items: [{ id: fetchedJob.uuid }] });
+      }
+      setLoading(false);
     };
     fetchJob();
   }, [getApi, isAuthenticated, params.id]);
@@ -156,7 +165,14 @@ const Job: React.FC = () => {
         </>
       )}
       <Header />
-      {job ? (
+      {loading ? (
+        <CircularProgress className={classes.loading} />
+      ) : !job ? (
+        <ErrorStatus
+          subheader="我們找不到這份工作。"
+          description="錯誤代碼：404"
+        />
+      ) : (
         <div className={classes.container}>
           <div className={classes.infoContainer}>
             <div className={classes.titleContainer}>
@@ -178,8 +194,6 @@ const Job: React.FC = () => {
             {job.recruiter && <JobFooter recruiter={job.recruiter} />}
           </div>
         </div>
-      ) : (
-        <CircularProgress className={classes.loading} />
       )}
     </div>
   );

@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core";
-import { Dark, Download, Job, Manage, Slogan } from "assets/about";
+import { Download, Job, Manage } from "assets/about";
 import {
   AppStore,
   Facebook,

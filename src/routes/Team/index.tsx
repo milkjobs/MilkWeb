@@ -3,8 +3,10 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
+import to from "await-to-js";
 import { Header } from "components/Header";
 import { TeamInfo } from "components/TeamComponents";
+import { ErrorStatus } from "components/Util";
 import { PageMetadata } from "helpers";
 import React, { useEffect, useState } from "react";
 import {
@@ -108,21 +110,27 @@ const Team: React.FC = () => {
   const tabsStyle = useTabsStyles();
   const tabStyle = useTabStyles();
   const match = useRouteMatch();
+  const matchJobsRoute = useRouteMatch("/team/:id/jobs");
   const params = useParams<{ id: string }>();
   const { getApi } = useAuth();
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(matchJobsRoute ? 1 : 0);
   const [team, setTeam] = useState<TeamType>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const updateTeam = async () => {
+    const getTeam = async () => {
+      setLoading(true);
       const teamApi = await getApi("Team");
-      const fetchTeam = await teamApi.getTeam({
-        teamId: params.id
-      });
+      const [, fetchTeam] = await to(
+        teamApi.getTeam({
+          teamId: params.id
+        })
+      );
       setTeam(fetchTeam);
+      setLoading(false);
     };
 
-    updateTeam();
+    getTeam();
   }, [getApi, params.id]);
 
   return (
@@ -135,7 +143,14 @@ const Team: React.FC = () => {
         />
       )}
       <Header />
-      {team ? (
+      {loading ? (
+        <CircularProgress className={classes.loading} />
+      ) : !team ? (
+        <ErrorStatus
+          subheader="我們找不到這間公司。"
+          description="錯誤代碼：404"
+        />
+      ) : (
         <div className={classes.container}>
           <TeamInfo {...team} />
           <Tabs
@@ -162,31 +177,18 @@ const Team: React.FC = () => {
           </Tabs>
           {match && (
             <Switch>
-              <Route
-                path={[match.path, `${match.path}/intro`]}
-                exact
-                render={props => {
-                  setTabIndex(0);
-                  return <Intro {...props} team={team} />;
-                }}
-              />
-              <Route
-                path={`${match.path}/jobs`}
-                exact
-                render={props => {
-                  setTabIndex(1);
-                  return <Jobs {...props} team={team} />;
-                }}
-              />
-              <Route
-                path={match.path}
-                render={() => <Redirect to={`/team/${params.id}`} />}
-              />
+              <Route path={[match.path, `${match.path}/intro`]} exact>
+                <Intro team={team} />
+              </Route>
+              <Route path={`${match.path}/jobs`} exact>
+                <Jobs team={team} />
+              </Route>
+              <Route path={match.path}>
+                <Redirect to={`/team/${params.id}`} />
+              </Route>
             </Switch>
           )}
         </div>
-      ) : (
-        <CircularProgress className={classes.loading} />
       )}
     </div>
   );
