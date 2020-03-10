@@ -61,6 +61,8 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
   const [subAreaOptions, setSubAreaOptions] = useState<SubArea[]>([]);
   const [street, setStreet] = useState(job.address.street);
   const [streetErrorMessage, setStreetErrorMessage] = useState<string>();
+  const [contact, setContact] = useState(job.contact);
+  const [contactErrorMessage, setContactErrorMessage] = useState<string>();
   const [salaryType, setSalaryType] = useState(job.salaryType);
   const [minSalary, setMinSalary] = useState(job.minSalary);
   const [maxSalary, setMaxSalary] = useState(job.maxSalary);
@@ -151,6 +153,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
           maxSalary,
           salaryType,
           address: { area, subArea, street },
+          contact,
           educationNeed,
           experienceNeed,
           description,
@@ -204,6 +207,15 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
     }
     setStreet(event.target.value);
     setStreetErrorMessage("");
+  };
+
+  const handleContactChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length > 512) {
+      setContactErrorMessage("聯絡方式最長不能超過 512 個字");
+      return;
+    }
+    setContact(event.target.value);
+    setContactErrorMessage(undefined);
   };
 
   const handleEducationLevelChange = (
@@ -377,6 +389,16 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
                 </InputAdornment>
               )
             }}
+          />
+          <TextField
+            error={Boolean(contactErrorMessage)}
+            fullWidth
+            helperText={contactErrorMessage}
+            id="contact"
+            label="聯絡方式（選填）"
+            margin="normal"
+            onChange={handleContactChange}
+            value={contact}
           />
           <div style={{ display: "flex" }}>
             <TextField
