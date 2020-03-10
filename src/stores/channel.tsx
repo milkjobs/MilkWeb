@@ -29,6 +29,10 @@ import { useAuth } from "./auth";
 interface ChannelContextProps {
   addChannelHandler: (handler: SendBird.ChannelHandler) => string | undefined;
   removeChannelHandler: (handlerId: string) => void;
+  addUserEventHandler: (
+    handler: SendBird.UserEventHandler
+  ) => string | undefined;
+  removeUserEventHandler: (handlerId: string) => void;
   sb?: SendBird.SendBirdInstance;
   unreadMessageCount: number;
 }
@@ -36,6 +40,10 @@ interface ChannelContextProps {
 const ChannelContext = createContext<ChannelContextProps>({
   addChannelHandler: () => "",
   removeChannelHandler: () => {
+    // do nothing.
+  },
+  addUserEventHandler: () => "",
+  removeUserEventHandler: () => {
     // do nothing.
   },
   unreadMessageCount: 0
@@ -118,14 +126,12 @@ export const ChannelProvider = ({ children }) => {
     [reloadUser, user]
   );
 
-  const onChannelChanged: SendBird.ChannelHandler["onChannelChanged"] = useCallback(() => {
-    // UserEventHandler.onTotalUnreadMessageCountUpdated() somehow doesn't work, so we fetch total
-    // unread message count every time a channel is changed.
-    // https://docs.sendbird.com/javascript/event_handler#3_add_and_remove_a_user_event_handler
-    sb?.getTotalUnreadMessageCount(count => {
-      setUnreadMessageCount(count);
-    });
-  }, [sb]);
+  const onTotalUnreadMessageCountUpdated: SendBird.UserEventHandler["onTotalUnreadMessageCountUpdated"] = useCallback(
+    count => {
+      setUnreadMessageCount(+count);
+    },
+    []
+  );
 
   const addChannelHandler = useCallback(
     (handler: SendBird.ChannelHandler) => {
@@ -141,6 +147,24 @@ export const ChannelProvider = ({ children }) => {
   const removeChannelHandler = useCallback(
     (handlerId: string) => {
       sb?.removeChannelHandler(handlerId);
+    },
+    [sb]
+  );
+
+  const addUserEventHandler = useCallback(
+    (handler: SendBird.UserEventHandler) => {
+      if (sb) {
+        const handlerId = uuidv4();
+        sb.addUserEventHandler(handlerId, handler);
+        return handlerId;
+      }
+    },
+    [sb]
+  );
+
+  const removeUserEventHandler = useCallback(
+    (handlerId: string) => {
+      sb?.removeUserEventHandler(handlerId);
     },
     [sb]
   );
@@ -199,18 +223,30 @@ export const ChannelProvider = ({ children }) => {
       // Register onMessageReceived listener.
       const handler = new sb.ChannelHandler();
       handler.onMessageReceived = onMessageReceived;
-      handler.onChannelChanged = onChannelChanged;
       handlerId = addChannelHandler(handler);
     }
 
     return () => {
       handlerId && removeChannelHandler(handlerId);
     };
+  }, [addChannelHandler, onMessageReceived, removeChannelHandler, sb]);
+
+  useEffect(() => {
+    let handlerId: string | undefined;
+    if (sb) {
+      // Register onTotalUnreadMessageCountUpdated listener.
+      const handler = new sb.UserEventHandler();
+      handler.onTotalUnreadMessageCountUpdated = onTotalUnreadMessageCountUpdated;
+      handlerId = addUserEventHandler(handler);
+    }
+
+    return () => {
+      handlerId && removeUserEventHandler(handlerId);
+    };
   }, [
-    addChannelHandler,
-    onChannelChanged,
-    onMessageReceived,
-    removeChannelHandler,
+    addUserEventHandler,
+    onTotalUnreadMessageCountUpdated,
+    removeUserEventHandler,
     sb
   ]);
 
@@ -219,6 +255,8 @@ export const ChannelProvider = ({ children }) => {
       value={{
         addChannelHandler,
         removeChannelHandler,
+        addUserEventHandler,
+        removeUserEventHandler,
         sb,
         unreadMessageCount
       }}
