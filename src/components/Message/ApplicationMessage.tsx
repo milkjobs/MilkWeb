@@ -1,10 +1,9 @@
 import { Job, PublicUser, Role } from "@frankyjuang/milkapi-client";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
+import { Skeleton } from "@material-ui/lab";
 import to from "await-to-js";
 import { salaryToString } from "helpers";
 import React, { useEffect, useState } from "react";
-import ReactPlaceholder from "react-placeholder";
-import "react-placeholder/lib/reactPlaceholder.css";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "stores";
 import { getMetadata } from "./utils";
@@ -121,13 +120,17 @@ const ApplicationMessage: React.FC<Props> = ({
   return !fromMe ? (
     <div className={classes.message}>
       <img alt="" src={profileUrl} width={40} height={40} />
-      <div className={classes.messageBody}>
-        <ReactPlaceholder
-          style={{ minWidth: 160 }}
-          type="text"
-          showLoadingAnimation
-          ready={!applicantLoading}
-        >
+      <div
+        className={classes.messageBody}
+        style={applicantLoading && jobLoading ? { minWidth: 160 } : undefined}
+      >
+        {applicantLoading ? (
+          <>
+            <Skeleton width="60%" />
+            <Skeleton width="100%" />
+            <Skeleton width="90%" />
+          </>
+        ) : (
           <div className={classes.userCard}>
             {applicant ? (
               <>
@@ -140,14 +143,10 @@ const ApplicationMessage: React.FC<Props> = ({
               <div>求職者已離開</div>
             )}
           </div>
-        </ReactPlaceholder>
-        <ReactPlaceholder
-          style={{ minWidth: 160 }}
-          type="text"
-          rows={1}
-          showLoadingAnimation
-          ready={!jobLoading}
-        >
+        )}
+        {jobLoading ? (
+          <Skeleton width="100%" style={{ marginTop: 16, marginBottom: 16 }} />
+        ) : (
           <div
             className={classes.jobCard}
             onClick={job ? () => history.push(`/job/${job.uuid}`) : undefined}
@@ -163,7 +162,7 @@ const ApplicationMessage: React.FC<Props> = ({
               <div>職缺已關閉</div>
             )}
           </div>
-        </ReactPlaceholder>
+        )}
       </div>
     </div>
   ) : (
@@ -173,13 +172,17 @@ const ApplicationMessage: React.FC<Props> = ({
       }}
       className={classes.message}
     >
-      <div className={classes.messageBody}>
-        <ReactPlaceholder
-          style={{ minWidth: 160 }}
-          type="text"
-          showLoadingAnimation
-          ready={!applicantLoading}
-        >
+      <div
+        className={classes.messageBody}
+        style={applicantLoading && jobLoading ? { minWidth: 160 } : undefined}
+      >
+        {applicantLoading ? (
+          <>
+            <Skeleton width="60%" />
+            <Skeleton width="100%" />
+            <Skeleton width="90%" />
+          </>
+        ) : (
           <div
             className={classes.userCard}
             onClick={() => history.push("/profile")}
@@ -195,14 +198,10 @@ const ApplicationMessage: React.FC<Props> = ({
               <div>求職者已離開</div>
             )}
           </div>
-        </ReactPlaceholder>
-        <ReactPlaceholder
-          style={{ minWidth: 160 }}
-          type="text"
-          rows={1}
-          showLoadingAnimation
-          ready={!jobLoading}
-        >
+        )}
+        {jobLoading ? (
+          <Skeleton width="100%" style={{ marginTop: 16, marginBottom: 16 }} />
+        ) : (
           <div
             className={classes.jobCard}
             onClick={job ? () => history.push(`/job/${job.uuid}`) : undefined}
@@ -218,9 +217,9 @@ const ApplicationMessage: React.FC<Props> = ({
               <div>職缺已關閉</div>
             )}
           </div>
-        </ReactPlaceholder>
+        )}
       </div>
-      <img alt="" src={profileUrl} width={40} height={40} />
+      <img alt="profile image" src={profileUrl} width={40} height={40} />
     </div>
   );
 };
