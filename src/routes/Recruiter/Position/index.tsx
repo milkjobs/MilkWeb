@@ -6,7 +6,7 @@ import {
   JobDescription,
   JobLocation,
   JobTitle,
-  RecruiterJobSideCard
+  PositionSideCard
 } from "components/Job";
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
@@ -65,7 +65,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const RecruiterJob: React.FC = () => {
+const Position: React.FC = () => {
   const { user } = useAuth();
   const params = useParams<{ id: string }>();
   const history = useHistory();
@@ -111,7 +111,7 @@ const RecruiterJob: React.FC = () => {
                 {job.contact && <JobContact contact={job.contact} />}
               </div>
               <div className={classes.descriptionSide}>
-                <RecruiterJobSideCard job={job} />
+                <PositionSideCard job={job} />
               </div>
             </div>
           </div>
@@ -121,4 +121,4 @@ const RecruiterJob: React.FC = () => {
   );
 };
 
-export default RecruiterJob;
+export default Position;

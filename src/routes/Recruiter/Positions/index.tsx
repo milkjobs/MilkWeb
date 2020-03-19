@@ -1,7 +1,7 @@
 import { Job } from "@frankyjuang/milkapi-client";
 import { makeStyles } from "@material-ui/core";
 import { Header } from "components/Header";
-import { JobCreateForm, RecruiterJobCard } from "components/Job";
+import { JobCreateForm, PositionCard } from "components/Job";
 import { Title } from "components/Util";
 import { VerificationStateBanner } from "components/Verification";
 import React, { useEffect, useState } from "react";
@@ -63,7 +63,7 @@ const Positions: React.FC = () => {
               if (user && user.recruiterInfo && user.recruiterInfo.team)
                 value.team = user.recruiterInfo.team;
               return (
-                <RecruiterJobCard
+                <PositionCard
                   {...value}
                   key={index}
                   targetPath={`/recruiter/job/${value.uuid}`}

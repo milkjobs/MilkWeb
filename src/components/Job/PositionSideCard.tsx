@@ -4,7 +4,7 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import React, { useState } from "react";
 import Sticky from "react-stickynode";
 import { useAuth } from "stores";
-import { JobEditForm } from "./";
+import { JobEditForm } from ".";
 
 const useStyles = makeStyles((theme: Theme) => ({
   card: {
@@ -55,7 +55,7 @@ interface Props {
   job: Job;
 }
 
-const RecruiterJobSideCard: React.FC<Props> = props => {
+const PositionSideCard: React.FC<Props> = props => {
   const classes = useStyles();
   const { getApi } = useAuth();
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -132,4 +132,4 @@ const RecruiterJobSideCard: React.FC<Props> = props => {
   );
 };
 
-export { RecruiterJobSideCard };
+export { PositionSideCard };

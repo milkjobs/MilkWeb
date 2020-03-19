@@ -9,5 +9,5 @@ export * from "./JobRecordCard";
 export * from "./JobSideCard";
 export * from "./JobStatistics";
 export * from "./JobTitle";
-export * from "./RecruiterJobCard";
-export * from "./RecruiterJobSideCard";
+export * from "./PositionCard";
+export * from "./PositionSideCard";

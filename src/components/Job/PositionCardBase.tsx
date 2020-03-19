@@ -159,7 +159,7 @@ interface Props {
   published: boolean;
 }
 
-const RecruiterJobCardBase: React.FC<Props> = props => {
+const PositionCardBase: React.FC<Props> = props => {
   const {
     type,
     name,
@@ -260,4 +260,4 @@ const RecruiterJobCardBase: React.FC<Props> = props => {
   );
 };
 
-export { RecruiterJobCardBase };
+export { PositionCardBase };

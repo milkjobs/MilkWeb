@@ -1,12 +1,12 @@
 import { Job } from "@frankyjuang/milkapi-client";
 import React from "react";
-import { RecruiterJobCardBase } from "./RecruiterJobCardBase";
+import { PositionCardBase } from "./PositionCardBase";
 
 interface Props extends Job {
   targetPath: string;
 }
 
-const RecruiterJobCard: React.FC<Props> = props => {
+const PositionCard: React.FC<Props> = props => {
   const {
     type,
     name,
@@ -20,7 +20,7 @@ const RecruiterJobCard: React.FC<Props> = props => {
   } = props;
 
   return (
-    <RecruiterJobCardBase
+    <PositionCardBase
       type={type}
       name={name}
       location={address.area + address.subArea}
@@ -34,4 +34,4 @@ const RecruiterJobCard: React.FC<Props> = props => {
   );
 };
 
-export { RecruiterJobCard };
+export { PositionCard };

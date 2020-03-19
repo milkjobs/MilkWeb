@@ -10,9 +10,9 @@ import {
   useRouteMatch
 } from "react-router-dom";
 import { useAuth } from "stores";
-import Job from "./Job";
 import Member from "./Member";
 import Message from "./Message";
+import Position from "./Position";
 import Positions from "./Positions";
 import Profile from "./Profile";
 import Team from "./Team";
@@ -73,7 +73,11 @@ const RecruiterRoute: React.FC = () => {
           component={Profile}
         />
         <PrivateRoute path={`${match.path}/team`} exact component={Team} />
-        <PrivateRoute path={`${match.path}/job/:id`} exact component={Job} />
+        <PrivateRoute
+          path={`${match.path}/job/:id`}
+          exact
+          component={Position}
+        />
         <PrivateRoute
           path={`${match.path}/verification`}
           exact
