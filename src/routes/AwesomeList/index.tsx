@@ -119,8 +119,8 @@ const AwesomeList: React.FC = () => {
         ) : awesomeList?.teams && awesomeList.teams.length > 0 ? (
           <>
             <div className={classes.introduction}>{introduction}</div>
-            {awesomeList.teams.map(c => (
-              <CompanyCard key={c.name + (params.name || "")} {...c} />
+            {awesomeList.teams.map((c, index) => (
+              <CompanyCard key={index + params.name} {...c} />
             ))}
           </>
         ) : (

@@ -50,7 +50,8 @@ const useStyles = makeStyles(theme => ({
   },
   tags: {
     display: "flex",
-    marginTop: 16
+    marginTop: 16,
+    flexWrap: "wrap"
   }
 }));
 
