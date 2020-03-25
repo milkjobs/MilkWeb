@@ -1,7 +1,9 @@
-import { Avatar, makeStyles } from "@material-ui/core";
-import React, { MouseEvent } from "react";
+import { Avatar, makeStyles, Badge } from "@material-ui/core";
+import React, { MouseEvent, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "stores";
+import { useAuth, useChannel } from "stores";
+import DialogContent from "@material-ui/core/DialogContent";
+import Dialog from "@material-ui/core/Dialog";
 
 const useStyles = makeStyles(theme => ({
   link: {
@@ -43,10 +45,11 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
   const { openProfileMenu } = props;
   const classes = useStyles();
   const { user } = useAuth();
-  // const { unreadMessageCount } = useChannel();
+  const { unreadMessageCount } = useChannel();
   const location = useLocation();
   const isRecruiterHome = location.pathname === "/recruiter";
-  // const isRecruiterMessage = location.pathname.startsWith("/recruiter/message");
+  const isRecruiterMessage = location.pathname.startsWith("/recruiter/message");
+  const [messageAlert, setMessageAlert] = useState(false);
 
   return (
     <div className={classes.sectionDesktop}>
@@ -65,8 +68,9 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
           <span className={classes.tab}>職缺管理</span>
         </Link>
       )}
-      {/* {!isRecruiterMessage && (
-        <Link to="/recruiter/message" className={classes.link}>
+      {!isRecruiterMessage && (
+        <div className={classes.link} onClick={() => setMessageAlert(true)}>
+          {/* <Link to="/recruiter/message" className={classes.link}> */}
           <span className={classes.tab}>
             <Badge
               color="secondary"
@@ -76,8 +80,9 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
               訊息
             </Badge>
           </span>
-        </Link>
-      )} */}
+          {/* </Link> */}
+        </div>
+      )}
       {user && (
         <span className={classes.tab} onClick={openProfileMenu}>
           <Avatar
@@ -87,6 +92,22 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
           />
         </span>
       )}
+      <Dialog
+        onClose={() => setMessageAlert(false)}
+        aria-labelledby="simple-dialog-title"
+        open={messageAlert}
+      >
+        <DialogContent
+          id="simple-dialog-title"
+          style={{ padding: 24, fontSize: 20 }}
+        >
+          感謝大家使用我們的創業的產品，由於我們是新創公司，勞動局希望我們還是要申請相關的證照，才能開放讓求職者跟企業在平台上聯絡。
+          <br></br>
+          目前牛奶找工作【訊息】的功能將暫時關閉，若公司可以在職缺敘述中改留下
+          email 或其他聯絡方式，讓求職者可以順利求職。<br></br> 我們的證照將在 4
+          月初下來，屆時訊息功能將會加回來，也會一並開放人才搜尋的功能，敬請期待。造成困擾，本公司非常不好意思。
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
