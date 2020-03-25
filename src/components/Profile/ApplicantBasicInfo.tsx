@@ -13,13 +13,19 @@ import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import { useAuth } from "stores";
 import Checkbox from "@material-ui/core/Checkbox";
 import moment from "moment";
-import { Experience } from "@frankyjuang/milkapi-client";
+import { Experience, Education } from "@frankyjuang/milkapi-client";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
+import { zhTW } from "date-fns/locale";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from "@material-ui/pickers";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -71,19 +77,22 @@ const useStyles = makeStyles(theme => ({
     whiteSpace: "pre-line",
     textAlign: "left",
     flex: 1,
-    fontSize: 18,
+    fontSize: 20,
     color: theme.palette.text.primary
   },
   block: {
     marginTop: 16,
     padding: 16,
+    borderBottomWidth: 1,
+    borderBottomStyle: "solid",
+    borderBottomColor: theme.palette.divider,
     "&:hover": {
       cursor: "pointer",
       boxShadow: "0 2px 4px rgba(0,0,0,0.1) !important"
     }
   },
   blockTitle: {
-    fontSize: 16,
+    fontSize: 18,
     color: theme.palette.text.secondary
   },
   blockRow: {
@@ -91,16 +100,16 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "space-between"
   },
   blockPeriod: {
-    fontSize: 16,
+    fontSize: 18,
     color: theme.palette.text.secondary
   },
   blockDescription: {
     marginTop: 8,
-    fontSize: 16,
+    fontSize: 18,
     color: theme.palette.text.secondary
   },
   blockAdd: {
-    color: theme.palette.text.hint,
+    color: theme.palette.secondary.main,
     margin: 8,
     padding: 8,
     display: "flex",
@@ -155,7 +164,50 @@ const ExperienceBlock: React.FC<Experience> = props => {
                   lastWeek: "MM/YYYY",
                   sameElse: "MM/YYYY"
                 })
-              : "")}
+              : "至今")}
+        </div>
+      </div>
+      <div className={classes.blockDescription}>{description}</div>
+    </div>
+  );
+};
+
+const EducationBlock: React.FC<Education> = props => {
+  const {
+    schoolName,
+    degree,
+    majorName,
+    startTime,
+    endTime,
+    description
+  } = props;
+  const classes = useStyles();
+  return (
+    <div className={classes.block}>
+      <div className={classes.blockRow}>
+        <div className={classes.blockTitle}>
+          {schoolName + "・" + degree + "・" + majorName}
+        </div>
+        <div className={classes.blockPeriod}>
+          {moment(startTime).calendar(undefined, {
+            sameDay: "MM/YYYY",
+            nextDay: "MM/YYYY",
+            nextWeek: "MM/YYYY",
+            lastDay: "MM/YYYY",
+            lastWeek: "MM/YYYY",
+            sameElse: "MM/YYYY"
+          }) +
+            " ~ " +
+            (endTime
+              ? moment(endTime).calendar(undefined, {
+                  sameDay: "MM/YYYY",
+                  nextDay: "MM/YYYY",
+                  nextWeek: "MM/YYYY",
+                  lastDay: "MM/YYYY",
+                  lastWeek: "MM/YYYY",
+                  sameElse: "MM/YYYY"
+                })
+              : "至今")}
         </div>
       </div>
       <div className={classes.blockDescription}>{description}</div>
@@ -355,19 +407,19 @@ interface ExperienceDialogProps {
   isOpen: boolean;
   create: boolean;
   close: () => void;
-  update: (Experience) => void;
+  update: (Experience: Experience) => void;
+  deleteExperience: (id: string) => void;
 }
 
 const ExperienceDialog: React.FC<ExperienceDialogProps> = props => {
-  const { isOpen, close, update, create, experience } = props;
+  const { isOpen, close, update, deleteExperience, create, experience } = props;
   const classes = useStyles();
-  const { getApi, reloadUser, user } = useAuth();
   const [jobName, setJobName] = useState<string>();
   const [teamName, setTeamName] = useState<string>();
   const [startTime, setStartTime] = React.useState<Date | null>(new Date());
   const [current, setCurrent] = React.useState<boolean>(true);
   const [endTime, setEndTime] = React.useState<Date | null>(null);
-  const [description, setDescription] = useState<string | null>();
+  const [description, setDescription] = useState<string>();
   const [jobNameErrorMessage, setJobNameErrorMessage] = useState<string>();
   const [teamNameErrorMessage, setTeamNameErrorMessage] = useState<string>();
   const [descriptionErrorMessage, setDescriptionErrorMessage] = useState<
@@ -439,42 +491,6 @@ const ExperienceDialog: React.FC<ExperienceDialogProps> = props => {
     return !helperText;
   };
 
-  // const saveChanges = async () => {
-  //   if (!checkName() || !name) {
-  //     return;
-  //   }
-
-  //   let changed = false;
-  //   if (user && user.name !== name) {
-  //     changed = true;
-  //     const userApi = await getApi("User");
-  //     await userApi.updateUser({ userId: user.uuid, user: { ...user, name } });
-  //   }
-  //   if (user && user.profile && user.profile.introduction !== introduction) {
-  //     changed = true;
-  //     const profileApi = await getApi("Profile");
-  //     await profileApi.updateProfile({
-  //       profileId: user.profile.uuid,
-  //       profile: {
-  //         ...user.profile,
-  //         introduction
-  //       }
-  //     });
-  //   }
-  //   changed && (await reloadUser());
-
-  //   close();
-  // };
-
-  // useEffect(() => {
-  //   if (user) {
-  //     setName(user.name);
-  //     if (user.profile) {
-  //       setIntroduction(user.profile.introduction);
-  //     }
-  //   }
-  // }, [user]);
-
   return (
     <Dialog open={isOpen} onClose={close} fullWidth={true}>
       <DialogTitle>{create ? "新增經驗" : "編輯經驗"}</DialogTitle>
@@ -527,13 +543,13 @@ const ExperienceDialog: React.FC<ExperienceDialogProps> = props => {
                 marginLeft: 16
               }}
             >
-              <Checkbox value={current} onChange={handleCurrentChange} />
+              <Checkbox checked={current} onChange={handleCurrentChange} />
               <div>{"至今"}</div>
             </div>
           </Grid>
         </MuiPickersUtilsProvider>
         {!current && (
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={zhTW}>
             <Grid container justify="space-between">
               <KeyboardDatePicker
                 disableToolbar
@@ -566,44 +582,314 @@ const ExperienceDialog: React.FC<ExperienceDialogProps> = props => {
         />
       </DialogContent>
       <DialogActions>
+        {!create && (
+          <Button
+            style={{ marginRight: "auto" }}
+            onClick={() => {
+              experience &&
+                experience.uuid &&
+                deleteExperience(experience.uuid);
+              close();
+            }}
+            color="secondary"
+            variant="text"
+          >
+            刪除
+          </Button>
+        )}
         <Button onClick={close} color="primary" variant="text">
           取消
         </Button>
         <Button
           onClick={() => {
-            update({ jobName, teamName, startTime, endTime, description });
+            jobName &&
+              teamName &&
+              startTime &&
+              update({
+                uuid: experience?.uuid,
+                jobName,
+                teamName,
+                startTime,
+                endTime,
+                description,
+                skillTags: []
+              });
             close();
           }}
           color="primary"
+          disabled={!jobName || !teamName || !startTime}
           variant="text"
         >
           {create ? "新增" : "儲存"}
         </Button>
-        {/* <Button onClick={saveChanges} color="primary">
-          儲存
-        </Button> */}
       </DialogActions>
     </Dialog>
   );
 };
 
-const ApplicantBasicInfo: React.FC = () => {
-  const { user } = useAuth();
+interface EducationDialogProps {
+  education?: Education;
+  isOpen: boolean;
+  create: boolean;
+  close: () => void;
+  update: (Education: Education) => void;
+  deleteEducation: (id: string) => void;
+}
+
+const EducationDialog: React.FC<EducationDialogProps> = props => {
+  const { isOpen, close, update, deleteEducation, create, education } = props;
   const classes = useStyles();
+  const [schoolName, setSchoolName] = useState<string>();
+  const [degree, setDegree] = useState<string>();
+  const [majorName, setMajorName] = useState<string>();
+  const [startTime, setStartTime] = React.useState<Date | null>(new Date());
+  const [current, setCurrent] = React.useState<boolean>(true);
+  const [endTime, setEndTime] = React.useState<Date | null>(null);
+  const [description, setDescription] = useState<string>();
+  const [schoolNameErrorMessage, setSchoolNameErrorMessage] = useState<
+    string
+  >();
+  const [degreeErrorMessage, setDegreeErrorMessage] = useState<string>();
+  const [majorNameErrorMessage, setMajorNameErrorMessage] = useState<string>();
+  const [descriptionErrorMessage, setDescriptionErrorMessage] = useState<
+    string
+  >();
+
+  useEffect(() => {
+    setSchoolName(education ? education.schoolName : undefined);
+    setDegree(education ? education.degree : undefined);
+    setStartTime(education ? education.startTime : new Date());
+    setEndTime(education ? education.endTime || null : null);
+    setDescription(education ? education.description : undefined);
+    education && !education.endTime && setCurrent(true);
+    !education && setCurrent(true);
+  }, [education]);
+
+  const handleSchoolNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.target.value.length > 100) {
+      setSchoolNameErrorMessage("職位名稱不能超過 100 個字");
+      return;
+    }
+    setSchoolName(event.target.value);
+    setSchoolNameErrorMessage(undefined);
+  };
+
+  const handleDegreeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setDegree(event.target.value as string);
+    setDegreeErrorMessage(undefined);
+  };
+
+  const handleMajorNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.target.value.length > 100) {
+      setMajorNameErrorMessage("科系不能超過 100 個字");
+      return;
+    }
+    setMajorName(event.target.value);
+    setMajorNameErrorMessage(undefined);
+  };
+
+  const handleDescriptionChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.target.value.length > 2000) {
+      setDescriptionErrorMessage("自我介紹長度不能超過 2000 個字");
+      return;
+    }
+    setDescription(event.target.value);
+    setDescriptionErrorMessage(undefined);
+  };
+
+  const handleStartTimeChange = (date: Date | null) => {
+    setStartTime(date);
+  };
+
+  const handleCurrentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrent(event.target.checked);
+  };
+
+  const handleEndTimeChange = (date: Date | null) => {
+    setEndTime(date);
+  };
+
+  const checkSchoolName = () => {
+    const helperText = !schoolName ? "學校名稱不得為空" : undefined;
+    setSchoolNameErrorMessage(helperText);
+
+    return !helperText;
+  };
+
+  const checkMajor = () => {
+    const helperText = !majorName ? "科系不得為空" : undefined;
+    setMajorNameErrorMessage(helperText);
+
+    return !helperText;
+  };
+
+  return (
+    <Dialog open={isOpen} onClose={close} fullWidth={true}>
+      <DialogTitle>{create ? "新增經驗" : "編輯經驗"}</DialogTitle>
+      <DialogContent>
+        <TextField
+          autoFocus
+          className={classes.formTextInput}
+          error={!!schoolNameErrorMessage}
+          fullWidth
+          helperText={schoolNameErrorMessage || ""}
+          id="name"
+          label="學校名稱"
+          margin="normal"
+          onBlur={checkSchoolName}
+          onChange={handleSchoolNameChange}
+          value={schoolName}
+        />
+        <FormControl className={classes.formControl}>
+          <InputLabel id="demo-simple-select-label">學位</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={degree}
+            onChange={handleDegreeChange}
+          >
+            <MenuItem value={"高中"}>高中</MenuItem>
+            <MenuItem value={"大學"}>大學</MenuItem>
+            <MenuItem value={"大專"}>大專</MenuItem>
+            <MenuItem value={"碩士"}>碩士</MenuItem>
+            <MenuItem value={"博士"}>博士</MenuItem>
+          </Select>
+        </FormControl>
+        <TextField
+          className={classes.formTextInput}
+          error={!!majorNameErrorMessage}
+          fullWidth
+          helperText={majorNameErrorMessage || ""}
+          id="name"
+          label="科系"
+          margin="normal"
+          onBlur={checkMajor}
+          onChange={handleMajorNameChange}
+          value={majorName}
+        />
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <Grid container>
+            <KeyboardDatePicker
+              disableToolbar
+              variant="inline"
+              format="MM/dd/yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              label="開始時間"
+              value={startTime}
+              onChange={handleStartTimeChange}
+              KeyboardButtonProps={{
+                "aria-label": "change date"
+              }}
+            />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginTop: 24,
+                marginLeft: 16
+              }}
+            >
+              <Checkbox checked={current} onChange={handleCurrentChange} />
+              <div>{"至今"}</div>
+            </div>
+          </Grid>
+        </MuiPickersUtilsProvider>
+        {!current && (
+          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={zhTW}>
+            <Grid container justify="space-between">
+              <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                id="date-picker-inline"
+                label="結束時間"
+                value={endTime}
+                onChange={handleEndTimeChange}
+                KeyboardButtonProps={{
+                  "aria-label": "change date"
+                }}
+              />
+            </Grid>
+          </MuiPickersUtilsProvider>
+        )}
+        <TextField
+          error={!!descriptionErrorMessage}
+          fullWidth
+          helperText={descriptionErrorMessage || ""}
+          id="introduction"
+          label="介紹"
+          margin="normal"
+          multiline
+          onBlur={() => setDescriptionErrorMessage(undefined)}
+          onChange={handleDescriptionChange}
+          rows="8"
+          value={description}
+        />
+      </DialogContent>
+      <DialogActions>
+        {!create && (
+          <Button
+            style={{ marginRight: "auto" }}
+            onClick={() => {
+              education && education.uuid && deleteEducation(education.uuid);
+              close();
+            }}
+            color="secondary"
+            variant="text"
+          >
+            刪除
+          </Button>
+        )}
+        <Button onClick={close} color="primary" variant="text">
+          取消
+        </Button>
+        <Button
+          onClick={() => {
+            schoolName &&
+              degree &&
+              majorName &&
+              startTime &&
+              update({
+                uuid: education?.uuid,
+                schoolName,
+                degree,
+                majorName,
+                startTime,
+                endTime,
+                description,
+                skillTags: []
+              });
+            close();
+          }}
+          color="primary"
+          disabled={!schoolName || !majorName || !startTime || !degree}
+          variant="text"
+        >
+          {create ? "新增" : "儲存"}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+const ApplicantBasicInfo: React.FC = () => {
+  const classes = useStyles();
+  const { getApi, reloadUser, user } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isExperienceDialogOpen, setIsExperienceDialogOpen] = useState(false);
   const [experienceCreate, setExperienceCreate] = useState(false);
   const [selectedExperience, setSelectedExperience] = useState<Experience>();
-  const [experiences, setExperiences] = useState<Experience[]>([
-    {
-      jobName: "軟體工程師",
-      teamName: "騰訊",
-      startTime: new Date(),
-      endTime: new Date(),
-      description: "工程師",
-      skillTags: []
-    }
-  ]);
+
+  const [isEducationDialogOpen, setIsEducationDialogOpen] = useState(false);
+  const [educationCreate, setEducationCreate] = useState(false);
+  const [selectedEducation, setSelectedEducation] = useState<Education>();
 
   const showDialog = () => {
     setIsDialogOpen(true);
@@ -617,18 +903,70 @@ const ApplicantBasicInfo: React.FC = () => {
     setIsExperienceDialogOpen(true);
   };
 
-  const updateExperienceDialog = (updatedExperience: Experience) => {
-    if (experienceCreate) {
-      setExperiences([...experiences, updatedExperience]);
-    } else {
-      setExperiences(
-        experiences.map(e => (e === selectedExperience ? updatedExperience : e))
-      );
+  const updateExperience = async (updatedExperience: Experience) => {
+    if (user && user.profile) {
+      const experienceApi = await getApi("Experience");
+      if (experienceCreate)
+        await experienceApi.addExperience({
+          profileId: user.profile.uuid,
+          experience: updatedExperience
+        });
+      else {
+        updatedExperience.uuid &&
+          (await experienceApi.updateExperience({
+            experienceId: updatedExperience.uuid,
+            experience: updatedExperience
+          }));
+      }
+      await reloadUser();
+    }
+  };
+
+  const deleteExperience = async (experienceId: string) => {
+    if (user && user.profile) {
+      const experienceApi = await getApi("Experience");
+      await experienceApi.removeExperience({ experienceId });
+      await reloadUser();
     }
   };
 
   const closeExperienceDialog = () => {
     setIsExperienceDialogOpen(false);
+  };
+
+  const showEducationDialog = () => {
+    setIsEducationDialogOpen(true);
+  };
+
+  const updateEducation = async (updatedEducation: Education) => {
+    if (user && user.profile) {
+      const educationApi = await getApi("Education");
+      if (educationCreate)
+        await educationApi.addEducation({
+          profileId: user.profile.uuid,
+          education: updatedEducation
+        });
+      else {
+        updatedEducation.uuid &&
+          (await educationApi.updateEducation({
+            educationId: updatedEducation.uuid,
+            education: updatedEducation
+          }));
+      }
+      await reloadUser();
+    }
+  };
+
+  const deleteEducation = async (educationId: string) => {
+    if (user && user.profile) {
+      const educationApi = await getApi("Education");
+      await educationApi.removeEducation({ educationId });
+      await reloadUser();
+    }
+  };
+
+  const closeEducationDialog = () => {
+    setIsEducationDialogOpen(false);
   };
 
   if (!user) {
@@ -670,9 +1008,9 @@ const ApplicantBasicInfo: React.FC = () => {
       </div>
       <div className={classes.items}>
         <div className={classes.title}>{"經歷"}</div>
-        {experiences.map(e => (
+        {(user.profile?.experiences || []).map(e => (
           <div
-            key={e.jobName}
+            key={e.uuid}
             onClick={() => {
               setSelectedExperience(e);
               setExperienceCreate(false);
@@ -695,17 +1033,28 @@ const ApplicantBasicInfo: React.FC = () => {
       </div>
       <div className={classes.items}>
         <div className={classes.title}>{"學歷"}</div>
-        {/* {[
-          {
-            name: "微信",
-            startTime: new Date(),
-            endTime: new Date(),
-            description: "工程師"
-          }
-        ].map(e => (
-          <ExperienceBlock key={e.name} {...e} />
-        ))} */}
-        <div className={classes.blockAdd}>{" + 新增學歷"}</div>
+        {(user.profile?.educations || []).map(e => (
+          <div
+            key={e.uuid}
+            onClick={() => {
+              setSelectedEducation(e);
+              setEducationCreate(false);
+              showEducationDialog();
+            }}
+          >
+            <EducationBlock {...e} />
+          </div>
+        ))}
+        <div
+          className={classes.blockAdd}
+          onClick={() => {
+            setSelectedEducation(undefined);
+            setEducationCreate(true);
+            showEducationDialog();
+          }}
+        >
+          {" + 新增學歷"}
+        </div>
       </div>
       <EditDialog isOpen={isDialogOpen} close={closeDialog} />
       <ExperienceDialog
@@ -713,7 +1062,16 @@ const ApplicantBasicInfo: React.FC = () => {
         create={experienceCreate}
         isOpen={isExperienceDialogOpen}
         close={closeExperienceDialog}
-        update={updateExperienceDialog}
+        update={updateExperience}
+        deleteExperience={deleteExperience}
+      />
+      <EducationDialog
+        education={selectedEducation}
+        create={educationCreate}
+        isOpen={isEducationDialogOpen}
+        close={closeEducationDialog}
+        update={updateEducation}
+        deleteEducation={deleteEducation}
       />
     </div>
   );

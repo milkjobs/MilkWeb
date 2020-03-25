@@ -16,11 +16,16 @@ import {
   SitelinksSearchboxStructuredData
 } from "helpers";
 import React, { useEffect, useState } from "react";
-import { Configure, InstantSearch } from "react-instantsearch-dom";
+import {
+  Configure,
+  InstantSearch,
+  connectRefinementList
+} from "react-instantsearch-dom";
 import { useInView } from "react-intersection-observer";
 import { useLocation } from "react-router-dom";
 import TextLoop from "react-text-loop";
 import { useAuth } from "stores";
+import { AreaFilterButton, FilterHeader } from "components/Filter";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -91,10 +96,6 @@ const latestNews: News[] = [
     website: "https://milk.jobs/job/2e2aa7dc13c542179559177d265f2183"
   },
   {
-    name: "Garena 儲備幹部 3/8 截止",
-    website: "https://map.career.garena.tw/"
-  },
-  {
     name: "華碩 AI 實習 4/30 截止",
     website: "https://aics.asus.com/zh/homepage-tw/"
   },
@@ -104,6 +105,8 @@ const latestNews: News[] = [
       "https://dell.wd1.myworkdayjobs.com/External/job/Taipei-Taiwan/RG-Advisor--Project-Program-Management_R41987"
   }
 ];
+
+const VirtualRefinementList = connectRefinementList(() => null);
 
 const JobSearch: React.FC = () => {
   const classes = useStyles();
@@ -180,6 +183,8 @@ const JobSearch: React.FC = () => {
             <div ref={ref}>
               <SearchBar />
             </div>
+            <VirtualRefinementList attribute="area.level2" />
+            <FilterHeader />
             <JobList />
             <SearchResult />
           </InstantSearch>
