@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     alignItems: "center",
     flex: 1,
-    marginBottom: 36,
+    marginBottom: 18,
     border: "1px solid #dfe1e5",
     borderRadius: 10,
     "&:hover": {

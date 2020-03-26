@@ -12,6 +12,7 @@
     "module": "esnext",
     "noImplicitAny": false,
     "moduleResolution": "node",
+    "downlevelIteration": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
