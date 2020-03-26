@@ -386,7 +386,7 @@ const EditDialog: React.FC<DialogProps> = props => {
           multiline
           onBlur={() => setIntroductionErrorMessage(undefined)}
           onChange={handleIntroductionChange}
-          rows="4"
+          rows="8"
           value={introduction}
         />
       </DialogContent>
