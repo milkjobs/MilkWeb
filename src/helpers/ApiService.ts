@@ -15,7 +15,8 @@ import {
   TeamApi,
   UserApi,
   VerificationApi,
-  TagApi
+  TagApi,
+  BottleApi
 } from "@frankyjuang/milkapi-client";
 
 // https://artsy.github.io/blog/2018/11/21/conditional-types-in-typescript/
@@ -37,6 +38,7 @@ export type Apis = {
   Project: ProjectApi;
   RecruiterInfo: RecruiterInfoApi;
   Support: SupportApi;
+  Bottle: BottleApi;
   Tag: TagApi;
   Team: TeamApi;
   User: UserApi;

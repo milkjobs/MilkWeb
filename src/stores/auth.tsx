@@ -18,7 +18,8 @@ import {
   TeamApi,
   User,
   UserApi,
-  VerificationApi
+  VerificationApi,
+  BottleApi
 } from "@frankyjuang/milkapi-client";
 import branch from "branch-sdk";
 import { apiServiceConfig } from "config";
@@ -75,6 +76,8 @@ export const AuthProvider = ({ children }) => {
       return new EducationApi(configuration) as any;
     } else if (type === "Experience") {
       return new ExperienceApi(configuration) as any;
+    } else if (type === "Bottle") {
+      return new BottleApi(configuration) as any;
     } else if (type === "Job") {
       return new JobApi(configuration) as any;
     } else if (type === "JobGoal") {

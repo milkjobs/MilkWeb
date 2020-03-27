@@ -92,6 +92,11 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
           <span className={classes.tab}>幫助中心</span>
         </Link>
       )}
+      {isHome && (
+        <Link to="/bottle" className={classes.link}>
+          <span className={classes.tab}>牛奶瓶</span>
+        </Link>
+      )}
       {/* {!isMessage && (
         <Link to="/message" className={classes.link}>
           <span className={classes.tab}>
