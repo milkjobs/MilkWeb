@@ -8,13 +8,7 @@ import { JobList, SearchBar } from "components/JobSearch";
 import { SearchResult } from "components/JobSearch/SearchResult";
 import { algoliaConfig } from "config";
 import "firebase/analytics";
-import firebase from "firebase/app";
-import {
-  AlgoliaService,
-  checkUrl,
-  openInNewTab,
-  SitelinksSearchboxStructuredData
-} from "helpers";
+import { AlgoliaService, SitelinksSearchboxStructuredData } from "helpers";
 import React, { useEffect, useState } from "react";
 import {
   Configure,
@@ -92,22 +86,6 @@ interface News {
   website: string;
 }
 
-const latestNews: News[] = [
-  {
-    name: "MixerBox 2020 新鮮人招募中",
-    website: "https://milk.jobs/job/2e2aa7dc13c542179559177d265f2183"
-  },
-  {
-    name: "華碩 AI 實習 4/30 截止",
-    website: "https://aics.asus.com/zh/homepage-tw/"
-  },
-  {
-    name: "Dell 儲備幹部",
-    website:
-      "https://dell.wd1.myworkdayjobs.com/External/job/Taipei-Taiwan/RG-Advisor--Project-Program-Management_R41987"
-  }
-];
-
 const VirtualRefinementList = connectRefinementList(() => null);
 const VirtualRange = connectRange(() => null);
 
@@ -151,27 +129,11 @@ const JobSearch: React.FC = () => {
     setClient();
   }, [user, getApi]);
 
-  const onClickTextLoop = (news: News) => {
-    firebase.analytics().logEvent("click_news", { name: news.name });
-    openInNewTab(checkUrl(news.website));
-  };
-
   return (
     <div className={classes.root}>
       <SitelinksSearchboxStructuredData />
       <Header hideSearchBar={hideHeaderSearchBar} />
       <div className={classes.container}>
-        <TextLoop className={classes.latestJobs}>
-          {latestNews.map(n => (
-            <div
-              className={classes.latestNews}
-              key={n.name}
-              onClick={() => onClickTextLoop(n)}
-            >
-              {n.name}
-            </div>
-          ))}
-        </TextLoop>
         <div style={{ padding: 16 }}>
           <AwesomeHeader />
         </div>
@@ -182,10 +144,7 @@ const JobSearch: React.FC = () => {
           >
             <Configure
               hitsPerPage={20}
-              optionalWords={[
-                ...searchHistoryConfig.split(" "),
-                searchHistoryConfig.split(" ").length > 0 && "正職"
-              ]}
+              optionalWords={[...searchHistoryConfig.split(" "), "正職"]}
             />
             <div ref={ref}>
               <SearchBar />

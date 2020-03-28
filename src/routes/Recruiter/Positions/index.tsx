@@ -55,8 +55,32 @@ const Positions: React.FC = () => {
   const { user, getApi, reloadUser } = useAuth();
   const [positions, setPositions] = useState<Job[]>([]);
   const [formOpen, setFormOpen] = useState(false);
-  const [email, setEmail] = useState<string>();
+  const [email, setEmail] = useState<string | undefined>(
+    user?.recruiterInfo?.email
+  );
   const [emailErrorMessage, setEmailErrorMessage] = useState<string>();
+
+  const resendVerificationEmail = async () => {
+    if (emailErrorMessage) {
+      return;
+    }
+    const recruiterInfoApi = await getApi("RecruiterInfo");
+
+    if (user?.recruiterInfo?.uuid && email !== user.recruiterInfo.email) {
+      await recruiterInfoApi.updateRecruiterInfo({
+        recruiterInfoId: user.recruiterInfo.uuid,
+        recruiterInfo: {
+          ...user.recruiterInfo,
+          email
+        }
+      });
+    }
+    user?.recruiterInfo?.uuid &&
+      (await recruiterInfoApi.resendEmailConfirmation({
+        recruiterInfoId: user?.recruiterInfo?.uuid
+      }));
+    await reloadUser();
+  };
 
   const saveEmail = async () => {
     if (emailErrorMessage) {
@@ -117,16 +141,28 @@ const Positions: React.FC = () => {
           )}
         </div>
       </div>
-      {!user?.recruiterInfo?.email && (
+      {(!user?.recruiterInfo?.email || !user.recruiterInfo.emailConfirmed) && (
         <div className={classes.emailContainer}>
-          <div className={classes.emailHint}>
-            {"告訴我們你的 email 或下載我們的 App"}
-          </div>
-          <div className={classes.emailHint}>
-            {"有求職者應徵或其他問題時，讓我們可以第一時間通知你"}
-          </div>
+          {user?.recruiterInfo?.email ? (
+            <>
+              <div className={classes.emailHint}>{"等待 email 驗證中"}</div>
+              <div className={classes.emailHint}>
+                {"記得到信箱查看點選驗證 email"}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={classes.emailHint}>
+                {"告訴我們你的 email 或下載我們的 App"}
+              </div>
+              <div className={classes.emailHint}>
+                {"有求職者應徵或其他問題時，讓我們可以第一時間通知你"}
+              </div>
+            </>
+          )}
           <div className={classes.emailForm}>
             <TextField
+              style={{ width: 200 }}
               id="standard-basic"
               label="Email"
               onBlur={() => {
@@ -141,6 +177,7 @@ const Positions: React.FC = () => {
                 setEmail(event.target.value);
                 setEmailErrorMessage(undefined);
               }}
+              value={email}
               error={Boolean(emailErrorMessage)}
               helperText={emailErrorMessage}
             />
@@ -148,9 +185,11 @@ const Positions: React.FC = () => {
               variant="contained"
               color="primary"
               style={{ marginRight: 16, marginLeft: 16 }}
-              onClick={saveEmail}
+              onClick={
+                user?.recruiterInfo?.email ? resendVerificationEmail : saveEmail
+              }
             >
-              {"送出"}
+              {user?.recruiterInfo?.email ? "重寄驗證信" : "送出"}
             </Button>
             <Link to="/about" style={{ textDecoration: "none" }}>
               <Button variant="contained" color="primary">
