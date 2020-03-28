@@ -24,6 +24,7 @@ import SampleMessage from "routes/SampleMessage";
 import Stories from "routes/Stories";
 import Team from "routes/Team";
 import { useAuth } from "stores";
+import Bottles from "routes/Bottles";
 
 interface PrivateRouteProps extends RouteProps {
   component:
@@ -76,6 +77,7 @@ const RootRoute: React.FC = () => {
       <Route path="/job/:id/stat" exact component={JobStatistics} />
       <Route path="/sample-message" exact component={SampleMessage} />
       <Route path="/stories" exact component={Stories} />
+      <Route path="/bottle" exact component={Bottles} />
       <Route path="/team/:id" component={Team} />
       <PrivateRoute path="/join" exact component={JoinTeam} />
       <PrivateRoute path="/message" exact component={Message} />
