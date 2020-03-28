@@ -19,13 +19,15 @@ import React, { useEffect, useState } from "react";
 import {
   Configure,
   InstantSearch,
-  connectRefinementList
+  connectRefinementList,
+  connectRange
 } from "react-instantsearch-dom";
 import { useInView } from "react-intersection-observer";
 import { useLocation } from "react-router-dom";
 import TextLoop from "react-text-loop";
 import { useAuth } from "stores";
-import { AreaFilterButton, FilterHeader } from "components/Filter";
+import { FilterHeader } from "components/Filter";
+import { useSearch } from "stores";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -107,10 +109,12 @@ const latestNews: News[] = [
 ];
 
 const VirtualRefinementList = connectRefinementList(() => null);
+const VirtualRange = connectRange(() => null);
 
 const JobSearch: React.FC = () => {
   const classes = useStyles();
   const location = useLocation();
+  const { searchState } = useSearch();
   const { getApi, user } = useAuth();
   const [ref, inView] = useInView({ threshold: 1 });
   const [algoliaClient, setAlgoliaClient] = useState<SearchClient>();
@@ -184,6 +188,12 @@ const JobSearch: React.FC = () => {
               <SearchBar />
             </div>
             <VirtualRefinementList attribute="area.level2" />
+            <VirtualRefinementList attribute="type" />
+            <VirtualRefinementList attribute="team.primaryField" />
+            <VirtualRefinementList attribute="educationNeed" />
+            <VirtualRefinementList attribute="experienceNeed" />
+            <VirtualRange attribute="minSalary" />
+            <VirtualRange attribute="maxSalary" />
             <FilterHeader />
             <JobList />
             <SearchResult />

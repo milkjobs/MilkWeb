@@ -9,7 +9,7 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
-import { JobType } from "@frankyjuang/milkapi-client";
+import { ExperienceLevel } from "@frankyjuang/milkapi-client";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -32,19 +32,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export interface JobTypeDialogProps {
+export interface ExperienceLevelDialogProps {
   open: boolean;
-  selectedValue: string;
-  onClose: (value: string) => void;
+  selectedValue: ExperienceLevel;
+  onClose: (value: ExperienceLevel) => void;
 }
 
-function JobTypeDialog(props: JobTypeDialogProps) {
+function ExperienceLevelDialog(props: ExperienceLevelDialogProps) {
   const { onClose, selectedValue, open } = props;
-  const [value, setValue] = React.useState<string>();
+  const [value, setValue] = React.useState<ExperienceLevel>();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue((event.target as HTMLInputElement).value);
-    onClose((event.target as HTMLInputElement).value);
+    setValue((event.target as HTMLInputElement).value as ExperienceLevel);
+    onClose((event.target as HTMLInputElement).value as ExperienceLevel);
   };
 
   const handleClose = () => {
@@ -58,7 +58,7 @@ function JobTypeDialog(props: JobTypeDialogProps) {
       open={open}
       fullWidth
     >
-      <DialogTitle>{"類型"}</DialogTitle>
+      <DialogTitle>{"經驗要求"}</DialogTitle>
       <FormControl
         component="fieldset"
         style={{ paddingLeft: 32, paddingBottom: 16 }}
@@ -69,21 +69,25 @@ function JobTypeDialog(props: JobTypeDialogProps) {
           value={value}
           onChange={handleChange}
         >
-          <FormControlLabel value={""} control={<Radio />} label="全部" />
           <FormControlLabel
-            value={JobType.Fulltime}
+            value={ExperienceLevel.Any}
             control={<Radio />}
-            label="正職"
+            label="不限"
           />
           <FormControlLabel
-            value={JobType.Internship}
+            value={ExperienceLevel.Entry}
             control={<Radio />}
-            label="實習"
+            label="入門"
           />
           <FormControlLabel
-            value={JobType.Parttime}
+            value={ExperienceLevel.Mid}
             control={<Radio />}
-            label="兼職"
+            label="中階"
+          />
+          <FormControlLabel
+            value={ExperienceLevel.Senior}
+            control={<Radio />}
+            label="資深"
           />
         </RadioGroup>
       </FormControl>
@@ -91,37 +95,41 @@ function JobTypeDialog(props: JobTypeDialogProps) {
   );
 }
 
-interface JobTypeFilterButtonProps extends RefinementListProvided {
-  onChange: (type: JobType) => void;
-}
-
-const JobTypeFilterButton: React.FC<JobTypeFilterButtonProps> = ({
-  refine,
-  onChange
+const ExperienceLevelFilterButton: React.FC<RefinementListProvided> = ({
+  refine
 }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState(ExperienceLevel.Any);
 
-  const jobTypeDisplay = (type: string) => {
-    if (type === JobType.Fulltime) return "正職";
-    if (type === JobType.Internship) return "實習";
-    if (type === JobType.Parttime) return "兼職";
+  const ExperienceLevelDisplay = (type: string) => {
+    if (type === ExperienceLevel.Any) return "經驗";
+    if (type === ExperienceLevel.Entry) return "入門";
+    if (type === ExperienceLevel.Mid) return "中階";
+    if (type === ExperienceLevel.Senior) return "資深";
   };
 
   return (
     <>
       <Button className={classes.filterButton} onClick={() => setOpen(true)}>
         <div className={classes.filterText}>
-          {jobTypeDisplay(selectedValue) || "類型"}
+          {ExperienceLevelDisplay(selectedValue)}
         </div>
       </Button>
-      <JobTypeDialog
+      <ExperienceLevelDialog
         open={open}
-        onClose={(value: string) => {
-          refine([value]);
+        onClose={(value: ExperienceLevel) => {
+          refine(
+            value === ExperienceLevel.Any
+              ? [
+                  ExperienceLevel.Any,
+                  ExperienceLevel.Entry,
+                  ExperienceLevel.Mid,
+                  ExperienceLevel.Senior
+                ]
+              : [value]
+          );
           setOpen(false);
-          onChange(value as JobType);
           setSelectedValue(value);
         }}
         selectedValue={selectedValue}
@@ -130,6 +138,8 @@ const JobTypeFilterButton: React.FC<JobTypeFilterButtonProps> = ({
   );
 };
 
-const ConnectedJobTypeFilterButton = connectRefinementList(JobTypeFilterButton);
+const ConnectedExperienceLevelFilterButton = connectRefinementList(
+  ExperienceLevelFilterButton
+);
 
-export { ConnectedJobTypeFilterButton as JobTypeFilterButton };
+export { ConnectedExperienceLevelFilterButton as ExperienceLevelFilterButton };

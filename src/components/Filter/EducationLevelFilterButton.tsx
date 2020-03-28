@@ -9,14 +9,14 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
-import { JobType } from "@frankyjuang/milkapi-client";
+import { EducationLevel } from "@frankyjuang/milkapi-client";
 
 const useStyles = makeStyles(theme => ({
   container: {
     marginHorizontal: 4
   },
   filterButton: {
-    width: 60,
+    minWidth: 60,
     borderColor: theme.palette.divider,
     borderRadius: 8,
     borderWidth: 1,
@@ -32,19 +32,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export interface JobTypeDialogProps {
+export interface EducationLevelDialogProps {
   open: boolean;
-  selectedValue: string;
-  onClose: (value: string) => void;
+  selectedValue: EducationLevel;
+  onClose: (value: EducationLevel) => void;
 }
 
-function JobTypeDialog(props: JobTypeDialogProps) {
+function EducationLevelDialog(props: EducationLevelDialogProps) {
   const { onClose, selectedValue, open } = props;
-  const [value, setValue] = React.useState<string>();
+  const [value, setValue] = React.useState<EducationLevel>();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue((event.target as HTMLInputElement).value);
-    onClose((event.target as HTMLInputElement).value);
+    setValue((event.target as HTMLInputElement).value as EducationLevel);
+    onClose((event.target as HTMLInputElement).value as EducationLevel);
   };
 
   const handleClose = () => {
@@ -58,7 +58,7 @@ function JobTypeDialog(props: JobTypeDialogProps) {
       open={open}
       fullWidth
     >
-      <DialogTitle>{"類型"}</DialogTitle>
+      <DialogTitle>{"學歷要求"}</DialogTitle>
       <FormControl
         component="fieldset"
         style={{ paddingLeft: 32, paddingBottom: 16 }}
@@ -69,21 +69,30 @@ function JobTypeDialog(props: JobTypeDialogProps) {
           value={value}
           onChange={handleChange}
         >
-          <FormControlLabel value={""} control={<Radio />} label="全部" />
           <FormControlLabel
-            value={JobType.Fulltime}
+            value={EducationLevel.Any}
             control={<Radio />}
-            label="正職"
+            label="不限"
           />
           <FormControlLabel
-            value={JobType.Internship}
+            value={EducationLevel.HighSchool}
             control={<Radio />}
-            label="實習"
+            label="高中 / 高職"
           />
           <FormControlLabel
-            value={JobType.Parttime}
+            value={EducationLevel.Bachelor}
             control={<Radio />}
-            label="兼職"
+            label="大學 / 專科"
+          />
+          <FormControlLabel
+            value={EducationLevel.Master}
+            control={<Radio />}
+            label="碩士"
+          />
+          <FormControlLabel
+            value={EducationLevel.PhD}
+            control={<Radio />}
+            label="博士"
           />
         </RadioGroup>
       </FormControl>
@@ -91,37 +100,43 @@ function JobTypeDialog(props: JobTypeDialogProps) {
   );
 }
 
-interface JobTypeFilterButtonProps extends RefinementListProvided {
-  onChange: (type: JobType) => void;
-}
-
-const JobTypeFilterButton: React.FC<JobTypeFilterButtonProps> = ({
-  refine,
-  onChange
+const EducationLevelFilterButton: React.FC<RefinementListProvided> = ({
+  refine
 }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState(EducationLevel.Any);
 
-  const jobTypeDisplay = (type: string) => {
-    if (type === JobType.Fulltime) return "正職";
-    if (type === JobType.Internship) return "實習";
-    if (type === JobType.Parttime) return "兼職";
+  const EducationLevelDisplay = (type: string) => {
+    if (type === EducationLevel.Any) return "學歷";
+    if (type === EducationLevel.HighSchool) return "高中 / 高職";
+    if (type === EducationLevel.Bachelor) return "大學 / 專科";
+    if (type === EducationLevel.Master) return "碩士";
+    if (type === EducationLevel.PhD) return "博士";
   };
 
   return (
     <>
       <Button className={classes.filterButton} onClick={() => setOpen(true)}>
         <div className={classes.filterText}>
-          {jobTypeDisplay(selectedValue) || "類型"}
+          {EducationLevelDisplay(selectedValue)}
         </div>
       </Button>
-      <JobTypeDialog
+      <EducationLevelDialog
         open={open}
-        onClose={(value: string) => {
-          refine([value]);
+        onClose={(value: EducationLevel) => {
+          refine(
+            value === EducationLevel.Any
+              ? [
+                  EducationLevel.Any,
+                  EducationLevel.HighSchool,
+                  EducationLevel.Bachelor,
+                  EducationLevel.Master,
+                  EducationLevel.PhD
+                ]
+              : [value]
+          );
           setOpen(false);
-          onChange(value as JobType);
           setSelectedValue(value);
         }}
         selectedValue={selectedValue}
@@ -130,6 +145,8 @@ const JobTypeFilterButton: React.FC<JobTypeFilterButtonProps> = ({
   );
 };
 
-const ConnectedJobTypeFilterButton = connectRefinementList(JobTypeFilterButton);
+const ConnectedEducationLevelFilterButton = connectRefinementList(
+  EducationLevelFilterButton
+);
 
-export { ConnectedJobTypeFilterButton as JobTypeFilterButton };
+export { ConnectedEducationLevelFilterButton as EducationLevelFilterButton };
