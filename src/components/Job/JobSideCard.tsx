@@ -2,8 +2,22 @@ import { Job } from "@frankyjuang/milkapi-client";
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import { LoginDialog } from "components/Util";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sticky from "react-stickynode";
+import {
+  Configure,
+  InstantSearch,
+  connectSearchBox
+} from "react-instantsearch-dom";
+import { useSearch } from "stores";
+import { algoliaConfig } from "config";
+import {
+  InfiniteHitsProvided,
+  SearchBoxProvided
+} from "react-instantsearch-core";
+import { connectInfiniteHits } from "react-instantsearch-dom";
+import { Link } from "react-router-dom";
+import { salaryToString } from "helpers";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -55,16 +69,122 @@ const useStyles = makeStyles(theme => ({
     fontSize: 14,
     fontWeight: 400,
     color: theme.palette.text.secondary
+  },
+  similarJobsContainer: {
+    marginTop: 100,
+    padding: 16,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "start",
+    width: "100%"
+  },
+  similarJobsTitle: {
+    fontSize: 18
+  },
+  similarJobCard: {
+    textDecoration: "none",
+    display: "flex",
+    flexDirection: "column",
+    paddingTop: 8,
+    paddingBottom: 8,
+    "&:hover": {
+      cursor: "pointer"
+    }
+  },
+  similarJobTitle: {
+    display: "flex",
+    marginBottom: 16
+  },
+  nameContainer: {
+    display: "flex",
+    flex: 1,
+    alignItems: "center"
+  },
+  jobName: {
+    display: "flex",
+    maxWidth: 200,
+    color: theme.palette.text.primary,
+    fontSize: 16,
+    fontWeight: 800,
+    marginRight: 16,
+    overflow: "hidden",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 16
+    }
+  },
+  jobSalary: {
+    minWidth: 100,
+    fontSize: 16,
+    fontWeight: 400,
+    textAlign: "left",
+    color: theme.palette.secondary.main
+  },
+  truncate: {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap"
+  },
+  teamName: {
+    display: "flex",
+    color: theme.palette.text.hint,
+    fontSize: 16,
+    overflow: "hidden",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 16
+    }
   }
 }));
+
+const JobList: React.FC<InfiniteHitsProvided> = props => {
+  const classes = useStyles();
+  const { hits } = props;
+
+  return (
+    <>
+      {hits.slice(1).map((value, index) => (
+        <Link
+          key={index}
+          to={`/job/${value.objectID}`}
+          className={classes.similarJobCard}
+        >
+          <div className={classes.nameContainer}>
+            <div className={classes.jobName}>
+              <div className={classes.truncate}>{value.name}</div>
+            </div>
+            <div className={classes.jobSalary}>
+              {salaryToString(
+                value.minSalary,
+                value.maxSalary,
+                value.salaryType
+              )}
+            </div>
+          </div>
+          <div className={classes.teamName}>{value.team.nickname}</div>
+        </Link>
+      ))}
+    </>
+  );
+};
+
+const ConnectedJobList = connectInfiniteHits(JobList);
+
+const SearchBar: React.FC<SearchBoxProvided> = props => {
+  return <div></div>;
+};
+const ConnectedSearchBar = connectSearchBox(SearchBar);
 
 interface Props {
   job: Job;
 }
 
 const JobSideCard: React.FC<Props> = ({ job }) => {
-  const { uuid: jobId, recruiter, team } = job;
+  const { uuid: jobId, recruiter, team, name } = job;
   const classes = useStyles();
+  const { searchClient, loadAlgoliaCredential } = useSearch();
+  useEffect(() => {
+    console.warn(searchClient);
+    !searchClient && loadAlgoliaCredential();
+  }, [searchClient]);
   // const history = useHistory();
   // const { user, getApi } = useAuth();
   // const { sb } = useChannel();
@@ -236,6 +356,19 @@ const JobSideCard: React.FC<Props> = ({ job }) => {
             </Button>
           )} */}
         </div>
+        {searchClient && (
+          <div className={classes.similarJobsContainer}>
+            <div className={classes.similarJobsTitle}>{"類似職缺"}</div>
+            <InstantSearch
+              indexName={algoliaConfig.index}
+              searchClient={searchClient}
+            >
+              <ConnectedSearchBar defaultRefinement={name} />
+              <Configure hitsPerPage={6} optionalWords={[name]} />
+              <ConnectedJobList />
+            </InstantSearch>
+          </div>
+        )}
       </Sticky>
     </div>
   );

@@ -41,7 +41,7 @@ export interface TeamFieldDialogProps {
     value: string[];
   }>[];
   selectedValue: string | undefined;
-  onClose: (value: string) => void;
+  onClose: (value: string | undefined) => void;
 }
 
 function TeamFieldDialog(props: TeamFieldDialogProps) {
@@ -54,7 +54,7 @@ function TeamFieldDialog(props: TeamFieldDialogProps) {
   };
 
   const handleClose = () => {
-    selectedValue && onClose(selectedValue);
+    onClose(selectedValue);
   };
 
   return (
@@ -111,7 +111,7 @@ const TeamFieldFilterButton: React.FC<RefinementListProvided> = ({
         open={open}
         items={items}
         onClose={value => {
-          refine([value]);
+          refine(value ? [value] : []);
           setOpen(false);
           setSelectedValue(value);
         }}

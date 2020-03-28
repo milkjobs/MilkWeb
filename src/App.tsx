@@ -8,7 +8,13 @@ import { BrowserRouter, Route, RouteProps, Switch } from "react-router-dom";
 import PageView from "routes/PageView";
 import Recruiter from "routes/Recruiter";
 import RootRoute from "routes/RootRoute";
-import { AuthProvider, ChannelProvider, ThemeProvider, useAuth } from "stores";
+import {
+  AuthProvider,
+  ChannelProvider,
+  ThemeProvider,
+  useAuth,
+  SearchProvider
+} from "stores";
 import "./App.css";
 
 const LoadingRoute: React.FC<RouteProps> = props => {
@@ -50,10 +56,12 @@ const App: React.FC<{}> = () => {
     <ThemeProvider>
       <HelmetProvider>
         <AuthProvider>
-          <ChannelProvider>
-            <CssBaseline />
-            <AppRouter />
-          </ChannelProvider>
+          <SearchProvider>
+            <ChannelProvider>
+              <CssBaseline />
+              <AppRouter />
+            </ChannelProvider>
+          </SearchProvider>
         </AuthProvider>
       </HelmetProvider>
     </ThemeProvider>

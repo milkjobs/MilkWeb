@@ -1,9 +1,10 @@
-import { Avatar, makeStyles } from "@material-ui/core";
+import { Avatar, makeStyles, Badge } from "@material-ui/core";
+import { Apps } from "@material-ui/icons";
 import { TeamCreateForm } from "components/TeamComponents";
 import { LoginDialog } from "components/Util";
 import React, { MouseEvent, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "stores";
+import { useAuth, useChannel } from "stores";
 
 const useStyles = makeStyles(theme => ({
   link: {
@@ -43,16 +44,16 @@ interface Props {
 }
 
 const ApplicantHeaderTabs: React.FC<Props> = props => {
-  const { openProfileMenu } = props;
+  const { openProfileMenu, openExploreMenu } = props;
   const classes = useStyles();
   const location = useLocation();
   const { user } = useAuth();
-  // const { unreadMessageCount } = useChannel();
+  const { unreadMessageCount } = useChannel();
   const [isCreateTeamFormOpen, setIsCreateTeamFormOpen] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const isHome = location.pathname === "/";
   const isAbout = location.pathname === "/about";
-  // const isMessage = location.pathname.startsWith("/message");
+  const isMessage = location.pathname.startsWith("/message");
 
   const showCreateTeamForm = () => {
     setIsCreateTeamFormOpen(true);
@@ -92,12 +93,7 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
           <span className={classes.tab}>幫助中心</span>
         </Link>
       )}
-      {isHome && (
-        <Link to="/bottle" className={classes.link}>
-          <span className={classes.tab}>牛奶瓶</span>
-        </Link>
-      )}
-      {/* {!isMessage && (
+      {!isMessage && (
         <Link to="/message" className={classes.link}>
           <span className={classes.tab}>
             <Badge
@@ -109,7 +105,10 @@ const ApplicantHeaderTabs: React.FC<Props> = props => {
             </Badge>
           </span>
         </Link>
-      )} */}
+      )}
+      <span className={classes.tab} onClick={openExploreMenu}>
+        <Apps />
+      </span>
 
       {user ? (
         <span className={classes.tab} onClick={openProfileMenu}>

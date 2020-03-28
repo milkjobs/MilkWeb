@@ -83,6 +83,16 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
           {/* </Link> */}
         </div>
       )}
+      <Link
+        to="/circle"
+        style={{
+          textDecoration: "none",
+          color: "#484848",
+          display: "flex"
+        }}
+      >
+        <span className={classes.tab}>工作圈</span>
+      </Link>
       {user && (
         <span className={classes.tab} onClick={openProfileMenu}>
           <Avatar

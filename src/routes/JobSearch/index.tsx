@@ -182,7 +182,10 @@ const JobSearch: React.FC = () => {
           >
             <Configure
               hitsPerPage={20}
-              optionalWords={[...searchHistoryConfig.split(" "), "正職"]}
+              optionalWords={[
+                ...searchHistoryConfig.split(" "),
+                searchHistoryConfig.split(" ").length > 0 && "正職"
+              ]}
             />
             <div ref={ref}>
               <SearchBar />

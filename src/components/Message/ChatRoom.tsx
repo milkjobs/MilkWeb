@@ -13,6 +13,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { ChannelHandler, GroupChannel, GroupChannelListQuery } from "sendbird";
 import { useAuth, useChannel } from "stores";
 import { isGroupChannel, parseChannel } from "./utils";
+import { ChannelCustomType } from "@frankyjuang/milkapi-client";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -90,7 +91,9 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
           return result;
         }
 
-        if (isRecruiter) {
+        if (c.customType === ChannelCustomType.Bottle && !isRecruiter) {
+          result.push(c);
+        } else if (isRecruiter) {
           user.uuid === recruiterMember.userId && result.push(c);
         } else {
           user.uuid === applicantMember.userId && result.push(c);
@@ -225,7 +228,7 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
                   name={they.nickname}
                   profileImageUrl={they.profileUrl}
                   teamName={
-                    isRecruiter ? "" : user?.recruiterInfo?.team?.nickname || ""
+                    isRecruiter ? "" : c.data ? JSON.parse(c.data).teamName : ""
                   }
                   selected={c.url === currentChannelUrl}
                   unreadMessageCount={c.unreadMessageCount}

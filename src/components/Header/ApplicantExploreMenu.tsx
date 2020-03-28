@@ -30,10 +30,22 @@ const ApplicantExploreMenu: React.FC<Props> = props => {
             <ClickAwayListener onClickAway={close}>
               <MenuList>
                 <Link
-                  to="/explore"
+                  to="/circle"
                   style={{ textDecoration: "none", color: "black" }}
                 >
-                  <MenuItem onClick={close}>團隊列表</MenuItem>
+                  <MenuItem onClick={close}>工作圈</MenuItem>
+                </Link>
+                <Link
+                  to="/departments"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={close}>就業精選</MenuItem>
+                </Link>
+                <Link
+                  to="/bottle"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={close}>牛奶瓶</MenuItem>
                 </Link>
               </MenuList>
             </ClickAwayListener>
