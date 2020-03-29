@@ -6,6 +6,7 @@ import { Title } from "components/Util";
 import { VerificationStateBanner } from "components/Verification";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "stores";
+import { DownloadApp } from "components/Util";
 import TextField from "@material-ui/core/TextField";
 import { Link } from "react-router-dom";
 
@@ -55,6 +56,7 @@ const Positions: React.FC = () => {
   const { user, getApi, reloadUser } = useAuth();
   const [positions, setPositions] = useState<Job[]>([]);
   const [formOpen, setFormOpen] = useState(false);
+  const [downloadAppOpen, setDownloadAppOpen] = useState(false);
   const [email, setEmail] = useState<string | undefined>(
     user?.recruiterInfo?.email
   );
@@ -191,11 +193,18 @@ const Positions: React.FC = () => {
             >
               {user?.recruiterInfo?.email ? "重寄驗證信" : "送出"}
             </Button>
-            <Link to="/about" style={{ textDecoration: "none" }}>
-              <Button variant="contained" color="primary">
-                {"下載 App"}
-              </Button>
-            </Link>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setDownloadAppOpen(true)}
+            >
+              {"下載 App"}
+            </Button>
+            <DownloadApp
+              isOpen={downloadAppOpen}
+              close={() => setDownloadAppOpen(false)}
+              recruiterMode
+            />
           </div>
         </div>
       )}

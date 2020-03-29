@@ -41,19 +41,32 @@ interface Slide {
 interface Props {
   isOpen: boolean;
   close: () => void;
+  recruiterMode?: boolean;
 }
 
-const DownloadApp: React.FC<Props> = ({ isOpen, close }) => {
+const DownloadApp: React.FC<Props> = ({
+  isOpen,
+  close,
+  recruiterMode = false
+}) => {
   const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
-  const slides: Slide[] = [
-    { title: "手機完成，輕鬆自在", image: Home },
-    { title: "簡單直覺，切中要點", image: Job },
-    { title: "職缺管理，一目瞭然", image: Manage },
-    // { title: "不漏接任何訊息", image: Chat },
-    { title: "保護眼睛，更加專注", image: Dark }
-  ];
+  const slides: Slide[] = recruiterMode
+    ? [
+        { title: "職缺管理，一目瞭然", image: Manage },
+        { title: "保護眼睛，更加專注", image: Dark },
+        { title: "手機完成，輕鬆自在", image: Home },
+        { title: "簡單直覺，切中要點", image: Job }
+        // { title: "不漏接任何訊息", image: Chat },
+      ]
+    : [
+        { title: "手機完成，輕鬆自在", image: Home },
+        { title: "簡單直覺，切中要點", image: Job },
+        { title: "職缺管理，一目瞭然", image: Manage },
+        // { title: "不漏接任何訊息", image: Chat },
+        { title: "保護眼睛，更加專注", image: Dark }
+      ];
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
   useEffect(() => {
@@ -61,7 +74,7 @@ const DownloadApp: React.FC<Props> = ({ isOpen, close }) => {
     if (isOpen) {
       timer = window.setInterval(() => {
         setCurrentSlideIndex(prev => (prev + 1) % slides.length);
-      }, 5000);
+      }, 2000);
     }
 
     return () => clearInterval(timer);
