@@ -25,6 +25,8 @@ import Stories from "routes/Stories";
 import Team from "routes/Team";
 import { useAuth } from "stores";
 import Bottles from "routes/Bottles";
+import JobCircle from "routes/JobCircle";
+import EmailConfirm from "routes/EmailConfirm";
 
 interface PrivateRouteProps extends RouteProps {
   component:
@@ -73,10 +75,13 @@ const RootRoute: React.FC = () => {
       <Route path="/chat" exact component={Chat} />
       <Route path="/departments" exact component={DepartmentList} />
       <Route path="/help" component={Help} />
+      <Route path="/confirm-email" component={EmailConfirm} />
       <Route path="/job/:id" exact component={Job} />
       <Route path="/job/:id/stat" exact component={JobStatistics} />
       <Route path="/sample-message" exact component={SampleMessage} />
       <Route path="/stories" exact component={Stories} />
+      <Route path="/circle/" exact component={JobCircle} />
+      <Route path="/circle/:id" exact component={JobCircle} />
       <Route path="/bottle" exact component={Bottles} />
       <Route path="/team/:id" component={Team} />
       <PrivateRoute path="/join" exact component={JoinTeam} />

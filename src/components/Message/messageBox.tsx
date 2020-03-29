@@ -328,11 +328,11 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
         <MessageList messages={messages.current} userId={user?.uuid || ""} />
       </div>
       <div className={classes.messageInput}>
-        {!isRecruiter && (
+        {/* {!isRecruiter && (
           <div style={{ display: "flex", marginLeft: 8, marginTop: 4 }}>
             <Button onClick={sendResume}>發送履歷</Button>
           </div>
-        )}
+        )} */}
         <Input
           autoFocus
           className={classes.textField}

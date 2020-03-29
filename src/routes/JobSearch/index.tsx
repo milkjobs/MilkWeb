@@ -8,24 +8,20 @@ import { JobList, SearchBar } from "components/JobSearch";
 import { SearchResult } from "components/JobSearch/SearchResult";
 import { algoliaConfig } from "config";
 import "firebase/analytics";
-import firebase from "firebase/app";
-import {
-  AlgoliaService,
-  checkUrl,
-  openInNewTab,
-  SitelinksSearchboxStructuredData
-} from "helpers";
+import { AlgoliaService, SitelinksSearchboxStructuredData } from "helpers";
 import React, { useEffect, useState } from "react";
 import {
   Configure,
   InstantSearch,
-  connectRefinementList
+  connectRefinementList,
+  connectRange
 } from "react-instantsearch-dom";
 import { useInView } from "react-intersection-observer";
 import { useLocation } from "react-router-dom";
 import TextLoop from "react-text-loop";
 import { useAuth } from "stores";
-import { AreaFilterButton, FilterHeader } from "components/Filter";
+import { FilterHeader } from "components/Filter";
+import { useSearch } from "stores";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -90,27 +86,13 @@ interface News {
   website: string;
 }
 
-const latestNews: News[] = [
-  {
-    name: "MixerBox 2020 新鮮人招募中",
-    website: "https://milk.jobs/job/2e2aa7dc13c542179559177d265f2183"
-  },
-  {
-    name: "華碩 AI 實習 4/30 截止",
-    website: "https://aics.asus.com/zh/homepage-tw/"
-  },
-  {
-    name: "Dell 儲備幹部",
-    website:
-      "https://dell.wd1.myworkdayjobs.com/External/job/Taipei-Taiwan/RG-Advisor--Project-Program-Management_R41987"
-  }
-];
-
 const VirtualRefinementList = connectRefinementList(() => null);
+const VirtualRange = connectRange(() => null);
 
 const JobSearch: React.FC = () => {
   const classes = useStyles();
   const location = useLocation();
+  const { searchState } = useSearch();
   const { getApi, user } = useAuth();
   const [ref, inView] = useInView({ threshold: 1 });
   const [algoliaClient, setAlgoliaClient] = useState<SearchClient>();
@@ -147,27 +129,11 @@ const JobSearch: React.FC = () => {
     setClient();
   }, [user, getApi]);
 
-  const onClickTextLoop = (news: News) => {
-    firebase.analytics().logEvent("click_news", { name: news.name });
-    openInNewTab(checkUrl(news.website));
-  };
-
   return (
     <div className={classes.root}>
       <SitelinksSearchboxStructuredData />
       <Header hideSearchBar={hideHeaderSearchBar} />
       <div className={classes.container}>
-        <TextLoop className={classes.latestJobs}>
-          {latestNews.map(n => (
-            <div
-              className={classes.latestNews}
-              key={n.name}
-              onClick={() => onClickTextLoop(n)}
-            >
-              {n.name}
-            </div>
-          ))}
-        </TextLoop>
         <div style={{ padding: 16 }}>
           <AwesomeHeader />
         </div>
@@ -184,6 +150,12 @@ const JobSearch: React.FC = () => {
               <SearchBar />
             </div>
             <VirtualRefinementList attribute="area.level2" />
+            <VirtualRefinementList attribute="type" />
+            <VirtualRefinementList attribute="team.primaryField" />
+            <VirtualRefinementList attribute="educationNeed" />
+            <VirtualRefinementList attribute="experienceNeed" />
+            <VirtualRange attribute="minSalary" />
+            <VirtualRange attribute="maxSalary" />
             <FilterHeader />
             <JobList />
             <SearchResult />

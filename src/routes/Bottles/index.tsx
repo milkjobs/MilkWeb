@@ -1,4 +1,4 @@
-import { Bottle as BottleType } from "@frankyjuang/milkapi-client";
+import { Bottle as BottleType, BottleReply } from "@frankyjuang/milkapi-client";
 import { makeStyles } from "@material-ui/core/styles";
 import { Header } from "components/Header";
 import React, { useCallback, useEffect, useState } from "react";
@@ -14,6 +14,8 @@ import to from "await-to-js";
 import Checkbox from "@material-ui/core/Checkbox";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { openInNewTab } from "helpers";
+import { SmsOutlined, Sms } from "@material-ui/icons";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   containerHeader: {
@@ -32,9 +34,25 @@ const useStyles = makeStyles(theme => ({
   myBottle: {
     fontSize: 18
   },
-  reply: {
+  message: {
     fontSize: 18,
     marginBottom: 32
+  },
+  reply: {
+    fontSize: 18,
+    marginBottom: 32,
+    padding: 16,
+    borderRadius: 4,
+    backgroundColor: theme.palette.action.hover
+  },
+  time: {
+    fontSize: 14,
+    color: theme.palette.text.hint
+  },
+  replyMessageContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
   container: {
     alignContent: "stretch",
@@ -63,8 +81,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper
   },
   dialogPaper: {
-    minHeight: "35vh",
-    maxHeight: "35vh"
+    minHeight: "35vh"
   },
   loading: {
     marginLeft: "auto",
@@ -173,6 +190,7 @@ interface ReplyDialogProps {
 const ReplyDialog: React.FC<ReplyDialogProps> = props => {
   const classes = useStyles();
   const { user, getApi } = useAuth();
+  const history = useHistory();
   const { onClose, open, bottle: b, myBottle } = props;
   const [reply, setReply] = useState<string>();
   const [bottle, setBottle] = useState(b);
@@ -224,6 +242,24 @@ const ReplyDialog: React.FC<ReplyDialogProps> = props => {
     setReply(undefined);
   }, [b]);
 
+  const match = async (reply: BottleReply, bottleId: string) => {
+    if (reply.channelUrl) {
+      history.push("/message/" + reply.channelUrl);
+
+      return;
+    }
+
+    setLoading(true);
+    const bottleApi = await getApi("Bottle");
+    const [err, updatedReply] = await to(
+      bottleApi.matchBottle({ bottleId, replyId: reply.uuid })
+    );
+    setLoading(false);
+    !err && getBottle();
+    updatedReply?.channelUrl &&
+      history.push("/message/" + updatedReply.channelUrl);
+  };
+
   return (
     <Dialog
       onClose={handleClose}
@@ -232,16 +268,32 @@ const ReplyDialog: React.FC<ReplyDialogProps> = props => {
       fullWidth
       classes={{ paper: classes.dialogPaper }}
     >
-      <DialogTitle id="simple-dialog-title">{bottle.message}</DialogTitle>
       {loading ? (
         <CircularProgress className={classes.loading} />
       ) : (
         <DialogContent>
+          <div className={classes.message}>
+            {bottle.message}
+            <div className={classes.time}>
+              {bottle.createdAt.toLocaleString()}
+            </div>
+          </div>
           {bottle.replies?.length || myBottle ? (
-            bottle.replies ? (
+            bottle.replies?.length ? (
               bottle.replies.map(r => (
                 <div key={r.uuid} className={classes.reply}>
-                  {r.message}
+                  <div className={classes.replyMessageContainer}>
+                    <div>{r.message}</div>
+                    {myBottle &&
+                      (r.channelUrl ? (
+                        <Sms onClick={() => match(r, bottle.uuid)} />
+                      ) : (
+                        <SmsOutlined onClick={() => match(r, bottle.uuid)} />
+                      ))}
+                  </div>
+                  <div className={classes.time}>
+                    {r.repliedAt.toLocaleString()}
+                  </div>
                 </div>
               ))
             ) : (

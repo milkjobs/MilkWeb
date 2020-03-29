@@ -4,7 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
-import { Dehaze, Search } from "@material-ui/icons";
+import { Dehaze, Search, Apps } from "@material-ui/icons";
 import logo from "assets/milk.png";
 import qs from "qs";
 import React, { useState } from "react";
@@ -279,6 +279,9 @@ const Header: React.FC<Props> = props => {
                   <Search />
                 </IconButton>
               )}
+              <IconButton onClick={openExploreMenu} color="inherit">
+                <Apps />
+              </IconButton>
               <IconButton onClick={openMobileMenu} color="inherit">
                 <Dehaze />
               </IconButton>

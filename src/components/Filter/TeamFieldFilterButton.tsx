@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core";
-import { RefinementListProvided } from "react-instantsearch-core";
+import { RefinementListProvided, Hit } from "react-instantsearch-core";
 import { connectRefinementList } from "react-instantsearch-dom";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -9,14 +9,14 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
-import { JobType } from "@frankyjuang/milkapi-client";
+import { EducationLevel } from "@frankyjuang/milkapi-client";
 
 const useStyles = makeStyles(theme => ({
   container: {
     marginHorizontal: 4
   },
   filterButton: {
-    width: 60,
+    minWidth: 60,
     borderColor: theme.palette.divider,
     borderRadius: 8,
     borderWidth: 1,
@@ -32,19 +32,25 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export interface JobTypeDialogProps {
+export interface TeamFieldDialogProps {
   open: boolean;
-  selectedValue: string;
-  onClose: (value: string) => void;
+  items: Hit<{
+    count: number;
+    isRefined: boolean;
+    label: string;
+    value: string[];
+  }>[];
+  selectedValue: string | undefined;
+  onClose: (value: string | undefined) => void;
 }
 
-function JobTypeDialog(props: JobTypeDialogProps) {
-  const { onClose, selectedValue, open } = props;
-  const [value, setValue] = React.useState<string>();
+function TeamFieldDialog(props: TeamFieldDialogProps) {
+  const { onClose, selectedValue, open, items } = props;
+  const [value, setValue] = React.useState<string | undefined>(selectedValue);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue((event.target as HTMLInputElement).value);
-    onClose((event.target as HTMLInputElement).value);
+    setValue((event.target as HTMLInputElement).value as EducationLevel);
+    onClose((event.target as HTMLInputElement).value as EducationLevel);
   };
 
   const handleClose = () => {
@@ -58,7 +64,7 @@ function JobTypeDialog(props: JobTypeDialogProps) {
       open={open}
       fullWidth
     >
-      <DialogTitle>{"類型"}</DialogTitle>
+      <DialogTitle>{"產業"}</DialogTitle>
       <FormControl
         component="fieldset"
         style={{ paddingLeft: 32, paddingBottom: 16 }}
@@ -69,59 +75,44 @@ function JobTypeDialog(props: JobTypeDialogProps) {
           value={value}
           onChange={handleChange}
         >
-          <FormControlLabel value={""} control={<Radio />} label="全部" />
           <FormControlLabel
-            value={JobType.Fulltime}
+            value={undefined}
             control={<Radio />}
-            label="正職"
+            label={"不限"}
           />
-          <FormControlLabel
-            value={JobType.Internship}
-            control={<Radio />}
-            label="實習"
-          />
-          <FormControlLabel
-            value={JobType.Parttime}
-            control={<Radio />}
-            label="兼職"
-          />
+          {items.map(i => (
+            <FormControlLabel
+              key={i.objectID}
+              value={i.label}
+              control={<Radio />}
+              label={i.label}
+            />
+          ))}
         </RadioGroup>
       </FormControl>
     </Dialog>
   );
 }
 
-interface JobTypeFilterButtonProps extends RefinementListProvided {
-  onChange: (type: JobType) => void;
-}
-
-const JobTypeFilterButton: React.FC<JobTypeFilterButtonProps> = ({
+const TeamFieldFilterButton: React.FC<RefinementListProvided> = ({
   refine,
-  onChange
+  items
 }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("");
-
-  const jobTypeDisplay = (type: string) => {
-    if (type === JobType.Fulltime) return "正職";
-    if (type === JobType.Internship) return "實習";
-    if (type === JobType.Parttime) return "兼職";
-  };
+  const [selectedValue, setSelectedValue] = useState<string>();
 
   return (
     <>
       <Button className={classes.filterButton} onClick={() => setOpen(true)}>
-        <div className={classes.filterText}>
-          {jobTypeDisplay(selectedValue) || "類型"}
-        </div>
+        <div className={classes.filterText}>{selectedValue || "產業"}</div>
       </Button>
-      <JobTypeDialog
+      <TeamFieldDialog
         open={open}
-        onClose={(value: string) => {
-          refine([value]);
+        items={items}
+        onClose={value => {
+          refine(value ? [value] : []);
           setOpen(false);
-          onChange(value as JobType);
           setSelectedValue(value);
         }}
         selectedValue={selectedValue}
@@ -130,6 +121,8 @@ const JobTypeFilterButton: React.FC<JobTypeFilterButtonProps> = ({
   );
 };
 
-const ConnectedJobTypeFilterButton = connectRefinementList(JobTypeFilterButton);
+const ConnectedTeamFieldFilterButton = connectRefinementList(
+  TeamFieldFilterButton
+);
 
-export { ConnectedJobTypeFilterButton as JobTypeFilterButton };
+export { ConnectedTeamFieldFilterButton as TeamFieldFilterButton };

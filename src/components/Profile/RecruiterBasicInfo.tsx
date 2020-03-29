@@ -77,9 +77,24 @@ const EditDialog: React.FC<DialogProps> = props => {
   const classes = useStyles();
   const { getApi, reloadUser, user } = useAuth();
   const [name, setName] = useState<string>();
+  const [email, setEmail] = useState<string>();
   const [title, setTitle] = useState<string>();
   const [nameErrorMessage, setNameErrorMessage] = useState<string>();
+  const [emailErrorMessage, setEmailErrorMessage] = useState<string>();
   const [titleErrorMessage, setTitleErrorMessage] = useState<string>();
+
+  const checkEmail = () => {
+    function validateEmail(email) {
+      let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(String(email).toLowerCase());
+    }
+    !validateEmail(email) && setEmailErrorMessage("請輸入正確的email");
+  };
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+    setEmailErrorMessage(undefined);
+  };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.length > 20) {
@@ -107,7 +122,7 @@ const EditDialog: React.FC<DialogProps> = props => {
   };
 
   const saveChanges = async () => {
-    if (!checkName() || !name) {
+    if (!checkName() || emailErrorMessage || !name) {
       return;
     }
 
@@ -117,14 +132,18 @@ const EditDialog: React.FC<DialogProps> = props => {
       const userApi = await getApi("User");
       await userApi.updateUser({ userId: user.uuid, user: { ...user, name } });
     }
-    if (user?.recruiterInfo?.uuid && user.recruiterInfo.title !== title) {
+    if (
+      user?.recruiterInfo?.uuid &&
+      (user.recruiterInfo.title !== title || user.recruiterInfo.email !== email)
+    ) {
       changed = true;
       const recruiterInfoApi = await getApi("RecruiterInfo");
       await recruiterInfoApi.updateRecruiterInfo({
         recruiterInfoId: user.recruiterInfo.uuid,
         recruiterInfo: {
           ...user.recruiterInfo,
-          title
+          title,
+          email
         }
       });
     }
@@ -170,6 +189,7 @@ const EditDialog: React.FC<DialogProps> = props => {
     if (user) {
       setName(user.name);
       setTitle(user.recruiterInfo?.title);
+      setEmail(user.recruiterInfo?.email);
     }
   }, [user]);
 
@@ -221,6 +241,19 @@ const EditDialog: React.FC<DialogProps> = props => {
           onBlur={checkName}
           onChange={handleNameChange}
           value={name}
+        />
+        <TextField
+          autoFocus
+          className={classes.formTextInput}
+          error={!!emailErrorMessage}
+          fullWidth
+          helperText={emailErrorMessage || ""}
+          id="name"
+          label="Email"
+          margin="normal"
+          onBlur={checkEmail}
+          onChange={handleEmailChange}
+          value={email}
         />
         <TextField
           error={!!titleErrorMessage}
@@ -294,6 +327,9 @@ const RecruiterBasicInfo: React.FC = () => {
             </Button>
           </div>
         </div>
+      </div>
+      <div className={classes.description}>
+        {user.recruiterInfo?.email || "尚無email"}
       </div>
       <div className={classes.description}>
         {user.recruiterInfo?.title || "尚無職位"}
