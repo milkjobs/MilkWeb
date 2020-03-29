@@ -55,7 +55,8 @@ const useStyles = makeStyles(theme => ({
   text: {
     textAlign: "left",
     fontSize: 16,
-    lineHeight: 2
+    lineHeight: 2,
+    color: "black"
   },
   circleLink: {
     padding: 32,
