@@ -19,7 +19,8 @@ import {
   User,
   UserApi,
   VerificationApi,
-  BottleApi
+  BottleApi,
+  PostApi
 } from "@frankyjuang/milkapi-client";
 import branch from "branch-sdk";
 import { apiServiceConfig } from "config";
@@ -104,6 +105,8 @@ export const AuthProvider = ({ children }) => {
       return new AwesomeApi(configuration) as any;
     } else if (type === "Support") {
       return new SupportApi(configuration) as any;
+    } else if (type === "Post") {
+      return new PostApi(configuration) as any;
     } else if (type === "RecruiterInfo") {
       return new RecruiterInfoApi(configuration) as any;
     } else if (type === "Tag") {

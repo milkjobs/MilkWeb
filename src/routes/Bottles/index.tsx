@@ -13,9 +13,9 @@ import { TextField, Button } from "@material-ui/core";
 import to from "await-to-js";
 import Checkbox from "@material-ui/core/Checkbox";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { openInNewTab } from "helpers";
 import { SmsOutlined, Sms } from "@material-ui/icons";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
+import { DownloadApp } from "components/Util";
 
 const useStyles = makeStyles(theme => ({
   containerHeader: {
@@ -156,13 +156,6 @@ const CreateDialog: React.FC<CreateDialogProps> = props => {
       </DialogContent>
       {
         <DialogActions>
-          <Button
-            onClick={() => openInNewTab("https://to.milk.jobs/app")}
-            color="primary"
-            style={{ marginRight: "auto" }}
-          >
-            下載 App
-          </Button>
           <Button onClick={handleClose} color="primary">
             取消
           </Button>
@@ -232,15 +225,16 @@ const ReplyDialog: React.FC<ReplyDialogProps> = props => {
     const [err, fetchedBottle] = await to(
       bottleApi.getBottle({ bottleId: b.uuid })
     );
+    console.warn(fetchedBottle);
     fetchedBottle && setBottle(fetchedBottle);
     setLoading(false);
-  }, [b, getApi]);
+  }, [b, getApi, user]);
 
   useEffect(() => {
     getBottle();
     setBottle(b);
     setReply(undefined);
-  }, [b]);
+  }, [b, user]);
 
   const match = async (reply: BottleReply, bottleId: string) => {
     if (reply.channelUrl) {
@@ -273,7 +267,9 @@ const ReplyDialog: React.FC<ReplyDialogProps> = props => {
       ) : (
         <DialogContent>
           <div className={classes.message}>
-            {bottle.message}
+            {bottle.message.split("\n").map((m, index) => (
+              <div key={index}>{m}</div>
+            ))}
             <div className={classes.time}>
               {bottle.createdAt.toLocaleString()}
             </div>
@@ -315,13 +311,6 @@ const ReplyDialog: React.FC<ReplyDialogProps> = props => {
       )}
       {!loading && !bottle.replies?.length && !myBottle && (
         <DialogActions>
-          <Button
-            onClick={() => openInNewTab("https://to.milk.jobs/app")}
-            color="primary"
-            style={{ marginRight: "auto" }}
-          >
-            下載 App
-          </Button>
           <Button onClick={handleClose} color="primary">
             取消
           </Button>
@@ -342,21 +331,34 @@ const ReplyDialog: React.FC<ReplyDialogProps> = props => {
 const Bottles: React.FC = () => {
   const classes = useStyles();
   const { getApi, user } = useAuth();
+  const params = useParams<{ id: string }>();
   const [bottles, setBottles] = useState<BottleType[]>([]);
   const [myBottles, setMyBottles] = useState<BottleType[]>([]);
   const [loading, setLoading] = useState(false);
   const [pageNo, setPageNo] = useState(1);
+  const [downloadDialogOpen, setDownloadDialogOpen] = useState(false);
   const [hasMorePages, setHasMorePages] = useState(true);
   const [createOpen, setCreateOpen] = useState(false);
-  const [replyOpen, setReplyOpen] = useState(false);
-  const [selectedBottle, setSelectedBottle] = useState<BottleType>();
+  const [replyOpen, setReplyOpen] = useState(params.id ? true : false);
+  const [selectedBottle, setSelectedBottle] = useState<BottleType | undefined>(
+    params.id
+      ? ({
+          uuid: params.id,
+          message: "",
+          createdAt: new Date(),
+          expiresAt: new Date(),
+          replies: [],
+          replyCount: 0
+        } as BottleType)
+      : undefined
+  );
   const [checked, setChecked] = React.useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
 
-  const pageSize = 100;
+  const pageSize = 50;
 
   const unique = (data: BottleType[]) => {
     const seen = new Set<string>();
@@ -481,6 +483,16 @@ const Bottles: React.FC = () => {
           bottle={selectedBottle}
         />
       )}
+      <Button
+        style={{ marginBottom: 64 }}
+        onClick={() => setDownloadDialogOpen(true)}
+      >
+        {"想看更多的牛奶瓶？下載牛奶找工作 App"}
+      </Button>
+      <DownloadApp
+        isOpen={downloadDialogOpen}
+        close={() => setDownloadDialogOpen(false)}
+      />
     </div>
   );
 };
