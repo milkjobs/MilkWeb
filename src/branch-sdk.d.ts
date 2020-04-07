@@ -53,6 +53,7 @@ declare module "branch-sdk" {
       options?: SendSMSOptions,
       callback?: ErrorCallback
     ) => void;
+    link: any;
   }
 
   const branch: BranchStatic;

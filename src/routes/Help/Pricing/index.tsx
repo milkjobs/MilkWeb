@@ -1,7 +1,7 @@
 import {
   Configuration,
   MembershipApi,
-  VisitorPlan
+  VisitorPlan,
 } from "@frankyjuang/milkapi-client";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
@@ -20,10 +20,10 @@ import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import { useAuth } from "stores";
 import urljoin from "url-join";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.default,
   },
   container: {
     display: "flex",
@@ -36,8 +36,8 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 24,
     paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: "960px"
-    }
+      width: "960px",
+    },
   },
   title: {},
   plansContainer: {
@@ -45,9 +45,9 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up("md")]: {
       width: "100%",
       flexDirection: "row",
-      justifyItems: "space-around"
+      justifyItems: "space-around",
     },
-    flexDirection: "column"
+    flexDirection: "column",
   },
   plan: {
     display: "flex",
@@ -67,40 +67,40 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up("md")]: {
       flex: 1,
       marginTop: 32,
-      marginBottom: 32
-    }
+      marginBottom: 32,
+    },
   },
   visitorToBe: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   free: {
-    color: theme.palette.secondary.main
-  }
+    color: theme.palette.secondary.main,
+  },
 }));
 
-const useTabsStyles = makeStyles(theme => ({
+const useTabsStyles = makeStyles((theme) => ({
   root: {
     borderBottomWidth: 1,
     borderBottomStyle: "solid",
     borderBottomColor: theme.palette.divider,
     paddingLeft: 24,
-    paddingRight: 24
+    paddingRight: 24,
   },
   indicator: {
-    backgroundColor: theme.palette.text.primary
-  }
+    backgroundColor: theme.palette.text.primary,
+  },
 }));
 
-const useTabStyles = makeStyles(theme => ({
+const useTabStyles = makeStyles((theme) => ({
   root: {
     textTransform: "none",
     color: theme.palette.grey["500"],
     minWidth: 72,
     fontSize: 16,
     [theme.breakpoints.down("xs")]: {
-      fontSize: 14
+      fontSize: 14,
     },
     fontWeight: theme.typography.fontWeightRegular,
     marginRight: theme.spacing(4),
@@ -115,17 +115,17 @@ const useTabStyles = makeStyles(theme => ({
       "sans-serif",
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"'
+      '"Segoe UI Symbol"',
     ].join(","),
     "&:hover": {
       color: theme.palette.secondary.main,
-      opacity: 1
+      opacity: 1,
     },
     "&$selected": {
-      color: theme.palette.text.primary
-    }
+      color: theme.palette.text.primary,
+    },
   },
-  selected: {}
+  selected: {},
 }));
 
 const Pricing: React.FC = () => {
@@ -151,8 +151,8 @@ const Pricing: React.FC = () => {
         subject: "廣告",
         phoneNumber,
         email,
-        body
-      }
+        body,
+      },
     });
     setPhoneNumber(undefined);
     setEmail(undefined);
@@ -168,41 +168,41 @@ const Pricing: React.FC = () => {
     setVisitorPlans(visitorPlans);
   };
 
-  const renderGeneralTab = () => {
-    return (
-      <div style={{ textAlign: "left", margin: 24 }}>
-        <h3>牛奶找工作，依職缺的點閱人數收費</h3>
-        <h3>企業根據自己刊登職缺的需求，用多少付多少</h3>
-        <h3>不再有付了錢，卻沒有曝光的窘境</h3>
-        <Link to="/recruiter" style={{ textDecoration: "none" }}>
-          <h3 className={classes.free}>現在加入，立刻送 1000 個免費點閱人數</h3>
-        </Link>
-        <div className={classes.plansContainer}>
-          {visitorPlans &&
-            visitorPlans.map((p, i) => (
-              <div key={i} className={classes.plan}>
-                <div className={classes.visitorToBe}>
-                  <Icon
-                    path={mdiEyeCheckOutline}
-                    size={0.7}
-                    style={{ marginRight: 4 }}
-                  />
-                  {p.visitorsToBe.toLocaleString()}
-                </div>
-                <div>{p.price.toLocaleString() + " 元"}</div>
-              </div>
-            ))}
-        </div>
-        <h3>登入牛奶找工作，創建公司後，即可在公司後台系統購買。</h3>
-        <h3>* 點閱人數是採不重複計算，一個使用者看 10 次，只會計算 1 次</h3>
-      </div>
-    );
-  };
+  // const renderGeneralTab = () => {
+  //   return (
+  //     <div style={{ textAlign: "left", margin: 24 }}>
+  //       <h3>牛奶找工作，依職缺的點閱人數收費</h3>
+  //       <h3>企業根據自己刊登職缺的需求，用多少付多少</h3>
+  //       <h3>不再有付了錢，卻沒有曝光的窘境</h3>
+  //       <Link to="/recruiter" style={{ textDecoration: "none" }}>
+  //         <h3 className={classes.free}>現在加入，立刻送 1000 個免費點閱人數</h3>
+  //       </Link>
+  //       <div className={classes.plansContainer}>
+  //         {visitorPlans &&
+  //           visitorPlans.map((p, i) => (
+  //             <div key={i} className={classes.plan}>
+  //               <div className={classes.visitorToBe}>
+  //                 <Icon
+  //                   path={mdiEyeCheckOutline}
+  //                   size={0.7}
+  //                   style={{ marginRight: 4 }}
+  //                 />
+  //                 {p.visitorsToBe.toLocaleString()}
+  //               </div>
+  //               <div>{p.price.toLocaleString() + " 元"}</div>
+  //             </div>
+  //           ))}
+  //       </div>
+  //       <h3>登入牛奶找工作，創建公司後，即可在公司後台系統購買。</h3>
+  //       <h3>* 點閱人數是採不重複計算，一個使用者看 10 次，只會計算 1 次</h3>
+  //     </div>
+  //   );
+  // };
 
   const renderAdvertiseTab = () => {
     return (
       <div style={{ textAlign: "left", margin: 24 }}>
-        <h3>為了讓網站可以順利運作，我們有三種廣告服務：</h3>
+        <h3>為了讓網站可以順利運作，我們有兩種廣告服務：</h3>
         <h3>
           1. 將你的徵才訊息置頂在指定校系的
           <Link
@@ -211,7 +211,7 @@ const Pricing: React.FC = () => {
           >
             就業精選版
           </Link>
-          ・熱門校系 新台幣 5000 元／月・其他校系 新台幣 1000 元／月
+          ・熱門校系 新台幣 2000 元／月・其他校系 新台幣 1000 元／月
         </h3>
         <h3>
           2. 牛奶找工作臉書
@@ -229,7 +229,7 @@ const Pricing: React.FC = () => {
         <TextField
           fullWidth
           label="聯絡電話"
-          onChange={e => setPhoneNumber(e.target.value)}
+          onChange={(e) => setPhoneNumber(e.target.value)}
           style={{ marginBottom: 16 }}
           value={phoneNumber || ""}
           variant="outlined"
@@ -247,7 +247,7 @@ const Pricing: React.FC = () => {
               setEmailErrorMessage(undefined);
             }
           }}
-          onChange={e => {
+          onChange={(e) => {
             setEmail(e.target.value);
             setEmailErrorMessage(undefined);
           }}
@@ -258,7 +258,7 @@ const Pricing: React.FC = () => {
         <TextField
           fullWidth
           multiline
-          onChange={e => setBody(e.target.value)}
+          onChange={(e) => setBody(e.target.value)}
           placeholder="告訴我們你想要什麼方案，以及你的需求"
           rows="8"
           style={{ marginBottom: 16 }}
@@ -295,14 +295,14 @@ const Pricing: React.FC = () => {
           { name: "幫助中心", url: urljoin(webConfig.basePath, "help") },
           {
             name: "付費方案",
-            url: urljoin(webConfig.basePath, "help", "pricing")
-          }
+            url: urljoin(webConfig.basePath, "help", "pricing"),
+          },
         ]}
       />
       <Header />
       <div className={classes.container}>
         <Title text="付費方案" hideBottomLine />
-        <Tabs
+        {/* <Tabs
           classes={tabsStyle}
           indicatorColor="primary"
           onChange={(_e, value) => setTabIndex(value)}
@@ -314,9 +314,9 @@ const Pricing: React.FC = () => {
         </Tabs>
         {tabIndex === 0
           ? renderGeneralTab()
-          : tabIndex === 1
-          ? renderAdvertiseTab()
-          : null}
+          : tabIndex === 1 */}
+        {renderAdvertiseTab()}
+        {/* : null} */}
       </div>
     </div>
   );

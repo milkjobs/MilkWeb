@@ -1,16 +1,17 @@
-import { makeStyles, Avatar } from "@material-ui/core";
+import { makeStyles, Button, CircularProgress } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { Header } from "components/Header";
 import { useParams, Link } from "react-router-dom";
 import { useAuth } from "stores";
-import { Post, NewPost } from "@frankyjuang/milkapi-client";
+import { Post } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
 import { PostCard } from "components/JobCircle";
+import { DownloadApp } from "components/Util";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   container: {
     marginTop: 40,
@@ -29,22 +30,35 @@ const useStyles = makeStyles(theme => ({
       marginTop: 8,
       marginBottom: 8,
       paddingLeft: 0,
-      paddingRight: 0
-    }
+      paddingRight: 0,
+    },
   },
   circleLink: {
     padding: 32,
     textDecoration: "none",
     fontSize: 18,
-    color: theme.palette.text.secondary
-  }
+    color: theme.palette.text.secondary,
+  },
+  downloadHint: {
+    color: theme.palette.text.secondary,
+    marginTop: 64,
+    fontSize: 16,
+  },
+  loading: {
+    flex: 1,
+    marginTop: 200,
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
 }));
 
 const JobCircle: React.FC = () => {
   const classes = useStyles();
   const params = useParams<{ id: string }>();
-  const { getApi, user } = useAuth();
+  const { getApi, user, loading } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
+  const [downloadAppOpen, setDownloadAppOpen] = useState(false);
+  const recruiterMode = Math.random() > 0.5;
 
   const updatePost = async (post: Post) => {
     if (user) {
@@ -55,7 +69,7 @@ const JobCircle: React.FC = () => {
       if (updatedPost) {
         updatedPost.creator = user;
         setPosts(
-          posts.map(p => (updatedPost.uuid === p.uuid ? updatedPost : p))
+          posts.map((p) => (updatedPost.uuid === p.uuid ? updatedPost : p))
         );
       }
     }
@@ -65,7 +79,7 @@ const JobCircle: React.FC = () => {
       const postApi = await getApi("Post");
       const [err] = await to(postApi.removePost({ postId }));
       if (!err) {
-        setPosts(posts.filter(p => p.uuid !== postId));
+        setPosts(posts.filter((p) => p.uuid !== postId));
       }
     }
   };
@@ -77,29 +91,46 @@ const JobCircle: React.FC = () => {
   };
 
   useEffect(() => {
-    getPost();
-  }, []);
+    !loading && getPost();
+  }, [loading]);
 
   return (
     <div className={classes.root}>
       <Header />
       <div className={classes.container}>
-        {posts
-          .filter(p => p.uuid === params.id)
-          .map(p => (
-            <PostCard
-              key={p.uuid}
-              post={p}
-              updatePost={updatePost}
-              deletePost={deletePost}
-            />
-          ))}
+        {loading ? (
+          <CircularProgress className={classes.loading} />
+        ) : (
+          posts
+            .filter((p) => p.uuid === params.id)
+            .map((p) => (
+              <PostCard
+                key={p.uuid}
+                post={p}
+                updatePost={updatePost}
+                deletePost={deletePost}
+              />
+            ))
+        )}
+        {params.id && (
+          <Link to={"/circle"} className={classes.circleLink}>
+            {"看所有的工作圈"}
+          </Link>
+        )}
+        <Button
+          className={classes.downloadHint}
+          onClick={() => setDownloadAppOpen(true)}
+        >
+          {recruiterMode
+            ? "找人才？來牛奶找工作 App 免費刊登職缺"
+            : "想獲得全台灣最新的徵才訊息？來牛奶找工作 App"}
+        </Button>
+        <DownloadApp
+          recruiterMode
+          isOpen={downloadAppOpen}
+          close={() => setDownloadAppOpen(false)}
+        />
       </div>
-      {params.id && (
-        <Link to={"/circle"} className={classes.circleLink}>
-          {"看所有的工作圈"}
-        </Link>
-      )}
     </div>
   );
 };

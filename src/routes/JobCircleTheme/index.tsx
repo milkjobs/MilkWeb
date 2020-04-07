@@ -7,15 +7,13 @@ import {
 import React, { useState, useEffect } from "react";
 import { Header } from "components/Header";
 import { themeSubTitles } from "config";
-import IconButton from "@material-ui/core/IconButton";
-import InputBase from "@material-ui/core/InputBase";
-import SearchIcon from "@material-ui/icons/Search";
 import { useAuth } from "stores";
 import { PostCard, PostDialog } from "components/JobCircle";
 import { Post, NewPost } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
 import { useInView } from "react-intersection-observer";
-import { Link } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
+import queryString from "query-string";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -100,13 +98,24 @@ const useStyles = makeStyles((theme) => ({
     overflow: "scroll",
   },
   themeTag: {
-    color: theme.palette.text.primary,
-    textDecoration: "none",
     whiteSpace: "nowrap",
     borderRadius: 8,
     margin: 8,
     padding: 8,
     background: theme.palette.divider,
+  },
+  themeTitle: {
+    fontSize: 24,
+    textAlign: "left",
+    fontWeight: "bold",
+    marginBottom: 8,
+    marginLeft: 24,
+  },
+  themeSubTitle: {
+    fontSize: 20,
+    textAlign: "left",
+    marginBottom: 16,
+    marginLeft: 24,
   },
   loading: {
     flex: 1,
@@ -116,11 +125,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const JobCircle: React.FC = () => {
+const JobCircleTheme: React.FC = () => {
   const classes = useStyles();
+  const params = useParams<{ id: string }>();
+  const themeTag = "#" + params.id;
   const { getApi, user, loading } = useAuth();
-  const [query, setQuery] = useState<string>("");
-  const [text, setText] = useState<string>("");
   const [posts, setPosts] = useState<Post[]>([]);
   const [createPostOpen, setCreatePostOpen] = useState(false);
   const [pageNo, setPageNo] = useState(0);
@@ -168,7 +177,7 @@ const JobCircle: React.FC = () => {
   const getPosts = async () => {
     const postApi = await getApi("Post");
     const [err, fetchedPosts] = await to(
-      postApi.getPosts({ pageNo, pageSize, text })
+      postApi.getPosts({ pageNo, pageSize, text: themeTag })
     );
     fetchedPosts && setPosts([...(pageNo === 1 ? [] : posts), ...fetchedPosts]);
   };
@@ -179,31 +188,14 @@ const JobCircle: React.FC = () => {
 
   useEffect(() => {
     !loading && pageNo && getPosts();
-  }, [pageNo, text, loading]);
+  }, [pageNo, loading]);
 
   return (
     <div className={classes.root}>
       <Header />
       <div className={classes.container}>
-        <div className={classes.searchRoot}>
-          <InputBase
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-            }}
-            onKeyPress={(e) => {
-              if (e.key === "Enter" && query !== text) {
-                setPageNo(1);
-                setText(query);
-              }
-            }}
-            className={classes.input}
-            placeholder="搜尋"
-          />
-          <IconButton className={classes.iconButton}>
-            <SearchIcon />
-          </IconButton>
-        </div>
+        <div className={classes.themeTitle}>{themeTag.substr(1)}</div>
+        <div className={classes.themeSubTitle}>{themeSubTitles[themeTag]}</div>
         <div className={classes.postButtonContainer}>
           <Avatar
             alt="profile image"
@@ -225,20 +217,8 @@ const JobCircle: React.FC = () => {
             open={createPostOpen}
             onClose={() => setCreatePostOpen(false)}
             finish={createPost}
+            theme={themeTag}
           />
-        </div>
-        <div className={classes.themeContainer}>
-          {Object.keys(themeSubTitles)
-            .sort(() => Math.random() - 0.5)
-            .map((t) => (
-              <Link
-                to={"/circle/theme/" + t.substr(1)}
-                key={t}
-                className={classes.themeTag}
-              >
-                {t}
-              </Link>
-            ))}
         </div>
         {loading ? (
           <CircularProgress className={classes.loading} />
@@ -258,4 +238,4 @@ const JobCircle: React.FC = () => {
   );
 };
 
-export default JobCircle;
+export default JobCircleTheme;

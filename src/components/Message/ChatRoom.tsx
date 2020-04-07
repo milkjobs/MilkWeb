@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useReducer,
   useRef,
-  useState
+  useState,
 } from "react";
 import { useInView } from "react-intersection-observer";
 import { useHistory, useParams } from "react-router-dom";
@@ -15,12 +15,12 @@ import { useAuth, useChannel } from "stores";
 import { isGroupChannel, parseChannel } from "./utils";
 import { ChannelCustomType } from "@frankyjuang/milkapi-client";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: theme.palette.background.paper,
     display: "flex",
     flex: 1,
-    flexDirection: "row"
+    flexDirection: "row",
   },
   channelListContainer: {
     position: "relative",
@@ -29,13 +29,13 @@ const useStyles = makeStyles(theme => ({
     minWidth: 320,
     maxWidth: 420,
     [theme.breakpoints.down("xs")]: {
-      display: "none"
-    }
+      display: "none",
+    },
   },
   chatContainer: {
     display: "flex",
     flex: 3,
-    position: "relative"
+    position: "relative",
   },
   permissionButton: {
     backgroundColor: theme.palette.secondary.main,
@@ -44,14 +44,14 @@ const useStyles = makeStyles(theme => ({
     fontSize: 16,
     fontWeight: 700,
     "&:hover": {
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
-    backgroundColor: "rgba(0, 0, 0, 0.8)"
-  }
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+  },
 }));
 
 interface Props {
@@ -71,7 +71,7 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
   >();
   const channels = useRef<GroupChannel[]>([]);
   const currentChannelUrl = params.id;
-  const [, forceUpdate] = useReducer(x => x + 1, 0);
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const filterChannels = useCallback(
     (chs: GroupChannel[]) =>
@@ -105,12 +105,12 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
   );
 
   const onChannelChanged: ChannelHandler["onChannelChanged"] = useCallback(
-    ch => {
+    (ch) => {
       if (!isGroupChannel(ch)) {
         return;
       }
 
-      const index = channels.current.findIndex(c => c.url === ch.url);
+      const index = channels.current.findIndex((c) => c.url === ch.url);
       if (index !== -1) {
         channels.current[index] = ch;
         forceUpdate();
@@ -120,7 +120,7 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
   );
 
   const onMessageReceived: ChannelHandler["onMessageReceived"] = useCallback(
-    ch => {
+    (ch) => {
       if (!isGroupChannel(ch)) {
         return;
       }
@@ -128,7 +128,7 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
         return;
       }
 
-      const newChannelList = channels.current.filter(c => c.url !== ch.url);
+      const newChannelList = channels.current.filter((c) => c.url !== ch.url);
       channels.current = [ch, ...newChannelList];
       forceUpdate();
     },
@@ -167,7 +167,7 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
     onChannelChanged,
     onMessageReceived,
     removeChannelHandler,
-    sb
+    sb,
   ]);
 
   useEffect(() => {
@@ -189,7 +189,7 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
           top: 0,
           left: 0,
           right: 0,
-          bottom: 0
+          bottom: 0,
         }}
       >
         <div style={{ overflow: "auto", flex: 1 }}>
@@ -209,9 +209,9 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
               </div>
             </div>
           )}
-          {channels.current.map(c => {
+          {channels.current.map((c) => {
             const myId = user?.uuid;
-            const they = c.members.filter(m => m.userId !== myId)[0];
+            const they = c.members.filter((m) => m.userId !== myId)[0];
 
             return (
               <div

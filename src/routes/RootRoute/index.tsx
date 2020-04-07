@@ -5,7 +5,7 @@ import {
   Route,
   RouteComponentProps,
   RouteProps,
-  Switch
+  Switch,
 } from "react-router-dom";
 import About from "routes/About";
 import AwesomeList from "routes/AwesomeList";
@@ -26,6 +26,7 @@ import Team from "routes/Team";
 import { useAuth } from "stores";
 import Bottles from "routes/Bottles";
 import JobCircle from "routes/JobCircle";
+import JobCircleTheme from "routes/JobCircleTheme";
 import JobCirclePost from "routes/JobCirclePost";
 import EmailConfirm from "routes/EmailConfirm";
 
@@ -44,7 +45,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   return (
     <Route
       {...rest}
-      render={props => {
+      render={(props) => {
         if (loading) {
           return null;
         }
@@ -82,6 +83,7 @@ const RootRoute: React.FC = () => {
       <Route path="/sample-message" exact component={SampleMessage} />
       <Route path="/stories" exact component={Stories} />
       <Route path="/circle/" exact component={JobCircle} />
+      <Route path="/circle/theme/:id" exact component={JobCircleTheme} />
       <Route path="/circle/:id" exact component={JobCirclePost} />
       <Route path="/bottle" exact component={Bottles} />
       <Route path="/bottle/:id" exact component={Bottles} />
