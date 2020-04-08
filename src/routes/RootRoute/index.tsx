@@ -29,6 +29,7 @@ import JobCircle from "routes/JobCircle";
 import JobCircleTheme from "routes/JobCircleTheme";
 import JobCirclePost from "routes/JobCirclePost";
 import EmailConfirm from "routes/EmailConfirm";
+import PublicProfile from "routes/PublicProfile";
 
 interface PrivateRouteProps extends RouteProps {
   component:
@@ -92,6 +93,11 @@ const RootRoute: React.FC = () => {
       <PrivateRoute path="/message" exact component={Message} />
       <PrivateRoute path="/message/:id" exact component={Message} />
       <PrivateRoute path="/profile" exact component={Profile} />
+      <PrivateRoute
+        path="/public-profile/:id"
+        exact
+        component={PublicProfile}
+      />
       <PrivateRoute path="/resume" exact component={Resume} />
       <Route path="/" component={NotFound} />
     </Switch>

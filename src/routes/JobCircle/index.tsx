@@ -16,6 +16,7 @@ import { Post, NewPost } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
 import { useInView } from "react-intersection-observer";
 import { Link } from "react-router-dom";
+import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,11 +32,18 @@ const useStyles = makeStyles((theme) => ({
   postButton: {
     flex: 1,
     fontSize: 16,
-    padding: 8,
+    paddingTop: 16,
+    paddingBottom: 16,
+    paddingRight: 8,
     borderColor: theme.palette.divider,
     borderStyle: "solid",
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 48,
+    paddingLeft: 24,
+    textAlign: "left",
+    cursor: "pointer",
+    alignItems: "center",
+    display: "flex",
   },
   postButtonContainer: {
     width: 650,
@@ -45,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "auto",
     marginRight: "auto",
     marginBottom: 8,
+    alignItems: "center",
     display: "flex",
   },
   container: {
@@ -214,13 +223,15 @@ const JobCircle: React.FC = () => {
                 : "https://milk.jobs/static/media/milk.d3c5757d.png"
             }
           />
-          <Button
+          <div
             className={classes.postButton}
-            variant="outlined"
             onClick={() => setCreatePostOpen(true)}
           >
-            {(user ? user.name + "，" : "") + "在想什麼？"}
-          </Button>
+            <CreateOutlinedIcon />
+            <div style={{ marginLeft: 8 }}>
+              {(user ? user.name + "，" : "") + "在想些什麼？"}
+            </div>
+          </div>
           <PostDialog
             open={createPostOpen}
             onClose={() => setCreatePostOpen(false)}

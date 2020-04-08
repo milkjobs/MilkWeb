@@ -110,7 +110,6 @@ const PostDialog: React.FC<PostDialogProps> = ({
 
   const uploadPostImage = useCallback(
     async (files: File[] | FileList) => {
-      console.warn("Hello");
       if (files.length === 0) {
         return;
       }
@@ -118,27 +117,34 @@ const PostDialog: React.FC<PostDialogProps> = ({
         setLoginDialogOpen(true);
         return;
       }
+      const addedUrls: string[] = [];
 
-      const file = files[0];
-      if (file.size > 1 * 1024 * 1024) {
-        toast.error("檔案過大，大小上限為 1MB");
-        return;
+      async function asyncForEach(array, callback) {
+        for (let index = 0; index < array.length; index++) {
+          await callback(array[index], index, array);
+        }
       }
 
-      const postApi = await getApi("Post");
-      const [err, url] = await to(
-        postApi.uploadPostImage({
-          file,
-          filename: file.name,
-        })
-      );
-      if (err) {
-        toast.error("上傳失敗，請稍後再試");
-        return;
-      }
-      url && setImageUrls([...imageUrls, url]);
+      await asyncForEach(Array.from(files), async (file, index) => {
+        if (file.size > 1 * 1024 * 1024) {
+          toast.error("檔案過大，大小上限為 1MB");
+        }
+
+        const postApi = await getApi("Post");
+        const [err, url] = await to(
+          postApi.uploadPostImage({
+            file,
+            filename: file.name,
+          })
+        );
+        if (err) {
+          toast.error("上傳失敗，請稍後再試");
+        }
+        url && addedUrls.push(url);
+      });
+      setImageUrls([...imageUrls, ...addedUrls]);
     },
-    [getApi]
+    [getApi, imageUrls]
   );
 
   return (
@@ -183,6 +189,7 @@ const PostDialog: React.FC<PostDialogProps> = ({
                 <input
                   hidden
                   accept={ImageMimeType}
+                  multiple
                   onChange={(e) => {
                     e.target.files && uploadPostImage(e.target.files);
                   }}

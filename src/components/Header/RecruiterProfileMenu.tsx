@@ -13,11 +13,11 @@ import { Link } from "react-router-dom";
 import { useAuth } from "stores";
 import { VerificationState } from "@frankyjuang/milkapi-client";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: "none",
-    color: theme.palette.text.primary
-  }
+    color: theme.palette.text.primary,
+  },
 }));
 
 interface Props {
@@ -26,7 +26,7 @@ interface Props {
   anchorElement: null | HTMLElement;
 }
 
-const RecruiterProfileMenu: React.FC<Props> = props => {
+const RecruiterProfileMenu: React.FC<Props> = (props) => {
   const { isOpen, anchorElement, close } = props;
   const classes = useStyles();
   const { user } = useAuth();
@@ -38,7 +38,7 @@ const RecruiterProfileMenu: React.FC<Props> = props => {
           {...TransitionProps}
           style={{
             transformOrigin:
-              placement === "bottom" ? "center top" : "center bottom"
+              placement === "bottom" ? "center top" : "center bottom",
           }}
         >
           <Paper square={true}>
@@ -64,11 +64,6 @@ const RecruiterProfileMenu: React.FC<Props> = props => {
                 <Link to="/recruiter/member" className={classes.link}>
                   <MenuItem onClick={close}>公司成員</MenuItem>
                 </Link>
-                {user && user.recruiterInfo && user.recruiterInfo.isAdmin && (
-                  <Link to="/recruiter/visitors-to-be" className={classes.link}>
-                    <MenuItem onClick={close}>點閱人數</MenuItem>
-                  </Link>
-                )}
                 <MenuItem
                   onClick={async () => {
                     close();

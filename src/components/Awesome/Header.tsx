@@ -10,11 +10,11 @@ const useStyles = makeStyles(() => ({
     flexDirection: "row",
     alignItems: "center",
     flexWrap: "wrap",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   link: {
-    textDecoration: "none"
-  }
+    textDecoration: "none",
+  },
 }));
 
 interface Props {
@@ -23,14 +23,26 @@ interface Props {
 
 const AwesomeHeader: React.FC<Props> = ({ containerStyle }) => {
   const classes = useStyles();
-  const [lists] = useState<AwesomeEntry[]>(_.sampleSize(awesomes, 9));
+  const [lists] = useState<AwesomeEntry[]>(_.sampleSize(awesomes, 6));
 
   return (
     <div className={classes.container} style={containerStyle}>
-      <Link to={{ pathname: "/departments" }} className={classes.link}>
-        <Button>就業精選</Button>
+      <a href={"https://covid19.milk.jobs/"} className={classes.link}>
+        <Button>新冠肺炎，公司招募情形</Button>
+      </a>
+      <Link
+        to={{ pathname: "/circle/988101058c344b3696ce00665bfa5e14" }}
+        className={classes.link}
+      >
+        <Button>校園徵才</Button>
       </Link>
-      {lists.map(list => (
+      <Link
+        to={{ pathname: "/circle/c8fdcda43d37476a91062950452efb4f" }}
+        className={classes.link}
+      >
+        <Button>實習資訊</Button>
+      </Link>
+      {lists.map((list) => (
         <Link
           key={list.link}
           to={{ pathname: `/awesome/${list.link}` }}

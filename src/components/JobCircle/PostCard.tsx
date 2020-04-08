@@ -20,6 +20,8 @@ import to from "await-to-js";
 import { LoginDialog } from "components/Util";
 import ReactHashTag from "react-hashtag";
 import { Link } from "react-router-dom";
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 
 const useStyles = makeStyles((theme) => ({
   actionButtonsContainer: {
@@ -31,6 +33,15 @@ const useStyles = makeStyles((theme) => ({
   },
   actionButton: {
     flex: 1,
+    fontSize: 16,
+    display: "flex",
+    alignItems: "center",
+    cursor: "pointer",
+    justifyContent: "center",
+  },
+  actionButtonLike: {
+    flex: 1,
+    color: theme.palette.secondary.main,
     fontSize: 16,
     display: "flex",
     alignItems: "center",
@@ -114,6 +125,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     marginBottom: 8,
     width: "100%",
+    textDecoration: "none",
   },
   postAvatar: {
     width: 20,
@@ -121,6 +133,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 8,
   },
   postImage: {
+    minWidth: 200,
+    minHeight: 200,
     width: 200,
     height: 200,
     objectFit: "cover",
@@ -151,6 +165,10 @@ const useStyles = makeStyles((theme) => ({
     width: 30,
     height: 30,
   },
+  name: {
+    textDecoration: "none",
+    color: theme.palette.text.primary,
+  },
   replyContainer: {
     width: "100%",
     display: "flex",
@@ -158,6 +176,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 8,
     flexDirection: "row",
     alignItems: "center",
+    textDecoration: "none",
   },
   replyAvatar: {
     width: 30,
@@ -172,12 +191,16 @@ const useStyles = makeStyles((theme) => ({
   },
   replyName: {
     fontWeight: "bold",
+    textDecoration: "none",
+    color: theme.palette.text.primary,
   },
   hashTag: {
     color: theme.palette.secondary.main,
     textDecoration: "none",
   },
-  replyText: {},
+  replyText: {
+    color: theme.palette.text.primary,
+  },
 }));
 
 interface PostCardProps {
@@ -195,9 +218,10 @@ const PostCard: React.FC<PostCardProps> = ({
   const theme = useTheme();
   const { user, getApi } = useAuth();
   const [liked, setLiked] = useState(post.liked);
+  const [likeCount, setLikeCount] = useState(post.likeCount || 0);
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
-  const [selectedImgUrl, setSelectedImgUrl] = useState<string>("");
+  const [selectedImgUrlIndex, setSelectedImgUrlIndex] = useState<number>(0);
   const lines = post.text.split("\n");
   const [editPostOpen, setEditPostOpen] = useState(false);
   const [hideText, setHideText] = useState(lines.length < 7 ? false : true);
@@ -285,6 +309,7 @@ const PostCard: React.FC<PostCardProps> = ({
           })
         );
         setLiked(true);
+        setLikeCount(likeCount + 1);
       } else {
         const [err] = await to(
           userApi.unlikePost({
@@ -293,6 +318,7 @@ const PostCard: React.FC<PostCardProps> = ({
           })
         );
         setLiked(false);
+        setLikeCount(likeCount - 1);
       }
     } else {
       setLoginDialogOpen(true);
@@ -303,12 +329,21 @@ const PostCard: React.FC<PostCardProps> = ({
     <div className={classes.postContainer}>
       {post.creator && (
         <div className={classes.postHeader}>
-          <Avatar
-            alt="profile image"
-            className={classes.postAvatar}
-            src={post.creator.profileImageUrl}
-          />
-          <div>{post.creator.name}</div>
+          <Link
+            to={"/public-profile/" + post.creator.uuid}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              textDecoration: "none",
+            }}
+          >
+            <Avatar
+              alt="profile image"
+              className={classes.postAvatar}
+              src={post.creator.profileImageUrl}
+            />
+            <div className={classes.name}>{post.creator.name}</div>
+          </Link>
           <div className={classes.postIcons}>
             {user && user.uuid === post.creator.uuid && (
               <>
@@ -411,7 +446,7 @@ const PostCard: React.FC<PostCardProps> = ({
           ))}
 
       <div className={classes.imagesContainer}>
-        {post.imageUrls?.map((i) => (
+        {post.imageUrls?.map((i, index) => (
           <img
             key={i}
             src={i}
@@ -419,26 +454,52 @@ const PostCard: React.FC<PostCardProps> = ({
             className={classes.postImage}
             onClick={() => {
               setImageDialogOpen(true);
-              setSelectedImgUrl(i);
+              setSelectedImgUrlIndex(index);
             }}
           ></img>
         ))}
       </div>
       <Dialog open={imageDialogOpen} onClose={() => setImageDialogOpen(false)}>
-        <img
-          src={selectedImgUrl}
-          style={{ height: "100%", width: "100%", objectFit: "contain" }}
-        />
+        {post.imageUrls && (
+          <>
+            <img
+              src={post.imageUrls[selectedImgUrlIndex]}
+              style={{ height: "100%", width: "100%", objectFit: "contain" }}
+            />
+            <IconButton
+              style={{ position: "absolute", left: 0, top: "50%" }}
+              onClick={() =>
+                selectedImgUrlIndex &&
+                setSelectedImgUrlIndex(selectedImgUrlIndex - 1)
+              }
+            >
+              <KeyboardArrowLeftIcon />
+            </IconButton>
+            <IconButton
+              style={{ position: "absolute", right: 0, top: "50%" }}
+              onClick={() =>
+                post.imageUrls?.length &&
+                selectedImgUrlIndex < post.imageUrls?.length - 1 &&
+                setSelectedImgUrlIndex(selectedImgUrlIndex + 1)
+              }
+            >
+              <KeyboardArrowRightIcon />
+            </IconButton>
+          </>
+        )}
       </Dialog>
       <div className={classes.date}>{post.createdAt.toLocaleDateString()}</div>
       <div className={classes.actionButtonsContainer}>
-        <div className={classes.actionButton} onClick={() => like()}>
+        <div
+          className={liked ? classes.actionButtonLike : classes.actionButton}
+          onClick={() => like()}
+        >
           {liked ? (
-            <FavoriteIcon style={{ marginRight: 8 }} />
+            <FavoriteIcon style={{ marginRight: 8 }} color={"secondary"} />
           ) : (
             <FavoriteBorderIcon style={{ marginRight: 8 }} />
           )}
-          {post.likeCount ? post.likeCount : "喜歡"}
+          {likeCount ? likeCount : "喜歡"}
         </div>
         <div className={classes.actionButton}>
           <CommentOutlinedIcon style={{ marginRight: 8 }} />
@@ -474,7 +535,12 @@ const PostCard: React.FC<PostCardProps> = ({
             src={r.replier?.profileImageUrl}
           />
           <div className={classes.replyTextContainer}>
-            <div className={classes.replyName}>{r.replier?.name}</div>
+            <Link
+              to={"/public-profile/" + r.replier?.uuid}
+              className={classes.replyName}
+            >
+              {r.replier?.name}
+            </Link>
             <div className={classes.replyText}>{r.text}</div>
           </div>
         </div>

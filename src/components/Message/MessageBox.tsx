@@ -8,7 +8,7 @@ import React, {
   useEffect,
   useReducer,
   useRef,
-  useState
+  useState,
 } from "react";
 import { useInView } from "react-intersection-observer";
 import {
@@ -16,11 +16,12 @@ import {
   GroupChannel,
   Member,
   PreviousMessageListQuery,
-  UserMessage
+  UserMessage,
 } from "sendbird";
 import { useAuth, useChannel } from "stores";
 import { MessageList } from "./MessageList";
 import { isGroupChannel, isUserMessage, SendBirdMessage } from "./utils";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,29 +37,29 @@ const useStyles = makeStyles((theme: Theme) =>
       top: 0,
       left: 0,
       right: 0,
-      bottom: 0
+      bottom: 0,
     },
     messages: {
       borderTop: "1px solid #EBEBEB",
       flex: 1,
-      overflow: "auto"
+      overflow: "auto",
     },
     messageInput: {
       padding: 8,
-      borderTop: "1px solid #EBEBEB"
+      borderTop: "1px solid #EBEBEB",
     },
     textField: {
       display: "flex",
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
       flex: 1,
-      border: 0
+      border: 0,
     },
     jobContainer: {
       display: "flex",
       marginLeft: 16,
       paddingTop: 8,
-      paddingBottom: 8
+      paddingBottom: 8,
     },
     jobName: {
       display: "flex",
@@ -67,7 +68,8 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: 18,
       fontWeight: 800,
       color: "#484848",
-      marginRight: 16
+      marginRight: 16,
+      textDecoration: "none",
     },
     jobSalary: {
       display: "flex",
@@ -76,7 +78,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: 18,
       fontWeight: 400,
       marginRight: 16,
-      color: "#FD8150"
+      color: "#FD8150",
     },
     location: {
       display: "flex",
@@ -85,8 +87,8 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: 16,
       color: "#484848",
       justifyContent: "center",
-      alignItems: "center"
-    }
+      alignItems: "center",
+    },
   })
 );
 
@@ -102,7 +104,7 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
   const [ref, inView] = useInView();
   const [input, setInput] = useState("");
   const [resumeDialogOpen, setResumeDialogOpen] = useState(false);
-  const [, forceUpdate] = useReducer(x => x + 1, 0);
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const [channel, setChannel] = useState<GroupChannel>();
   const [they, setThey] = useState<Member>();
   const [scrollHeight, setScrollHeight] = useState(0);
@@ -123,7 +125,7 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
 
   const updateMetadata = ({
     channel,
-    metadata
+    metadata,
   }: {
     channel: GroupChannel;
     metadata: any;
@@ -135,7 +137,7 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
     });
   };
 
-  const onKeyDown: InputProps["onKeyDown"] = async e => {
+  const onKeyDown: InputProps["onKeyDown"] = async (e) => {
     if (channel && e.keyCode === 13) {
       const text = (e.target as HTMLInputElement).value.replace(
         /(\r\n|\n|\r)/gm,
@@ -206,8 +208,8 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
     await updateMetadata({
       channel,
       metadata: {
-        resumeKey: user.profile.resumeKey
-      }
+        resumeKey: user.profile.resumeKey,
+      },
     });
 
     if (messagesEl.current) {
@@ -269,13 +271,13 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
     getTheirLastSeenTime,
     onMessageReceived,
     removeChannelHandler,
-    sb
+    sb,
   ]);
 
   useEffect(() => {
     user &&
       channel &&
-      setThey(channel.members.find(m => m.userId !== user.uuid));
+      setThey(channel.members.find((m) => m.userId !== user.uuid));
   }, [channel, user]);
 
   useEffect(() => {
@@ -321,7 +323,12 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
         type={AlertType.NoResume}
       />
       <div className={classes.jobContainer}>
-        <div className={classes.jobName}>{they?.nickname || ""}</div>
+        <Link
+          to={"/public-profile/" + they?.userId}
+          className={classes.jobName}
+        >
+          {they?.nickname || ""}
+        </Link>
       </div>
       <div className={classes.messages} ref={messagesEl}>
         <div ref={ref}></div>
@@ -339,7 +346,7 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
           disableUnderline={true}
           placeholder="Enter 鍵送出訊息"
           multiline
-          onChange={e => setInput(e.target.value)}
+          onChange={(e) => setInput(e.target.value)}
           onKeyDown={onKeyDown}
           rows="4"
           value={input}
