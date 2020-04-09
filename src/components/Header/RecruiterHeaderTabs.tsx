@@ -5,11 +5,11 @@ import { useAuth, useChannel } from "stores";
 import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: "none",
     color: "#484848",
-    display: "flex"
+    display: "flex",
   },
   tab: {
     marginLeft: 30,
@@ -20,28 +20,28 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     cursor: "pointer",
     "&:hover": {
-      color: theme.palette.secondary.main
-    }
+      color: theme.palette.secondary.main,
+    },
   },
   sectionDesktop: {
     display: "none",
     [theme.breakpoints.up("sm")]: {
       display: "flex",
-      alignSelf: "stretch"
-    }
+      alignSelf: "stretch",
+    },
   },
   avatar: {
     width: 30,
     height: 30,
-    boxShadow: "0 4px 4px rgba(0,0,0,0.1) !important"
-  }
+    boxShadow: "0 4px 4px rgba(0,0,0,0.1) !important",
+  },
 }));
 
 interface Props {
   openExploreMenu: (event: MouseEvent<HTMLElement>) => void;
   openProfileMenu: (event: MouseEvent<HTMLElement>) => void;
 }
-const RecruiterHeaderTabs: React.FC<Props> = props => {
+const RecruiterHeaderTabs: React.FC<Props> = (props) => {
   const { openProfileMenu } = props;
   const classes = useStyles();
   const { user } = useAuth();
@@ -62,7 +62,7 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
           style={{
             textDecoration: "none",
             color: "#484848",
-            display: "flex"
+            display: "flex",
           }}
         >
           <span className={classes.tab}>職缺管理</span>
@@ -84,11 +84,11 @@ const RecruiterHeaderTabs: React.FC<Props> = props => {
         </div>
       )}
       <Link
-        to="/circle"
+        to="/recruiter/circle"
         style={{
           textDecoration: "none",
           color: "#484848",
-          display: "flex"
+          display: "flex",
         }}
       >
         <span className={classes.tab}>工作圈</span>

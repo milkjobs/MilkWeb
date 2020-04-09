@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     message: {
       margin: 16,
-      display: "flex"
+      display: "flex",
     },
     messageBody: {
       width: "auto",
@@ -28,7 +28,8 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: 5,
       textAlign: "left",
       overflowWrap: "anywhere",
-      maxWidth: "60%"
+      maxWidth: "60%",
+      whiteSpace: "pre",
     },
     resumeMessageBody: {
       width: "auto",
@@ -44,8 +45,8 @@ const useStyles = makeStyles((theme: Theme) =>
       border: 1,
       borderRadius: 5,
       cursor: "pointer",
-      textDecoration: "underline"
-    }
+      textDecoration: "underline",
+    },
   })
 );
 
@@ -55,7 +56,7 @@ interface Props {
   fromMe: boolean;
 }
 
-const Message: React.FC<Props> = props => {
+const Message: React.FC<Props> = (props) => {
   // Was the message sent by the current user. If so, add a css class
   const classes = useStyles();
   const { getApi } = useAuth();
@@ -76,7 +77,7 @@ const Message: React.FC<Props> = props => {
     const [, url] = await to(
       channelApi.getResumeUrlInChannel({
         resumeKey: data["resumeKey"],
-        channelUrl: message.channelUrl
+        channelUrl: message.channelUrl,
       })
     );
     setResumeUrl(url);
@@ -108,7 +109,7 @@ const Message: React.FC<Props> = props => {
     ) : (
       <div
         style={{
-          justifyContent: "flex-end"
+          justifyContent: "flex-end",
         }}
         className={classes.message}
       >
@@ -133,7 +134,7 @@ const Message: React.FC<Props> = props => {
   ) : (
     <div
       style={{
-        justifyContent: "flex-end"
+        justifyContent: "flex-end",
       }}
       className={classes.message}
     >

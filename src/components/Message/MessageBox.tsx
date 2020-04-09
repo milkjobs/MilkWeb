@@ -22,6 +22,7 @@ import { useAuth, useChannel } from "stores";
 import { MessageList } from "./MessageList";
 import { isGroupChannel, isUserMessage, SendBirdMessage } from "./utils";
 import { Link } from "react-router-dom";
+import { CommonWordsPopper } from "./CommonWordsPopper";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -89,6 +90,9 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "center",
       alignItems: "center",
     },
+    messageButton: {
+      marginRight: 8,
+    },
   })
 );
 
@@ -138,11 +142,8 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
   };
 
   const onKeyDown: InputProps["onKeyDown"] = async (e) => {
-    if (channel && e.keyCode === 13) {
-      const text = (e.target as HTMLInputElement).value.replace(
-        /(\r\n|\n|\r)/gm,
-        ""
-      );
+    if (channel && e.keyCode === 13 && !e.shiftKey) {
+      const text = input.slice(0, -1);
       const msg = await new Promise<SendBirdMessage>((resolve, reject) => {
         channel.sendUserMessage(text, (msg, error) => {
           error ? reject(error) : resolve(msg);
@@ -335,11 +336,21 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
         <MessageList messages={messages.current} userId={user?.uuid || ""} />
       </div>
       <div className={classes.messageInput}>
-        {/* {!isRecruiter && (
-          <div style={{ display: "flex", marginLeft: 8, marginTop: 4 }}>
-            <Button onClick={sendResume}>發送履歷</Button>
-          </div>
-        )} */}
+        <div
+          style={{
+            display: "flex",
+            marginLeft: 8,
+            marginTop: 4,
+            marginBottom: 6,
+          }}
+        >
+          {!isRecruiter && (
+            <Button onClick={sendResume} className={classes.messageButton}>
+              發送履歷
+            </Button>
+          )}
+          <CommonWordsPopper />
+        </div>
         <Input
           autoFocus
           className={classes.textField}

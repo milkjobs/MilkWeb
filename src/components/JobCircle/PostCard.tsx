@@ -207,16 +207,17 @@ const useStyles = makeStyles((theme) => ({
 
 interface ReplyProps {
   reply: PostReply;
+  deleteReply: (replyId: string) => void;
 }
 
-const Reply: React.FC<ReplyProps> = ({ reply }) => {
+const Reply: React.FC<ReplyProps> = ({ reply, deleteReply }) => {
   const classes = useStyles();
   const theme = useTheme();
   const lines = reply.text.split("\n");
+  const { user } = useAuth();
   const [hideText, setHideText] = useState(
     lines.length < 2 && lines[0].length < 35 ? false : true
   );
-  console.warn(hideText);
 
   return (
     <div className={classes.replyContainer}>
@@ -305,6 +306,14 @@ const Reply: React.FC<ReplyProps> = ({ reply }) => {
           ))
         )}
       </div>
+      {user && reply.replier && user.uuid === reply.replier.uuid && (
+        <IconButton
+          onClick={() => deleteReply(reply.uuid)}
+          style={{ marginLeft: "auto" }}
+        >
+          <DeleteIcon />
+        </IconButton>
+      )}
     </div>
   );
 };
@@ -335,6 +344,12 @@ const PostCard: React.FC<PostCardProps> = ({
   const [postReplyPageNo, setPostReplyPageNo] = useState<number>(1);
   const [replyText, setReplyText] = useState("");
   const postReplyPageSize = 10;
+
+  const deleteReply = async (replyId: string, postId: string) => {
+    const postApi = await getApi("Post");
+    const [err] = await to(postApi.removePostReply({ replyId, postId }));
+    !err && setPostReplies(postReplies.filter((r) => r.uuid !== replyId));
+  };
 
   const replyPost = async () => {
     if (user?.uuid) {
@@ -395,14 +410,6 @@ const PostCard: React.FC<PostCardProps> = ({
       }
     );
   }, [branch, post]);
-  const linkifyOptions = {
-    formatHref: function(href, type) {
-      if (type === "hashtag") {
-        href = "https://twitter.com/hashtag/" + href.substring(1);
-      }
-      return href;
-    },
-  };
 
   const like = async () => {
     if (user) {
@@ -625,18 +632,21 @@ const PostCard: React.FC<PostCardProps> = ({
         <TextField
           id="outlined-basic"
           variant="outlined"
+          multiline
           className={classes.commentInput}
           size={"small"}
           placeholder={"我來說幾句"}
           value={replyText}
           onChange={(e) => setReplyText(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && replyPost()}
+          onKeyDown={(e) => !e.shiftKey && e.keyCode == 13 && replyPost()}
         />
       </div>
       {postReplies.map((r) => (
-        <div key={r.uuid}>
-          <Reply reply={r} />
-        </div>
+        <Reply
+          key={r.uuid}
+          reply={r}
+          deleteReply={(replyId) => deleteReply(replyId, post.uuid)}
+        />
       ))}
       <LoginDialog
         isOpen={loginDialogOpen}

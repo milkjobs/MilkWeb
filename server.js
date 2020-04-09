@@ -22,9 +22,7 @@ app.get("/circle/:id", function(request, response) {
           data = data.replace(/\$OG_DESCRIPTION/g, circle.text);
           result = data.replace(
             /\$OG_IMAGE/g,
-            circle.imageUrls.length > 0
-              ? circle.imageUrls[0]
-              : "%PUBLIC_URL%/cover.jpeg"
+            circle.imageUrls.length > 0 ? circle.imageUrls[0] : "/cover.jpeg"
           );
           response.send(result);
         } catch {
@@ -86,7 +84,7 @@ app.get("/", function(request, response) {
       /\$OG_DESCRIPTION/g,
       "牛奶找工作，專注於大學生、新鮮人的求職機會。我們的 App 提供最快速、直接的求職求才服務。求職者與公司直接聊、加快面試、即時反饋，隨時隨地都能掌握人才的訊息。"
     );
-    result = data.replace(/\$OG_IMAGE/g, "%PUBLIC_URL%/cover.jpeg");
+    result = data.replace(/\$OG_IMAGE/g, "/cover.jpeg");
     response.send(result);
   });
 });
@@ -107,7 +105,7 @@ app.get("*", function(request, response) {
       /\$OG_DESCRIPTION/g,
       "牛奶找工作，專注於大學生、新鮮人的求職機會。我們的 App 提供最快速、直接的求職求才服務。求職者與公司直接聊、加快面試、即時反饋，隨時隨地都能掌握人才的訊息。"
     );
-    result = data.replace(/\$OG_IMAGE/g, "%PUBLIC_URL%/cover.jpeg");
+    result = data.replace(/\$OG_IMAGE/g, "/cover.jpeg");
     response.send(result);
   });
 });

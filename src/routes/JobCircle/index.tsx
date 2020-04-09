@@ -15,7 +15,7 @@ import { PostCard, PostDialog } from "components/JobCircle";
 import { Post, NewPost } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
 import { useInView } from "react-intersection-observer";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
 
 const useStyles = makeStyles((theme) => ({
@@ -128,6 +128,7 @@ const useStyles = makeStyles((theme) => ({
 const JobCircle: React.FC = () => {
   const classes = useStyles();
   const { getApi, user, loading } = useAuth();
+  const location = useLocation();
   const [query, setQuery] = useState<string>("");
   const [text, setText] = useState<string>("");
   const [posts, setPosts] = useState<Post[]>([]);
@@ -135,6 +136,7 @@ const JobCircle: React.FC = () => {
   const [pageNo, setPageNo] = useState(0);
   const pageSize = 5;
   const [ref, inView] = useInView();
+  const isRecruiter = location.pathname.startsWith("/recruiter");
 
   const deletePost = async (postId: string) => {
     if (user) {
@@ -243,7 +245,11 @@ const JobCircle: React.FC = () => {
             .sort(() => Math.random() - 0.5)
             .map((t) => (
               <Link
-                to={"/circle/theme/" + t.substr(1)}
+                to={
+                  (isRecruiter ? "/recruiter" : "") +
+                  "/circle/theme/" +
+                  t.substr(1)
+                }
                 key={t}
                 className={classes.themeTag}
               >
