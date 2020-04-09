@@ -2,14 +2,14 @@ import {
   ChannelCustomType,
   SendbirdCredential,
   SendbirdCredentialFromJSON,
-  SendbirdCredentialToJSON
+  SendbirdCredentialToJSON,
 } from "@frankyjuang/milkapi-client";
 import logo from "assets/milk.png";
 import to from "await-to-js";
 import {
   isGroupChannel,
   isUserMessage,
-  parseChannel
+  parseChannel,
 } from "components/Message/utils";
 import { sendbirdConfig } from "config";
 import "firebase/analytics";
@@ -20,7 +20,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useState
+  useState,
 } from "react";
 import SendBird from "sendbird";
 import { v4 as uuidv4 } from "uuid";
@@ -46,7 +46,7 @@ const ChannelContext = createContext<ChannelContextProps>({
   removeUserEventHandler: () => {
     // do nothing.
   },
-  unreadMessageCount: 0
+  unreadMessageCount: 0,
 });
 
 export const useChannel = () => useContext(ChannelContext);
@@ -84,7 +84,7 @@ export const ChannelProvider = ({ children }) => {
       const userApi = await getApi("User");
       const [, credential] = await to(
         userApi.getSendbirdCredential({
-          userId: user.uuid
+          userId: user.uuid,
         })
       );
 
@@ -94,7 +94,12 @@ export const ChannelProvider = ({ children }) => {
 
   const onMessageReceived: SendBird.ChannelHandler["onMessageReceived"] = useCallback(
     (ch, msg) => {
-      if (!isGroupChannel(ch) || !isUserMessage(msg) || !user) {
+      if (
+        !isGroupChannel(ch) ||
+        !isUserMessage(msg) ||
+        !user ||
+        !("message" in msg)
+      ) {
         return;
       }
 
@@ -112,7 +117,7 @@ export const ChannelProvider = ({ children }) => {
             {
               badge: logo,
               body: msg.message,
-              icon: msg.sender.profileUrl
+              icon: msg.sender.profileUrl,
             }
           );
           notification.onclick = () => {
@@ -127,7 +132,7 @@ export const ChannelProvider = ({ children }) => {
   );
 
   const onTotalUnreadMessageCountUpdated: SendBird.UserEventHandler["onTotalUnreadMessageCountUpdated"] = useCallback(
-    count => {
+    (count) => {
       setUnreadMessageCount(+count);
     },
     []
@@ -186,7 +191,7 @@ export const ChannelProvider = ({ children }) => {
     const sb =
       SendBird.getInstance() || new SendBird({ appId: sendbirdConfig.appId });
     if (user && sendbirdCredential) {
-      sb.connect(user.uuid, sendbirdCredential.sessionToken, sbUser => {
+      sb.connect(user.uuid, sendbirdCredential.sessionToken, (sbUser) => {
         sbUser && setSb(sb);
       });
     } else {
@@ -209,7 +214,7 @@ export const ChannelProvider = ({ children }) => {
   useEffect(() => {
     if (sb) {
       // Set initial unread message count.
-      sb.getTotalUnreadMessageCount(count => {
+      sb.getTotalUnreadMessageCount((count) => {
         setUnreadMessageCount(count);
       });
     } else {
@@ -247,7 +252,7 @@ export const ChannelProvider = ({ children }) => {
     addUserEventHandler,
     onTotalUnreadMessageCountUpdated,
     removeUserEventHandler,
-    sb
+    sb,
   ]);
 
   return (
@@ -258,7 +263,7 @@ export const ChannelProvider = ({ children }) => {
         addUserEventHandler,
         removeUserEventHandler,
         sb,
-        unreadMessageCount
+        unreadMessageCount,
       }}
     >
       {children}

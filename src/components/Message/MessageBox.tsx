@@ -2,7 +2,7 @@ import Button from "@material-ui/core/Button";
 import Input, { InputProps } from "@material-ui/core/Input";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { AlertDialog } from "components/Util";
-import { AlertType } from "helpers";
+import { AlertType, ImageMimeType } from "helpers";
 import React, {
   useCallback,
   useEffect,
@@ -23,6 +23,7 @@ import { MessageList } from "./MessageList";
 import { isGroupChannel, isUserMessage, SendBirdMessage } from "./utils";
 import { Link } from "react-router-dom";
 import { CommonWordsPopper } from "./CommonWordsPopper";
+import ImageOutlinedIcon from "@material-ui/icons/ImageOutlined";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -115,7 +116,7 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
   const [prevMessageListQuery, setPrevMessageListQuery] = useState<
     PreviousMessageListQuery
   >();
-  const messages = useRef<UserMessage[]>([]);
+  const messages = useRef<(UserMessage | SendBird.FileMessage)[]>([]);
   const messagesEl = useRef<HTMLDivElement>(null);
   const theirLastSeenTime = useRef<number>();
 
@@ -139,6 +140,24 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
         err ? reject(err) : resolve(res);
       });
     });
+  };
+
+  const sendFileMessage = async (file: File) => {
+    if (channel) {
+      const msg = await new Promise<SendBirdMessage>((resolve, reject) => {
+        channel.sendFileMessage(file, (msg, error) => {
+          error ? reject(error) : resolve(msg);
+        });
+      });
+      console.warn(msg);
+      isUserMessage(msg) && messages.current.unshift(msg);
+      forceUpdate();
+      if (messagesEl.current) {
+        // scroll to bottom
+        messagesEl.current.scrollTop =
+          messagesEl.current.scrollHeight - messagesEl.current.offsetHeight;
+      }
+    }
   };
 
   const sendMessage = async (message: string) => {
@@ -345,6 +364,7 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
         <div
           style={{
             display: "flex",
+            alignItems: "center",
             marginLeft: 8,
             marginTop: 4,
             marginBottom: 6,
@@ -356,6 +376,17 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
             </Button>
           )}
           <CommonWordsPopper sendMessage={sendMessage} />
+          <label style={{ marginLeft: 8, marginRight: 8, cursor: "pointer" }}>
+            <input
+              hidden
+              accept={ImageMimeType}
+              onChange={(e) => {
+                e.target.files && sendFileMessage(e.target.files[0]);
+              }}
+              type="file"
+            />
+            <ImageOutlinedIcon />
+          </label>
         </div>
         <Input
           autoFocus

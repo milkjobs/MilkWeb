@@ -5,13 +5,13 @@ import { Message } from ".";
 const useStyles = makeStyles(() =>
   createStyles({
     messages: {
-      flexGrow: 1
-    }
+      flexGrow: 1,
+    },
   })
 );
 
 interface Props {
-  messages: SendBird.UserMessage[];
+  messages: (SendBird.UserMessage | SendBird.FileMessage)[];
   userId: string;
 }
 
@@ -23,7 +23,7 @@ const MessageList: React.FC<Props> = ({ userId, messages }) => {
       {messages
         .slice()
         .reverse()
-        .map(msg => (
+        .map((msg) => (
           <Message
             key={msg.messageId}
             profileUrl={msg.sender.profileUrl}

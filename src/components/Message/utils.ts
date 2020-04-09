@@ -24,9 +24,10 @@ export const isGroupChannel = (
   ch: GroupChannel | OpenChannel
 ): ch is GroupChannel => (ch as GroupChannel).markAsRead !== undefined;
 
-export const isUserMessage = (msg: SendBirdMessage): msg is UserMessage =>
-  (msg as UserMessage).message !== undefined &&
-  (msg as UserMessage).sender !== undefined;
+export const isUserMessage = (
+  msg: SendBirdMessage
+): msg is UserMessage | SendBird.FileMessage =>
+  (msg as UserMessage | SendBird.FileMessage).sender !== undefined;
 
 export const getMetadata = (m: SendBirdMessage) => {
   try {
@@ -57,7 +58,7 @@ export const parseChannel = (channel: GroupChannel) => {
     return [undefined, undefined];
   }
 
-  const applicantUser = channel.members.find(m => m.userId === memberIds[0]);
-  const recruiterUser = channel.members.find(m => m.userId === memberIds[1]);
+  const applicantUser = channel.members.find((m) => m.userId === memberIds[0]);
+  const recruiterUser = channel.members.find((m) => m.userId === memberIds[1]);
   return [applicantUser, recruiterUser];
 };

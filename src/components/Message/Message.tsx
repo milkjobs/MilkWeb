@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme: Theme) =>
     message: {
       margin: 16,
       display: "flex",
+      alignItems: "center",
     },
     messageBody: {
       width: "auto",
@@ -47,12 +48,17 @@ const useStyles = makeStyles((theme: Theme) =>
       cursor: "pointer",
       textDecoration: "underline",
     },
+    imageMessage: {
+      marginLeft: 16,
+      marginRight: 16,
+      width: 100,
+    },
   })
 );
 
 interface Props {
   profileUrl: string;
-  message: SendBird.UserMessage;
+  message: SendBird.UserMessage | SendBird.FileMessage;
   fromMe: boolean;
 }
 
@@ -89,11 +95,20 @@ const Message: React.FC<Props> = (props) => {
     }
   }, [getResumeUrl, message.customType]);
 
-  if (message.customType === MessageCustomType.Application) {
-    return <ApplicationMessage {...props} />;
+  if (
+    message.customType === MessageCustomType.Application &&
+    "message" in message
+  ) {
+    return (
+      <ApplicationMessage
+        fromMe={fromMe}
+        profileUrl={profileUrl}
+        message={message}
+      />
+    );
   }
 
-  if (message.customType === MessageCustomType.Resume) {
+  if (message.customType === MessageCustomType.Resume && "message" in message) {
     return !fromMe ? (
       <div className={classes.message}>
         <img alt="" src={profileUrl} width={40} height={40} />
@@ -126,10 +141,30 @@ const Message: React.FC<Props> = (props) => {
     );
   }
 
+  if ("message" in message)
+    return !fromMe ? (
+      <div className={classes.message}>
+        <img alt="" src={profileUrl} width={40} height={40} />
+        <div className={classes.messageBody}>{message.message}</div>
+      </div>
+    ) : (
+      <div
+        style={{
+          justifyContent: "flex-end",
+        }}
+        className={classes.message}
+      >
+        <div className={classes.messageBody} style={{ textAlign: "right" }}>
+          {message.message}
+        </div>
+        <img alt="" src={profileUrl} width={40} height={40} />
+      </div>
+    );
+
   return !fromMe ? (
     <div className={classes.message}>
       <img alt="" src={profileUrl} width={40} height={40} />
-      <div className={classes.messageBody}>{message.message}</div>
+      <img src={message.url} className={classes.imageMessage} />
     </div>
   ) : (
     <div
@@ -138,9 +173,7 @@ const Message: React.FC<Props> = (props) => {
       }}
       className={classes.message}
     >
-      <div className={classes.messageBody} style={{ textAlign: "right" }}>
-        {message.message}
-      </div>
+      <img src={message.url} className={classes.imageMessage} />
       <img alt="" src={profileUrl} width={40} height={40} />
     </div>
   );
