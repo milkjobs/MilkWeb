@@ -9,7 +9,7 @@ import { PostDialog } from "./";
 import { themeSubTitles } from "config";
 import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import Dialog from "@material-ui/core/Dialog";
-import branch from "branch-sdk";
+// import branch from "branch-sdk";
 import { webConfig } from "config";
 import CommentOutlinedIcon from "@material-ui/icons/CommentOutlined";
 import ShareOutlinedIcon from "@material-ui/icons/ShareOutlined";
@@ -267,28 +267,28 @@ const PostCard: React.FC<PostCardProps> = ({
 
   const getShareUrl = useCallback(async () => {
     const url = urljoin(webConfig.basePath, "circle", post.uuid);
-    branch.link(
-      {
-        channel: "app",
-        feature: "share",
-        data: {
-          $desktop_url: url,
-          $ios_url: url,
-          $ipad_url: url,
-          $android_url: url,
-          $og_title: post.text.split("\n")[0],
-          $og_description: post.text,
-          $og_image_url: post.imageUrls ? post.imageUrls[0] : undefined,
-        },
-      },
-      function(err, link) {
-        err
-          ? toast.error("獲取連結失敗，可能是廣告阻擋插件造成的影響。")
-          : toast.success("已複製分享連結到剪貼簿");
-        navigator.clipboard.writeText(link);
-      }
-    );
-  }, [branch, post]);
+    // branch.link(
+    //   {
+    //     channel: "app",
+    //     feature: "share",
+    //     data: {
+    //       $desktop_url: url,
+    //       $ios_url: url,
+    //       $ipad_url: url,
+    //       $android_url: url,
+    //       $og_title: post.text.split("\n")[0],
+    //       $og_description: post.text,
+    //       $og_image_url: post.imageUrls ? post.imageUrls[0] : undefined,
+    //     },
+    //   },
+    //   function(err, link) {
+    //     err
+    //       ? toast.error("獲取連結失敗，可能是廣告阻擋插件造成的影響。")
+    //       : toast.success("已複製分享連結到剪貼簿");
+    //     navigator.clipboard.writeText(link);
+    //   }
+    // );
+  }, [post]);
   const linkifyOptions = {
     formatHref: function(href, type) {
       if (type === "hashtag") {

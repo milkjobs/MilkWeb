@@ -15,18 +15,18 @@ interface Props {
   Twitter debug: https://cards-dev.twitter.com/validator
   Linkedin debug: https://www.linkedin.com/post-inspector/inspect/
 */
-const PageMetadata: React.FC<Props> = props => {
+const PageMetadata: React.FC<Props> = (props) => {
   const { title, description, image } = props;
-  const location = window.location;
+  // const location = window.location;
 
   return (
     <Helmet>
       <title>{title}</title>
       <meta name="description" content={description} />
-      <meta
+      {/* <meta
         property="og:url"
         content={`${location.protocol}//${location.host}${location.pathname}`}
-      />
+      /> */}
       <meta property="og:title" content={title} />
       <meta property="og:locale" content="zh_TW" />
       <meta property="og:description" content={description} />
