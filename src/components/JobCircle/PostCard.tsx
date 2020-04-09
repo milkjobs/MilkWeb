@@ -186,6 +186,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 16,
     display: "flex",
     flexDirection: "column",
+    textAlign: "left",
     alignItems: "start",
     justifyContent: "start",
   },
@@ -202,6 +203,110 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.primary,
   },
 }));
+
+interface ReplyProps {
+  reply: PostReply;
+}
+
+const Reply: React.FC<ReplyProps> = ({ reply }) => {
+  const classes = useStyles();
+  const theme = useTheme();
+  const lines = reply.text.split("\n");
+  const [hideText, setHideText] = useState(
+    lines.length < 2 && lines[0].length < 35 ? false : true
+  );
+  console.warn(hideText);
+
+  return (
+    <div className={classes.replyContainer}>
+      <Avatar
+        alt="profile image"
+        className={classes.replyAvatar}
+        src={reply.replier?.profileImageUrl}
+      />
+      <div className={classes.replyTextContainer}>
+        <Link
+          to={"/public-profile/" + reply.replier?.uuid}
+          className={classes.replyName}
+        >
+          {reply.replier?.name}
+        </Link>
+        {hideText ? (
+          <div className={classes.replyText}>
+            {lines[0].slice(0, 35).includes("#") ? (
+              <ReactHashTag
+                renderHashtag={(hashtagValue) => (
+                  <Link
+                    to={
+                      hashtagValue in themeSubTitles
+                        ? "/circle/theme/" + hashtagValue.substr(1)
+                        : "/circle"
+                    }
+                    className={classes.hashTag}
+                  >
+                    {hashtagValue}
+                  </Link>
+                )}
+              >
+                {lines[0].slice(0, 35)}
+              </ReactHashTag>
+            ) : (
+              <Linkify
+                properties={{
+                  target: "_blank",
+                  style: {
+                    color: theme.palette.secondary.main,
+                    textDecoration: "none",
+                  },
+                }}
+              >
+                {lines[0].slice(0, 35)}
+              </Linkify>
+            )}
+            <div className={classes.more} onClick={() => setHideText(false)}>
+              {"查看更多"}
+            </div>
+          </div>
+        ) : (
+          lines.map((t, index) => (
+            <div key={t + index} className={classes.replyText}>
+              {t.includes("#") ? (
+                <ReactHashTag
+                  renderHashtag={(hashtagValue) => (
+                    <Link
+                      to={
+                        hashtagValue in themeSubTitles
+                          ? "/circle/theme/" + hashtagValue.substr(1)
+                          : "/circle"
+                      }
+                      className={classes.hashTag}
+                    >
+                      {hashtagValue}
+                    </Link>
+                  )}
+                >
+                  {t}
+                </ReactHashTag>
+              ) : (
+                <Linkify
+                  properties={{
+                    target: "_blank",
+                    style: {
+                      color: theme.palette.secondary.main,
+                      textDecoration: "none",
+                    },
+                  }}
+                >
+                  {t}
+                </Linkify>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+};
 
 interface PostCardProps {
   post: Post;
@@ -528,21 +633,8 @@ const PostCard: React.FC<PostCardProps> = ({
         />
       </div>
       {postReplies.map((r) => (
-        <div className={classes.replyContainer} key={r.uuid}>
-          <Avatar
-            alt="profile image"
-            className={classes.replyAvatar}
-            src={r.replier?.profileImageUrl}
-          />
-          <div className={classes.replyTextContainer}>
-            <Link
-              to={"/public-profile/" + r.replier?.uuid}
-              className={classes.replyName}
-            >
-              {r.replier?.name}
-            </Link>
-            <div className={classes.replyText}>{r.text}</div>
-          </div>
+        <div key={r.uuid}>
+          <Reply reply={r} />
         </div>
       ))}
       <LoginDialog
