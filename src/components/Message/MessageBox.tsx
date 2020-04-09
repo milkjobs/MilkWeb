@@ -141,21 +141,27 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
     });
   };
 
-  const onKeyDown: InputProps["onKeyDown"] = async (e) => {
-    if (channel && e.keyCode === 13 && !e.shiftKey) {
-      const text = input.slice(0, -1);
+  const sendMessage = async (message: string) => {
+    if (channel) {
       const msg = await new Promise<SendBirdMessage>((resolve, reject) => {
-        channel.sendUserMessage(text, (msg, error) => {
+        channel.sendUserMessage(message, (msg, error) => {
           error ? reject(error) : resolve(msg);
         });
       });
       isUserMessage(msg) && messages.current.unshift(msg);
-      setInput("");
+      forceUpdate();
       if (messagesEl.current) {
         // scroll to bottom
         messagesEl.current.scrollTop =
           messagesEl.current.scrollHeight - messagesEl.current.offsetHeight;
       }
+    }
+  };
+
+  const onKeyDown: InputProps["onKeyDown"] = async (e) => {
+    if (channel && e.keyCode === 13 && !e.shiftKey) {
+      sendMessage(input);
+      setInput("");
     }
   };
 
@@ -349,7 +355,7 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
               發送履歷
             </Button>
           )}
-          <CommonWordsPopper />
+          <CommonWordsPopper sendMessage={sendMessage} />
         </div>
         <Input
           autoFocus
@@ -357,7 +363,7 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
           disableUnderline={true}
           placeholder="Enter 鍵送出訊息"
           multiline
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => e.target.value !== "\n" && setInput(e.target.value)}
           onKeyDown={onKeyDown}
           rows="4"
           value={input}
