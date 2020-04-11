@@ -1,15 +1,10 @@
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "stores";
-import moment from "moment";
-import {
-  Experience,
-  Education,
-  PublicUser,
-  Role,
-} from "@frankyjuang/milkapi-client";
+import { PublicUser, Role } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
+import { ExperienceBlock, EducationBlock, ProjectBlock } from ".";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -122,83 +117,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ExperienceBlock: React.FC<Experience> = (props) => {
-  const { jobName, teamName, startTime, endTime, description } = props;
-  const classes = useStyles();
-  return (
-    <div className={classes.block}>
-      <div className={classes.blockRow}>
-        <div className={classes.blockTitle}>{jobName + "・" + teamName}</div>
-        <div className={classes.blockPeriod}>
-          {moment(startTime).calendar(undefined, {
-            sameDay: "MM/YYYY",
-            nextDay: "MM/YYYY",
-            nextWeek: "MM/YYYY",
-            lastDay: "MM/YYYY",
-            lastWeek: "MM/YYYY",
-            sameElse: "MM/YYYY",
-          }) +
-            " ~ " +
-            (endTime
-              ? moment(endTime).calendar(undefined, {
-                  sameDay: "MM/YYYY",
-                  nextDay: "MM/YYYY",
-                  nextWeek: "MM/YYYY",
-                  lastDay: "MM/YYYY",
-                  lastWeek: "MM/YYYY",
-                  sameElse: "MM/YYYY",
-                })
-              : "至今")}
-        </div>
-      </div>
-      <div className={classes.blockDescription}>{description}</div>
-    </div>
-  );
-};
-
-const EducationBlock: React.FC<Education> = (props) => {
-  const {
-    schoolName,
-    degree,
-    majorName,
-    startTime,
-    endTime,
-    description,
-  } = props;
-  const classes = useStyles();
-  return (
-    <div className={classes.block}>
-      <div className={classes.blockRow}>
-        <div className={classes.blockTitle}>
-          {schoolName + "・" + degree + "・" + majorName}
-        </div>
-        <div className={classes.blockPeriod}>
-          {moment(startTime).calendar(undefined, {
-            sameDay: "MM/YYYY",
-            nextDay: "MM/YYYY",
-            nextWeek: "MM/YYYY",
-            lastDay: "MM/YYYY",
-            lastWeek: "MM/YYYY",
-            sameElse: "MM/YYYY",
-          }) +
-            " ~ " +
-            (endTime
-              ? moment(endTime).calendar(undefined, {
-                  sameDay: "MM/YYYY",
-                  nextDay: "MM/YYYY",
-                  nextWeek: "MM/YYYY",
-                  lastDay: "MM/YYYY",
-                  lastWeek: "MM/YYYY",
-                  sameElse: "MM/YYYY",
-                })
-              : "至今")}
-        </div>
-      </div>
-      <div className={classes.blockDescription}>{description}</div>
-    </div>
-  );
-};
-
 interface Props {
   userId: string;
 }
@@ -264,6 +182,14 @@ const PublicApplicantBasicInfo: React.FC<Props> = ({ userId }) => {
             {(user.profile?.educations || []).map((e) => (
               <div key={e.uuid}>
                 <EducationBlock {...e} />
+              </div>
+            ))}
+          </div>
+          <div className={classes.items}>
+            <div className={classes.title}>{"作品"}</div>
+            {(user.profile?.projects || []).map((e) => (
+              <div key={e.uuid}>
+                <ProjectBlock {...e} />
               </div>
             ))}
           </div>

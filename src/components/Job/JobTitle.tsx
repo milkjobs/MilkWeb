@@ -4,12 +4,12 @@ import {
   EducationLevelConvertor,
   ExperienceLevelConvertor,
   salaryToString,
-  TeamSizeConvertor
+  TeamSizeConvertor,
 } from "helpers";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     paddingLeft: 24,
     paddingRight: 24,
@@ -24,13 +24,13 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       flexDirection: "column",
       paddingLeft: 0,
-      paddingRight: 0
-    }
+      paddingRight: 0,
+    },
   },
   jobContainer: {
     flex: 2,
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   teamContainer: {
     flex: 1,
@@ -39,16 +39,16 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 24,
     [theme.breakpoints.down("xs")]: {
       paddingLeft: 0,
-      marginTop: 16
-    }
+      marginTop: 16,
+    },
   },
   teamInfo: {
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   nameContainer: {
     display: "flex",
-    flex: 1
+    flex: 1,
   },
   jobName: {
     display: "flex",
@@ -60,8 +60,8 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.primary,
     marginRight: 16,
     [theme.breakpoints.down("xs")]: {
-      fontSize: 16
-    }
+      fontSize: 16,
+    },
   },
   jobSalary: {
     display: "flex",
@@ -73,8 +73,8 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       fontSize: 16,
       marginLeft: "auto",
-      alignItems: "flex-start"
-    }
+      alignItems: "flex-start",
+    },
   },
   teamName: {
     display: "flex",
@@ -86,8 +86,8 @@ const useStyles = makeStyles(theme => ({
     marginRight: "auto",
     textAlign: "left",
     [theme.breakpoints.down("xs")]: {
-      fontSize: 16
-    }
+      fontSize: 16,
+    },
   },
   teamField: {
     display: "flex",
@@ -98,8 +98,8 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     alignItems: "center",
     [theme.breakpoints.down("xs")]: {
-      fontSize: 14
-    }
+      fontSize: 14,
+    },
   },
   location: {
     display: "flex",
@@ -112,8 +112,8 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     [theme.breakpoints.down("xs")]: {
       fontSize: 14,
-      marginTop: 4
-    }
+      marginTop: 4,
+    },
   },
   logoContainer: {
     objectFit: "contain",
@@ -124,16 +124,16 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
     [theme.breakpoints.down("xs")]: {
       width: 40,
-      height: 40
-    }
-  }
+      height: 40,
+    },
+  },
 }));
 
 interface Props extends Job {
   teamLinkDisabled?: boolean;
 }
 
-const JobTitle: React.FC<Props> = props => {
+const JobTitle: React.FC<Props> = (props) => {
   const {
     type,
     name,
@@ -144,7 +144,7 @@ const JobTitle: React.FC<Props> = props => {
     experienceNeed,
     educationNeed,
     team,
-    teamLinkDisabled
+    teamLinkDisabled,
   } = props;
   const classes = useStyles();
   const [fields, setFields] = useState("");
@@ -180,7 +180,11 @@ const JobTitle: React.FC<Props> = props => {
       </div>
       {team &&
         (teamLinkDisabled ? (
-          <div className={classes.teamContainer}>
+          <Link
+            to={"/recruiter/team"}
+            style={{ textDecoration: "none", cursor: "pointer" }}
+            className={classes.teamContainer}
+          >
             <img
               alt="team logo"
               className={classes.logoContainer}
@@ -192,7 +196,7 @@ const JobTitle: React.FC<Props> = props => {
                 {fields + "・" + TeamSizeConvertor(team.size)}
               </div>
             </div>
-          </div>
+          </Link>
         ) : (
           <Link
             to={"/team/" + team.uuid}
