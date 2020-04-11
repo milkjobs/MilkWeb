@@ -4,15 +4,16 @@ import { Skeleton } from "@material-ui/lab";
 import to from "await-to-js";
 import { salaryToString } from "helpers";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { useAuth } from "stores";
 import { getMetadata } from "./utils";
+import moment from "moment";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     message: {
       margin: 16,
-      display: "flex"
+      display: "flex",
     },
     messageBody: {
       width: "auto",
@@ -28,11 +29,10 @@ const useStyles = makeStyles(theme =>
       fontSize: 14,
       backgroundColor: "#eee",
       border: 1,
-      borderRadius: 5
+      borderRadius: 5,
     },
     userCard: {
       width: "100%",
-      paddingTop: 16,
       paddingBottom: 16,
       borderBottomStyle: "solid",
       borderBottomWidth: 1,
@@ -40,22 +40,100 @@ const useStyles = makeStyles(theme =>
       display: "flex",
       flexDirection: "column",
       cursor: "pointer",
-      alignItems: "flex-start"
+      alignItems: "flex-start",
     },
     userIntroduction: {
       marginTop: 8,
       maxWidth: 300,
       whiteSpace: "pre-line",
-      textAlign: "left"
+      textAlign: "left",
     },
     jobCard: {
       paddingTop: 16,
       paddingBottom: 16,
       display: "flex",
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
+    link: {
+      textDecoration: "none",
+      color: theme.palette.text.primary,
+    },
   })
 );
+
+interface ProfileMessageProps {
+  applicant: PublicUser;
+}
+
+const ProfileMessage: React.FC<ProfileMessageProps> = ({ applicant }) => {
+  const classes = useStyles();
+  return (
+    <div>
+      <div>{applicant.name}</div>
+      <div className={classes.userIntroduction}>
+        {applicant.profile?.introduction || "尚無自我介紹"}
+      </div>
+      <div className={classes.userIntroduction}>經驗</div>
+      <div className={classes.userIntroduction}>
+        {applicant.profile?.experiences?.map((e) => (
+          <div key={e.uuid}>
+            <div>{e.jobName + " - " + e.teamName}</div>
+            <div>
+              {moment(e.startTime).calendar(undefined, {
+                sameDay: "MM/YYYY",
+                nextDay: "MM/YYYY",
+                nextWeek: "MM/YYYY",
+                lastDay: "MM/YYYY",
+                lastWeek: "MM/YYYY",
+                sameElse: "MM/YYYY",
+              }) +
+                " ~ " +
+                (e.endTime
+                  ? moment(e.endTime).calendar(undefined, {
+                      sameDay: "MM/YYYY",
+                      nextDay: "MM/YYYY",
+                      nextWeek: "MM/YYYY",
+                      lastDay: "MM/YYYY",
+                      lastWeek: "MM/YYYY",
+                      sameElse: "MM/YYYY",
+                    })
+                  : "至今")}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className={classes.userIntroduction}>學歷</div>
+      <div className={classes.userIntroduction}>
+        {applicant.profile?.educations?.map((e) => (
+          <div key={e.uuid}>
+            <div>{e.schoolName + " - " + e.majorName}</div>
+            <div>
+              {moment(e.startTime).calendar(undefined, {
+                sameDay: "MM/YYYY",
+                nextDay: "MM/YYYY",
+                nextWeek: "MM/YYYY",
+                lastDay: "MM/YYYY",
+                lastWeek: "MM/YYYY",
+                sameElse: "MM/YYYY",
+              }) +
+                " ~ " +
+                (e.endTime
+                  ? moment(e.endTime).calendar(undefined, {
+                      sameDay: "MM/YYYY",
+                      nextDay: "MM/YYYY",
+                      nextWeek: "MM/YYYY",
+                      lastDay: "MM/YYYY",
+                      lastWeek: "MM/YYYY",
+                      sameElse: "MM/YYYY",
+                    })
+                  : "至今")}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 interface Props {
   profileUrl: string;
@@ -66,7 +144,7 @@ interface Props {
 const ApplicationMessage: React.FC<Props> = ({
   profileUrl,
   message,
-  fromMe
+  fromMe,
 }) => {
   const classes = useStyles();
   const history = useHistory();
@@ -105,7 +183,7 @@ const ApplicationMessage: React.FC<Props> = ({
           const [, fetchedUser] = await to(
             userApi.getPublicUser({
               userId: metadata.applicantId,
-              role: Role.Applicant
+              role: Role.Applicant,
             })
           );
           setApplicant(fetchedUser);
@@ -133,12 +211,13 @@ const ApplicationMessage: React.FC<Props> = ({
         ) : (
           <div className={classes.userCard}>
             {applicant ? (
-              <>
-                <div>{applicant.name}</div>
-                <div className={classes.userIntroduction}>
-                  {applicant.profile?.introduction || "尚無自我介紹"}
-                </div>
-              </>
+              <Link
+                className={classes.link}
+                to={"/public-profile/" + applicant.uuid}
+                target={"_blank"}
+              >
+                <ProfileMessage applicant={applicant} />
+              </Link>
             ) : (
               <div>求職者已離開</div>
             )}
@@ -168,7 +247,7 @@ const ApplicationMessage: React.FC<Props> = ({
   ) : (
     <div
       style={{
-        justifyContent: "flex-end"
+        justifyContent: "flex-end",
       }}
       className={classes.message}
     >
@@ -188,12 +267,7 @@ const ApplicationMessage: React.FC<Props> = ({
             onClick={() => history.push("/profile")}
           >
             {applicant ? (
-              <>
-                <div>{applicant.name}</div>
-                <div className={classes.userIntroduction}>
-                  {applicant.profile?.introduction || "尚無自我介紹"}
-                </div>
-              </>
+              <ProfileMessage applicant={applicant} />
             ) : (
               <div>求職者已離開</div>
             )}

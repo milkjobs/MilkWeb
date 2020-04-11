@@ -18,32 +18,32 @@ const useStyles = makeStyles((theme: Theme) =>
       top: 0,
       left: 0,
       right: 0,
-      bottom: 0
+      bottom: 0,
     },
     messages: {
       borderTop: "1px solid #EBEBEB",
       flex: 1,
-      overflow: "auto"
+      overflow: "auto",
     },
     messageInput: {
       position: "fixed",
       width: "100%",
       bottom: 0,
       zIndex: 100,
-      borderTop: "1px solid #EBEBEB"
+      borderTop: "1px solid #EBEBEB",
     },
     textField: {
       display: "flex",
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
       flex: 1,
-      border: 0
+      border: 0,
     },
     jobContainer: {
       display: "flex",
       marginLeft: 16,
       paddingTop: 8,
-      paddingBottom: 8
+      paddingBottom: 8,
     },
     jobName: {
       display: "flex",
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: 18,
       fontWeight: 800,
       color: "#484848",
-      marginRight: 16
+      marginRight: 16,
     },
     jobSalary: {
       display: "flex",
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: 18,
       fontWeight: 400,
       marginRight: 16,
-      color: "#FD8150"
+      color: "#FD8150",
     },
     location: {
       display: "flex",
@@ -70,8 +70,8 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: 16,
       color: "#484848",
       justifyContent: "center",
-      alignItems: "center"
-    }
+      alignItems: "center",
+    },
   })
 );
 
@@ -87,23 +87,23 @@ const SampleMessageBox: React.FC = () => {
       sender: {
         profileUrl:
           "https://milkjobs-teams-production.s3.amazonaws.com/fa7e298aa1924bc89a1e1eeb7012ad6c.jpg",
-        userId: null
+        userId: null,
       },
-      requestState: "succeeded"
+      requestState: "succeeded",
     },
     {
       message: "你好，我想應徵業務的工作",
       sender: {
         profileUrl:
           "https://milkjobs-users-production.s3.amazonaws.com/default-profiles/profile22.png",
-        userId: undefined
+        userId: undefined,
       },
-      requestState: "succeeded"
-    }
+      requestState: "succeeded",
+    },
   ]);
   const messagesEl = useRef<any>(null);
 
-  const keyPress = async e => {
+  const keyPress = async (e) => {
     if (e.keyCode === 13) {
       const text = e.target.value.replace(/(\r\n|\n|\r)/gm, "");
       messages.current = [
@@ -112,10 +112,10 @@ const SampleMessageBox: React.FC = () => {
           sender: {
             profileUrl:
               "https://milkjobs-users-production.s3.amazonaws.com/default-profiles/profile22.png",
-            userId: undefined
+            userId: undefined,
           },
-          requestState: "succeeded"
-        }
+          requestState: "succeeded",
+        },
       ].concat(messages.current);
       setInput("");
       // scroll to bottom
@@ -131,11 +131,15 @@ const SampleMessageBox: React.FC = () => {
       </div>
       <div
         className={classes.messages}
-        ref={el => {
+        ref={(el) => {
           messagesEl.current = el;
         }}
       >
-        <MessageList messages={messages.current} userId={user?.uuid || ""} />
+        {/* <MessageList
+          messages={messages.current}
+          userId={user?.uuid || ""}
+          theirLastSeenTime={}
+        /> */}
       </div>
       <div className={classes.messageInput}>
         {/* <div style={{ display: "flex", marginLeft: 8, marginTop: 4 }}>
@@ -146,7 +150,7 @@ const SampleMessageBox: React.FC = () => {
           id="standard-multiline-static"
           multiline
           rows="4"
-          onChange={e => e.target.value !== "\n" && setInput(e.target.value)}
+          onChange={(e) => e.target.value !== "\n" && setInput(e.target.value)}
           className={classes.textField}
           onKeyDown={keyPress}
           disableUnderline={true}

@@ -1,8 +1,8 @@
 import Button from "@material-ui/core/Button";
 import Input, { InputProps } from "@material-ui/core/Input";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { AlertDialog } from "components/Util";
-import { AlertType, ImageMimeType } from "helpers";
+import { AlertDialog, ResumeDialog } from "components/Util";
+import { AlertType, ImageMimeType, FileMimeType } from "helpers";
 import React, {
   useCallback,
   useEffect,
@@ -24,6 +24,14 @@ import { isGroupChannel, isUserMessage, SendBirdMessage } from "./utils";
 import { Link } from "react-router-dom";
 import { CommonWordsPopper } from "./CommonWordsPopper";
 import ImageOutlinedIcon from "@material-ui/icons/ImageOutlined";
+import AttachFileOutlinedIcon from "@material-ui/icons/AttachFileOutlined";
+import { Job } from "@frankyjuang/milkapi-client";
+import to from "await-to-js";
+import Popper, { PopperPlacementType } from "@material-ui/core/Popper";
+import Typography from "@material-ui/core/Typography";
+import Fade from "@material-ui/core/Fade";
+import Paper from "@material-ui/core/Paper";
+import { Slide } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,6 +67,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     jobContainer: {
       display: "flex",
+      alignItems: "center",
       marginLeft: 16,
       paddingTop: 8,
       paddingBottom: 8,
@@ -94,8 +103,113 @@ const useStyles = makeStyles((theme: Theme) =>
     messageButton: {
       marginRight: 8,
     },
+    jobHintContainer: {
+      display: "flex",
+      marginLeft: "auto",
+      marginRight: 16,
+    },
+    jobHintTitle: {
+      fontWeight: "bold",
+      marginRight: 8,
+    },
+    jobHintLink: {
+      color: theme.palette.secondary.main,
+      textDecoration: "none",
+    },
+    resumeButtonDisabled: {
+      borderWidth: 0.5,
+      borderColor: theme.palette.text.hint,
+      borderRadius: 8,
+      borderStyle: "solid",
+      color: theme.palette.text.hint,
+      padding: 4,
+      cursor: "pointer",
+    },
+    resumeButton: {
+      borderWidth: 0.5,
+      borderColor: theme.palette.text.primary,
+      borderRadius: 8,
+      borderStyle: "solid",
+      color: theme.palette.text.primary,
+      padding: 4,
+      cursor: "pointer",
+    },
+    typography: {
+      padding: theme.spacing(2),
+    },
   })
 );
+
+interface ResumeButtonProps {
+  resumeKey?: string;
+  channelUrl?: string;
+}
+
+const ResumeButton: React.FC<ResumeButtonProps> = ({
+  resumeKey,
+  channelUrl,
+}) => {
+  const classes = useStyles();
+  const { getApi } = useAuth();
+  const [mouseOver, setMouseOver] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
+  const [resumeUrl, setResumeUrl] = useState<string>();
+  const [resumeOpen, setResumeOpen] = useState(false);
+
+  const getResumeUrl = useCallback(async () => {
+    if (resumeKey && channelUrl) {
+      const channelApi = await getApi("Channel");
+      const [, url] = await to(
+        channelApi.getResumeUrlInChannel({
+          resumeKey,
+          channelUrl: channelUrl,
+        })
+      );
+      setResumeUrl(url);
+    }
+  }, [getApi, resumeKey]);
+
+  useEffect(() => {
+    getResumeUrl();
+  }, [getApi, resumeKey]);
+
+  return resumeUrl ? (
+    <>
+      <div className={classes.resumeButton} onClick={() => setResumeOpen(true)}>
+        履歷附件
+      </div>
+      <ResumeDialog
+        isOpen={resumeOpen}
+        close={() => setResumeOpen(false)}
+        resumeUrl={resumeUrl}
+      />
+    </>
+  ) : (
+    <>
+      <div
+        className={classes.resumeButtonDisabled}
+        onMouseEnter={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+          setMouseOver(true);
+          setAnchorEl(e.currentTarget);
+        }}
+        onMouseLeave={() => setMouseOver(false)}
+      >
+        履歷附件
+      </div>
+      <Popper open={mouseOver} anchorEl={anchorEl} transition>
+        {({ TransitionProps }) => (
+          <Fade {...TransitionProps} timeout={350}>
+            <Paper>
+              <Typography className={classes.typography}>
+                求職者還沒有向你發送履歷，可以在訊息請對方傳履歷
+              </Typography>
+            </Paper>
+          </Fade>
+        )}
+      </Popper>
+    </>
+  );
+};
 
 interface Props {
   channelUrl: string;
@@ -104,7 +218,7 @@ interface Props {
 
 const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
   const classes = useStyles();
-  const { user } = useAuth();
+  const { user, getApi } = useAuth();
   const { sb, addChannelHandler, removeChannelHandler } = useChannel();
   const [ref, inView] = useInView();
   const [input, setInput] = useState("");
@@ -119,6 +233,8 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
   const messages = useRef<(UserMessage | SendBird.FileMessage)[]>([]);
   const messagesEl = useRef<HTMLDivElement>(null);
   const theirLastSeenTime = useRef<number>();
+  const [channelJobs, setChannelJobs] = useState<Job[]>([]);
+  const [resumeKey, setResumeKey] = useState<string>();
 
   const loadPreviousMessages = (query: PreviousMessageListQuery) => {
     return new Promise<SendBirdMessage[]>((resolve, reject) => {
@@ -149,7 +265,6 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
           error ? reject(error) : resolve(msg);
         });
       });
-      console.warn(msg);
       isUserMessage(msg) && messages.current.unshift(msg);
       forceUpdate();
       if (messagesEl.current) {
@@ -300,10 +415,36 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
     sb,
   ]);
 
+  const getChannelMetaData = () => {
+    async function asyncForEach(array, callback) {
+      for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array);
+      }
+    }
+    channel &&
+      channel.getMetaData([], async (res, err) => {
+        const jobApi = await getApi("Job");
+        const jobIds: string[] = [];
+        const fetchedChannelJobs: Job[] = [];
+        Object.keys(res).map(async (k) => {
+          if (res[k] === "job") {
+            jobIds.push(k);
+          }
+          if (k === "resumeKey") setResumeKey(res[k]);
+        });
+        await asyncForEach(jobIds, async (id) => {
+          const [err, job] = await to(jobApi.getJobAnonymously({ jobId: id }));
+          job && fetchedChannelJobs.push(job);
+        });
+        setChannelJobs(fetchedChannelJobs);
+      });
+  };
+
   useEffect(() => {
     user &&
       channel &&
       setThey(channel.members.find((m) => m.userId !== user.uuid));
+    user && channel && getChannelMetaData();
   }, [channel, user]);
 
   useEffect(() => {
@@ -341,6 +482,10 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
     init();
   }, [channelUrl, getTheirLastSeenTime, sb]);
 
+  // <Slide direction="left" in={true} mountOnEnter unmountOnExit>
+  //   <div className={classes.container}>
+  //   </div>
+  // </Slide>
   return (
     <div className={classes.container}>
       <AlertDialog
@@ -352,13 +497,33 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
         <Link
           to={"/public-profile/" + they?.userId}
           className={classes.jobName}
+          target={"_blank"}
         >
           {they?.nickname || ""}
         </Link>
+        {isRecruiter && (
+          <ResumeButton resumeKey={resumeKey} channelUrl={channel?.url} />
+        )}
+        {channelJobs.length > 0 && (
+          <div className={classes.jobHintContainer}>
+            <div className={classes.jobHintTitle}>{"詢問職缺 :"}</div>
+            <Link
+              to={"/job/" + channelJobs[0].uuid}
+              className={classes.jobHintLink}
+              target="_blank"
+            >
+              {channelJobs[0].name}
+            </Link>
+          </div>
+        )}
       </div>
       <div className={classes.messages} ref={messagesEl}>
         <div ref={ref}></div>
-        <MessageList messages={messages.current} userId={user?.uuid || ""} />
+        <MessageList
+          messages={messages.current}
+          userId={user?.uuid || ""}
+          theirLastSeenTime={theirLastSeenTime}
+        />
       </div>
       <div className={classes.messageInput}>
         <div
@@ -386,6 +551,17 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
               type="file"
             />
             <ImageOutlinedIcon />
+          </label>
+          <label style={{ marginLeft: 8, marginRight: 8, cursor: "pointer" }}>
+            <input
+              hidden
+              accept={FileMimeType}
+              onChange={(e) => {
+                e.target.files && sendFileMessage(e.target.files[0]);
+              }}
+              type="file"
+            />
+            <AttachFileOutlinedIcon />
           </label>
         </div>
         <Input

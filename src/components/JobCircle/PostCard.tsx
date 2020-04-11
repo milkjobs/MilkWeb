@@ -5,8 +5,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { useAuth } from "stores";
 import { Post, NewPost, PostReply } from "@frankyjuang/milkapi-client";
 import EditIcon from "@material-ui/icons/Edit";
-import { PostDialog } from "./";
-import { themeSubTitles } from "config";
+import { PostDialog, ParsedText } from "./";
 import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import Dialog from "@material-ui/core/Dialog";
 import branch from "branch-sdk";
@@ -18,7 +17,6 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import urljoin from "url-join";
 import to from "await-to-js";
 import { LoginDialog } from "components/Util";
-import ReactHashTag from "react-hashtag";
 import { Link } from "react-router-dom";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
@@ -212,12 +210,7 @@ interface ReplyProps {
 
 const Reply: React.FC<ReplyProps> = ({ reply, deleteReply }) => {
   const classes = useStyles();
-  const theme = useTheme();
-  const lines = reply.text.split("\n");
   const { user } = useAuth();
-  const [hideText, setHideText] = useState(
-    lines.length < 2 && lines[0].length < 35 ? false : true
-  );
 
   return (
     <div className={classes.replyContainer}>
@@ -233,78 +226,7 @@ const Reply: React.FC<ReplyProps> = ({ reply, deleteReply }) => {
         >
           {reply.replier?.name}
         </Link>
-        {hideText ? (
-          <div className={classes.replyText}>
-            {lines[0].slice(0, 35).includes("#") ? (
-              <ReactHashTag
-                renderHashtag={(hashtagValue) => (
-                  <Link
-                    to={
-                      hashtagValue in themeSubTitles
-                        ? "/circle/theme/" + hashtagValue.substr(1)
-                        : "/circle"
-                    }
-                    className={classes.hashTag}
-                  >
-                    {hashtagValue}
-                  </Link>
-                )}
-              >
-                {lines[0].slice(0, 35)}
-              </ReactHashTag>
-            ) : (
-              <Linkify
-                properties={{
-                  target: "_blank",
-                  style: {
-                    color: theme.palette.secondary.main,
-                    textDecoration: "none",
-                  },
-                }}
-              >
-                {lines[0].slice(0, 35)}
-              </Linkify>
-            )}
-            <div className={classes.more} onClick={() => setHideText(false)}>
-              {"查看更多"}
-            </div>
-          </div>
-        ) : (
-          lines.map((t, index) => (
-            <div key={t + index} className={classes.replyText}>
-              {t.includes("#") ? (
-                <ReactHashTag
-                  renderHashtag={(hashtagValue) => (
-                    <Link
-                      to={
-                        hashtagValue in themeSubTitles
-                          ? "/circle/theme/" + hashtagValue.substr(1)
-                          : "/circle"
-                      }
-                      className={classes.hashTag}
-                    >
-                      {hashtagValue}
-                    </Link>
-                  )}
-                >
-                  {t}
-                </ReactHashTag>
-              ) : (
-                <Linkify
-                  properties={{
-                    target: "_blank",
-                    style: {
-                      color: theme.palette.secondary.main,
-                      textDecoration: "none",
-                    },
-                  }}
-                >
-                  {t}
-                </Linkify>
-              )}
-            </div>
-          ))
-        )}
+        <ParsedText text={reply.text} showLine={2} />
       </div>
       {user && reply.replier && user.uuid === reply.replier.uuid && (
         <IconButton
@@ -337,9 +259,7 @@ const PostCard: React.FC<PostCardProps> = ({
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [selectedImgUrlIndex, setSelectedImgUrlIndex] = useState<number>(0);
-  const lines = post.text.split("\n");
   const [editPostOpen, setEditPostOpen] = useState(false);
-  const [hideText, setHideText] = useState(lines.length < 7 ? false : true);
   const [postReplies, setPostReplies] = useState<PostReply[]>([]);
   const [postReplyPageNo, setPostReplyPageNo] = useState<number>(1);
   const [replyText, setReplyText] = useState("");
@@ -480,84 +400,7 @@ const PostCard: React.FC<PostCardProps> = ({
           </div>
         </div>
       )}
-      {hideText
-        ? lines.slice(0, 5).map((t, index) => (
-            <div key={t + index} className={classes.text}>
-              {t.includes("#") ? (
-                <ReactHashTag
-                  renderHashtag={(hashtagValue) => (
-                    <Link
-                      to={
-                        hashtagValue in themeSubTitles
-                          ? "/circle/theme/" + hashtagValue.substr(1)
-                          : "/circle"
-                      }
-                      className={classes.hashTag}
-                    >
-                      {hashtagValue}
-                    </Link>
-                  )}
-                >
-                  {t}
-                </ReactHashTag>
-              ) : (
-                <Linkify
-                  properties={{
-                    target: "_blank",
-                    style: {
-                      color: theme.palette.secondary.main,
-                      textDecoration: "none",
-                    },
-                  }}
-                >
-                  {t}
-                </Linkify>
-              )}
-              {index === 4 && (
-                <div
-                  className={classes.more}
-                  onClick={() => setHideText(false)}
-                >
-                  {"查看更多"}
-                </div>
-              )}
-            </div>
-          ))
-        : lines.map((t, index) => (
-            <div key={t + index} className={classes.text}>
-              {t.includes("#") ? (
-                <ReactHashTag
-                  renderHashtag={(hashtagValue) => (
-                    <Link
-                      to={
-                        hashtagValue in themeSubTitles
-                          ? "/circle/theme/" + hashtagValue.substr(1)
-                          : "/circle"
-                      }
-                      className={classes.hashTag}
-                    >
-                      {hashtagValue}
-                    </Link>
-                  )}
-                >
-                  {t}
-                </ReactHashTag>
-              ) : (
-                <Linkify
-                  properties={{
-                    target: "_blank",
-                    style: {
-                      color: theme.palette.secondary.main,
-                      textDecoration: "none",
-                    },
-                  }}
-                >
-                  {t}
-                </Linkify>
-              )}
-            </div>
-          ))}
-
+      <ParsedText text={post.text} showLine={5} />
       <div className={classes.imagesContainer}>
         {post.imageUrls?.map((i, index) => (
           <img
@@ -572,7 +415,11 @@ const PostCard: React.FC<PostCardProps> = ({
           ></img>
         ))}
       </div>
-      <Dialog open={imageDialogOpen} onClose={() => setImageDialogOpen(false)}>
+      <Dialog
+        open={imageDialogOpen}
+        onClose={() => setImageDialogOpen(false)}
+        maxWidth={"md"}
+      >
         {post.imageUrls && (
           <>
             <img
@@ -637,7 +484,9 @@ const PostCard: React.FC<PostCardProps> = ({
           size={"small"}
           placeholder={"我來說幾句"}
           value={replyText}
-          onChange={(e) => setReplyText(e.target.value)}
+          onChange={(e) =>
+            e.target.value !== "\n" && setReplyText(e.target.value)
+          }
           onKeyDown={(e) => !e.shiftKey && e.keyCode == 13 && replyPost()}
         />
       </div>

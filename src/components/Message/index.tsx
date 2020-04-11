@@ -1,4 +1,5 @@
 export * from "./ApplicationMessage";
+export * from "./FileMessage";
 export * from "./ChannelListCard";
 export * from "./ChatRoom";
 export * from "./CommonWordsPopper";

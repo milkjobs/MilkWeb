@@ -10,7 +10,7 @@ import {
   JobLocation,
   JobSideCard,
   JobStatistics,
-  JobTitle
+  JobTitle,
 } from "components/Job";
 import { ErrorStatus } from "components/Util";
 import { webConfig } from "config";
@@ -20,17 +20,17 @@ import {
   BreadcrumbListStructuredData,
   getPostCode,
   JobPostingStructuredData,
-  PageMetadata
+  PageMetadata,
 } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "stores";
 import urljoin from "url-join";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   container: {
     alignItems: "center",
@@ -42,8 +42,8 @@ const useStyles = makeStyles(theme => ({
     paddingTop: 40,
     [theme.breakpoints.down("xs")]: {
       paddingTop: 0,
-      paddingBottom: 0
-    }
+      paddingBottom: 0,
+    },
   },
   imgContainer: {
     width: "100%",
@@ -51,20 +51,20 @@ const useStyles = makeStyles(theme => ({
     background: "#EBEBEB",
     position: "relative",
     marginBottom: 8,
-    overflow: "hidden"
+    overflow: "hidden",
   },
   infoContainer: {
     display: "flex",
     flexDirection: "column",
     width: "100%",
     [theme.breakpoints.up("lg")]: {
-      width: "1120px"
-    }
+      width: "1120px",
+    },
   },
   titleContainer: {
     flex: 1,
     marginLeft: 24,
-    marginRight: 24
+    marginRight: 24,
   },
   descriptionContainer: {
     display: "flex",
@@ -72,22 +72,22 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 24,
     marginRight: 24,
     [theme.breakpoints.down("xs")]: {
-      flexDirection: "column"
-    }
+      flexDirection: "column",
+    },
   },
   descriptionContent: {
-    flex: 2
+    flex: 2,
   },
   descriptionSide: {
     flex: 1,
     [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
+      display: "none",
+    },
   },
   loading: {
     flex: 1,
-    marginTop: 200
-  }
+    marginTop: 200,
+  },
 }));
 
 const Job: React.FC = () => {
@@ -99,7 +99,7 @@ const Job: React.FC = () => {
 
   useEffect(() => {
     const fetchJob = async () => {
-      setLoading(true);
+      !job && setLoading(true);
       const jobApi = await getApi("Job");
       let fetchedJob: JobType | undefined;
       if (user) {
@@ -150,16 +150,16 @@ const Job: React.FC = () => {
             breadcrumbs={[
               {
                 name: job.team.name,
-                url: urljoin(webConfig.basePath, "team", job.team.uuid)
+                url: urljoin(webConfig.basePath, "team", job.team.uuid),
               },
               {
                 name: "工作機會",
-                url: urljoin(webConfig.basePath, "team", job.team.uuid, "jobs")
+                url: urljoin(webConfig.basePath, "team", job.team.uuid, "jobs"),
               },
               {
                 name: job.name,
-                url: urljoin(webConfig.basePath, "job", job.uuid)
-              }
+                url: urljoin(webConfig.basePath, "job", job.uuid),
+              },
             ]}
           />
         </>

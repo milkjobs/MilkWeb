@@ -1,4 +1,4 @@
-import { Job } from "@frankyjuang/milkapi-client";
+import { Job, MessageCustomType } from "@frankyjuang/milkapi-client";
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import { LoginDialog } from "components/Util";
@@ -7,19 +7,22 @@ import Sticky from "react-stickynode";
 import {
   Configure,
   InstantSearch,
-  connectSearchBox
+  connectSearchBox,
 } from "react-instantsearch-dom";
-import { useSearch } from "stores";
+import { useSearch, useAuth, useChannel } from "stores";
 import { algoliaConfig } from "config";
 import {
   InfiniteHitsProvided,
-  SearchBoxProvided
+  SearchBoxProvided,
 } from "react-instantsearch-core";
 import { connectInfiniteHits } from "react-instantsearch-dom";
-import { Link } from "react-router-dom";
-import { salaryToString } from "helpers";
+import { Link, useHistory } from "react-router-dom";
+import { salaryToString, ApplicationMetaData } from "helpers";
+import { Button } from "@material-ui/core";
+import SendBird from "sendbird";
+import to from "await-to-js";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     display: "flex",
     flexDirection: "column",
@@ -28,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: 16,
     paddingRight: 24,
     paddingLeft: 24,
-    borderRadius: 4
+    borderRadius: 4,
   },
   button: {
     backgroundColor: theme.palette.secondary.main,
@@ -38,37 +41,37 @@ const useStyles = makeStyles(theme => ({
     paddingTop: 6,
     paddingBottom: 6,
     borderRadius: 4,
-    boxShadow: "none"
+    boxShadow: "none",
   },
   contact: {
     textAlign: "left",
-    marginTop: 12
+    marginTop: 12,
   },
   review: {
     marginTop: 4,
     display: "flex",
     fontSize: 14,
     fontWeight: 400,
-    color: "#484848"
+    color: "#484848",
   },
   recruiterContainer: {
     display: "flex",
     alignItems: "center",
-    marginBottom: 12
+    marginBottom: 12,
   },
   recruiterName: {
     display: "flex",
     alignItems: "center",
     fontSize: 18,
     fontWeight: 800,
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   },
   recruiterTitle: {
     display: "flex",
     alignItems: "center",
     fontSize: 14,
     fontWeight: 400,
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
   },
   similarJobsContainer: {
     marginTop: 100,
@@ -76,10 +79,10 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "start",
-    width: "100%"
+    width: "100%",
   },
   similarJobsTitle: {
-    fontSize: 18
+    fontSize: 18,
   },
   similarJobCard: {
     textDecoration: "none",
@@ -88,17 +91,17 @@ const useStyles = makeStyles(theme => ({
     paddingTop: 8,
     paddingBottom: 8,
     "&:hover": {
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   },
   similarJobTitle: {
     display: "flex",
-    marginBottom: 16
+    marginBottom: 16,
   },
   nameContainer: {
     display: "flex",
     flex: 1,
-    alignItems: "center"
+    alignItems: "center",
   },
   jobName: {
     display: "flex",
@@ -109,20 +112,20 @@ const useStyles = makeStyles(theme => ({
     marginRight: 16,
     overflow: "hidden",
     [theme.breakpoints.down("xs")]: {
-      fontSize: 16
-    }
+      fontSize: 16,
+    },
   },
   jobSalary: {
     minWidth: 100,
     fontSize: 16,
     fontWeight: 400,
     textAlign: "left",
-    color: theme.palette.secondary.main
+    color: theme.palette.secondary.main,
   },
   truncate: {
     overflow: "hidden",
     textOverflow: "ellipsis",
-    whiteSpace: "nowrap"
+    whiteSpace: "nowrap",
   },
   teamName: {
     display: "flex",
@@ -130,12 +133,12 @@ const useStyles = makeStyles(theme => ({
     fontSize: 16,
     overflow: "hidden",
     [theme.breakpoints.down("xs")]: {
-      fontSize: 16
-    }
-  }
+      fontSize: 16,
+    },
+  },
 }));
 
-const JobList: React.FC<InfiniteHitsProvided> = props => {
+const JobList: React.FC<InfiniteHitsProvided> = (props) => {
   const classes = useStyles();
   const { hits } = props;
 
@@ -168,7 +171,7 @@ const JobList: React.FC<InfiniteHitsProvided> = props => {
 
 const ConnectedJobList = connectInfiniteHits(JobList);
 
-const SearchBar: React.FC<SearchBoxProvided> = props => {
+const SearchBar: React.FC<SearchBoxProvided> = (props) => {
   return <div></div>;
 };
 const ConnectedSearchBar = connectSearchBox(SearchBar);
@@ -185,143 +188,143 @@ const JobSideCard: React.FC<Props> = ({ job }) => {
     console.warn(searchClient);
     !searchClient && loadAlgoliaCredential();
   }, [searchClient]);
-  // const history = useHistory();
-  // const { user, getApi } = useAuth();
-  // const { sb } = useChannel();
-  // const [loading, setLoading] = useState(false);
-  // const [channel, setChannel] = useState<SendBird.GroupChannel>();
+  const history = useHistory();
+  const { user, getApi } = useAuth();
+  const { sb } = useChannel();
+  const [loading, setLoading] = useState(false);
+  const [channel, setChannel] = useState<SendBird.GroupChannel>();
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 
-  // const createChannel = async (
-  //   members: string[],
-  //   data: Record<string, any>
-  // ): Promise<SendBird.GroupChannel> => {
-  //   return new Promise((resolve, reject) => {
-  //     const sb = SendBird.getInstance();
-  //     sb.GroupChannel.createChannelWithUserIds(
-  //       members,
-  //       false,
-  //       members.join("_"),
-  //       "",
-  //       JSON.stringify(data),
-  //       (channel, error) => {
-  //         error ? reject(error) : resolve(channel);
-  //       }
-  //     );
-  //   });
-  // };
+  const createChannel = async (
+    members: string[],
+    data: Record<string, any>
+  ): Promise<SendBird.GroupChannel> => {
+    return new Promise((resolve, reject) => {
+      const sb = SendBird.getInstance();
+      sb.GroupChannel.createChannelWithUserIds(
+        members,
+        false,
+        members.join("_"),
+        "",
+        JSON.stringify(data),
+        (channel, error) => {
+          error ? reject(error) : resolve(channel);
+        }
+      );
+    });
+  };
 
-  // const sendApplicationMessage = async (
-  //   channel: SendBird.GroupChannel,
-  //   newApplication: ApplicationMetaData
-  // ): Promise<
-  //   SendBird.UserMessage | SendBird.FileMessage | SendBird.AdminMessage
-  // > => {
-  //   const sb = SendBird.getInstance();
-  //   const params = new sb.UserMessageParams();
-  //   params.customType = MessageCustomType.Application;
-  //   params.message = "職缺詢問";
-  //   params.data = JSON.stringify(newApplication);
-  //   return new Promise((resolve, reject) => {
-  //     channel.sendUserMessage(params, (message, error) => {
-  //       error ? reject(error) : resolve(message);
-  //     });
-  //   });
-  // };
+  const sendApplicationMessage = async (
+    channel: SendBird.GroupChannel,
+    newApplication: ApplicationMetaData
+  ): Promise<
+    SendBird.UserMessage | SendBird.FileMessage | SendBird.AdminMessage
+  > => {
+    const sb = SendBird.getInstance();
+    const params = new sb.UserMessageParams();
+    params.customType = MessageCustomType.Application;
+    params.message = "職缺詢問";
+    params.data = JSON.stringify(newApplication);
+    return new Promise((resolve, reject) => {
+      channel.sendUserMessage(params, (message, error) => {
+        error ? reject(error) : resolve(message);
+      });
+    });
+  };
 
-  // const apply = async () => {
-  //   if (user && recruiter && sb) {
-  //     const members = [user.uuid, recruiter.uuid];
-  //     // Check there is an application or not
-  //     const filteredQuery = sb.GroupChannel.createMyGroupChannelListQuery();
-  //     filteredQuery.userIdsIncludeFilter = members;
-  //     filteredQuery.next(async groupChannels => {
-  //       let applicationChannel = groupChannels.find(
-  //         c =>
-  //           c.name === members.join("_") &&
-  //           c.members.some(m => m.userId === user.uuid) &&
-  //           c.members.some(m => m.userId === recruiter.uuid)
-  //       );
-  //       let newMetadata = {};
-  //       // If not found, create a new channel.
-  //       if (!applicationChannel) {
-  //         applicationChannel = await createChannel(members, {
-  //           teamName: team ? team.nickname : ""
-  //         });
-  //         newMetadata = {
-  //           applicantId: user.uuid,
-  //           recruiterId: recruiter.uuid,
-  //           teamName: team && team.nickname,
-  //           teamId: team && team.uuid
-  //         };
-  //       }
+  const apply = async () => {
+    if (user && recruiter && sb) {
+      const members = [user.uuid, recruiter.uuid];
+      // Check there is an application or not
+      const filteredQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+      filteredQuery.userIdsIncludeFilter = members;
+      filteredQuery.next(async (groupChannels) => {
+        let applicationChannel = groupChannels.find(
+          (c) =>
+            c.name === members.join("_") &&
+            c.members.some((m) => m.userId === user.uuid) &&
+            c.members.some((m) => m.userId === recruiter.uuid)
+        );
+        let newMetadata = {};
+        // If not found, create a new channel.
+        if (!applicationChannel) {
+          applicationChannel = await createChannel(members, {
+            teamName: team ? team.nickname : "",
+          });
+          newMetadata = {
+            applicantId: user.uuid,
+            recruiterId: recruiter.uuid,
+            teamName: team && team.nickname,
+            teamId: team && team.uuid,
+          };
+        }
 
-  //       // Add application
-  //       const channelApi = await getApi("Channel");
-  //       channelApi.addApplication({
-  //         newApplication: {
-  //           applicantUserId: user.uuid,
-  //           channelUrl: applicationChannel.url,
-  //           jobId
-  //         }
-  //       });
+        // Add application
+        const channelApi = await getApi("Channel");
+        channelApi.addApplication({
+          newApplication: {
+            applicantUserId: user.uuid,
+            channelUrl: applicationChannel.url,
+            jobId,
+          },
+        });
 
-  //       // Update jobs meta data
-  //       newMetadata[jobId] = "job";
-  //       applicationChannel.updateMetaData(newMetadata, true, () => {
-  //         // Do nothing.
-  //       });
+        // Update jobs meta data
+        newMetadata[jobId] = "job";
+        applicationChannel.updateMetaData(newMetadata, true, () => {
+          // Do nothing.
+        });
 
-  //       await to(
-  //         sendApplicationMessage(applicationChannel, {
-  //           jobId,
-  //           applicantId: user.uuid
-  //         })
-  //       );
+        await to(
+          sendApplicationMessage(applicationChannel, {
+            jobId,
+            applicantId: user.uuid,
+          })
+        );
 
-  //       history.push("/message/" + applicationChannel.url);
-  //     });
-  //   }
-  // };
+        history.push("/message/" + applicationChannel.url);
+      });
+    }
+  };
 
-  // useEffect(() => {
-  //   if (user && recruiter && sb) {
-  //     setLoading(true);
-  //     const recruiterId = recruiter.uuid;
-  //     const members = [user.uuid, recruiterId];
-  //     // Check there is an application or not
-  //     const filteredQuery = sb.GroupChannel.createMyGroupChannelListQuery();
-  //     filteredQuery.userIdsIncludeFilter = members;
-  //     filteredQuery.next(groupChannels => {
-  //       const applicationChannel = groupChannels.find(
-  //         c =>
-  //           c.name === members.join("_") &&
-  //           c.members.some(m => m.userId === user.uuid) &&
-  //           c.members.some(m => m.userId === recruiterId)
-  //       );
-  //       if (applicationChannel) {
-  //         applicationChannel.getMetaData([jobId], res => {
-  //           try {
-  //             res[jobId] === "job" && setChannel(applicationChannel);
-  //           } catch (err) {
-  //             return;
-  //           }
-  //           setLoading(false);
-  //         });
-  //       } else setLoading(false);
-  //     });
-  //   }
-  // }, [user, sb, recruiter, jobId]);
+  useEffect(() => {
+    if (user && recruiter && sb) {
+      setLoading(true);
+      const recruiterId = recruiter.uuid;
+      const members = [user.uuid, recruiterId];
+      // Check there is an application or not
+      const filteredQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+      filteredQuery.userIdsIncludeFilter = members;
+      filteredQuery.next((groupChannels) => {
+        const applicationChannel = groupChannels.find(
+          (c) =>
+            c.name === members.join("_") &&
+            c.members.some((m) => m.userId === user.uuid) &&
+            c.members.some((m) => m.userId === recruiterId)
+        );
+        if (applicationChannel) {
+          applicationChannel.getMetaData([jobId], (res) => {
+            try {
+              res[jobId] === "job" && setChannel(applicationChannel);
+            } catch (err) {
+              return;
+            }
+            setLoading(false);
+          });
+        } else setLoading(false);
+      });
+    }
+  }, [user, sb, recruiter, jobId]);
 
-  // const chat = async () => {
-  //   if (!user) {
-  //     setIsLoginDialogOpen(true);
-  //   } else if (channel) {
-  //     history.push("/message/" + channel.url);
-  //   } else {
-  //     apply();
-  //   }
-  // };
+  const chat = async () => {
+    if (!user) {
+      setIsLoginDialogOpen(true);
+    } else if (channel) {
+      history.push("/message/" + channel.url);
+    } else {
+      apply();
+    }
+  };
 
   return (
     <div>
@@ -350,7 +353,7 @@ const JobSideCard: React.FC<Props> = ({ job }) => {
           {job.contact && (
             <div className={classes.contact}>聯絡方式・{job.contact}</div>
           )}
-          {/* {!loading && recruiter.uuid !== user?.uuid && (
+          {/* {!loading && recruiter && recruiter.uuid !== user?.uuid && (
             <Button className={classes.button} onClick={chat}>
               {channel ? "繼續詢問" : "詢問"}
             </Button>

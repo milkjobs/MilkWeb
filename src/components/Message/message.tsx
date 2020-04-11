@@ -4,7 +4,7 @@ import to from "await-to-js";
 import { ResumeDialog } from "components/Util";
 import React, { useCallback, useEffect, useState } from "react";
 import { useAuth } from "stores";
-import { ApplicationMessage } from ".";
+import { ApplicationMessage, FileMessage } from ".";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,6 +40,8 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: 16,
       paddingLeft: 16,
       paddingRight: 16,
+      paddingTop: 8,
+      paddingBottom: 8,
       fontSize: 14,
       backgroundColor: "#eee",
       color: theme.palette.text.primary,
@@ -161,21 +163,8 @@ const Message: React.FC<Props> = (props) => {
       </div>
     );
 
-  return !fromMe ? (
-    <div className={classes.message}>
-      <img alt="" src={profileUrl} width={40} height={40} />
-      <img src={message.url} className={classes.imageMessage} />
-    </div>
-  ) : (
-    <div
-      style={{
-        justifyContent: "flex-end",
-      }}
-      className={classes.message}
-    >
-      <img src={message.url} className={classes.imageMessage} />
-      <img alt="" src={profileUrl} width={40} height={40} />
-    </div>
+  return (
+    <FileMessage fromMe={fromMe} profileUrl={profileUrl} message={message} />
   );
 };
 

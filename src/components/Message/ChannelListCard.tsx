@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingRight: 24,
       display: "flex",
       flexDirection: "row",
-      borderBottom: "1px solid #EBEBEB"
+      borderBottom: "1px solid #EBEBEB",
     },
     name: {
       marginRight: "auto",
@@ -23,17 +23,17 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.primary,
       overflow: "hidden",
       textOverflow: "ellipsis",
-      whiteSpace: "nowrap"
+      whiteSpace: "nowrap",
     },
     badge: {
       marginRight: theme.spacing(1),
       display: "flex",
-      alignItems: "center"
+      alignItems: "center",
     },
     date: {
       fontSize: 12,
       marginLeft: "auto",
-      color: theme.palette.text.hint
+      color: theme.palette.text.hint,
     },
     recentMessage: {
       fontSize: 12,
@@ -41,8 +41,8 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.primary,
       whiteSpace: "nowrap",
       overflow: "hidden",
-      textOverflow: "ellipsis"
-    }
+      textOverflow: "ellipsis",
+    },
   })
 );
 
@@ -52,10 +52,13 @@ interface Props {
   teamName: string;
   selected: boolean;
   unreadMessageCount: number;
-  lastMessage: any;
+  lastMessage:
+    | SendBird.UserMessage
+    | SendBird.FileMessage
+    | SendBird.AdminMessage;
 }
 
-const ChannelListCard: React.FC<Props> = props => {
+const ChannelListCard: React.FC<Props> = (props) => {
   const classes = useStyles();
   const {
     name,
@@ -63,7 +66,7 @@ const ChannelListCard: React.FC<Props> = props => {
     teamName,
     selected,
     unreadMessageCount,
-    lastMessage
+    lastMessage,
   } = props;
   return (
     <div
@@ -88,7 +91,7 @@ const ChannelListCard: React.FC<Props> = props => {
           flex: 1,
           marginLeft: 8,
           justifyContent: "space-around",
-          overflow: "hidden"
+          overflow: "hidden",
         }}
       >
         <div
@@ -97,7 +100,7 @@ const ChannelListCard: React.FC<Props> = props => {
             flex: 1,
             flexDirection: "row",
             marginBottom: 4,
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <div className={classes.name}>
@@ -110,7 +113,7 @@ const ChannelListCard: React.FC<Props> = props => {
           </div>
         </div>
         <div className={classes.recentMessage}>
-          {lastMessage ? lastMessage.message : ""}
+          {"message" in lastMessage ? lastMessage.message : lastMessage.name}
         </div>
       </div>
     </div>

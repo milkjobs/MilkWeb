@@ -79,7 +79,6 @@ const CommonWordsPopper: React.FC<PopperProps> = ({ sendMessage }) => {
     const words = isRecruiter
       ? localStorage.getItem("RecruiterCommonWords")
       : localStorage.getItem("ApplicantCommonWords");
-    console.warn(words);
     if (words && JSON.parse(words).length) setCommonWords(JSON.parse(words));
     else {
       isRecruiter

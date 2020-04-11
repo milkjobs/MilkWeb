@@ -3,11 +3,12 @@ import {
   ExperienceLevel,
   JobType,
   SalaryType,
-  TeamSize
+  TeamSize,
 } from "@frankyjuang/milkapi-client";
 import { MobileOS } from "helpers";
 import { useState } from "react";
 
+const FileMimeType = ".xlsx,.xls,.doc, .docx,.ppt, .pptx,.txt,.pdf";
 const PdfMimeType = "application/pdf";
 const ImageMimeType = "image/*";
 const ImagePdfMimeType = "image/*,application/pdf";
@@ -17,11 +18,11 @@ const TeamSizeOptions = [
   { value: TeamSize.Small, label: "21 ~ 100 人" },
   { value: TeamSize.Medium, label: "101 ~ 500 人" },
   { value: TeamSize.Large, label: "501 ~ 1000 人" },
-  { value: TeamSize.ExtraLarge, label: "1001 人以上" }
+  { value: TeamSize.ExtraLarge, label: "1001 人以上" },
 ];
 
 const TeamSizeConvertor = (teamSize: TeamSize | undefined) => {
-  const filterValue = TeamSizeOptions.filter(o => o.value === teamSize);
+  const filterValue = TeamSizeOptions.filter((o) => o.value === teamSize);
   if (filterValue.length) {
     return filterValue[0].label;
   }
@@ -31,11 +32,11 @@ const TeamSizeConvertor = (teamSize: TeamSize | undefined) => {
 const JobTypeOptions = [
   { value: JobType.Fulltime, label: "正職" },
   { value: JobType.Internship, label: "實習" },
-  { value: JobType.Parttime, label: "兼職" }
+  { value: JobType.Parttime, label: "兼職" },
 ];
 
 const JobTypeConvertor = (jobType: JobType | undefined) => {
-  const filterValue = JobTypeOptions.filter(o => o.value === jobType);
+  const filterValue = JobTypeOptions.filter((o) => o.value === jobType);
   if (filterValue.length) {
     return filterValue[0].label;
   }
@@ -47,14 +48,14 @@ const EducationLevelOptions = [
   { value: EducationLevel.HighSchool, label: "高中／高職" },
   { value: EducationLevel.Bachelor, label: "大學／專科" },
   { value: EducationLevel.Master, label: "碩士" },
-  { value: EducationLevel.PhD, label: "博士" }
+  { value: EducationLevel.PhD, label: "博士" },
 ];
 
 const EducationLevelConvertor = (
   educationLevel: EducationLevel | undefined
 ) => {
   const filterValue = EducationLevelOptions.filter(
-    o => o.value === educationLevel
+    (o) => o.value === educationLevel
   );
   if (filterValue.length) {
     return filterValue[0].label;
@@ -66,14 +67,14 @@ const ExperienceLevelOptions = [
   { value: ExperienceLevel.Any, label: "不限" },
   { value: ExperienceLevel.Entry, label: "入門" },
   { value: ExperienceLevel.Mid, label: "中階" },
-  { value: ExperienceLevel.Senior, label: "資深" }
+  { value: ExperienceLevel.Senior, label: "資深" },
 ];
 
 const ExperienceLevelConvertor = (
   experienceLevel: ExperienceLevel | undefined
 ) => {
   const filterValue = ExperienceLevelOptions.filter(
-    o => o.value === experienceLevel
+    (o) => o.value === experienceLevel
   );
   if (filterValue.length) {
     return filterValue[0].label;
@@ -181,7 +182,7 @@ const useLocalStorage = (key, initialValue) => {
 
   // ... persists the new value to localStorage.
 
-  const setValue = value => {
+  const setValue = (value) => {
     try {
       // Allow value to be a function so we have same API as useState
 
@@ -216,6 +217,7 @@ export {
   ExperienceLevelConvertor,
   ExperienceLevelOptions,
   getMobileOS,
+  FileMimeType,
   ImageMimeType,
   ImagePdfMimeType,
   isIntlPhoneNumber,
@@ -230,5 +232,5 @@ export {
   salaryToString,
   TeamSizeConvertor,
   TeamSizeOptions,
-  useLocalStorage
+  useLocalStorage,
 };
