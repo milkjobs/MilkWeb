@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 8,
     fontSize: 18,
     color: theme.palette.text.secondary,
-    whiteSpace: "pre",
+    whiteSpace: "pre-line",
   },
 }));
 

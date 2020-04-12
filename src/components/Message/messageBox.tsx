@@ -27,11 +27,14 @@ import ImageOutlinedIcon from "@material-ui/icons/ImageOutlined";
 import AttachFileOutlinedIcon from "@material-ui/icons/AttachFileOutlined";
 import { Job } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
-import Popper, { PopperPlacementType } from "@material-ui/core/Popper";
+import Popper from "@material-ui/core/Popper";
 import Typography from "@material-ui/core/Typography";
 import Fade from "@material-ui/core/Fade";
 import Paper from "@material-ui/core/Paper";
 import { Slide } from "@material-ui/core";
+import { PublicApplicantBasicInfo } from "components/Profile";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import moment from "moment";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -81,6 +84,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: "#484848",
       marginRight: 16,
       textDecoration: "none",
+      cursor: "pointer",
     },
     jobSalary: {
       display: "flex",
@@ -133,9 +137,26 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.primary,
       padding: 4,
       cursor: "pointer",
+      marginLeft: 16,
     },
     typography: {
       padding: theme.spacing(2),
+    },
+    backHeader: {
+      display: "flex",
+      flexDirection: "row",
+      padding: 16,
+      alignItems: "center",
+      cursor: "pointer",
+    },
+    publicProfileContainer: {
+      alignContent: "stretch",
+      alignItems: "center",
+      display: "flex",
+      flexDirection: "column",
+      flexGrow: 1,
+      overflow: "auto",
+      paddingBottom: 40,
     },
   })
 );
@@ -235,6 +256,7 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
   const theirLastSeenTime = useRef<number>();
   const [channelJobs, setChannelJobs] = useState<Job[]>([]);
   const [resumeKey, setResumeKey] = useState<string>();
+  const [showPublicProfile, setShowPublicProfile] = useState(false);
 
   const loadPreviousMessages = (query: PreviousMessageListQuery) => {
     return new Promise<SendBirdMessage[]>((resolve, reject) => {
@@ -444,6 +466,7 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
     user &&
       channel &&
       setThey(channel.members.find((m) => m.userId !== user.uuid));
+    console.warn(channel?.members);
     user && channel && getChannelMetaData();
   }, [channel, user]);
 
@@ -482,101 +505,130 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
     init();
   }, [channelUrl, getTheirLastSeenTime, sb]);
 
-  // <Slide direction="left" in={true} mountOnEnter unmountOnExit>
-  //   <div className={classes.container}>
-  //   </div>
-  // </Slide>
   return (
-    <div className={classes.container}>
-      <AlertDialog
-        isOpen={resumeDialogOpen}
-        close={() => setResumeDialogOpen(false)}
-        type={AlertType.NoResume}
-      />
-      <div className={classes.jobContainer}>
-        <Link
-          to={"/public-profile/" + they?.userId}
-          className={classes.jobName}
-          target={"_blank"}
-        >
-          {they?.nickname || ""}
-        </Link>
-        {isRecruiter && (
-          <ResumeButton resumeKey={resumeKey} channelUrl={channel?.url} />
-        )}
-        {channelJobs.length > 0 && (
-          <div className={classes.jobHintContainer}>
-            <div className={classes.jobHintTitle}>{"詢問職缺 :"}</div>
-            <Link
-              to={"/job/" + channelJobs[0].uuid}
-              className={classes.jobHintLink}
-              target="_blank"
-            >
-              {channelJobs[0].name}
-            </Link>
+    <>
+      <Slide
+        direction="left"
+        in={showPublicProfile}
+        mountOnEnter
+        unmountOnExit
+        style={{ backgroundColor: "white" }}
+      >
+        <div className={classes.container}>
+          <div
+            className={classes.backHeader}
+            onClick={() => setShowPublicProfile(false)}
+          >
+            <ArrowBackIosIcon />
+            <div>返回</div>
           </div>
-        )}
-      </div>
-      <div className={classes.messages} ref={messagesEl}>
-        <div ref={ref}></div>
-        <MessageList
-          messages={messages.current}
-          userId={user?.uuid || ""}
-          theirLastSeenTime={theirLastSeenTime}
-        />
-      </div>
-      <div className={classes.messageInput}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginLeft: 8,
-            marginTop: 4,
-            marginBottom: 6,
-          }}
-        >
-          {!isRecruiter && (
-            <Button onClick={sendResume} className={classes.messageButton}>
-              發送履歷
-            </Button>
-          )}
-          <CommonWordsPopper sendMessage={sendMessage} />
-          <label style={{ marginLeft: 8, marginRight: 8, cursor: "pointer" }}>
-            <input
-              hidden
-              accept={ImageMimeType}
-              onChange={(e) => {
-                e.target.files && sendFileMessage(e.target.files[0]);
-              }}
-              type="file"
-            />
-            <ImageOutlinedIcon />
-          </label>
-          <label style={{ marginLeft: 8, marginRight: 8, cursor: "pointer" }}>
-            <input
-              hidden
-              accept={FileMimeType}
-              onChange={(e) => {
-                e.target.files && sendFileMessage(e.target.files[0]);
-              }}
-              type="file"
-            />
-            <AttachFileOutlinedIcon />
-          </label>
+          <div className={classes.publicProfileContainer}>
+            {they && <PublicApplicantBasicInfo userId={they?.userId} />}
+          </div>
         </div>
-        <Input
-          autoFocus
-          className={classes.textField}
-          disableUnderline={true}
-          placeholder="Enter 鍵送出訊息"
-          multiline
-          onChange={(e) => e.target.value !== "\n" && setInput(e.target.value)}
-          onKeyDown={onKeyDown}
-          rows="4"
-          value={input}
+      </Slide>
+      <div
+        className={classes.container}
+        style={{ visibility: showPublicProfile ? "hidden" : "visible" }}
+      >
+        <AlertDialog
+          isOpen={resumeDialogOpen}
+          close={() => setResumeDialogOpen(false)}
+          type={AlertType.NoResume}
         />
+        <div className={classes.jobContainer}>
+          <div
+            className={classes.jobName}
+            onClick={() => setShowPublicProfile(true)}
+          >
+            {they?.nickname || ""}
+          </div>
+          <div>
+            {they &&
+              (they.connectionStatus === "online"
+                ? "上線中"
+                : moment(new Date(they.lastSeenAt)).fromNow())}
+          </div>
+          {/* </Link> */}
+          {isRecruiter && (
+            <ResumeButton resumeKey={resumeKey} channelUrl={channel?.url} />
+          )}
+          {channelJobs.length > 0 && (
+            <div className={classes.jobHintContainer}>
+              <div className={classes.jobHintTitle}>{"詢問職缺 :"}</div>
+              <Link
+                to={"/job/" + channelJobs[0].uuid}
+                className={classes.jobHintLink}
+                target="_blank"
+              >
+                {channelJobs[0].name}
+              </Link>
+            </div>
+          )}
+        </div>
+        <div className={classes.messages} ref={messagesEl}>
+          <div ref={ref}></div>
+          <MessageList
+            messages={messages.current}
+            userId={user?.uuid || ""}
+            theirLastSeenTime={theirLastSeenTime}
+          />
+        </div>
+        <div className={classes.messageInput}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginLeft: 8,
+              marginTop: 4,
+              marginBottom: 6,
+            }}
+          >
+            {!isRecruiter && (
+              <Button onClick={sendResume} className={classes.messageButton}>
+                發送履歷
+              </Button>
+            )}
+            <CommonWordsPopper sendMessage={sendMessage} />
+            <label style={{ marginLeft: 8, marginRight: 8, cursor: "pointer" }}>
+              <input
+                hidden
+                accept={ImageMimeType}
+                onChange={(e) => {
+                  e.target.files && sendFileMessage(e.target.files[0]);
+                }}
+                type="file"
+              />
+              <ImageOutlinedIcon />
+            </label>
+            <label style={{ marginLeft: 8, marginRight: 8, cursor: "pointer" }}>
+              <input
+                hidden
+                accept={FileMimeType}
+                onChange={(e) => {
+                  e.target.files && sendFileMessage(e.target.files[0]);
+                }}
+                type="file"
+              />
+              <AttachFileOutlinedIcon />
+            </label>
+          </div>
+          <Input
+            autoFocus
+            className={classes.textField}
+            disableUnderline={true}
+            placeholder="Enter 鍵送出訊息"
+            multiline
+            onChange={(e) =>
+              e.target.value !== "\n" && setInput(e.target.value)
+            }
+            onKeyDown={onKeyDown}
+            rows="4"
+            value={input}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
