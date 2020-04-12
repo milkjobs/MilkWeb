@@ -48,7 +48,18 @@ const getDefaultBody = (url: string) =>
 
 const app = express();
 
-app.use(express.static(buildDir));
+app.use(
+  express.static(buildDir, {
+    dotfiles: "allow",
+    setHeaders: (res, path) => {
+      if (path.endsWith("apple-app-site-association")) {
+        // Set content type of AASA to json
+        // https://developer.apple.com/library/archive/documentation/General/Conceptual/AppSearch/UniversalLinks.html
+        res.type("application/json");
+      }
+    }
+  })
+);
 
 app.get("/circle/:id", async (request, response) => {
   let body: string;

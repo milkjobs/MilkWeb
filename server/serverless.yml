@@ -23,6 +23,9 @@ provider:
     restApi: true
   environment:
     NODE_ENV: production
+  apiGateway:
+    binaryMediaTypes:
+      - "*/*"
 package:
   include:
     - build/**
