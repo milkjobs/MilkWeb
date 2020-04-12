@@ -5,11 +5,9 @@
   "private": true,
   "scripts": {
     "start": "SKIP_PREFLIGHT_CHECK=true react-scripts --max_old_space_size=12288 start",
-    "start:server": "ts-node-dev --project server/tsconfig.json server/app.local.ts",
-    "build-production": "REACT_APP_ENV=production react-scripts --max_old_space_size=12288 build",
-    "build-staging": "REACT_APP_ENV=staging react-scripts --max_old_space_size=12288 build",
-    "deploy-production": "./deploy.sh E19KDDT43S99QX",
-    "deploy-staging": "firebase deploy --project=staging -m $(git rev-parse --short HEAD)",
+    "build:production": "REACT_APP_ENV=production react-scripts --max_old_space_size=12288 build",
+    "build:staging": "REACT_APP_ENV=staging react-scripts --max_old_space_size=12288 build",
+    "deploy:staging": "firebase deploy --project=staging -m $(git rev-parse --short HEAD)",
     "sitemap": "ts-node-dev --project tsconfig.sitemap.json sitemap.ts"
   },
   "browserslist": {
@@ -45,7 +43,6 @@
     "intersection-observer": "^0.7.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
-    "node-fetch": "^2.6.0",
     "prop-types": "^15.7.2",
     "qrcode.react": "^1.0.0",
     "qs": "^6.9.1",
@@ -84,7 +81,6 @@
     "@types/lodash": "^4.14.149",
     "@types/mysql": "^2.15.9",
     "@types/node": "^13.9.2",
-    "@types/node-fetch": "^2.5.6",
     "@types/qrcode.react": "^1.0.0",
     "@types/qs": "^6.9.1",
     "@types/react": "^16.9.23",

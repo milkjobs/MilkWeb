@@ -1,8 +1,8 @@
 service: milkweb
 plugins:
-  - serverless-plugin-typescript
   - serverless-domain-manager
   - serverless-plugin-git-variables
+  - serverless-plugin-typescript
 custom:
   customDomain:
     domainName: web.production.milk.jobs
@@ -20,7 +20,7 @@ provider:
   stackName: milkweb-serverless-production
   deploymentBucket: milkweb-serverless-production
   logs:
-    httpApi: true
+    restApi: true
   environment:
     NODE_ENV: production
 package:
@@ -35,6 +35,9 @@ functions:
     memorySize: 256
     reservedConcurrency: 30
     events:
+      - http:
+          path: /
+          method: ANY
       - http:
           path: /{proxy+}
           method: ANY
