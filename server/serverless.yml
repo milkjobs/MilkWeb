@@ -25,11 +25,7 @@ provider:
     NODE_ENV: production
 package:
   include:
-    - include-me.js
-    - include-me-dir/**
-  exclude:
-    - exclude-me.js
-    - exclude-me-dir/**
+    - build/**
 functions:
   main:
     name: milkweb-production

@@ -20,7 +20,7 @@ const apiBaseUrl =
   process.env.NODE_ENV === "production"
     ? "https://api.production.milk.jobs/"
     : "https://api.staging.milk.jobs/";
-const buildDir = path.resolve(__dirname, "../build");
+const buildDir = path.resolve(__dirname, "build");
 
 const getBody = async ({ url, title, description, image }: Metadata) => {
   const indexPath = path.resolve(buildDir, "index.html");

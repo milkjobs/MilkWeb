@@ -13,8 +13,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "jsx": "preserve"
   },
-  "include": ["app.ts", "app.local.ts"]
+  "include": ["app.ts", "app.local.ts", "lambda.ts"]
 }

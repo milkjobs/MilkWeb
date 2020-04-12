@@ -40,7 +40,6 @@
     "await-to-js": "^2.1.1",
     "branch-sdk": "^2.52.7",
     "date-fns": "^2.0.0-beta.5",
-    "express": "^4.17.1",
     "firebase": "^7.11.0",
     "fuse.js": "^3.6.1",
     "intersection-observer": "^0.7.0",
@@ -82,7 +81,6 @@
   },
   "devDependencies": {
     "@mysql/xdevapi": "^8.0.19",
-    "@types/aws-serverless-express": "^3.3.3",
     "@types/lodash": "^4.14.149",
     "@types/mysql": "^2.15.9",
     "@types/node": "^13.9.2",
@@ -104,7 +102,6 @@
     "@types/uuid": "^7.0.2",
     "@typescript-eslint/eslint-plugin": "^2.24.0",
     "@typescript-eslint/parser": "^2.24.0",
-    "aws-serverless-express": "^3.3.8",
     "depcheck": "^0.9.2",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
@@ -114,7 +111,6 @@
     "eslint-plugin-react-hooks": "^2.5.0",
     "mysql": "^2.18.1",
     "prettier": "^1.19.1",
-    "serverless-plugin-typescript": "^1.1.9",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.8.3",
     "xmlbuilder": "^15.0.0"

@@ -1,12 +1,19 @@
-import lambda from "aws-lambda";
+import {
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult,
+  Handler
+} from "aws-lambda";
 import awsServerlessExpress from "aws-serverless-express";
 import app from "./app";
 
 const server = awsServerlessExpress.createServer(app);
 
-export async function main(
-  event: lambda.APIGatewayProxyEvent,
-  context: lambda.Context
-) {
-  awsServerlessExpress.proxy(server, event, context);
-}
+const main: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = (
+  event,
+  context,
+  callback
+) => {
+  awsServerlessExpress.proxy(server, event, context, "CALLBACK", callback);
+};
+
+export { main };
