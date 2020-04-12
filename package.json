@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "start": "SKIP_PREFLIGHT_CHECK=true react-scripts --max_old_space_size=12288 start",
+    "start:server": "ts-node-dev --project server/tsconfig.json server/app.local.ts",
     "build-production": "REACT_APP_ENV=production react-scripts --max_old_space_size=12288 build",
     "build-staging": "REACT_APP_ENV=staging react-scripts --max_old_space_size=12288 build",
     "deploy-production": "./deploy.sh E19KDDT43S99QX",
@@ -81,9 +82,11 @@
   },
   "devDependencies": {
     "@mysql/xdevapi": "^8.0.19",
+    "@types/aws-serverless-express": "^3.3.3",
     "@types/lodash": "^4.14.149",
     "@types/mysql": "^2.15.9",
     "@types/node": "^13.9.2",
+    "@types/node-fetch": "^2.5.6",
     "@types/qrcode.react": "^1.0.0",
     "@types/qs": "^6.9.1",
     "@types/react": "^16.9.23",
@@ -101,6 +104,7 @@
     "@types/uuid": "^7.0.2",
     "@typescript-eslint/eslint-plugin": "^2.24.0",
     "@typescript-eslint/parser": "^2.24.0",
+    "aws-serverless-express": "^3.3.8",
     "depcheck": "^0.9.2",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
@@ -110,6 +114,7 @@
     "eslint-plugin-react-hooks": "^2.5.0",
     "mysql": "^2.18.1",
     "prettier": "^1.19.1",
+    "serverless-plugin-typescript": "^1.1.9",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.8.3",
     "xmlbuilder": "^15.0.0"

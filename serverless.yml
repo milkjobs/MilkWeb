@@ -1,0 +1,44 @@
+service: milkweb
+plugins:
+  - serverless-plugin-typescript
+  - serverless-domain-manager
+  - serverless-plugin-git-variables
+custom:
+  customDomain:
+    domainName: web.production.milk.jobs
+    stage: production
+    certificateName: milk.jobs
+    endpointType: regional
+    createRoute53Record: false
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ap-northeast-1
+  endpointType: regional
+  stage: production
+  apiName: milkweb-production
+  stackName: milkweb-serverless-production
+  deploymentBucket: milkweb-serverless-production
+  logs:
+    httpApi: true
+  environment:
+    NODE_ENV: production
+package:
+  include:
+    - include-me.js
+    - include-me-dir/**
+  exclude:
+    - exclude-me.js
+    - exclude-me-dir/**
+functions:
+  main:
+    name: milkweb-production
+    description: ${git:sha1} - ${git:branch}
+    handler: lambda.main
+    timeout: 30
+    memorySize: 256
+    reservedConcurrency: 30
+    events:
+      - http:
+          path: /{proxy+}
+          method: ANY
