@@ -128,6 +128,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.hint,
       padding: 4,
       cursor: "pointer",
+      marginLeft: 16,
     },
     resumeButton: {
       borderWidth: 0.5,
@@ -466,7 +467,6 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
     user &&
       channel &&
       setThey(channel.members.find((m) => m.userId !== user.uuid));
-    console.warn(channel?.members);
     user && channel && getChannelMetaData();
   }, [channel, user]);
 
@@ -572,6 +572,7 @@ const MessageBox: React.FC<Props> = ({ channelUrl, isRecruiter }) => {
             messages={messages.current}
             userId={user?.uuid || ""}
             theirLastSeenTime={theirLastSeenTime}
+            channel={channel}
           />
         </div>
         <div className={classes.messageInput}>

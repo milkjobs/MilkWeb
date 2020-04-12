@@ -4,6 +4,7 @@ export * from "./ChannelListCard";
 export * from "./ChatRoom";
 export * from "./CommonWordsPopper";
 export * from "./Message";
+export * from "./TextMessage";
 export * from "./MessageBox";
 export * from "./MessageList";
 export * from "./SampleMessageBox";

@@ -22,12 +22,14 @@ interface Props {
   messages: (SendBird.UserMessage | SendBird.FileMessage)[];
   userId: string;
   theirLastSeenTime: React.MutableRefObject<number | undefined>;
+  channel?: SendBird.GroupChannel;
 }
 
 const MessageList: React.FC<Props> = ({
   userId,
   messages,
   theirLastSeenTime,
+  channel,
 }) => {
   const classes = useStyles();
 
@@ -42,6 +44,7 @@ const MessageList: React.FC<Props> = ({
             profileUrl={msg.sender.profileUrl}
             message={msg}
             fromMe={msg.sender.userId === userId}
+            channel={channel}
           />
         ))}
       {theirLastSeenTime.current !== undefined &&

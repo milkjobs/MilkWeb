@@ -1,10 +1,14 @@
-import { MessageCustomType } from "@frankyjuang/milkapi-client";
+import {
+  MessageCustomType,
+  SystemMessageCustomType,
+} from "@frankyjuang/milkapi-client";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import to from "await-to-js";
 import { ResumeDialog } from "components/Util";
 import React, { useCallback, useEffect, useState } from "react";
 import { useAuth } from "stores";
-import { ApplicationMessage, FileMessage } from ".";
+import { ApplicationMessage, FileMessage, TextMessage } from ".";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -14,6 +18,8 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: "center",
     },
     messageBody: {
+      textDecoration: "none",
+      color: theme.palette.text.primary,
       width: "auto",
       display: "flex",
       alignItems: "center",
@@ -62,14 +68,17 @@ interface Props {
   profileUrl: string;
   message: SendBird.UserMessage | SendBird.FileMessage;
   fromMe: boolean;
+  channel?: SendBird.GroupChannel;
 }
 
 const Message: React.FC<Props> = (props) => {
   // Was the message sent by the current user. If so, add a css class
   const classes = useStyles();
   const { getApi } = useAuth();
-  const { fromMe, profileUrl, message } = props;
+  const { fromMe, profileUrl, message, channel } = props;
   const [resumeUrl, setResumeUrl] = useState<string>();
+  const [postId, setPostId] = useState<string>();
+  const [bottleId, setBottleId] = useState<string>();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = () => {
@@ -78,6 +87,16 @@ const Message: React.FC<Props> = (props) => {
   const handleClose = () => {
     setIsOpen(false);
   };
+
+  const getBottleId = useCallback(async () => {
+    const data = JSON.parse(message.data);
+    setBottleId(data["bottleId"]);
+  }, [getApi, message.channelUrl, message.data]);
+
+  const getPostId = useCallback(async () => {
+    const data = JSON.parse(message.data);
+    setPostId(data["postId"]);
+  }, [getApi, message.channelUrl, message.data]);
 
   const getResumeUrl = useCallback(async () => {
     const data = JSON.parse(message.data);
@@ -95,7 +114,13 @@ const Message: React.FC<Props> = (props) => {
     if (message.customType === MessageCustomType.Resume) {
       getResumeUrl();
     }
-  }, [getResumeUrl, message.customType]);
+    if (message.customType === SystemMessageCustomType.PostReply) {
+      getPostId();
+    }
+    if (message.customType === SystemMessageCustomType.BottleReply) {
+      getBottleId();
+    }
+  }, [getResumeUrl, getPostId, getBottleId, message.customType]);
 
   if (
     message.customType === MessageCustomType.Application &&
@@ -143,11 +168,17 @@ const Message: React.FC<Props> = (props) => {
     );
   }
 
-  if ("message" in message)
+  if (
+    message.customType === SystemMessageCustomType.BottleReply &&
+    "message" in message &&
+    bottleId
+  ) {
     return !fromMe ? (
       <div className={classes.message}>
         <img alt="" src={profileUrl} width={40} height={40} />
-        <div className={classes.messageBody}>{message.message}</div>
+        <Link to={"/bottle/" + bottleId} className={classes.messageBody}>
+          {message.message}
+        </Link>
       </div>
     ) : (
       <div
@@ -162,7 +193,44 @@ const Message: React.FC<Props> = (props) => {
         <img alt="" src={profileUrl} width={40} height={40} />
       </div>
     );
+  }
 
+  if (
+    message.customType === SystemMessageCustomType.PostReply &&
+    "message" in message &&
+    postId
+  ) {
+    return !fromMe ? (
+      <div className={classes.message}>
+        <img alt="" src={profileUrl} width={40} height={40} />
+        <Link to={"/circle/" + postId} className={classes.messageBody}>
+          {message.message}
+        </Link>
+      </div>
+    ) : (
+      <div
+        style={{
+          justifyContent: "flex-end",
+        }}
+        className={classes.message}
+      >
+        <div className={classes.messageBody} style={{ textAlign: "right" }}>
+          {message.message}
+        </div>
+        <img alt="" src={profileUrl} width={40} height={40} />
+      </div>
+    );
+  }
+
+  if ("message" in message)
+    return (
+      <TextMessage
+        fromMe={fromMe}
+        profileUrl={profileUrl}
+        message={message}
+        channel={channel}
+      />
+    );
   return (
     <FileMessage fromMe={fromMe} profileUrl={profileUrl} message={message} />
   );
