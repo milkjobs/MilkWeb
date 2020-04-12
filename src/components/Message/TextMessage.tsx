@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: "left",
       overflowWrap: "anywhere",
       maxWidth: "60%",
-      whiteSpace: "pre",
+      whiteSpace: "pre-line",
     },
     typography: {
       padding: theme.spacing(2),
