@@ -1,3 +1,4 @@
+import { Job, Post, Team } from "@frankyjuang/milkapi-client";
 import express from "express";
 import fs from "fs";
 import fetch from "node-fetch";
@@ -56,7 +57,7 @@ app.get("/circle/:id", async (request, response) => {
     const postId = request.params.id;
     const url = urljoin(apiBaseUrl, "posts", postId);
     const res = await fetch(url);
-    const post = await res.json();
+    const post: Post = await res.json();
     body = await getBody({
       url: request.url,
       title: post.text.split("\n")[0],
@@ -77,12 +78,51 @@ app.get("/job/:id", async (request, response) => {
     const jobId = request.params.id;
     const url = urljoin(apiBaseUrl, "jobs", jobId, "anonymous");
     const res = await fetch(url);
-    const job = await res.json();
+    const job: Job = await res.json();
+    const teamName = job.team ? `・${job.team.nickname}` : "";
     body = await getBody({
       url: request.url,
-      title: `${job.name}－${job.team.nickname}`,
-      description: job.description,
-      image: job.team.logoUrl
+      title: `${job.name}${teamName}－牛奶找工作`,
+      description: job.description || "尚無詳情",
+      image: job.team?.logoUrl
+    });
+  } catch {
+    body = await getDefaultBody(request.url);
+  }
+
+  response.send(body);
+});
+
+app.get("/team/:id", async (request, response) => {
+  let body: string;
+
+  try {
+    const teamId = request.params.id;
+    const url = urljoin(apiBaseUrl, "teams", teamId);
+    const res = await fetch(url);
+    const team: Team = await res.json();
+    body = await getBody({
+      url: request.url,
+      title: `${team.nickname}－牛奶找工作`,
+      description: team.introduction || "尚無介紹",
+      image: team.logoUrl
+    });
+  } catch {
+    body = await getDefaultBody(request.url);
+  }
+
+  response.send(body);
+});
+
+app.get("/awesome/:name", async (request, response) => {
+  let body: string;
+
+  try {
+    const name = request.params.name;
+    body = await getBody({
+      url: request.url,
+      title: `${name}－牛奶找工作`,
+      description: `為了幫助學生更了解自己有哪些選擇，我們整理了${name}畢業生最常去的公司。先從這些公司開始應徵吧！`
     });
   } catch {
     body = await getDefaultBody(request.url);
