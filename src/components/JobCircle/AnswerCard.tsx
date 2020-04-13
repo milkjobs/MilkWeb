@@ -15,8 +15,30 @@ import { Link } from "react-router-dom";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import to from "await-to-js";
 
 const useStyles = makeStyles((theme) => ({
+  actionButton: {
+    flex: 1,
+    fontSize: 14,
+    display: "flex",
+    alignItems: "center",
+    cursor: "pointer",
+    justifyContent: "center",
+    marginTop: 8,
+  },
+  actionButtonLike: {
+    flex: 1,
+    color: theme.palette.secondary.main,
+    fontSize: 14,
+    display: "flex",
+    alignItems: "center",
+    cursor: "pointer",
+    justifyContent: "center",
+    marginTop: 8,
+  },
   postContainer: {
     margin: 8,
     borderRadius: 8,
@@ -148,7 +170,37 @@ const AnswerCard: React.FC<AnswerCardProps> = ({
   const classes = useStyles();
   const theme = useTheme();
   const { user, getApi } = useAuth();
+  const [likeCount, setLikeCount] = useState(answer.likeCount || 0);
+  const [liked, setLiked] = useState(answer.liked || false);
   const [editAnswerOpen, setEditAnswerOpen] = useState(false);
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
+
+  const like = async () => {
+    if (user) {
+      const userApi = await getApi("User");
+      if (!liked) {
+        const [err] = await to(
+          userApi.likePostReply({
+            userId: user?.uuid,
+            postReplyId: answer.uuid,
+          })
+        );
+        setLiked(true);
+        setLikeCount(likeCount + 1);
+      } else {
+        const [err] = await to(
+          userApi.unlikePostReply({
+            userId: user?.uuid,
+            postReplyId: answer.uuid,
+          })
+        );
+        setLiked(false);
+        setLikeCount(likeCount - 1);
+      }
+    } else {
+      setLoginDialogOpen(true);
+    }
+  };
 
   return (
     <div className={classes.postContainer}>
@@ -184,6 +236,17 @@ const AnswerCard: React.FC<AnswerCardProps> = ({
         </div>
       )}
       <ParsedText text={answer.text} showLine={5} />
+      <div
+        className={liked ? classes.actionButtonLike : classes.actionButton}
+        onClick={() => like()}
+      >
+        {liked ? (
+          <FavoriteIcon style={{ marginRight: 8 }} color={"secondary"} />
+        ) : (
+          <FavoriteBorderIcon style={{ marginRight: 8 }} />
+        )}
+        {likeCount ? likeCount : ""}
+      </div>
       <EditAnswerDialog
         isOpen={editAnswerOpen}
         answer={answer}

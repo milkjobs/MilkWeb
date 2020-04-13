@@ -179,7 +179,7 @@ interface QuestionProps {
 
 const Question: React.FC<QuestionProps> = ({ question: q }) => {
   const classes = useStyles();
-  const { getApi, user } = useAuth();
+  const { getApi, user, loading } = useAuth();
   const history = useHistory();
   const [question] = useState<Post>(q);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
@@ -264,6 +264,7 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
   const getPostReplies = async () => {
     if (question) {
       const postApi = await getApi("Post");
+      console.warn(postApi);
       const [err, fetchedPostReplies] = await to(
         postApi.getPostReplies({
           postId: question.uuid,
@@ -271,6 +272,7 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
           pageSize: answerPageSize,
         })
       );
+      console.warn(fetchedPostReplies);
       setAnswers([...answers, ...fetchedPostReplies]);
     }
   };
@@ -294,8 +296,8 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
   };
 
   useEffect(() => {
-    if (question && question.replyCount) getPostReplies();
-  }, [answerPageNo, question]);
+    if (!loading && question && question.replyCount) getPostReplies();
+  }, [answerPageNo, question, loading]);
 
   return (
     <div className={classes.container}>
