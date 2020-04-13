@@ -48,6 +48,11 @@ const getDefaultBody = (url: string) =>
 
 const app = express();
 
+app.get(["/", "/index.html"], async (request, response) => {
+  const body = await getDefaultBody(request.url);
+  response.send(body);
+});
+
 app.use(
   express.static(buildDir, {
     dotfiles: "allow",
