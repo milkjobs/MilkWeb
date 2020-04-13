@@ -4100,10 +4100,10 @@ braces@~3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
-branch-sdk@^2.53.1:
-  version "2.53.1"
-  resolved "https://registry.yarnpkg.com/branch-sdk/-/branch-sdk-2.53.1.tgz#8a515e224c7020b026b8a3ac3b2fe5194504e69c"
-  integrity sha512-kRZQRdP/v72EL8paGNcE7VVmlXwL18q5XvECFUn962bQJaoj3gDAJM3LNjdEGFiuP7UrDOvwwcyKTitLs3vsOQ==
+branch-sdk@^2.52.7:
+  version "2.52.7"
+  resolved "https://registry.yarnpkg.com/branch-sdk/-/branch-sdk-2.52.7.tgz#fc2f26fc6e29c3b45f2001a15842b0ab09f51e2c"
+  integrity sha512-5fxMZwU4lY1Srapt0wgXDQJlUGxBi1UcHW4swn9wURjAl8NOiki8XIRJ56dsvp1qPs1xIhgsPzIDEmm6xe2LBQ==
   dependencies:
     request "^2.55.0"
 
