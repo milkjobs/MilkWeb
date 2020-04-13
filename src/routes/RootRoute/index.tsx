@@ -5,7 +5,7 @@ import {
   Route,
   RouteComponentProps,
   RouteProps,
-  Switch,
+  Switch
 } from "react-router-dom";
 import About from "routes/About";
 import AwesomeList from "routes/AwesomeList";
@@ -30,6 +30,7 @@ import JobCircleTheme from "routes/JobCircleTheme";
 import JobCirclePost from "routes/JobCirclePost";
 import EmailConfirm from "routes/EmailConfirm";
 import PublicProfile from "routes/PublicProfile";
+import QuestionAnswer from "routes/Question&Answer";
 
 interface PrivateRouteProps extends RouteProps {
   component:
@@ -46,7 +47,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   return (
     <Route
       {...rest}
-      render={(props) => {
+      render={props => {
         if (loading) {
           return null;
         }
@@ -84,6 +85,7 @@ const RootRoute: React.FC = () => {
       <Route path="/sample-message" exact component={SampleMessage} />
       <Route path="/stories" exact component={Stories} />
       <Route path="/circle/" exact component={JobCircle} />
+      <Route path="/qna/" exact component={QuestionAnswer} />
       <Route path="/circle/theme/:id" exact component={JobCircleTheme} />
       <Route path="/circle/:id" exact component={JobCirclePost} />
       <Route path="/bottle" exact component={Bottles} />

@@ -1,4 +1,4 @@
-import { makeStyles, Button } from "@material-ui/core";
+import { makeStyles, Button, TextField } from "@material-ui/core";
 import React, { useState, useCallback, useEffect } from "react";
 import { useAuth } from "stores";
 import { Post, NewPost } from "@frankyjuang/milkapi-client";
@@ -6,13 +6,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import { LoginDialog } from "components/Util";
-import ClearIcon from "@material-ui/icons/Clear";
-import IconButton from "@material-ui/core/IconButton";
-import { ImageMimeType } from "helpers";
-import { toast } from "react-toastify";
-import to from "await-to-js";
 
 const useStyles = makeStyles(theme => ({
   input: {
@@ -67,37 +61,31 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-interface PostDialogProps {
+interface QuestionDialogProps {
   open: boolean;
-  post?: Post;
+  question?: Post;
   onClose: () => void;
   finish: (post: NewPost | Post) => void;
   delete?: (postId: string) => void;
   theme?: string;
 }
 
-const PostDialog: React.FC<PostDialogProps> = ({
+const QuestionDialog: React.FC<QuestionDialogProps> = ({
   open,
   onClose,
   finish,
   delete: deletePost,
   theme,
-  post
+  question
 }) => {
   const classes = useStyles();
-  const { user, getApi } = useAuth();
-  const [text, setText] = useState<string>(
-    post ? post.text : theme ? "\n\n" + theme : ""
-  );
-  const [imageUrls, setImageUrls] = useState<string[]>(
-    post && post.imageUrls ? post.imageUrls : []
-  );
+  const { user } = useAuth();
+  const [text, setText] = useState<string>(question ? question.text : "");
   const [textErrorMessage, setTextErrorMessage] = useState<string>();
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
 
   useEffect(() => {
-    setText(post ? post.text : theme ? "\n\n" + theme : "");
-    setImageUrls(post && post.imageUrls ? post.imageUrls : []);
+    question && setText(question.text);
   }, [open]);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -108,45 +96,6 @@ const PostDialog: React.FC<PostDialogProps> = ({
     }
   };
 
-  const uploadPostImage = useCallback(
-    async (files: File[] | FileList) => {
-      if (files.length === 0) {
-        return;
-      }
-      if (!user) {
-        setLoginDialogOpen(true);
-        return;
-      }
-      const addedUrls: string[] = [];
-
-      async function asyncForEach(array, callback) {
-        for (let index = 0; index < array.length; index++) {
-          await callback(array[index], index, array);
-        }
-      }
-
-      await asyncForEach(Array.from(files), async (file, index) => {
-        if (file.size > 1 * 1024 * 1024) {
-          toast.error("檔案過大，大小上限為 1MB");
-        }
-
-        const postApi = await getApi("Post");
-        const [err, url] = await to(
-          postApi.uploadPostImage({
-            file,
-            filename: file.name
-          })
-        );
-        if (err) {
-          toast.error("上傳失敗，請稍後再試");
-        }
-        url && addedUrls.push(url);
-      });
-      setImageUrls([...imageUrls, ...addedUrls]);
-    },
-    [getApi, imageUrls]
-  );
-
   return (
     <div>
       <Dialog
@@ -156,62 +105,24 @@ const PostDialog: React.FC<PostDialogProps> = ({
         fullWidth
       >
         <DialogTitle id="form-dialog-title">
-          {post ? "編輯貼文" : "建立貼文"}
+          {question ? "編輯提問" : "提問"}
         </DialogTitle>
         <DialogContent>
-          <TextareaAutosize
+          <TextField
             className={classes.textArea}
             autoFocus
             id="standard-multiline-static"
-            placeholder={"在想什麼？"}
-            rowsMin="4"
-            rowsMax="40"
+            placeholder={"想問什麼？"}
             value={text}
             onChange={handleTextChange}
           />
           <div className={classes.textAreaError}>{textErrorMessage}</div>
-          <div className={classes.imagesContainer}>
-            {imageUrls.map(i => (
-              <div key={i} className={classes.imageContainer}>
-                <img src={i} alt="照片" className={classes.postImage}></img>
-                <IconButton
-                  className={classes.deleteIcon}
-                  onClick={() => {
-                    setImageUrls(imageUrls.filter(url => url !== i));
-                  }}
-                >
-                  <ClearIcon color={"primary"} />
-                </IconButton>
-              </div>
-            ))}
-            {user ? (
-              <label>
-                <input
-                  hidden
-                  accept={ImageMimeType}
-                  multiple
-                  onChange={e => {
-                    e.target.files && uploadPostImage(e.target.files);
-                  }}
-                  type="file"
-                />
-                <div className={classes.imagePlus}>{"+"}</div>
-              </label>
-            ) : (
-              <div
-                className={classes.imagePlus}
-                onClick={() => setLoginDialogOpen(true)}
-              >
-                {"+"}
-              </div>
-            )}
-          </div>
         </DialogContent>
         <DialogActions>
-          {post && deletePost && (
+          {question && deletePost && (
             <Button
               onClick={() => {
-                deletePost(post.uuid);
+                deletePost(question.uuid);
                 onClose();
               }}
               color="secondary"
@@ -224,16 +135,18 @@ const PostDialog: React.FC<PostDialogProps> = ({
             <Button
               onClick={() => {
                 onClose();
-                !post && setText("");
+                !question && setText("");
                 text &&
                   finish(
-                    post ? { ...post, text, imageUrls } : { text, imageUrls }
+                    question
+                      ? { ...question, text }
+                      : { text: text + "\n\n#提問" + theme || "" }
                   );
               }}
               color="primary"
               disabled={!text}
             >
-              {post ? "更新" : "發布"}
+              {question ? "更新" : "發布"}
             </Button>
           ) : (
             <>
@@ -252,4 +165,4 @@ const PostDialog: React.FC<PostDialogProps> = ({
   );
 };
 
-export { PostDialog };
+export { QuestionDialog };

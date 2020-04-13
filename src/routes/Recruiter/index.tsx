@@ -7,7 +7,7 @@ import {
   RouteComponentProps,
   RouteProps,
   Switch,
-  useRouteMatch,
+  useRouteMatch
 } from "react-router-dom";
 import { useAuth } from "stores";
 import Member from "./Member";
@@ -19,7 +19,9 @@ import Team from "./Team";
 import Verification from "./Verification";
 import VisitorsToBe from "./VisitorsToBe";
 import JobCircle from "routes/JobCircle";
+import JobCirclePost from "routes/JobCirclePost";
 import JobCircleTheme from "routes/JobCircleTheme";
+import QuestionAnswer from "routes/Question&Answer";
 
 interface PrivateRouteProps extends RouteProps {
   component:
@@ -36,7 +38,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   return (
     <Route
       {...rest}
-      render={(props) => {
+      render={props => {
         if (loading) {
           return null;
         }
@@ -75,9 +77,19 @@ const RecruiterRoute: React.FC = () => {
           component={JobCircle}
         />
         <PrivateRoute
+          path={`${match.path}/circle/:id`}
+          exact
+          component={JobCirclePost}
+        />
+        <PrivateRoute
           path={`${match.path}/circle/theme/:id`}
           exact
           component={JobCircleTheme}
+        />
+        <PrivateRoute
+          path={`${match.path}/qna`}
+          exact
+          component={QuestionAnswer}
         />
         <PrivateRoute
           path={`${match.path}/profile`}

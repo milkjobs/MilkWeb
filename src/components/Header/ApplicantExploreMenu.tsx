@@ -36,6 +36,12 @@ const ApplicantExploreMenu: React.FC<Props> = props => {
                   <MenuItem onClick={close}>工作圈</MenuItem>
                 </Link>
                 <Link
+                  to="/qna"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={close}>職場問答</MenuItem>
+                </Link>
+                <Link
                   to="/departments"
                   style={{ textDecoration: "none", color: "black" }}
                 >

@@ -11,19 +11,12 @@ import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import { useAuth } from "stores";
-import {
-  PostCard,
-  PostDialog,
-  QuestionCard,
-  QuestionDialog
-} from "components/JobCircle";
+import { QuestionCard, PostDialog } from "components/JobCircle";
 import { Post, NewPost } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
 import { useInView } from "react-intersection-observer";
 import { Link, useLocation } from "react-router-dom";
 import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
-import { Slide, ToastContainer, ToastPosition } from "react-toastify";
-import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,7 +38,7 @@ const useStyles = makeStyles(theme => ({
     borderColor: theme.palette.divider,
     borderStyle: "solid",
     borderWidth: 1,
-    borderRadius: 16,
+    borderRadius: 48,
     paddingLeft: 24,
     textAlign: "left",
     cursor: "pointer",
@@ -132,15 +125,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const JobCircle: React.FC = () => {
+const QuestionAnswer: React.FC = () => {
   const classes = useStyles();
   const { getApi, user, loading } = useAuth();
   const location = useLocation();
-  const [query, setQuery] = useState<string>("");
-  const [text, setText] = useState<string>("");
   const [posts, setPosts] = useState<Post[]>([]);
   const [createPostOpen, setCreatePostOpen] = useState(false);
-  const [createQuestionOpen, setCreateQuestionOpen] = useState(false);
   const [pageNo, setPageNo] = useState(0);
   const pageSize = 5;
   const [ref, inView] = useInView();
@@ -187,7 +177,7 @@ const JobCircle: React.FC = () => {
   const getPosts = async () => {
     const postApi = await getApi("Post");
     const [err, fetchedPosts] = await to(
-      postApi.getPosts({ pageNo, pageSize, text })
+      postApi.getPosts({ pageNo, pageSize, text: "#提問" })
     );
     fetchedPosts && setPosts([...(pageNo === 1 ? [] : posts), ...fetchedPosts]);
   };
@@ -198,115 +188,28 @@ const JobCircle: React.FC = () => {
 
   useEffect(() => {
     !loading && pageNo && getPosts();
-  }, [pageNo, text, loading]);
+  }, [pageNo, loading]);
 
   return (
     <div className={classes.root}>
       <Header />
       <div className={classes.container}>
-        <div className={classes.searchRoot}>
-          <InputBase
-            value={query}
-            onChange={e => {
-              setQuery(e.target.value);
-            }}
-            onKeyPress={e => {
-              if (e.key === "Enter" && query !== text) {
-                setPageNo(1);
-                setText(query);
-              }
-            }}
-            className={classes.input}
-            placeholder="搜尋"
-          />
-          <IconButton className={classes.iconButton}>
-            <SearchIcon />
-          </IconButton>
-        </div>
-        <div className={classes.postButtonContainer}>
-          <Avatar
-            alt="profile image"
-            className={classes.avatar}
-            src={
-              user
-                ? user.profileImageUrl
-                : "https://milk.jobs/static/media/milk.d3c5757d.png"
-            }
-          />
-          <div
-            className={classes.postButton}
-            style={{ marginRight: 8 }}
-            onClick={() => setCreatePostOpen(true)}
-          >
-            <CreateOutlinedIcon />
-            <div style={{ marginLeft: 8 }}>{"在想什麼？"}</div>
-          </div>
-          <div
-            className={classes.postButton}
-            onClick={() => setCreateQuestionOpen(true)}
-          >
-            <HelpOutlineOutlinedIcon />
-            <div style={{ marginLeft: 8 }}>{"想問什麼？"}</div>
-          </div>
-          <QuestionDialog
-            open={createQuestionOpen}
-            onClose={() => setCreateQuestionOpen(false)}
-            finish={createPost}
-          />
-          <PostDialog
-            open={createPostOpen}
-            onClose={() => setCreatePostOpen(false)}
-            finish={createPost}
-          />
-        </div>
-        <div className={classes.themeContainer}>
-          {Object.keys(themeSubTitles)
-            .sort(() => Math.random() - 0.5)
-            .map(t => (
-              <Link
-                to={
-                  (isRecruiter ? "/recruiter" : "") +
-                  "/circle/theme/" +
-                  t.substr(1)
-                }
-                key={t}
-                className={classes.themeTag}
-              >
-                {t}
-              </Link>
-            ))}
-        </div>
         {loading ? (
           <CircularProgress className={classes.loading} />
         ) : (
-          posts.map(p =>
-            p.text.includes("#提問") ? (
-              <QuestionCard
-                key={p.uuid}
-                question={p}
-                updatePost={updatePost}
-                deletePost={deletePost}
-              />
-            ) : (
-              <PostCard
-                key={p.uuid}
-                post={p}
-                updatePost={updatePost}
-                deletePost={deletePost}
-              />
-            )
-          )
+          posts.map(p => (
+            <QuestionCard
+              key={p.uuid}
+              question={p}
+              updatePost={updatePost}
+              deletePost={deletePost}
+            />
+          ))
         )}
         <div ref={ref}></div>
       </div>
-      <ToastContainer
-        draggable={false}
-        hideProgressBar
-        position={ToastPosition.BOTTOM_CENTER}
-        transition={Slide}
-      />
     </div>
   );
 };
 
-export default JobCircle;
+export default QuestionAnswer;

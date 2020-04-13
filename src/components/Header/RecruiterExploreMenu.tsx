@@ -30,11 +30,23 @@ const RecruiterExploreMenu: React.FC<Props> = props => {
             <ClickAwayListener onClickAway={close}>
               <MenuList>
                 <Link
+                  to="/recruiter/circle"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={close}>工作圈</MenuItem>
+                </Link>
+                <Link
+                  to="/recruiter/qna"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={close}>職場問答</MenuItem>
+                </Link>
+                {/* <Link
                   to="/recruiter/recommend-candidates"
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem onClick={close}>人才推薦</MenuItem>
-                </Link>
+                </Link> */}
               </MenuList>
             </ClickAwayListener>
           </Paper>
