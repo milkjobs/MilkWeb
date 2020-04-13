@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   mdiCommentProcessingOutline,
   mdiEyeCheckOutline,
-  mdiEyeOutline
+  mdiEyeOutline,
 } from "@mdi/js";
 import Icon from "@mdi/react";
 import moment from "moment";
@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import { useAuth, useTheme } from "stores";
 moment.locale("zh-tw");
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     paddingLeft: 24,
     paddingRight: 24,
@@ -23,30 +23,30 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       marginTop: 8,
       paddingLeft: 0,
-      paddingRight: 0
-    }
+      paddingRight: 0,
+    },
   },
   link: {
     textDecoration: "none",
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   },
   statisticsContainer: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   item: {
     fontWeight: 600,
     marginLeft: 8,
-    marginRight: 8
+    marginRight: 8,
   },
   icon: {
-    marginBottom: 4
+    marginBottom: 4,
   },
   footer: {
     textAlign: "left",
-    marginTop: 8
-  }
+    marginTop: 8,
+  },
 }));
 
 interface Props {
@@ -54,7 +54,7 @@ interface Props {
   createdAt: Date;
 }
 
-const JobStatistics: React.FC<Props> = props => {
+const JobStatistics: React.FC<Props> = (props) => {
   const { jobId, createdAt } = props;
   const classes = useStyles();
   const { theme } = useTheme();
@@ -70,7 +70,7 @@ const JobStatistics: React.FC<Props> = props => {
       const statistics = await jobApi.getJobStatistics({
         jobId,
         binCount: 14,
-        binSizeDays: 1
+        binSizeDays: 1,
       });
       setJobStatistics(statistics);
     };
@@ -132,7 +132,7 @@ const JobStatistics: React.FC<Props> = props => {
             sameDay: "[今天]",
             lastDay: "[昨天]",
             lastWeek: isSameYear(createdAt) ? "MM/DD" : "YYYY/MM/DD",
-            sameElse: isSameYear(createdAt) ? "MM/DD" : "YYYY/MM/DD"
+            sameElse: isSameYear(createdAt) ? "MM/DD" : "YYYY/MM/DD",
           })}
       </div>
     </div>

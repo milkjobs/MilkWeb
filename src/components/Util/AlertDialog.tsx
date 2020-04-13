@@ -1,12 +1,12 @@
 import {
+  Button,
   Dialog,
-  DialogContent,
   DialogActions,
-  Button
+  DialogContent,
 } from "@material-ui/core";
-import React from "react";
 import { AlertType } from "helpers";
-import { useHistory } from "react-router";
+import React from "react";
+import { useHistory } from "react-router-dom";
 
 interface Props {
   isOpen: boolean;
@@ -14,7 +14,7 @@ interface Props {
   close: () => void;
 }
 
-const AlertDialog: React.FC<Props> = props => {
+const AlertDialog: React.FC<Props> = (props) => {
   const history = useHistory();
   const { isOpen, close, type } = props;
 

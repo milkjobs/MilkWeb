@@ -12,7 +12,7 @@ import { SubArea, TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
 import to from "await-to-js";
 import { TeamSizeOptions } from "helpers";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { useAuth } from "stores";
 
 interface Props {
@@ -57,7 +57,7 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
 
     const validateOperator = [1, 2, 1, 2, 1, 2, 4, 1];
     let sum = 0;
-    const calculate = product => {
+    const calculate = (product) => {
       // 個位數 + 十位數
       const ones = product % 10;
       const tens = (product - ones) / 10;
@@ -135,8 +135,8 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
           address: { area, subArea, street },
           size,
           primaryField,
-          secondaryField
-        }
+          secondaryField,
+        },
       });
       await reloadUser();
       setLoading(false);
@@ -165,7 +165,7 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
     setArea(event.target.value);
     setAreaErrorMessage("");
     const selectedMainArea = TaiwanAreaJSON.find(
-      a => a.name === event.target.value
+      (a) => a.name === event.target.value
     );
     setSubAreaOptions(selectedMainArea ? selectedMainArea.districts : []);
     setSubArea(undefined);
@@ -215,7 +215,7 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
   };
 
   useEffect(() => {
-    const selectedMainArea = TaiwanAreaJSON.find(a => a.name === area);
+    const selectedMainArea = TaiwanAreaJSON.find((a) => a.name === area);
     setSubAreaOptions(selectedMainArea ? selectedMainArea.districts : []);
   }, [area]);
 
@@ -265,7 +265,7 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
               style={{ marginRight: 4 }}
               value={area || ""}
             >
-              {TaiwanAreaJSON.map(option => (
+              {TaiwanAreaJSON.map((option) => (
                 <MenuItem key={option.name} value={option.name}>
                   {option.name}
                 </MenuItem>
@@ -284,7 +284,7 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
               style={{ marginLeft: 4 }}
               value={subArea || ""}
             >
-              {subAreaOptions.map(option => (
+              {subAreaOptions.map((option) => (
                 <MenuItem key={option.name} value={option.name}>
                   {option.name}
                 </MenuItem>
@@ -306,13 +306,13 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
                   style={{
                     width: "25%",
                     display: "flex",
-                    justifyContent: "center"
+                    justifyContent: "center",
                   }}
                   position="start"
                 >
                   {(area || "縣市") + (subArea || "地區")}
                 </InputAdornment>
-              )
+              ),
             }}
           />
           <TextField
@@ -326,7 +326,7 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
             select
             value={size || ""}
           >
-            {TeamSizeOptions.map(option => (
+            {TeamSizeOptions.map((option) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
@@ -344,7 +344,7 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
             select
             value={primaryField || ""}
           >
-            {fieldTagOptions.map(option => (
+            {fieldTagOptions.map((option) => (
               <MenuItem key={option} value={option}>
                 {option}
               </MenuItem>
@@ -362,8 +362,8 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
           >
             {secondaryField && <MenuItem value="無">無</MenuItem>}
             {fieldTagOptions
-              .filter(o => o !== primaryField)
-              .map(option => (
+              .filter((o) => o !== primaryField)
+              .map((option) => (
                 <MenuItem key={option} value={option}>
                   {option}
                 </MenuItem>

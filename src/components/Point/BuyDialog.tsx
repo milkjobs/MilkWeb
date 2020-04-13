@@ -7,7 +7,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { createStyles, makeStyles } from "@material-ui/styles";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { paymentUrl } from "config";
 import { PurchaseMethod } from "helpers";
 import React, { useEffect, useState } from "react";
@@ -19,27 +19,27 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: "flex",
-      flexWrap: "wrap"
+      flexWrap: "wrap",
     },
     infoContainer: {
       display: "flex",
       flexDirection: "row",
-      alignItems: "center"
+      alignItems: "center",
     },
     info: {
       fontSize: 16,
-      color: theme.palette.text.primary
+      color: theme.palette.text.primary,
     },
     error: {
       fontSize: 16,
-      color: theme.palette.error.main
+      color: theme.palette.error.main,
     },
     link: {
       fontSize: 16,
       color: theme.palette.text.primary,
       cursor: "pointer",
-      textDecoration: "underline"
-    }
+      textDecoration: "underline",
+    },
   })
 );
 
@@ -54,7 +54,7 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
   open,
   handleClose,
   plan,
-  method
+  method,
 }) => {
   const classes = useStyles();
   const { getApi, user } = useAuth();
@@ -69,7 +69,7 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
       const orderApi = await getApi("Order");
       const order = await orderApi.addOrder({
         teamId: user.recruiterInfo.team.uuid,
-        visitorPlanId: plan.uuid
+        visitorPlanId: plan.uuid,
       });
       setLoading(false);
       if (order && order.token) {
@@ -167,7 +167,7 @@ const BuyDialog: React.FC<BuyDialogProps> = ({
                     width: 20,
                     height: 20,
                     marginLeft: 20,
-                    marginRight: 20
+                    marginRight: 20,
                   }}
                 />
               ) : (

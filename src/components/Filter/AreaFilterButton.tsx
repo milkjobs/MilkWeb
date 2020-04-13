@@ -8,9 +8,9 @@ import Dialog from "@material-ui/core/Dialog";
 import CheckIcon from "@material-ui/icons/Check";
 import DialogActions from "@material-ui/core/DialogActions";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
-    marginHorizontal: 4
+    marginHorizontal: 4,
   },
   filterButton: {
     minWidth: 60,
@@ -21,11 +21,11 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     paddingHorizontal: 12,
     marginBottom: 8,
-    marginRight: 8
+    marginRight: 8,
   },
   filterText: {
     color: theme.palette.text.secondary,
-    fontSize: 14
+    fontSize: 14,
   },
   mainArea: {
     paddingRight: 24,
@@ -37,8 +37,8 @@ const useStyles = makeStyles(theme => ({
     "&:hover": {
       cursor: "pointer",
       backgroundColor: theme.palette.background.default,
-      color: theme.palette.secondary.main
-    }
+      color: theme.palette.secondary.main,
+    },
   },
   hoverMainArea: {
     paddingRight: 24,
@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
     fontSize: 16,
     cursor: "pointer",
     backgroundColor: theme.palette.background.default,
-    color: theme.palette.secondary.main
+    color: theme.palette.secondary.main,
   },
   subArea: {
     paddingRight: 24,
@@ -59,8 +59,8 @@ const useStyles = makeStyles(theme => ({
     "&:hover": {
       cursor: "pointer",
       backgroundColor: theme.palette.background.default,
-      color: theme.palette.secondary.main
-    }
+      color: theme.palette.secondary.main,
+    },
   },
   selectedSubArea: {
     paddingRight: 24,
@@ -72,9 +72,9 @@ const useStyles = makeStyles(theme => ({
     "&:hover": {
       cursor: "pointer",
       backgroundColor: theme.palette.background.default,
-      color: theme.palette.secondary.main
-    }
-  }
+      color: theme.palette.secondary.main,
+    },
+  },
 }));
 
 interface AreaFilter {
@@ -114,7 +114,7 @@ function AreaFilterDialog(props: AreaFilterDialogProps) {
     >
       <div style={{ display: "flex" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          {TaiwanAreaJSON.map(a => (
+          {TaiwanAreaJSON.map((a) => (
             <div
               key={a.name}
               className={
@@ -129,51 +129,51 @@ function AreaFilterDialog(props: AreaFilterDialogProps) {
           ))}
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          {TaiwanAreaJSON.find(a => a.name === selectedMainArea)?.districts.map(
-            d => (
-              <div
-                key={d.name}
-                className={
-                  selectedMainArea &&
+          {TaiwanAreaJSON.find(
+            (a) => a.name === selectedMainArea
+          )?.districts.map((d) => (
+            <div
+              key={d.name}
+              className={
+                selectedMainArea &&
+                selectedAreaFilters.find(
+                  (a) => a.area === selectedMainArea && a.subArea === d.name
+                )
+                  ? classes.selectedSubArea
+                  : classes.subArea
+              }
+              onClick={() => {
+                if (
                   selectedAreaFilters.find(
-                    a => a.area === selectedMainArea && a.subArea === d.name
+                    (a) => a.area === selectedMainArea && a.subArea === d.name
                   )
-                    ? classes.selectedSubArea
-                    : classes.subArea
-                }
-                onClick={() => {
-                  if (
-                    selectedAreaFilters.find(
-                      a => a.area === selectedMainArea && a.subArea === d.name
+                ) {
+                  setSelectedAreaFilters(
+                    selectedAreaFilters?.filter(
+                      (a) => a.area !== selectedMainArea || a.subArea !== d.name
                     )
-                  ) {
-                    setSelectedAreaFilters(
-                      selectedAreaFilters?.filter(
-                        a => a.area !== selectedMainArea || a.subArea !== d.name
-                      )
-                    );
-                  } else
-                    selectedMainArea &&
-                      setSelectedAreaFilters([
-                        ...selectedAreaFilters,
-                        { area: selectedMainArea, subArea: d.name }
-                      ]);
-                }}
-              >
-                {d.name}
-                {selectedMainArea &&
-                  selectedAreaFilters.find(
-                    a => a.area === selectedMainArea && a.subArea === d.name
-                  ) && (
-                    <CheckIcon
-                      color="secondary"
-                      fontSize="small"
-                      style={{ marginLeft: 16, marginTop: 4 }}
-                    />
-                  )}
-              </div>
-            )
-          )}
+                  );
+                } else
+                  selectedMainArea &&
+                    setSelectedAreaFilters([
+                      ...selectedAreaFilters,
+                      { area: selectedMainArea, subArea: d.name },
+                    ]);
+              }}
+            >
+              {d.name}
+              {selectedMainArea &&
+                selectedAreaFilters.find(
+                  (a) => a.area === selectedMainArea && a.subArea === d.name
+                ) && (
+                  <CheckIcon
+                    color="secondary"
+                    fontSize="small"
+                    style={{ marginLeft: 16, marginTop: 4 }}
+                  />
+                )}
+            </div>
+          ))}
         </div>
       </div>
       <DialogActions>
@@ -189,12 +189,12 @@ function AreaFilterDialog(props: AreaFilterDialogProps) {
 }
 
 const convertAreaFilterListToAlgoliaAreaList = (filterList: AreaFilter[]) =>
-  filterList.map(filter => `${filter.area} > ${filter.subArea}`);
+  filterList.map((filter) => `${filter.area} > ${filter.subArea}`);
 
 const convertAlgoliaAreaListToAreaFilterList = (algoliaList: string[]) =>
   algoliaList
-    .filter(value => value.includes(" > ") && value)
-    .map<AreaFilter>(value => {
+    .filter((value) => value.includes(" > ") && value)
+    .map<AreaFilter>((value) => {
       const [area, subArea] = value.split(" > ");
       return { area, subArea };
     });
@@ -269,13 +269,13 @@ const AreaFilterButton: React.FC<RefinementListProvided> = ({ refine }) => {
       const titles: string[] = [];
       const otherSubAreas = new Set<string>();
       areaMap.forEach((subAreas, area) => {
-        const mainArea = TaiwanAreaJSON.find(a => a.name === area);
+        const mainArea = TaiwanAreaJSON.find((a) => a.name === area);
         if (!mainArea) {
           return;
         }
         for (const dist of mainArea.districts) {
           if (!subAreas.has(dist.name)) {
-            subAreas.forEach(a => otherSubAreas.add(a));
+            subAreas.forEach((a) => otherSubAreas.add(a));
             return;
           }
         }

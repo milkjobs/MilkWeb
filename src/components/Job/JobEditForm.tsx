@@ -5,7 +5,7 @@ import {
   JobType,
   SalaryType,
   Tag,
-  TagType
+  TagType,
 } from "@frankyjuang/milkapi-client";
 import { InputAdornment } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
@@ -24,10 +24,10 @@ import {
   EducationLevelOptions,
   ExperienceLevelOptions,
   JobTypeOptions,
-  normalizeSchoolName
+  normalizeSchoolName,
 } from "helpers";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { useAuth } from "stores";
 import { HourlySalaryOptions, MonthlySalaryOptions } from "./utils";
 
@@ -91,22 +91,22 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
       const tagApi = await getApi("Tag");
       const [[, schoolTags], [, departmentTags]] = await Promise.all([
         to(tagApi.getTags({ type: TagType.School })),
-        to(tagApi.getTags({ type: TagType.Department }))
+        to(tagApi.getTags({ type: TagType.Department })),
       ]);
 
-      const schoolEntries = (schoolTags || []).map<FuzzyTag>(t => ({
+      const schoolEntries = (schoolTags || []).map<FuzzyTag>((t) => ({
         normalizedLabel: normalizeSchoolName(t.label),
-        tag: t
+        tag: t,
       }));
-      const departmentEntries = (departmentTags || []).map<FuzzyTag>(t => ({
+      const departmentEntries = (departmentTags || []).map<FuzzyTag>((t) => ({
         normalizedLabel: t.label,
-        tag: t
+        tag: t,
       }));
       const options: Fuse.FuseOptions<FuzzyTag> = {
         shouldSort: true,
         tokenize: true,
         matchAllTokens: true,
-        keys: ["normalizedLabel"]
+        keys: ["normalizedLabel"],
       };
       setFuse(new Fuse([...schoolEntries, ...departmentEntries], options));
       setTagOptions([...(schoolTags || []), ...(departmentTags || [])]);
@@ -157,8 +157,8 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
           educationNeed,
           experienceNeed,
           description,
-          tags
-        }
+          tags,
+        },
       });
       await reloadUser();
       setLoading(false);
@@ -189,7 +189,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
     setArea(event.target.value);
     setAreaErrorMessage("");
     const selectedMainArea = TaiwanAreaJSON.find(
-      a => a.name === event.target.value
+      (a) => a.name === event.target.value
     );
     setSubAreaOptions(selectedMainArea ? selectedMainArea.districts : []);
     setSubArea(undefined);
@@ -259,7 +259,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
   };
 
   useEffect(() => {
-    const selectedMainArea = TaiwanAreaJSON.find(a => a.name === area);
+    const selectedMainArea = TaiwanAreaJSON.find((a) => a.name === area);
     setSubAreaOptions(selectedMainArea ? selectedMainArea.districts : []);
   }, [area]);
 
@@ -312,7 +312,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
             select
             value={type || ""}
           >
-            {JobTypeOptions.map(option => (
+            {JobTypeOptions.map((option) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
@@ -341,7 +341,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
               style={{ marginRight: 4 }}
               value={area}
             >
-              {TaiwanAreaJSON.map(option => (
+              {TaiwanAreaJSON.map((option) => (
                 <MenuItem key={option.name} value={option.name}>
                   {option.name}
                 </MenuItem>
@@ -359,7 +359,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
               style={{ marginLeft: 4 }}
               value={subArea || ""}
             >
-              {subAreaOptions.map(option => (
+              {subAreaOptions.map((option) => (
                 <MenuItem key={option.name} value={option.name}>
                   {option.name}
                 </MenuItem>
@@ -381,13 +381,13 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
                   style={{
                     width: "25%",
                     display: "flex",
-                    justifyContent: "center"
+                    justifyContent: "center",
                   }}
                   position="start"
                 >
                   {(area || "縣市") + (subArea || "地區")}
                 </InputAdornment>
-              )
+              ),
             }}
           />
           <TextField
@@ -411,7 +411,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
               margin="normal"
               style={{ marginRight: 4 }}
               value={minSalary}
-              onChange={e => {
+              onChange={(e) => {
                 if (/^\d+$/.test(e.target.value)) {
                   setMinSalary(parseInt(e.target.value));
                 }
@@ -448,7 +448,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
               margin="normal"
               style={{ marginLeft: 4 }}
               value={maxSalary}
-              onChange={e => {
+              onChange={(e) => {
                 if (/^\d+$/.test(e.target.value)) {
                   setMaxSalary(parseInt(e.target.value));
                 }
@@ -513,7 +513,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
               select
               value={educationNeed}
             >
-              {EducationLevelOptions.map(option => (
+              {EducationLevelOptions.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
@@ -530,7 +530,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
               select
               value={experienceNeed}
             >
-              {ExperienceLevelOptions.map(option => (
+              {ExperienceLevelOptions.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
@@ -541,7 +541,7 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
             clearText="清除已選的校系"
             closeText="收起清單"
             defaultValue={[]}
-            getOptionLabel={option => option.label}
+            getOptionLabel={(option) => option.label}
             id="tags"
             multiple
             noOptionsText="找不到學校、系所"
@@ -555,10 +555,10 @@ const JobEditForm: React.FC<Props> = ({ open, handleClose, job }) => {
               inputValue && fuse
                 ? fuse
                     .search<FuzzyTag, false, false>(inputValue)
-                    .map(ft => ft.tag)
+                    .map((ft) => ft.tag)
                 : tagOptions
             }
-            renderInput={params => (
+            renderInput={(params) => (
               <TextField
                 {...params}
                 margin="normal"

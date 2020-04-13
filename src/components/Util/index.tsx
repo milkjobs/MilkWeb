@@ -1,5 +1,4 @@
 export * from "./AlertDialog";
-export * from "./AutoSuggestion";
 export * from "./DownloadApp";
 export * from "./ErrorStatus";
 export * from "./LoginDialog";

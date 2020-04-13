@@ -6,16 +6,15 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { ImageMimeType } from "helpers";
 import MenuItem from "@material-ui/core/MenuItem";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import { createStyles, makeStyles } from "@material-ui/styles";
 import { SubArea, TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
 import to from "await-to-js";
-import { TeamSizeOptions } from "helpers";
-import React, { useEffect, useState, useCallback } from "react";
+import { ImageMimeType, TeamSizeOptions } from "helpers";
+import React, { useCallback, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
-import { useHistory } from "react-router";
 import { useAuth } from "stores";
 
 const useStyles = makeStyles(() =>
@@ -23,12 +22,12 @@ const useStyles = makeStyles(() =>
     logo: {
       objectFit: "contain",
       width: 50,
-      height: 50
+      height: 50,
     },
     button: {
       marginLeft: 16,
-      maxWidth: 300
-    }
+      maxWidth: 300,
+    },
   })
 );
 
@@ -78,7 +77,7 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
       const verificationApi = await getApi("Verification");
       const [, result] = await to(
         verificationApi.getCommerce({
-          unifiedNumber: team.unifiedNumber
+          unifiedNumber: team.unifiedNumber,
         })
       );
       result && setFieldTagOptions(result.fields);
@@ -120,8 +119,8 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
           primaryField,
           secondaryField,
           website,
-          introduction
-        }
+          introduction,
+        },
       });
       await reloadUser();
       setLoading(false);
@@ -133,7 +132,7 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
     setArea(event.target.value);
     setAreaErrorMessage("");
     const selectedMainArea = TaiwanAreaJSON.find(
-      a => a.name === event.target.value
+      (a) => a.name === event.target.value
     );
     setSubAreaOptions(selectedMainArea ? selectedMainArea.districts : []);
     setSubArea(undefined);
@@ -203,7 +202,7 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
   };
 
   useEffect(() => {
-    const selectedMainArea = TaiwanAreaJSON.find(a => a.name === area);
+    const selectedMainArea = TaiwanAreaJSON.find((a) => a.name === area);
     setSubAreaOptions(selectedMainArea ? selectedMainArea.districts : []);
   }, [area]);
 
@@ -240,7 +239,7 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
         teamApi.uploadTeamLogo({
           teamId: user.recruiterInfo.team.uuid,
           file,
-          filename: file.name
+          filename: file.name,
         })
       );
       if (err) {
@@ -264,7 +263,7 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
               <input
                 hidden
                 accept={ImageMimeType}
-                onChange={e => {
+                onChange={(e) => {
                   e.target.files && uploadLogo(e.target.files);
                 }}
                 type="file"
@@ -313,7 +312,7 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
               style={{ marginRight: 4 }}
               value={area}
             >
-              {TaiwanAreaJSON.map(option => (
+              {TaiwanAreaJSON.map((option) => (
                 <MenuItem key={option.name} value={option.name}>
                   {option.name}
                 </MenuItem>
@@ -331,7 +330,7 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
               style={{ marginLeft: 4 }}
               value={subArea || ""}
             >
-              {subAreaOptions.map(option => (
+              {subAreaOptions.map((option) => (
                 <MenuItem key={option.name} value={option.name}>
                   {option.name}
                 </MenuItem>
@@ -353,13 +352,13 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
                   style={{
                     width: "25%",
                     display: "flex",
-                    justifyContent: "center"
+                    justifyContent: "center",
                   }}
                   position="start"
                 >
                   {(area || "縣市") + (subArea || "地區")}
                 </InputAdornment>
-              )
+              ),
             }}
           />
           <TextField
@@ -373,7 +372,7 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
             select
             value={size}
           >
-            {TeamSizeOptions.map(option => (
+            {TeamSizeOptions.map((option) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
@@ -391,7 +390,7 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
             select
             value={primaryField}
           >
-            {fieldTagOptions.map(option => (
+            {fieldTagOptions.map((option) => (
               <MenuItem key={option} value={option}>
                 {option}
               </MenuItem>
@@ -409,8 +408,8 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
           >
             {secondaryField && <MenuItem value="無">無</MenuItem>}
             {fieldTagOptions
-              .filter(o => o !== primaryField)
-              .map(option => (
+              .filter((o) => o !== primaryField)
+              .map((option) => (
                 <MenuItem key={option} value={option}>
                   {option}
                 </MenuItem>
