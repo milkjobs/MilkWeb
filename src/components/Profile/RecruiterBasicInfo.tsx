@@ -12,7 +12,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import { useAuth } from "stores";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     marginTop: 12,
     paddingLeft: 24,
@@ -22,24 +22,24 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     [theme.breakpoints.up("sm")]: {
-      width: "600px"
-    }
+      width: "600px",
+    },
   },
   info: {
     display: "flex",
     flexDirection: "column",
-    marginLeft: 24
+    marginLeft: 24,
   },
   name: {
     fontSize: 30,
     fontWeight: "bold",
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   },
   detail: {
     display: "flex",
     flex: 1,
     fontSize: 16,
-    color: "#4A4A4A"
+    color: "#4A4A4A",
   },
   description: {
     display: "flex",
@@ -48,23 +48,23 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     fontSize: 16,
     marginTop: 32,
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
   },
   button: {
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2),
   },
   formContainer: {
     display: "flex",
     flexWrap: "wrap",
-    marginTop: 8
+    marginTop: 8,
   },
   formControl: {
     marginRight: theme.spacing(2),
-    minWidth: 115
+    minWidth: 115,
   },
   formTextInput: {
-    marginBottom: 12
-  }
+    marginBottom: 12,
+  },
 }));
 
 interface DialogProps {
@@ -72,7 +72,7 @@ interface DialogProps {
   close: () => void;
 }
 
-const EditDialog: React.FC<DialogProps> = props => {
+const EditDialog: React.FC<DialogProps> = (props) => {
   const { isOpen, close } = props;
   const classes = useStyles();
   const { getApi, reloadUser, user } = useAuth();
@@ -143,8 +143,8 @@ const EditDialog: React.FC<DialogProps> = props => {
         recruiterInfo: {
           ...user.recruiterInfo,
           title,
-          email
-        }
+          email,
+        },
       });
     }
     changed && (await reloadUser());
@@ -172,7 +172,7 @@ const EditDialog: React.FC<DialogProps> = props => {
         userApi.uploadUserProfileImage({
           userId: user.uuid,
           file,
-          filename: file.name
+          filename: file.name,
         })
       );
       if (err) {
@@ -208,7 +208,7 @@ const EditDialog: React.FC<DialogProps> = props => {
               <input
                 hidden
                 accept={ImageMimeType}
-                onChange={e => {
+                onChange={(e) => {
                   e.target.files && uploadProfileImage(e.target.files);
                 }}
                 type="file"
@@ -304,7 +304,7 @@ const RecruiterBasicInfo: React.FC = () => {
         style={{
           display: "flex",
           flexDirection: "row",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <Avatar

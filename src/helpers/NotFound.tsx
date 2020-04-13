@@ -3,11 +3,11 @@ import { Header } from "components/Header";
 import { ErrorStatus } from "components/Util";
 import React from "react";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.default
-  }
+    backgroundColor: theme.palette.background.default,
+  },
 }));
 
 const NotFound: React.FC = () => {

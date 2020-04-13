@@ -5,16 +5,16 @@ import {
   Facebook,
   GooglePlay,
   Instagram,
-  Youtube
+  Youtube,
 } from "assets/icons";
 import { Header } from "components/Header";
 import { PageMetadata } from "helpers";
 import React from "react";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.default,
   },
   container: {
     marginTop: 8,
@@ -30,11 +30,11 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up("md")]: {
       width: 960,
       marginRight: "auto",
-      marginLeft: "auto"
-    }
+      marginLeft: "auto",
+    },
   },
   appImage: {
-    width: "100%"
+    width: "100%",
   },
   iconsContainer: {
     display: "flex",
@@ -43,12 +43,12 @@ const useStyles = makeStyles(theme => ({
     width: 640,
     padding: 40,
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   app: {
     fontSize: 24,
-    cursor: "pointer"
-  }
+    cursor: "pointer",
+  },
 }));
 
 const About: React.FC = () => {

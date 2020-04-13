@@ -11,7 +11,7 @@ import { SearchBoxProvided } from "react-instantsearch-core";
 import { connectSearchBox } from "react-instantsearch-dom";
 import { useHistory, useLocation } from "react-router-dom";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     padding: "2px 4px",
     display: "flex",
@@ -21,22 +21,22 @@ const useStyles = makeStyles(theme => ({
     border: "1px solid #dfe1e5",
     borderRadius: 10,
     "&:hover": {
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1) !important"
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1) !important",
     },
     [theme.breakpoints.down("xs")]: {
-      marginBottom: 16
-    }
+      marginBottom: 16,
+    },
   },
   input: {
     marginLeft: 8,
-    flex: 1
+    flex: 1,
   },
   iconButton: {
-    padding: 10
-  }
+    padding: 10,
+  },
 }));
 
-const SearchBar: React.FC<SearchBoxProvided> = props => {
+const SearchBar: React.FC<SearchBoxProvided> = (props) => {
   const location = useLocation();
   const history = useHistory();
   const classes = useStyles();
@@ -78,10 +78,10 @@ const SearchBar: React.FC<SearchBoxProvided> = props => {
     <div className={classes.root}>
       <InputBase
         value={query}
-        onChange={e => {
+        onChange={(e) => {
           setQuery(e.target.value);
         }}
-        onKeyPress={e => {
+        onKeyPress={(e) => {
           if (e.key === "Enter") {
             search();
           }

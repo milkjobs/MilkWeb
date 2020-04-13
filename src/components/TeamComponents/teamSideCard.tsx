@@ -3,7 +3,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from "@material-ui/core/styles";
 import { TeamOfficialInfo, TeamWebsite } from "components/TeamComponents";
 import React from "react";
@@ -21,12 +21,12 @@ const styles = (theme: Theme) =>
       color: theme.palette.text.primary,
       paddingTop: 16,
       paddingBottom: 16,
-      borderRadius: 4
-    }
+      borderRadius: 4,
+    },
   });
 interface Props extends WithStyles<typeof styles>, Team {}
 
-const TeamSideCard: React.FC<Props> = props => {
+const TeamSideCard: React.FC<Props> = (props) => {
   const { classes, website, name, unifiedNumber } = props;
   return (
     <div>

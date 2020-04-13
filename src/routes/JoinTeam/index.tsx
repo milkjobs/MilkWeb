@@ -6,11 +6,11 @@ import React, { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useAuth } from "stores";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.paper
-  }
+    backgroundColor: theme.palette.background.paper,
+  },
 }));
 
 interface InvitationData {
@@ -32,7 +32,7 @@ const JoinTeam: React.FC = () => {
       }
 
       const data: Partial<InvitationData> = qs.parse(location.search, {
-        ignoreQueryPrefix: true
+        ignoreQueryPrefix: true,
       });
       if (!data.expiresTime || !data.code || !data.teamId) {
         alert("錯誤的邀請");
@@ -63,7 +63,7 @@ const JoinTeam: React.FC = () => {
         teamApi.joinTeam({
           teamId: data.teamId,
           userId: user.uuid,
-          inviteCode: data.code
+          inviteCode: data.code,
         })
       );
       if (err) {

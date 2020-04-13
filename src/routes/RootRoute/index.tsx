@@ -5,7 +5,7 @@ import {
   Route,
   RouteComponentProps,
   RouteProps,
-  Switch
+  Switch,
 } from "react-router-dom";
 import About from "routes/About";
 import AwesomeList from "routes/AwesomeList";
@@ -47,7 +47,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   return (
     <Route
       {...rest}
-      render={props => {
+      render={(props) => {
         if (loading) {
           return null;
         }

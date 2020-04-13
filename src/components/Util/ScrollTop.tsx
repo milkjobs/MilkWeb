@@ -4,7 +4,7 @@ import {
   Theme,
   useScrollTrigger,
   useTheme,
-  Zoom
+  Zoom,
 } from "@material-ui/core";
 import React from "react";
 
@@ -13,8 +13,8 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       position: "fixed",
       bottom: theme.spacing(2),
-      right: theme.spacing(2)
-    }
+      right: theme.spacing(2),
+    },
   })
 );
 
@@ -27,7 +27,7 @@ const ScrollTop: React.FC<Props> = ({ children }) => {
   const theme = useTheme();
   const trigger = useScrollTrigger({
     disableHysteresis: true,
-    threshold: 100
+    threshold: 100,
   });
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -49,7 +49,7 @@ const ScrollTop: React.FC<Props> = ({ children }) => {
           window.innerWidth > 1080
             ? {
                 left: (window.innerWidth - 960) / 2 + 960 + theme.spacing(2),
-                right: "auto"
+                right: "auto",
               }
             : undefined
         }

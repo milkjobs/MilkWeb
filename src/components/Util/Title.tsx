@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => ({
     color: "#484848",
     textAlign: "left",
     marginRight: 16,
-    flex: 1
+    flex: 1,
   },
   container: {
     display: "flex",
@@ -20,11 +20,11 @@ const useStyles = makeStyles(() => ({
     paddingBottom: 12,
     paddingLeft: 24,
     paddingRight: 24,
-    paddingTop: 12
+    paddingTop: 12,
   },
   bottomLine: {
-    borderBottom: "1px solid rgba(0, 0, 0, 0.1)"
-  }
+    borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
+  },
 }));
 
 interface Props {
@@ -42,7 +42,7 @@ const Title: React.FC<Props> = ({
   buttonText,
   buttonOnClick,
   customButtonComponent,
-  hideBottomLine
+  hideBottomLine,
 }) => {
   const classes = useStyles();
 

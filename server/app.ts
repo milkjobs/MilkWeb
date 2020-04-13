@@ -43,7 +43,7 @@ const getDefaultBody = (url: string) =>
     url,
     title: "牛奶找工作，大學生的求職平台：工作，是為了更好的生活",
     description:
-      "牛奶找工作，專注於大學生、新鮮人的求職機會。我們的 App 提供最快速、直接的求職求才服務。求職者與公司直接聊、加快面試、即時反饋，隨時隨地都能掌握人才的訊息。"
+      "牛奶找工作，專注於大學生、新鮮人的求職機會。我們的 App 提供最快速、直接的求職求才服務。求職者與公司直接聊、加快面試、即時反饋，隨時隨地都能掌握人才的訊息。",
   });
 
 const app = express();
@@ -62,7 +62,7 @@ app.use(
         // https://developer.apple.com/library/archive/documentation/General/Conceptual/AppSearch/UniversalLinks.html
         res.type("application/json");
       }
-    }
+    },
   })
 );
 
@@ -78,7 +78,7 @@ app.get("/circle/:id", async (request, response) => {
       url: request.url,
       title: post.text.split("\n")[0],
       description: post.text,
-      image: post.imageUrls && post.imageUrls[0]
+      image: post.imageUrls && post.imageUrls[0],
     });
   } catch {
     body = await getDefaultBody(request.url);
@@ -100,7 +100,7 @@ app.get("/job/:id", async (request, response) => {
       url: request.url,
       title: `${job.name}${teamName}－牛奶找工作`,
       description: job.description || "尚無詳情",
-      image: job.team?.logoUrl
+      image: job.team?.logoUrl,
     });
   } catch {
     body = await getDefaultBody(request.url);
@@ -121,7 +121,7 @@ app.get("/team/:id", async (request, response) => {
       url: request.url,
       title: `${team.nickname}－牛奶找工作`,
       description: team.introduction || "尚無介紹",
-      image: team.logoUrl
+      image: team.logoUrl,
     });
   } catch {
     body = await getDefaultBody(request.url);
@@ -138,7 +138,7 @@ app.get("/awesome/:name", async (request, response) => {
     body = await getBody({
       url: request.url,
       title: `${name}－牛奶找工作`,
-      description: `為了幫助學生更了解自己有哪些選擇，我們整理了${name}畢業生最常去的公司。先從這些公司開始應徵吧！`
+      description: `為了幫助學生更了解自己有哪些選擇，我們整理了${name}畢業生最常去的公司。先從這些公司開始應徵吧！`,
     });
   } catch {
     body = await getDefaultBody(request.url);

@@ -10,11 +10,11 @@ const useStyles = makeStyles({
     display: "flex",
     flex: 4,
     flexDirection: "column",
-    boxSizing: "border-box"
-  }
+    boxSizing: "border-box",
+  },
 });
 
-const JobList: React.FC<InfiniteHitsProvided> = props => {
+const JobList: React.FC<InfiniteHitsProvided> = (props) => {
   const classes = useStyles();
   const { hits, hasMore, refineNext } = props;
   const [ref, inView] = useInView();

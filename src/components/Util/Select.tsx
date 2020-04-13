@@ -8,25 +8,25 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 import Select from "react-select";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    paddingBottom: 8
+    paddingBottom: 8,
   },
   input: {
     display: "flex",
     padding: 0,
-    height: "auto"
+    height: "auto",
   },
   valueContainer: {
     display: "flex",
     flexWrap: "wrap",
     flex: 1,
     alignItems: "center",
-    overflow: "hidden"
+    overflow: "hidden",
   },
   chip: {
-    margin: theme.spacing(0.5, 0.25)
+    margin: theme.spacing(0.5, 0.25),
   },
   chipFocused: {
     backgroundColor: emphasize(
@@ -34,39 +34,39 @@ const useStyles = makeStyles(theme => ({
         ? theme.palette.grey[300]
         : theme.palette.grey[700],
       0.08
-    )
+    ),
   },
   noOptionsMessage: {
-    padding: theme.spacing(1, 2)
+    padding: theme.spacing(1, 2),
   },
   singleValue: {
-    fontSize: 16
+    fontSize: 16,
   },
   placeholder: {
     position: "absolute",
     left: 2,
     bottom: 6,
-    fontSize: 16
+    fontSize: 16,
   },
   paper: {
     position: "absolute",
     zIndex: 1,
     marginTop: theme.spacing(1),
     left: 0,
-    right: 0
+    right: 0,
   },
   divider: {
-    height: theme.spacing(2)
+    height: theme.spacing(2),
   },
   errorMessage: {
     fontSize: "12px",
     color: "rgb(244, 67, 54)",
     marginRight: "auto",
-    display: "flex"
-  }
+    display: "flex",
+  },
 }));
 
-const NoOptionsMessage: React.FC<any> = props => {
+const NoOptionsMessage: React.FC<any> = (props) => {
   return (
     <Typography
       color="textSecondary"
@@ -81,7 +81,7 @@ const NoOptionsMessage: React.FC<any> = props => {
 NoOptionsMessage.propTypes = {
   children: PropTypes.node,
   innerProps: PropTypes.object,
-  selectProps: PropTypes.object.isRequired
+  selectProps: PropTypes.object.isRequired,
 };
 
 function inputComponent({ inputRef, ...props }) {
@@ -89,17 +89,17 @@ function inputComponent({ inputRef, ...props }) {
 }
 
 inputComponent.propTypes = {
-  inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object])
+  inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
 };
 
-const Option: React.FC<any> = props => {
+const Option: React.FC<any> = (props) => {
   return (
     <MenuItem
       ref={props.innerRef}
       selected={props.isFocused}
       component="div"
       style={{
-        fontWeight: props.isSelected ? 500 : 400
+        fontWeight: props.isSelected ? 500 : 400,
       }}
       {...props.innerProps}
     >
@@ -113,10 +113,10 @@ Option.propTypes = {
   innerProps: PropTypes.object,
   innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   isFocused: PropTypes.bool,
-  isSelected: PropTypes.bool
+  isSelected: PropTypes.bool,
 };
 
-const Placeholder: React.FC<any> = props => {
+const Placeholder: React.FC<any> = (props) => {
   return (
     <Typography
       color="textSecondary"
@@ -131,10 +131,10 @@ const Placeholder: React.FC<any> = props => {
 Placeholder.propTypes = {
   children: PropTypes.node,
   innerProps: PropTypes.object,
-  selectProps: PropTypes.object.isRequired
+  selectProps: PropTypes.object.isRequired,
 };
 
-const ValueContainer: React.FC<any> = props => {
+const ValueContainer: React.FC<any> = (props) => {
   return (
     <div className={props.selectProps.classes.valueContainer}>
       {props.children}
@@ -144,10 +144,10 @@ const ValueContainer: React.FC<any> = props => {
 
 ValueContainer.propTypes = {
   children: PropTypes.node,
-  selectProps: PropTypes.object.isRequired
+  selectProps: PropTypes.object.isRequired,
 };
 
-const Menu: React.FC<any> = props => {
+const Menu: React.FC<any> = (props) => {
   return (
     <Paper
       square
@@ -162,13 +162,13 @@ const Menu: React.FC<any> = props => {
 Menu.propTypes = {
   children: PropTypes.node,
   innerProps: PropTypes.object,
-  selectProps: PropTypes.object
+  selectProps: PropTypes.object,
 };
 
 const components = {
   Menu,
   NoOptionsMessage,
-  Option
+  Option,
 };
 
 function FieldSelect(props) {
@@ -183,26 +183,26 @@ function FieldSelect(props) {
   }
 
   const selectStyles = {
-    input: base => ({
+    input: (base) => ({
       ...base,
       color: theme.palette.text.primary,
       "& input": {
-        font: "inherit"
-      }
+        font: "inherit",
+      },
     }),
-    control: base => ({
+    control: (base) => ({
       ...base,
       paddingTop: 7,
-      paddingBottom: 7
+      paddingBottom: 7,
     }),
-    indicatorSeparator: base => ({
+    indicatorSeparator: (base) => ({
       ...base,
-      margin: 2
+      margin: 2,
     }),
-    placeholder: base => ({
+    placeholder: (base) => ({
       ...base,
-      color: "rgba(162, 162,162)"
-    })
+      color: "rgba(162, 162,162)",
+    }),
   };
 
   return (
@@ -216,9 +216,9 @@ function FieldSelect(props) {
             label: "Country",
             InputLabelProps: {
               htmlFor: "react-select-single",
-              shrink: true
+              shrink: true,
             },
-            placeholder: props.placeholder
+            placeholder: props.placeholder,
           }}
           placeholder={props.placeholder}
           options={props.options}
@@ -226,12 +226,12 @@ function FieldSelect(props) {
           value={single}
           isSearchable={false}
           onChange={handleChangeSingle}
-          theme={theme => ({
+          theme={(theme) => ({
             ...theme,
             colors: {
               ...theme.colors,
-              primary: "#69C0FF"
-            }
+              primary: "#69C0FF",
+            },
           })}
         />
       </NoSsr>

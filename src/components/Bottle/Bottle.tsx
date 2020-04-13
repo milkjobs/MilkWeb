@@ -3,25 +3,25 @@ import { makeStyles } from "@material-ui/core/styles";
 import LightThemeBottle from "assets/icons/bottle_light.png";
 import React from "react";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     position: "relative",
-    padding: 24
+    padding: 24,
   },
   highlight: {
-    color: theme.palette.secondary.main
+    color: theme.palette.secondary.main,
   },
   image: {
     // original size 1203x472
     height: 200,
     resizeMode: "contain",
-    width: 78.47 // 200 / 1203 * 472
+    width: 78.47, // 200 / 1203 * 472
   },
   replyCount: {
     left: 0,
     position: "absolute",
     right: 0,
-    top: 40
+    top: 40,
   },
   tag: {
     height: "100%",
@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
     right: 0,
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   text: {
     borderBottomWidth: 4,
@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
     width: 75,
     padding: 8,
     fontSize: 18,
-    marginTop: 40
+    marginTop: 40,
   },
   mytext: {
     borderBottomWidth: 4,
@@ -59,8 +59,8 @@ const useStyles = makeStyles(theme => ({
     padding: 8,
     fontSize: 18,
     marginTop: 40,
-    color: theme.palette.secondary.main
-  }
+    color: theme.palette.secondary.main,
+  },
 }));
 
 interface Props {

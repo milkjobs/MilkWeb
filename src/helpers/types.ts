@@ -1,6 +1,6 @@
 export enum LocalStorageItem {
   AlgoliaCredential = "AlgoliaCredential",
-  SendbirdCredential = "SendbirdCredential"
+  SendbirdCredential = "SendbirdCredential",
 }
 
 export interface ApplicationMetaData {
@@ -11,16 +11,16 @@ export interface ApplicationMetaData {
 export enum MobileOS {
   WindowsPhone,
   Android,
-  Ios
+  Ios,
 }
 
 export enum AlertType {
   NotVerification,
   NoVisitorsToBe,
-  NoResume
+  NoResume,
 }
 
 export enum PurchaseMethod {
   Credit = "Credit",
-  ATM = "ATM"
+  ATM = "ATM",
 }

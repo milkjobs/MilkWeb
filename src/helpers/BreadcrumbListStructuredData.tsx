@@ -27,8 +27,8 @@ const BreadcrumbListStructuredData: React.FC<Props> = ({ breadcrumbs }) => {
       "@type": "ListItem",
       position: index + 1,
       name: bc.name,
-      item: bc.url
-    }))
+      item: bc.url,
+    })),
   };
 
   return (

@@ -4,7 +4,7 @@ import { salaryToString, TeamSizeConvertor } from "helpers";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     textDecoration: "none",
     paddingLeft: 24,
@@ -20,12 +20,12 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       flexDirection: "column",
       paddingLeft: 0,
-      paddingRight: 0
+      paddingRight: 0,
     },
     "&:hover": {
       cursor: "pointer",
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1) !important"
-    }
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1) !important",
+    },
   },
   jobContainer: {
     display: "flex",
@@ -33,28 +33,28 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     overflow: "hidden",
     [theme.breakpoints.up("sm")]: {
-      paddingRight: 48
-    }
+      paddingRight: 48,
+    },
   },
   teamContainer: {
     display: "flex",
     flex: 2,
     overflow: "hidden",
     [theme.breakpoints.down("xs")]: {
-      marginTop: 8
-    }
+      marginTop: 8,
+    },
   },
   teamInfo: {
     display: "flex",
     flex: 1,
     justifyContent: "space-around",
     flexDirection: "column",
-    overflow: "hidden"
+    overflow: "hidden",
   },
   nameContainer: {
     display: "flex",
     flex: 1,
-    alignItems: "center"
+    alignItems: "center",
   },
   jobName: {
     display: "flex",
@@ -65,8 +65,8 @@ const useStyles = makeStyles(theme => ({
     marginRight: 16,
     overflow: "hidden",
     [theme.breakpoints.down("xs")]: {
-      fontSize: 16
-    }
+      fontSize: 16,
+    },
   },
   jobSalary: {
     flex: 1,
@@ -75,8 +75,8 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.secondary.main,
     [theme.breakpoints.down("xs")]: {
       fontSize: 16,
-      marginLeft: "auto"
-    }
+      marginLeft: "auto",
+    },
   },
   teamName: {
     display: "flex",
@@ -85,8 +85,8 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 800,
     overflow: "hidden",
     [theme.breakpoints.down("xs")]: {
-      fontSize: 16
-    }
+      fontSize: 16,
+    },
   },
   teamField: {
     display: "flex",
@@ -94,8 +94,8 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.primary,
     overflow: "hidden",
     [theme.breakpoints.down("xs")]: {
-      fontSize: 14
-    }
+      fontSize: 14,
+    },
   },
   location: {
     display: "flex",
@@ -105,8 +105,8 @@ const useStyles = makeStyles(theme => ({
     fontSize: 16,
     fontWeight: 400,
     [theme.breakpoints.down("xs")]: {
-      fontSize: 14
-    }
+      fontSize: 14,
+    },
   },
   logoContainer: {
     objectFit: "contain",
@@ -117,17 +117,17 @@ const useStyles = makeStyles(theme => ({
     height: 72,
     [theme.breakpoints.down("xs")]: {
       width: 55,
-      height: 55
+      height: 55,
     },
     [theme.breakpoints.only("sm")]: {
-      display: "none"
-    }
+      display: "none",
+    },
   },
   truncate: {
     overflow: "hidden",
     textOverflow: "ellipsis",
-    whiteSpace: "nowrap"
-  }
+    whiteSpace: "nowrap",
+  },
 }));
 
 interface Props {
@@ -144,7 +144,7 @@ interface Props {
   targetPath: string;
 }
 
-const JobCardBase: React.FC<Props> = props => {
+const JobCardBase: React.FC<Props> = (props) => {
   const {
     type,
     name,
@@ -153,7 +153,7 @@ const JobCardBase: React.FC<Props> = props => {
     maxSalary,
     salaryType,
     team,
-    targetPath
+    targetPath,
   } = props;
   const classes = useStyles();
   const [fields, setFields] = useState("");

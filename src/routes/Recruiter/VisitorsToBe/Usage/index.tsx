@@ -4,11 +4,11 @@ import { CostEntry } from "components/Point";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "stores";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.default
-  }
+    backgroundColor: theme.palette.background.default,
+  },
 }));
 
 const Usage: React.FC = () => {
@@ -25,7 +25,7 @@ const Usage: React.FC = () => {
         startTime.setDate(now.getDate() - 30);
         const membershipUsage = await membershipApi.getTeamMembershipUsage({
           teamId: user.recruiterInfo.team.uuid,
-          startTime
+          startTime,
         });
         setMembershipUsage(membershipUsage);
       }
@@ -40,12 +40,12 @@ const Usage: React.FC = () => {
         <CostEntry
           entry={{
             name: "全部職缺",
-            visitors: membershipUsage.totalVisitors
+            visitors: membershipUsage.totalVisitors,
           }}
         />
       )}
       {membershipUsage &&
-        membershipUsage.entries.map(e => (
+        membershipUsage.entries.map((e) => (
           <CostEntry key={`${e.name}${e.recruiterName}`} entry={e} />
         ))}
     </div>

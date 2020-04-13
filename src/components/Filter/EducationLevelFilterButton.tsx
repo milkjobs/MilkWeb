@@ -11,9 +11,9 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import { EducationLevel } from "@frankyjuang/milkapi-client";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
-    marginHorizontal: 4
+    marginHorizontal: 4,
   },
   filterButton: {
     minWidth: 60,
@@ -24,12 +24,12 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     paddingHorizontal: 12,
     marginBottom: 8,
-    marginRight: 8
+    marginRight: 8,
   },
   filterText: {
     color: theme.palette.text.secondary,
-    fontSize: 14
-  }
+    fontSize: 14,
+  },
 }));
 
 export interface EducationLevelDialogProps {
@@ -101,7 +101,7 @@ function EducationLevelDialog(props: EducationLevelDialogProps) {
 }
 
 const EducationLevelFilterButton: React.FC<RefinementListProvided> = ({
-  refine
+  refine,
 }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -132,7 +132,7 @@ const EducationLevelFilterButton: React.FC<RefinementListProvided> = ({
                   EducationLevel.HighSchool,
                   EducationLevel.Bachelor,
                   EducationLevel.Master,
-                  EducationLevel.PhD
+                  EducationLevel.PhD,
                 ]
               : [value]
           );

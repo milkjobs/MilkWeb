@@ -104,5 +104,5 @@ export const awesomes: AwesomeEntry[] = [
   { name: "成大化工", link: "國立成功大學化學工程學系" },
   { name: "中山財管", link: "國立中山大學財務管理學系" },
   { name: "中山機電", link: "國立中山大學機電工程學系" },
-  { name: "東華企管", link: "國立東華大學企業管理學系" }
+  { name: "東華企管", link: "國立東華大學企業管理學系" },
 ];

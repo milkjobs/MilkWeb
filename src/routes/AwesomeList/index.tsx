@@ -21,10 +21,10 @@ import { useHistory, useParams } from "react-router-dom";
 import { useAuth } from "stores";
 import urljoin from "url-join";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: "100vh",
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   container: {
     display: "flex",
@@ -36,18 +36,18 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 24,
     paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: "960px"
-    }
+      width: "960px",
+    },
   },
   introduction: {
     fontSize: 18,
     textAlign: "left",
     [theme.breakpoints.down("xs")]: {
-      fontSize: 16
+      fontSize: 16,
     },
     fontWeight: 800,
-    margin: "16px 0"
-  }
+    margin: "16px 0",
+  },
 }));
 
 const AwesomeList: React.FC = () => {
@@ -68,8 +68,8 @@ const AwesomeList: React.FC = () => {
       newSupportTicket: {
         subject: params.name || "我要建議",
         body: suggestion,
-        email: "awesome-suggestion@milk.jobs"
-      }
+        email: "awesome-suggestion@milk.jobs",
+      },
     });
     setSuggestion(undefined);
   };
@@ -99,8 +99,8 @@ const AwesomeList: React.FC = () => {
           { name: "就業精選", url: urljoin(webConfig.basePath, "departments") },
           {
             name: params.name,
-            url: urljoin(webConfig.basePath, "awesome", params.name)
-          }
+            url: urljoin(webConfig.basePath, "awesome", params.name),
+          },
         ]}
       />
       <Header />
@@ -165,7 +165,7 @@ const AwesomeList: React.FC = () => {
             rows="8"
             fullWidth
             variant="outlined"
-            onChange={e => setSuggestion(e.target.value)}
+            onChange={(e) => setSuggestion(e.target.value)}
           />
         </DialogContent>
         <DialogActions>

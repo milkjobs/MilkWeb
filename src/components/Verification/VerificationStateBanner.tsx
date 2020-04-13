@@ -12,7 +12,7 @@ interface Props {
 
 const VerificationStateBanner: React.FC<Props> = ({
   showAction,
-  containerStyle
+  containerStyle,
 }) => {
   const { user } = useAuth();
   const history = useHistory();

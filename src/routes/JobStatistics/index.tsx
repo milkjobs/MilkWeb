@@ -1,6 +1,6 @@
 import {
   DateBin,
-  JobStatistics as JobStatisticsType
+  JobStatistics as JobStatisticsType,
 } from "@frankyjuang/milkapi-client";
 import { useMediaQuery } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -15,17 +15,17 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
+  YAxis,
 } from "recharts";
 import { useAuth, useTheme } from "stores";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   header: {
     fontSize: "1.2rem",
     textAlign: "left",
     margin: 12,
     marginTop: 32,
-    marginBottom: 18
+    marginBottom: 18,
   },
   container: {
     display: "flex",
@@ -38,9 +38,9 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 24,
     paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: "960px"
-    }
-  }
+      width: "960px",
+    },
+  },
 }));
 
 const JobStatistics: React.FC = () => {
@@ -57,7 +57,7 @@ const JobStatistics: React.FC = () => {
       const statistics = await jobApi.getJobStatistics({
         jobId,
         binCount: 14,
-        binSizeDays: 1
+        binSizeDays: 1,
       });
       setJobStatistics(statistics);
     };
@@ -93,12 +93,12 @@ const JobStatistics: React.FC = () => {
               dot={{
                 stroke: theme.palette.text.primary,
                 strokeWidth: 4,
-                fill: theme.palette.text.primary
+                fill: theme.palette.text.primary,
               }}
               activeDot={{
                 stroke: theme.palette.secondary.main,
                 strokeWidth: 4,
-                fill: theme.palette.secondary.main
+                fill: theme.palette.secondary.main,
               }}
             />
             <Tooltip />

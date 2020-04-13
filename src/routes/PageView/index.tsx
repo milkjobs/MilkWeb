@@ -13,7 +13,7 @@ const PageView: React.FC = () => {
         // eslint-disable-next-line @typescript-eslint/camelcase
         page_location: window.location.href,
         // eslint-disable-next-line @typescript-eslint/camelcase
-        page_path: location.pathname
+        page_path: location.pathname,
       });
     }
   }, [history, location]);

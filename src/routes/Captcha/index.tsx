@@ -12,7 +12,7 @@ const Captcha: React.FC = () => {
   useEffect(() => {
     const getToken = async () => {
       const captcha = new firebase.auth.RecaptchaVerifier(captchaDomId, {
-        size: "invisible"
+        size: "invisible",
       });
       await captcha.render();
       const token = await captcha.verify();

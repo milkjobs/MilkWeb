@@ -4,7 +4,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  makeStyles
+  makeStyles,
 } from "@material-ui/core";
 import { CloudUploadOutlined } from "@material-ui/icons";
 import to from "await-to-js";
@@ -19,12 +19,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "stores";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
     flex: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   container: {
     display: "flex",
@@ -38,22 +38,22 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 24,
     paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: "960px"
-    }
+      width: "960px",
+    },
   },
   button: {
-    marginLeft: 16
+    marginLeft: 16,
   },
   body: {
     display: "flex",
-    flex: 1
+    flex: 1,
   },
   pdfDocument: {
-    flex: 1
+    flex: 1,
   },
   pdfPage: {
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.2)",
-    marginBottom: 24
+    marginBottom: 24,
   },
   dropzone: {
     display: "flex",
@@ -70,13 +70,13 @@ const useStyles = makeStyles(theme => ({
     paddingRight: 48,
     paddingTop: 48,
     [theme.breakpoints.down("xs")]: {
-      fontSize: 18
-    }
+      fontSize: 18,
+    },
   },
   uploadIcon: {
     flexGrow: 1,
-    width: "100%"
-  }
+    width: "100%",
+  },
 }));
 
 const Resume: React.FC = () => {
@@ -109,7 +109,7 @@ const Resume: React.FC = () => {
         profileApi.uploadResume({
           profileId: user.profile.uuid,
           file,
-          filename: file.name
+          filename: file.name,
         })
       );
       if (err) {
@@ -128,7 +128,7 @@ const Resume: React.FC = () => {
       const profileApi = await getApi("Profile");
       await profileApi.removeResume({
         profileId: user.profile.uuid,
-        resumeKey: user.profile.resumeKey
+        resumeKey: user.profile.resumeKey,
       });
       setResumeUrl(undefined);
       setDeleteLoading(false);
@@ -138,12 +138,12 @@ const Resume: React.FC = () => {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDropAccepted: upload,
-    onDropRejected: files => {
+    onDropRejected: (files) => {
       if (files[0].type !== "application/pdf") {
         toast.error("目前僅可上傳 pdf 檔");
       }
     },
-    accept: PdfMimeType
+    accept: PdfMimeType,
   });
 
   useEffect(() => {
@@ -156,7 +156,7 @@ const Resume: React.FC = () => {
         const profileApi = await getApi("Profile");
         const url = await profileApi.getResumeUrl({
           profileId: user.profile.uuid,
-          resumeKey: user.profile.resumeKey
+          resumeKey: user.profile.resumeKey,
         });
         setResumeUrl(url);
       }
@@ -177,7 +177,7 @@ const Resume: React.FC = () => {
                   <input
                     accept={PdfMimeType}
                     hidden
-                    onChange={e => {
+                    onChange={(e) => {
                       e.target.files && upload(e.target.files);
                     }}
                     type="file"
@@ -218,13 +218,13 @@ const Resume: React.FC = () => {
               file={resumeUrl}
               loading="載入中"
               noData="無法載入履歷"
-              onLoadSuccess={doc => {
+              onLoadSuccess={(doc) => {
                 setNumPages(doc.numPages);
               }}
             >
               {bodyWidth &&
                 numPages &&
-                Array.from({ length: numPages }, (v, k) => k).map(x => (
+                Array.from({ length: numPages }, (v, k) => k).map((x) => (
                   <Page
                     key={x}
                     pageIndex={x}
@@ -272,7 +272,7 @@ const Resume: React.FC = () => {
                   width: 20,
                   height: 20,
                   marginLeft: 20,
-                  marginRight: 20
+                  marginRight: 20,
                 }}
               />
             ) : (

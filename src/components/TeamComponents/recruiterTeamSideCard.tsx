@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from "@material-ui/core/styles";
 import React, { useState } from "react";
 import Sticky from "react-stickynode";
@@ -22,7 +22,7 @@ const styles = (theme: Theme) =>
       color: theme.palette.text.primary,
       paddingTop: 16,
       paddingBottom: 16,
-      borderRadius: 4
+      borderRadius: 4,
     },
     removeButton: {
       marginLeft: 24,
@@ -32,14 +32,14 @@ const styles = (theme: Theme) =>
       paddingTop: 6,
       paddingBottom: 6,
       borderRadius: 4,
-      boxShadow: "none"
-    }
+      boxShadow: "none",
+    },
   });
 interface Props extends WithStyles<typeof styles> {
   team: Team;
 }
 
-const RecruiterTeamSideCard: React.FC<Props> = props => {
+const RecruiterTeamSideCard: React.FC<Props> = (props) => {
   const { user } = useAuth();
   const { classes, team } = props;
   const [editDialogOpen, setEditDialogOpen] = useState(false);

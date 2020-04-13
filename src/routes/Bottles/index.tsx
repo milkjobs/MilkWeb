@@ -17,7 +17,7 @@ import { SmsOutlined, Sms } from "@material-ui/icons";
 import { useHistory, useParams } from "react-router-dom";
 import { DownloadApp } from "components/Util";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   containerHeader: {
     display: "flex",
     flexDirection: "row",
@@ -28,31 +28,31 @@ const useStyles = makeStyles(theme => ({
     marginRight: "auto",
     width: 600,
     [theme.breakpoints.down("xs")]: {
-      width: "100%"
-    }
+      width: "100%",
+    },
   },
   myBottle: {
-    fontSize: 18
+    fontSize: 18,
   },
   message: {
     fontSize: 18,
-    marginBottom: 32
+    marginBottom: 32,
   },
   reply: {
     fontSize: 18,
     marginBottom: 32,
     padding: 16,
     borderRadius: 4,
-    backgroundColor: theme.palette.action.hover
+    backgroundColor: theme.palette.action.hover,
   },
   time: {
     fontSize: 14,
-    color: theme.palette.text.hint
+    color: theme.palette.text.hint,
   },
   replyMessageContainer: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   container: {
     alignContent: "stretch",
@@ -66,29 +66,29 @@ const useStyles = makeStyles(theme => ({
     marginRight: "auto",
     width: 600,
     [theme.breakpoints.down("xs")]: {
-      width: "100%"
-    }
+      width: "100%",
+    },
   },
   bottle: {
     width: 200,
     cursor: "pointer",
     [theme.breakpoints.down("xs")]: {
-      width: "33%"
-    }
+      width: "33%",
+    },
   },
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   dialogPaper: {
-    minHeight: "35vh"
+    minHeight: "35vh",
   },
   loading: {
     marginLeft: "auto",
     marginRight: "auto",
     marginTop: "auto",
-    marginBottom: "auto"
-  }
+    marginBottom: "auto",
+  },
 }));
 
 interface CreateDialogProps {
@@ -97,7 +97,7 @@ interface CreateDialogProps {
   addBottle: (bottle: BottleType) => void;
 }
 
-const CreateDialog: React.FC<CreateDialogProps> = props => {
+const CreateDialog: React.FC<CreateDialogProps> = (props) => {
   const classes = useStyles();
   const { user, getApi } = useAuth();
   const { onClose, open, addBottle } = props;
@@ -127,7 +127,7 @@ const CreateDialog: React.FC<CreateDialogProps> = props => {
     const bottleApi = await getApi("Bottle");
     const newBottle = await bottleApi.addBottle({
       userId: user.uuid,
-      newBottle: { message }
+      newBottle: { message },
     });
     addBottle(newBottle);
     setLoading(false);
@@ -149,7 +149,7 @@ const CreateDialog: React.FC<CreateDialogProps> = props => {
           id="introduction"
           margin="normal"
           multiline
-          onChange={e => setMessage(e.target.value)}
+          onChange={(e) => setMessage(e.target.value)}
           rows="8"
           value={message}
         />
@@ -180,7 +180,7 @@ interface ReplyDialogProps {
   myBottle: boolean;
 }
 
-const ReplyDialog: React.FC<ReplyDialogProps> = props => {
+const ReplyDialog: React.FC<ReplyDialogProps> = (props) => {
   const classes = useStyles();
   const { user, getApi } = useAuth();
   const history = useHistory();
@@ -212,7 +212,7 @@ const ReplyDialog: React.FC<ReplyDialogProps> = props => {
     const [err] = await to(
       bottleApi.addBottleReply({
         bottleId: bottle.uuid,
-        newBottleReply: { replierId: user.uuid, message: reply }
+        newBottleReply: { replierId: user.uuid, message: reply },
       })
     );
     setLoading(false);
@@ -276,7 +276,7 @@ const ReplyDialog: React.FC<ReplyDialogProps> = props => {
           </div>
           {bottle.replies?.length || myBottle ? (
             bottle.replies?.length ? (
-              bottle.replies.map(r => (
+              bottle.replies.map((r) => (
                 <div key={r.uuid} className={classes.reply}>
                   <div className={classes.replyMessageContainer}>
                     <div>{r.message}</div>
@@ -302,7 +302,7 @@ const ReplyDialog: React.FC<ReplyDialogProps> = props => {
               id="introduction"
               margin="normal"
               multiline
-              onChange={e => setReply(e.target.value)}
+              onChange={(e) => setReply(e.target.value)}
               rows="8"
               value={reply}
             />
@@ -348,7 +348,7 @@ const Bottles: React.FC = () => {
           createdAt: new Date(),
           expiresAt: new Date(),
           replies: [],
-          replyCount: 0
+          replyCount: 0,
         } as BottleType)
       : undefined
   );
@@ -362,7 +362,7 @@ const Bottles: React.FC = () => {
 
   const unique = (data: BottleType[]) => {
     const seen = new Set<string>();
-    return data.filter(b => {
+    return data.filter((b) => {
       const k = b.uuid;
       return seen.has(k) ? false : seen.add(k);
     });
@@ -374,7 +374,7 @@ const Bottles: React.FC = () => {
       const bottleApi = await getApi("Bottle");
       const response = await bottleApi.getBottlesRaw({
         pageNo: page,
-        pageSize
+        pageSize,
       });
       const totalPages = response.raw.headers.get("X-Total-Pages");
       const fetchedBottles = await response.value();
@@ -393,9 +393,9 @@ const Bottles: React.FC = () => {
   );
   const init = async () => {
     const { fetchedBottles, hasMore } = await getBottles(pageNo);
-    setBottles(prev => unique([...prev, ...fetchedBottles]));
+    setBottles((prev) => unique([...prev, ...fetchedBottles]));
     setHasMorePages(hasMore);
-    setPageNo(x => x + 1);
+    setPageNo((x) => x + 1);
 
     let myPageNo = 1;
     const myPageSize = 20;
@@ -406,7 +406,7 @@ const Bottles: React.FC = () => {
       const response = await userApi.getUserBottlesRaw({
         userId: user.uuid,
         pageNo: myPageNo,
-        pageSize: myPageSize
+        pageSize: myPageSize,
       });
       const totalPages = response.raw.headers.get("X-Total-Pages");
       const fetchedBottles = await response.value();
@@ -448,7 +448,7 @@ const Bottles: React.FC = () => {
           <div className={classes.bottle} onClick={() => setCreateOpen(true)}>
             <PlusBottle />
           </div>
-          {(checked ? myBottles : bottles).map(b => (
+          {(checked ? myBottles : bottles).map((b) => (
             <div
               key={b.uuid}
               className={classes.bottle}
@@ -459,7 +459,7 @@ const Bottles: React.FC = () => {
             >
               <Bottle
                 bottle={b}
-                myBottle={Boolean(myBottles.find(mb => mb.uuid === b.uuid))}
+                myBottle={Boolean(myBottles.find((mb) => mb.uuid === b.uuid))}
               />
             </div>
           ))}
@@ -476,7 +476,7 @@ const Bottles: React.FC = () => {
       {selectedBottle && (
         <ReplyDialog
           myBottle={Boolean(
-            myBottles.find(b => b.uuid === selectedBottle.uuid)
+            myBottles.find((b) => b.uuid === selectedBottle.uuid)
           )}
           open={replyOpen}
           onClose={() => setReplyOpen(false)}

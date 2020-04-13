@@ -10,20 +10,20 @@ import { PurchaseMethod } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "stores";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
     paddingTop: 32,
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.default,
   },
   plansContainer: {
     display: "flex",
     [theme.breakpoints.up("md")]: {
       width: "100%",
       flexDirection: "row",
-      justifyItems: "space-around"
+      justifyItems: "space-around",
     },
-    flexDirection: "column"
+    flexDirection: "column",
   },
   plan: {
     display: "flex",
@@ -44,14 +44,14 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up("md")]: {
       flex: 1,
       marginTop: 32,
-      marginBottom: 32
-    }
+      marginBottom: 32,
+    },
   },
   visitorToBe: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 }));
 
 const Buy: React.FC = () => {

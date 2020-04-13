@@ -11,9 +11,9 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import { ExperienceLevel } from "@frankyjuang/milkapi-client";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
-    marginHorizontal: 4
+    marginHorizontal: 4,
   },
   filterButton: {
     width: 60,
@@ -24,12 +24,12 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     paddingHorizontal: 12,
     marginBottom: 8,
-    marginRight: 8
+    marginRight: 8,
   },
   filterText: {
     color: theme.palette.text.secondary,
-    fontSize: 14
-  }
+    fontSize: 14,
+  },
 }));
 
 export interface ExperienceLevelDialogProps {
@@ -96,7 +96,7 @@ function ExperienceLevelDialog(props: ExperienceLevelDialogProps) {
 }
 
 const ExperienceLevelFilterButton: React.FC<RefinementListProvided> = ({
-  refine
+  refine,
 }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -125,7 +125,7 @@ const ExperienceLevelFilterButton: React.FC<RefinementListProvided> = ({
                   ExperienceLevel.Any,
                   ExperienceLevel.Entry,
                   ExperienceLevel.Mid,
-                  ExperienceLevel.Senior
+                  ExperienceLevel.Senior,
                 ]
               : [value]
           );

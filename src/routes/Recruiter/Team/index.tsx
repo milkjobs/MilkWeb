@@ -11,7 +11,7 @@ import {
   TeamInfo,
   TeamLocation,
   TeamOfficialInfo,
-  TeamWebsite
+  TeamWebsite,
 } from "components/TeamComponents";
 import RecruiterTeamSideCard from "components/TeamComponents/recruiterTeamSideCard";
 import { algoliaConfig } from "config";
@@ -20,27 +20,27 @@ import React, { useEffect, useState } from "react";
 import { connectRefinementList, InstantSearch } from "react-instantsearch-dom";
 import { useAuth } from "stores";
 
-const useTabsStyles = makeStyles(theme => ({
+const useTabsStyles = makeStyles((theme) => ({
   root: {
     borderBottomWidth: 1,
     borderBottomStyle: "solid",
     borderBottomColor: theme.palette.divider,
     paddingLeft: 24,
-    paddingRight: 24
+    paddingRight: 24,
   },
   indicator: {
-    backgroundColor: theme.palette.text.primary
-  }
+    backgroundColor: theme.palette.text.primary,
+  },
 }));
 
-const useTabStyles = makeStyles(theme => ({
+const useTabStyles = makeStyles((theme) => ({
   root: {
     textTransform: "none",
     color: theme.palette.grey["500"],
     minWidth: 72,
     fontSize: 16,
     [theme.breakpoints.down("xs")]: {
-      fontSize: 14
+      fontSize: 14,
     },
     fontWeight: theme.typography.fontWeightRegular,
     marginRight: theme.spacing(4),
@@ -54,23 +54,23 @@ const useTabStyles = makeStyles(theme => ({
       "sans-serif",
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"'
+      '"Segoe UI Symbol"',
     ].join(","),
     "&:hover": {
       color: theme.palette.secondary.main,
-      opacity: 1
+      opacity: 1,
     },
     "&$selected": {
-      color: theme.palette.text.primary
-    }
+      color: theme.palette.text.primary,
+    },
   },
-  selected: {}
+  selected: {},
 }));
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   container: {
     backgroundColor: theme.palette.background.paper,
@@ -82,11 +82,11 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     flexDirection: "column",
     [theme.breakpoints.up("md")]: {
-      width: "960px"
+      width: "960px",
     },
     [theme.breakpoints.down("xs")]: {
-      marginTop: 0
-    }
+      marginTop: 0,
+    },
   },
   title: {
     display: "flex",
@@ -94,22 +94,22 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 24,
     marginBottom: 16,
     fontWeight: "bold",
-    color: "#484848"
+    color: "#484848",
   },
   sideCard: {
     flex: 1,
     marginLeft: 8,
     [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
-  }
+      display: "none",
+    },
+  },
 }));
 
 interface Props {
   team: TeamType;
 }
 
-const TeamIntroduction: React.FC<Props> = props => {
+const TeamIntroduction: React.FC<Props> = (props) => {
   const { team } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -135,7 +135,7 @@ const TeamIntroduction: React.FC<Props> = props => {
   );
 };
 
-const TeamJobs: React.FC<Props> = props => {
+const TeamJobs: React.FC<Props> = (props) => {
   const { user, getApi } = useAuth();
   const { team } = props;
   const [algoliaClient, setAlgoliaClient] = useState<SearchClient>();

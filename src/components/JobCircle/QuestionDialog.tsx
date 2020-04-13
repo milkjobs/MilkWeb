@@ -8,10 +8,10 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { LoginDialog } from "components/Util";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   input: {
     marginLeft: 8,
-    flex: 1
+    flex: 1,
   },
   textArea: {
     borderWidth: 0,
@@ -19,11 +19,11 @@ const useStyles = makeStyles(theme => ({
     fontSize: 16,
     resize: "none",
     "&:focus": {
-      outline: "none !important"
-    }
+      outline: "none !important",
+    },
   },
   textAreaError: {
-    color: theme.palette.secondary.main
+    color: theme.palette.secondary.main,
   },
   imagePlus: {
     color: "#ffffff",
@@ -35,30 +35,30 @@ const useStyles = makeStyles(theme => ({
     minWidth: 100,
     height: 100,
     marginRight: 8,
-    borderRadius: 8
+    borderRadius: 8,
   },
   postImage: {
     width: 100,
     height: 100,
     objectFit: "cover",
     marginRight: 8,
-    borderRadius: 8
+    borderRadius: 8,
   },
   imageContainer: {
-    position: "relative"
+    position: "relative",
   },
   deleteIcon: {
     position: "absolute",
     padding: 0,
     top: 0,
-    right: 8
+    right: 8,
   },
   imagesContainer: {
     width: "100%",
     display: "flex",
     overflow: "scroll",
-    flexWrap: "nowrap"
-  }
+    flexWrap: "nowrap",
+  },
 }));
 
 interface QuestionDialogProps {
@@ -76,7 +76,7 @@ const QuestionDialog: React.FC<QuestionDialogProps> = ({
   finish,
   delete: deletePost,
   theme,
-  question
+  question,
 }) => {
   const classes = useStyles();
   const { user } = useAuth();

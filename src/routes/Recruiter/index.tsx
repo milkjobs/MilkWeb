@@ -7,7 +7,7 @@ import {
   RouteComponentProps,
   RouteProps,
   Switch,
-  useRouteMatch
+  useRouteMatch,
 } from "react-router-dom";
 import { useAuth } from "stores";
 import Member from "./Member";
@@ -38,7 +38,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   return (
     <Route
       {...rest}
-      render={props => {
+      render={(props) => {
         if (loading) {
           return null;
         }

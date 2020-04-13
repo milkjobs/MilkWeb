@@ -14,11 +14,11 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "stores";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: "none",
-    color: theme.palette.text.primary
-  }
+    color: theme.palette.text.primary,
+  },
 }));
 
 interface Props {
@@ -27,7 +27,7 @@ interface Props {
   anchorElement: null | HTMLElement;
 }
 
-const ApplicantProfileMenu: React.FC<Props> = props => {
+const ApplicantProfileMenu: React.FC<Props> = (props) => {
   const { isOpen, anchorElement, close } = props;
   const classes = useStyles();
   const { user } = useAuth();
@@ -62,7 +62,7 @@ const ApplicantProfileMenu: React.FC<Props> = props => {
             {...TransitionProps}
             style={{
               transformOrigin:
-                placement === "bottom" ? "center top" : "center bottom"
+                placement === "bottom" ? "center top" : "center bottom",
             }}
           >
             <Paper square={true}>

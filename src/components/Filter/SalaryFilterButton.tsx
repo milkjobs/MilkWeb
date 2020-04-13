@@ -7,9 +7,9 @@ import { SalaryType } from "@frankyjuang/milkapi-client";
 import Slider from "@material-ui/core/Slider";
 import { useSearch } from "stores";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
-    marginHorizontal: 4
+    marginHorizontal: 4,
   },
   filterButton: {
     width: 60,
@@ -20,12 +20,12 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     paddingHorizontal: 12,
     marginBottom: 8,
-    marginRight: 8
+    marginRight: 8,
   },
   filterText: {
     color: theme.palette.text.secondary,
-    fontSize: 14
-  }
+    fontSize: 14,
+  },
 }));
 
 export interface SalaryDialogProps {
@@ -39,7 +39,7 @@ function SalaryDialog(props: SalaryDialogProps) {
   const { onClose, open, minimumSalary, maximumSalary } = props;
   const [value, setValue] = React.useState<number[]>([
     minimumSalary,
-    maximumSalary
+    maximumSalary,
   ]);
 
   const handleChange = (event: any, newValue: number | number[]) => {
@@ -76,7 +76,7 @@ interface SalaryFilterButtonProps {
 }
 
 const SalaryFilterButton: React.FC<SalaryFilterButtonProps> = ({
-  salaryType
+  salaryType,
 }) => {
   const classes = useStyles();
   const { setSearchState, searchState } = useSearch();
@@ -95,14 +95,14 @@ const SalaryFilterButton: React.FC<SalaryFilterButtonProps> = ({
         maximumSalary={maximumSalary}
         onClose={(salary: number[]) => {
           console.warn(salary);
-          setSearchState(prev => {
+          setSearchState((prev) => {
             return {
               ...prev,
               page: 1,
               range: {
                 minSalary: { max: salary[1] },
-                maxSalary: { min: salary[0] }
-              }
+                maxSalary: { min: salary[0] },
+              },
             };
           });
           setOpen(false);

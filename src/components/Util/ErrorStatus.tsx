@@ -3,10 +3,10 @@ import missingMilkImage from "assets/missing.png";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.default,
   },
   container: {
     display: "flex",
@@ -20,16 +20,16 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up("md")]: {
       width: "960px",
       paddingRight: 0,
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     [theme.breakpoints.down("sm")]: {
-      marginTop: 30
-    }
+      marginTop: 30,
+    },
   },
   descriptionContainer: {
     display: "flex",
     flex: 1,
-    flexDirection: "column"
+    flexDirection: "column",
   },
   descriptionHeader: {
     display: "flex",
@@ -37,27 +37,27 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 800,
     alignItems: "center",
     [theme.breakpoints.down("sm")]: {
-      fontSize: 72
-    }
+      fontSize: 72,
+    },
   },
   descriptionSubheader: {
     display: "flex",
     fontSize: 30,
     alignItems: "center",
-    textAlign: "left"
+    textAlign: "left",
   },
   descriptionBody: {
     display: "flex",
     fontSize: 20,
     marginTop: 16,
     marginBottom: 16,
-    textAlign: "left"
+    textAlign: "left",
   },
   descriptionFooter: {
     display: "flex",
     flex: 1,
     alignItems: "flex-end",
-    fontSize: 20
+    fontSize: 20,
   },
   imageContainer: {
     display: "flex",
@@ -65,17 +65,17 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     justifyItems: "center",
     [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
+      display: "none",
+    },
   },
   image: {
-    maxWidth: "100%"
+    maxWidth: "100%",
   },
   link: {
     textDecoration: "none",
     color: "#484848",
-    display: "flex"
-  }
+    display: "flex",
+  },
 }));
 
 interface Props {
@@ -83,7 +83,7 @@ interface Props {
   description: string;
 }
 
-const ErrorStatus: React.FC<Props> = props => {
+const ErrorStatus: React.FC<Props> = (props) => {
   const { subheader, description } = props;
   const classes = useStyles();
 

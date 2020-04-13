@@ -14,27 +14,27 @@ import Buy from "./Buy";
 import History from "./History";
 import Usage from "./Usage";
 
-const useTabsStyles = makeStyles(theme => ({
+const useTabsStyles = makeStyles((theme) => ({
   root: {
     borderBottomWidth: 1,
     borderBottomStyle: "solid",
     borderBottomColor: theme.palette.divider,
     paddingLeft: 24,
-    paddingRight: 24
+    paddingRight: 24,
   },
   indicator: {
-    backgroundColor: theme.palette.text.primary
-  }
+    backgroundColor: theme.palette.text.primary,
+  },
 }));
 
-const useTabStyles = makeStyles(theme => ({
+const useTabStyles = makeStyles((theme) => ({
   root: {
     textTransform: "none",
     color: theme.palette.grey["500"],
     minWidth: 72,
     fontSize: 16,
     [theme.breakpoints.down("xs")]: {
-      fontSize: 14
+      fontSize: 14,
     },
     fontWeight: theme.typography.fontWeightRegular,
     marginRight: theme.spacing(4),
@@ -48,23 +48,23 @@ const useTabStyles = makeStyles(theme => ({
       "sans-serif",
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"'
+      '"Segoe UI Symbol"',
     ].join(","),
     "&:hover": {
       color: theme.palette.secondary.main,
-      opacity: 1
+      opacity: 1,
     },
     "&$selected": {
-      color: theme.palette.text.primary
-    }
+      color: theme.palette.text.primary,
+    },
   },
-  selected: {}
+  selected: {},
 }));
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.default,
   },
   container: {
     display: "flex",
@@ -77,16 +77,16 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 24,
     paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: "960px"
-    }
+      width: "960px",
+    },
   },
   icon: {
     marginTop: "auto",
     marginBottom: "auto",
     marginLeft: 8,
     marginRight: 8,
-    color: theme.palette.text.primary
-  }
+    color: theme.palette.text.primary,
+  },
 }));
 
 const VisitorsToBe: React.FC = () => {
@@ -105,7 +105,7 @@ const VisitorsToBe: React.FC = () => {
       const membershipApi = await getApi("Membership");
       const [, fetchedMembership] = await to(
         membershipApi.getTeamMembership({
-          teamId
+          teamId,
         })
       );
       setMembership(fetchedMembership);

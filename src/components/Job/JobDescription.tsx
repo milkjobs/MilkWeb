@@ -3,7 +3,7 @@ import { Chip } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     marginTop: 32,
     paddingLeft: 24,
@@ -14,8 +14,8 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       marginTop: 16,
       paddingLeft: 0,
-      paddingRight: 0
-    }
+      paddingRight: 0,
+    },
   },
   title: {
     flex: 1,
@@ -26,8 +26,8 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 8,
     [theme.breakpoints.down("xs")]: {
       fontSize: 16,
-      marginBottom: 4
-    }
+      marginBottom: 4,
+    },
   },
   content: {
     display: "flex",
@@ -37,22 +37,22 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.primary,
     textAlign: "left",
     [theme.breakpoints.down("xs")]: {
-      fontSize: 14
-    }
+      fontSize: 14,
+    },
   },
   line: {
     marginTop: 8,
     marginBottom: 8,
     [theme.breakpoints.down("xs")]: {
       marginTop: 2,
-      marginBottom: 2
-    }
+      marginBottom: 2,
+    },
   },
   tags: {
     display: "flex",
     marginTop: 16,
-    flexWrap: "wrap"
-  }
+    flexWrap: "wrap",
+  },
 }));
 
 interface Props {
@@ -79,7 +79,7 @@ const JobDescription: React.FC<Props> = ({ description, tags }) => {
       </div>
       {tags && (
         <div className={classes.tags}>
-          {tags.map(tag => (
+          {tags.map((tag) => (
             <Chip
               key={tag.uuid}
               variant="outlined"

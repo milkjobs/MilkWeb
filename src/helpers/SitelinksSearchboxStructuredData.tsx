@@ -14,8 +14,8 @@ const SitelinksSearchboxStructuredData: React.FC = () => {
     potentialAction: {
       "@type": "SearchAction",
       target: "https://milk.jobs/?job={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
+      "query-input": "required name=search_term_string",
+    },
   };
 
   return (

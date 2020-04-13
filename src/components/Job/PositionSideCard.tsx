@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: 16,
     paddingRight: 24,
     paddingLeft: 24,
-    borderRadius: 4
+    borderRadius: 4,
   },
   button: {
     boxShadow: "none",
@@ -25,13 +25,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: "white",
     paddingTop: 6,
     paddingBottom: 6,
-    borderRadius: 4
+    borderRadius: 4,
   },
   publishButton: {
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
   },
   loadingButton: {
-    backgroundColor: theme.palette.text.hint
+    backgroundColor: theme.palette.text.hint,
   },
   removeButton: {
     width: "100%",
@@ -41,21 +41,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: 6,
     paddingBottom: 6,
     borderRadius: 4,
-    boxShadow: "none"
+    boxShadow: "none",
   },
   analysisContainer: {
     display: "flex",
     alignItems: "center",
     marginTop: 8,
-    marginBottom: 8
-  }
+    marginBottom: 8,
+  },
 }));
 
 interface Props {
   job: Job;
 }
 
-const PositionSideCard: React.FC<Props> = props => {
+const PositionSideCard: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { getApi } = useAuth();
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -67,7 +67,7 @@ const PositionSideCard: React.FC<Props> = props => {
     const jobApi = await getApi("Job");
     const updatedJob = await jobApi.updateJob({
       jobId: job.uuid,
-      job: { ...job, published: !job.published }
+      job: { ...job, published: !job.published },
     });
     setJob(updatedJob);
     setPublishLoading(false);

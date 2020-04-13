@@ -6,21 +6,21 @@ import {
   TeamLocation,
   TeamOfficialInfo,
   TeamSideCard,
-  TeamWebsite
+  TeamWebsite,
 } from "components/TeamComponents";
 import { webConfig } from "config";
 import { BreadcrumbListStructuredData } from "helpers";
 import React from "react";
 import urljoin from "url-join";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   sideCard: {
     flex: 1,
     marginLeft: 8,
     [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
-  }
+      display: "none",
+    },
+  },
 }));
 
 interface Props {
@@ -38,12 +38,12 @@ const Intro: React.FC<Props> = ({ team }) => {
         breadcrumbs={[
           {
             name: team.name,
-            url: urljoin(webConfig.basePath, "team", team.uuid)
+            url: urljoin(webConfig.basePath, "team", team.uuid),
           },
           {
             name: "公司介紹",
-            url: urljoin(webConfig.basePath, "team", team.uuid, "intro")
-          }
+            url: urljoin(webConfig.basePath, "team", team.uuid, "intro"),
+          },
         ]}
       />
       <div style={{ display: "flex" }}>

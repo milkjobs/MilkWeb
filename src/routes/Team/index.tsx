@@ -15,33 +15,33 @@ import {
   Route,
   Switch,
   useParams,
-  useRouteMatch
+  useRouteMatch,
 } from "react-router-dom";
 import { useAuth } from "stores";
 import Intro from "./Intro";
 import Jobs from "./Jobs";
 
-const useTabsStyles = makeStyles(theme => ({
+const useTabsStyles = makeStyles((theme) => ({
   root: {
     borderBottomWidth: 1,
     borderBottomStyle: "solid",
     borderBottomColor: theme.palette.divider,
     paddingLeft: 24,
-    paddingRight: 24
+    paddingRight: 24,
   },
   indicator: {
-    backgroundColor: theme.palette.text.primary
-  }
+    backgroundColor: theme.palette.text.primary,
+  },
 }));
 
-const useTabStyles = makeStyles(theme => ({
+const useTabStyles = makeStyles((theme) => ({
   root: {
     textTransform: "none",
     color: theme.palette.grey["500"],
     minWidth: 72,
     fontSize: 16,
     [theme.breakpoints.down("xs")]: {
-      fontSize: 14
+      fontSize: 14,
     },
     fontWeight: theme.typography.fontWeightRegular,
     marginRight: theme.spacing(4),
@@ -55,23 +55,23 @@ const useTabStyles = makeStyles(theme => ({
       "sans-serif",
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"'
+      '"Segoe UI Symbol"',
     ].join(","),
     "&:hover": {
       color: theme.palette.secondary.main,
-      opacity: 1
+      opacity: 1,
     },
     "&$selected": {
-      color: theme.palette.text.primary
-    }
+      color: theme.palette.text.primary,
+    },
   },
-  selected: {}
+  selected: {},
 }));
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   container: {
     backgroundColor: theme.palette.background.paper,
@@ -84,12 +84,12 @@ const useStyles = makeStyles(theme => ({
     paddingRight: 24,
     paddingTop: 40,
     [theme.breakpoints.up("md")]: {
-      width: "960px"
+      width: "960px",
     },
     [theme.breakpoints.down("xs")]: {
       paddingTop: 0,
-      paddingBottom: 0
-    }
+      paddingBottom: 0,
+    },
   },
   title: {
     display: "flex",
@@ -97,12 +97,12 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 24,
     marginBottom: 16,
     fontWeight: "bold",
-    color: "#484848"
+    color: "#484848",
   },
   loading: {
     flex: 1,
-    marginTop: 200
-  }
+    marginTop: 200,
+  },
 }));
 
 const Team: React.FC = () => {
@@ -123,7 +123,7 @@ const Team: React.FC = () => {
       const teamApi = await getApi("Team");
       const [, fetchTeam] = await to(
         teamApi.getTeam({
-          teamId: params.id
+          teamId: params.id,
         })
       );
       setTeam(fetchTeam);

@@ -17,11 +17,11 @@ import { RecruiterExploreMenu } from "./RecruiterExploreMenu";
 import { RecruiterHeaderTabs } from "./RecruiterHeaderTabs";
 import { RecruiterProfileMenu } from "./RecruiterProfileMenu";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: "none",
     color: "#484848",
-    display: "flex"
+    display: "flex",
   },
   tab: {
     marginLeft: 30,
@@ -32,27 +32,27 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     cursor: "pointer",
     "&:hover": {
-      color: theme.palette.secondary.main
-    }
+      color: theme.palette.secondary.main,
+    },
   },
   root: {
     width: "100%",
     position: "relative",
-    zIndex: 1
+    zIndex: 1,
   },
   appBarRoot: {
     backgroundColor: theme.palette.background.default,
-    boxShadow: "0 0px 0px rgba(0,0,0,0.05) !important"
+    boxShadow: "0 0px 0px rgba(0,0,0,0.05) !important",
   },
   grow: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   menuButton: {
     marginLeft: -12,
-    marginRight: 20
+    marginRight: 20,
   },
   logo: {
-    display: "flex"
+    display: "flex",
   },
   search: {
     display: "flex",
@@ -63,15 +63,15 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(6),
     "&:hover": {
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1) !important"
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1) !important",
     },
     "&:focus-within": {
-      flex: 1
+      flex: 1,
     },
     transition: theme.transitions.create("flex"),
     [theme.breakpoints.down("xs")]: {
-      display: "none"
-    }
+      display: "none",
+    },
   },
   searchIcon: {
     display: "flex",
@@ -79,18 +79,18 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     pointerEvents: "none",
     paddingTop: 9,
-    paddingBottom: 9
+    paddingBottom: 9,
   },
   input: {
-    width: "100%"
+    width: "100%",
   },
   sectionMobile: {
     display: "flex",
     [theme.breakpoints.up("sm")]: {
-      display: "none"
-    }
+      display: "none",
+    },
   },
-  title: { paddingLeft: 24, paddingRight: 24, fontSize: 18 }
+  title: { paddingLeft: 24, paddingRight: 24, fontSize: 18 },
 }));
 
 const SearchBar: React.FC = () => {
@@ -104,7 +104,7 @@ const SearchBar: React.FC = () => {
     params.job = query;
     history.push({
       pathname: "/",
-      search: qs.stringify(params, { addQueryPrefix: true })
+      search: qs.stringify(params, { addQueryPrefix: true }),
     });
   };
 
@@ -117,10 +117,10 @@ const SearchBar: React.FC = () => {
         placeholder="搜尋工作、地區、公司"
         value={query}
         className={classes.input}
-        onChange={e => {
+        onChange={(e) => {
           setQuery(e.target.value);
         }}
-        onKeyPress={e => {
+        onKeyPress={(e) => {
           if (e.key === "Enter") {
             search();
           }
@@ -136,21 +136,21 @@ interface Props {
   hideSearchBar?: boolean;
 }
 
-const Header: React.FC<Props> = props => {
+const Header: React.FC<Props> = (props) => {
   const { title, progressValue, hideSearchBar } = props;
   const classes = useStyles();
   const location = useLocation();
   const [
     exploreMenuAnchorElement,
-    setExploreMenuAnchorElement
+    setExploreMenuAnchorElement,
   ] = useState<null | HTMLElement>(null);
   const [
     profileMenuAnchorElement,
-    setProfileMenuAnchorElement
+    setProfileMenuAnchorElement,
   ] = useState<null | HTMLElement>(null);
   const [
     mobileMenuAnchorElement,
-    setMobileMenuAnchorElement
+    setMobileMenuAnchorElement,
   ] = useState<null | HTMLElement>(null);
 
   const openExploreMenu = (event: React.MouseEvent<HTMLElement>) => {

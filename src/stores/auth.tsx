@@ -20,7 +20,7 @@ import {
   UserApi,
   VerificationApi,
   BottleApi,
-  PostApi
+  PostApi,
 } from "@frankyjuang/milkapi-client";
 import branch from "branch-sdk";
 import { apiServiceConfig } from "config";
@@ -33,7 +33,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useState
+  useState,
 } from "react";
 
 interface AuthContextProps {
@@ -50,7 +50,7 @@ const AuthContext = createContext<AuthContextProps>({
   reloadUser: async () => {
     // Do nothing.
   },
-  user: null
+  user: null,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -61,13 +61,13 @@ export const AuthProvider = ({ children }) => {
 
   const getApi: <T extends keyof Apis>(
     type: T
-  ) => Promise<ExtractApi<TypedApis, T>> = useCallback(async type => {
+  ) => Promise<ExtractApi<TypedApis, T>> = useCallback(async (type) => {
     const firebaseUser = firebase.auth().currentUser;
     const accessToken = firebaseUser && (await firebaseUser.getIdToken());
 
     const configuration = new Configuration({
       accessToken: accessToken || undefined,
-      ...apiServiceConfig
+      ...apiServiceConfig,
     });
     // Using any because typescript currently has design limitation to infer
     // return type while using extends keyof.
@@ -124,7 +124,7 @@ export const AuthProvider = ({ children }) => {
       const userApi = await getApi("User");
       const [user, recruiter] = await Promise.all([
         userApi.getUser({ userId, role: Role.Applicant }),
-        userApi.getUser({ userId, role: Role.Recruiter })
+        userApi.getUser({ userId, role: Role.Recruiter }),
       ]);
       firebase.analytics().setUserId(userId);
       branch.setIdentity(userId);
@@ -145,7 +145,7 @@ export const AuthProvider = ({ children }) => {
     firebase.auth().languageCode = "zh-TW";
     const unsubscribe = firebase
       .auth()
-      .onAuthStateChanged(async firebaseUser => {
+      .onAuthStateChanged(async (firebaseUser) => {
         if (firebaseUser) {
           firebase.analytics().logEvent("login", {});
           await reloadUser();
@@ -164,7 +164,7 @@ export const AuthProvider = ({ children }) => {
         getApi,
         loading,
         reloadUser,
-        user
+        user,
       }}
     >
       {children}

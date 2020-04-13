@@ -7,10 +7,10 @@ import to from "await-to-js";
 import { PostCard } from "components/JobCircle";
 import { DownloadApp } from "components/Util";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   container: {
     marginTop: 40,
@@ -29,26 +29,26 @@ const useStyles = makeStyles(theme => ({
       marginTop: 8,
       marginBottom: 8,
       paddingLeft: 0,
-      paddingRight: 0
-    }
+      paddingRight: 0,
+    },
   },
   circleLink: {
     padding: 32,
     textDecoration: "none",
     fontSize: 18,
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
   },
   downloadHint: {
     color: theme.palette.text.secondary,
     marginTop: 64,
-    fontSize: 16
+    fontSize: 16,
   },
   loading: {
     flex: 1,
     marginTop: 200,
     marginLeft: "auto",
-    marginRight: "auto"
-  }
+    marginRight: "auto",
+  },
 }));
 
 interface PostProps {

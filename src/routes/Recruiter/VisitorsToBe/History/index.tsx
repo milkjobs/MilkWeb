@@ -4,11 +4,11 @@ import { OrderEntry } from "components/Point";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "stores";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.default
-  }
+    backgroundColor: theme.palette.background.default,
+  },
 }));
 
 const History: React.FC = () => {
@@ -26,7 +26,7 @@ const History: React.FC = () => {
         const fetchOrders = await orderApi.getTeamOrders({
           teamId: user.recruiterInfo.team.uuid,
           pageNo,
-          pageSize
+          pageSize,
         });
         if (fetchOrders && fetchOrders.length < pageSize) setHasNoMore(true);
         fetchOrders && setOrders([...orders, ...fetchOrders]);
@@ -39,7 +39,7 @@ const History: React.FC = () => {
   return (
     <div className={classes.root}>
       {orders.length > 0 ? (
-        orders.map(o => <OrderEntry key={o.uuid} order={o} />)
+        orders.map((o) => <OrderEntry key={o.uuid} order={o} />)
       ) : (
         <div style={{ margin: 16 }}>無購買紀錄</div>
       )}

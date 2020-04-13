@@ -17,7 +17,7 @@ import {
   VerificationApi,
   TagApi,
   BottleApi,
-  PostApi
+  PostApi,
 } from "@frankyjuang/milkapi-client";
 
 // https://artsy.github.io/blog/2018/11/21/conditional-types-in-typescript/

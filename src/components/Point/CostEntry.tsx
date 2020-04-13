@@ -4,7 +4,7 @@ import { mdiEyeCheckOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 import React from "react";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   costCard: {
     display: "flex",
     flexDirection: "row",
@@ -13,52 +13,52 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     borderBottomColor: theme.palette.divider,
     borderBottomWidth: 1,
-    borderBottomStyle: "solid"
+    borderBottomStyle: "solid",
   },
   costNameContainer: {
     flex: 2,
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   costName: {
     fontSize: 18,
     color: theme.palette.text.primary,
-    textAlign: "left"
+    textAlign: "left",
   },
   recruiterName: {
     fontSize: 16,
     color: theme.palette.text.hint,
     marginTop: 4,
-    textAlign: "left"
+    textAlign: "left",
   },
   costNumberContainer: {
     display: "flex",
     flex: 1,
     flexDirection: "column",
     marginLeft: "auto",
-    alignItems: "flex-end"
+    alignItems: "flex-end",
   },
   viewNumber: {
     fontSize: 18,
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   },
   costNumber: {
     fontSize: 16,
     marginTop: 4,
-    color: theme.palette.text.hint
+    color: theme.palette.text.hint,
   },
   eyeCheckIcon: {
     marginLeft: 4,
     marginRight: 4,
-    color: theme.palette.text.primary
-  }
+    color: theme.palette.text.primary,
+  },
 }));
 
 interface CostEntryProps {
   entry: MembershipUsageEntry;
 }
 
-const CostEntry: React.FC<CostEntryProps> = props => {
+const CostEntry: React.FC<CostEntryProps> = (props) => {
   const { entry } = props;
   const classes = useStyles();
 
@@ -76,7 +76,7 @@ const CostEntry: React.FC<CostEntryProps> = props => {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         >
           <Icon

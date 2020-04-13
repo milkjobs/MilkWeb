@@ -3,7 +3,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from "@material-ui/core/styles";
 
 const styles = (theme: Theme) =>
@@ -17,8 +17,8 @@ const styles = (theme: Theme) =>
       flexDirection: "column",
       [theme.breakpoints.down("xs")]: {
         marginTop: 0,
-        paddingBottom: 0
-      }
+        paddingBottom: 0,
+      },
     },
     title: {
       display: "flex",
@@ -29,8 +29,8 @@ const styles = (theme: Theme) =>
       color: theme.palette.text.primary,
       [theme.breakpoints.down("xs")]: {
         fontSize: 16,
-        marginBottom: 4
-      }
+        marginBottom: 4,
+      },
     },
     description: {
       display: "flex",
@@ -39,24 +39,24 @@ const styles = (theme: Theme) =>
       color: theme.palette.text.primary,
       textAlign: "left",
       [theme.breakpoints.down("xs")]: {
-        fontSize: 14
-      }
+        fontSize: 14,
+      },
     },
     line: {
       marginTop: 4,
       marginBottom: 4,
       [theme.breakpoints.down("xs")]: {
         marginTop: 2,
-        marginBottom: 2
-      }
-    }
+        marginBottom: 2,
+      },
+    },
   });
 interface Props extends WithStyles<typeof styles> {
   unifiedNumber: string;
   name: string;
 }
 
-const TeamOfficialInfo: React.FC<Props> = props => {
+const TeamOfficialInfo: React.FC<Props> = (props) => {
   const { classes, unifiedNumber, name } = props;
   return (
     <div className={classes.container}>
@@ -74,7 +74,7 @@ const TeamOfficialInfo: React.FC<Props> = props => {
             style={{
               flex: 2,
               marginLeft: "auto",
-              textAlign: "right"
+              textAlign: "right",
             }}
           >
             {name}

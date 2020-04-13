@@ -6,7 +6,7 @@ interface Props extends JobRecord {
   targetPath: string;
 }
 
-const JobRecordCard: React.FC<Props> = props => {
+const JobRecordCard: React.FC<Props> = (props) => {
   const {
     type,
     name,
@@ -15,7 +15,7 @@ const JobRecordCard: React.FC<Props> = props => {
     maxSalary,
     salaryType,
     team,
-    targetPath
+    targetPath,
   } = props;
 
   return (

@@ -3,7 +3,7 @@ import {
   Button,
   CircularProgress,
   DialogTitle,
-  Avatar
+  Avatar,
 } from "@material-ui/core";
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, Link, useHistory } from "react-router-dom";
@@ -23,10 +23,10 @@ import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   container: {
     marginTop: 40,
@@ -45,14 +45,14 @@ const useStyles = makeStyles(theme => ({
       marginTop: 8,
       marginBottom: 8,
       paddingLeft: 0,
-      paddingRight: 0
-    }
+      paddingRight: 0,
+    },
   },
   loading: {
     flex: 1,
     marginTop: 200,
     marginLeft: "auto",
-    marginRight: "auto"
+    marginRight: "auto",
   },
   postContainer: {
     margin: 8,
@@ -73,42 +73,42 @@ const useStyles = makeStyles(theme => ({
       borderColor: theme.palette.divider,
       borderStyle: "solid",
       borderWidth: 0,
-      borderBottomWidth: 1
-    }
+      borderBottomWidth: 1,
+    },
   },
   text: {
     textAlign: "left",
     fontSize: 18,
     color: "black",
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   replyHint: {
     color: theme.palette.text.hint,
-    paddingTop: 16
+    paddingTop: 16,
   },
   button: {
-    marginRight: 8
+    marginRight: 8,
   },
   postHeader: {
     display: "flex",
     flexDirection: "row",
     marginTop: 8,
     width: "100%",
-    textDecoration: "none"
+    textDecoration: "none",
   },
   postAvatar: {
     width: 20,
     height: 20,
-    marginRight: 8
+    marginRight: 8,
   },
   name: {
     textDecoration: "none",
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   },
   postIcons: {
     display: "flex",
     flexDirection: "row",
-    marginLeft: "auto"
+    marginLeft: "auto",
   },
   postIconButton: { padding: 0, marginLeft: 8 },
   themeTag: {
@@ -116,8 +116,8 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 8,
     color: theme.palette.secondary.main,
     cursor: "pointer",
-    textDecoration: "none"
-  }
+    textDecoration: "none",
+  },
 }));
 
 interface AnswerDialogProps {
@@ -131,7 +131,7 @@ const AnswerDialog: React.FC<AnswerDialogProps> = ({
   isOpen,
   close,
   title,
-  replyQuestion
+  replyQuestion,
 }) => {
   const [text, setText] = useState("");
 
@@ -152,7 +152,7 @@ const AnswerDialog: React.FC<AnswerDialogProps> = ({
           rows={20}
           fullWidth
           value={text}
-          onChange={e => setText(e.target.value)}
+          onChange={(e) => setText(e.target.value)}
         />
       </DialogContent>
       <DialogActions>
@@ -188,7 +188,7 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
   );
   const themeTag = question.text
     .split("\n")
-    .filter(l => l.includes("#提問"))[0]
+    .filter((l) => l.includes("#提問"))[0]
     .replace("#提問", "");
   console.warn(themeTag);
   const [answerDialogOpen, setAnswerDialogOpen] = useState(false);
@@ -203,13 +203,15 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
         postApi.updatePostReply({
           postId: question.uuid,
           replyId: answer.uuid,
-          postReply: answer
+          postReply: answer,
         })
       );
       if (updatedAnswer) {
         updatedAnswer.replier = user;
         setAnswers(
-          answers.map(a => (a.uuid === updatedAnswer.uuid ? updatedAnswer : a))
+          answers.map((a) =>
+            a.uuid === updatedAnswer.uuid ? updatedAnswer : a
+          )
         );
       }
     }
@@ -229,7 +231,7 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
       const [err] = await to(
         postApi.removePostReply({ postId: question.uuid, replyId: answerId })
       );
-      !err && setAnswers(answers.filter(a => a.uuid !== answerId));
+      !err && setAnswers(answers.filter((a) => a.uuid !== answerId));
     }
   };
 
@@ -246,10 +248,10 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
             $ipad_url: url,
             $android_url: url,
             $og_title: "邀請回答 : " + question.text.split("\n")[0],
-            $og_description: question.text
-          }
+            $og_description: question.text,
+          },
         },
-        function(err, link) {
+        function (err, link) {
           err
             ? toast.error("獲取連結失敗，可能是廣告阻擋插件造成的影響。")
             : toast.success("已複製分享連結到剪貼簿");
@@ -266,7 +268,7 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
         postApi.getPostReplies({
           postId: question.uuid,
           pageNo: answerPageNo,
-          pageSize: answerPageSize
+          pageSize: answerPageSize,
         })
       );
       setAnswers([...answers, ...fetchedPostReplies]);
@@ -279,7 +281,7 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
       const [err, newAnswer] = await to(
         postApi.addPostReply({
           postId: question.uuid,
-          newPostReply: { text: answerText, replierId: user?.uuid }
+          newPostReply: { text: answerText, replierId: user?.uuid },
         })
       );
       if (newAnswer) {
@@ -304,7 +306,7 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
           <div className={classes.postContainer}>
             {question.text
               .split("\n")
-              .filter(l => !l.includes("#提問"))
+              .filter((l) => !l.includes("#提問"))
               .map((l, index) => (
                 <div className={classes.text} key={index}>
                   {l}
@@ -325,7 +327,7 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
                   style={{
                     display: "flex",
                     flexDirection: "row",
-                    textDecoration: "none"
+                    textDecoration: "none",
                   }}
                 >
                   <Avatar
@@ -396,7 +398,7 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
             </div>
           </div>
           <div>
-            {answers.map(a => (
+            {answers.map((a) => (
               <AnswerCard
                 answer={a}
                 key={a.uuid}
@@ -412,7 +414,7 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
         close={() => setAnswerDialogOpen(false)}
         title={question?.text
           .split("\n")
-          .filter(l => !l.includes("#提問"))
+          .filter((l) => !l.includes("#提問"))
           .join("\n")}
         replyQuestion={replyQuestion}
       />

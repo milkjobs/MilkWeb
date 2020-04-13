@@ -2,7 +2,7 @@ import { DetailedAddress } from "@frankyjuang/milkapi-client";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     paddingLeft: 24,
     paddingRight: 24,
@@ -12,8 +12,8 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       marginTop: 8,
       paddingLeft: 0,
-      paddingRight: 0
-    }
+      paddingRight: 0,
+    },
   },
   title: {
     flex: 1,
@@ -24,8 +24,8 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 8,
     [theme.breakpoints.down("xs")]: {
       fontSize: 16,
-      marginBottom: 4
-    }
+      marginBottom: 4,
+    },
   },
   location: {
     alignItems: "center",
@@ -39,8 +39,8 @@ const useStyles = makeStyles(theme => ({
     wordBreak: "break-all",
     textAlign: "left",
     [theme.breakpoints.down("xs")]: {
-      fontSize: 14
-    }
+      fontSize: 14,
+    },
   },
   mapLink: {
     marginLeft: 16,
@@ -48,16 +48,16 @@ const useStyles = makeStyles(theme => ({
     cursor: "pointer",
     wordBreak: "keep-all",
     [theme.breakpoints.down("xs")]: {
-      fontSize: 14
-    }
-  }
+      fontSize: 14,
+    },
+  },
 }));
 
 interface Props {
   address: DetailedAddress;
 }
 
-const JobLocation: React.FC<Props> = props => {
+const JobLocation: React.FC<Props> = (props) => {
   const { address } = props;
   const classes = useStyles();
   const fullAddress = address.area + address.subArea + address.street;

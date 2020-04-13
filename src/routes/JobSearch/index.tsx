@@ -14,7 +14,7 @@ import {
   Configure,
   InstantSearch,
   connectRefinementList,
-  connectRange
+  connectRange,
 } from "react-instantsearch-dom";
 import { useInView } from "react-intersection-observer";
 import { useLocation } from "react-router-dom";
@@ -23,10 +23,10 @@ import { useAuth } from "stores";
 import { FilterHeader } from "components/Filter";
 import { useSearch } from "stores";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   container: {
     marginTop: 40,
@@ -40,12 +40,12 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     backgroundColor: theme.palette.background.paper,
     [theme.breakpoints.up("md")]: {
-      width: "960px"
+      width: "960px",
     },
     [theme.breakpoints.down("xs")]: {
       marginTop: 8,
-      marginBottom: 8
-    }
+      marginBottom: 8,
+    },
   },
   searchBarRoot: {
     padding: "2px 4px",
@@ -56,29 +56,29 @@ const useStyles = makeStyles(theme => ({
     border: "1px solid #dfe1e5",
     borderRadius: 10,
     "&:hover": {
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1) !important"
-    }
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1) !important",
+    },
   },
   input: {
     marginLeft: 8,
-    flex: 1
+    flex: 1,
   },
   iconButton: {
-    padding: 10
+    padding: 10,
   },
   latestJobs: {
     width: 200,
     marginLeft: "auto",
     marginRight: "auto",
     textAlign: "center",
-    height: 20
+    height: 20,
   },
   latestNews: {
     width: 200,
     textAlign: "center",
     fontWeight: 800,
-    cursor: "pointer"
-  }
+    cursor: "pointer",
+  },
 }));
 
 interface News {

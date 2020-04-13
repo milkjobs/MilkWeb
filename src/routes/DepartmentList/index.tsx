@@ -14,7 +14,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "stores";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
     flexDirection: "column",
@@ -26,39 +26,39 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 24,
     paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: "960px"
-    }
+      width: "960px",
+    },
   },
   listContainer: {
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
   },
   schoolContainer: {
-    flex: 1
+    flex: 1,
   },
   departmentContainer: {
-    flex: 2
+    flex: 2,
   },
   item: {
     fontSize: 18,
     "&:hover": {
       backgroundColor: theme.palette.secondary.main,
-      color: theme.palette.secondary.contrastText
-    }
+      color: theme.palette.secondary.contrastText,
+    },
   },
   Link: {
     "&:hover": {
-      color: theme.palette.secondary.contrastText
+      color: theme.palette.secondary.contrastText,
     },
     textDecoration: "none",
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   },
   input: {
     marginLeft: 8,
-    flex: 1
+    flex: 1,
   },
   iconButton: {
-    padding: 10
+    padding: 10,
   },
   searchRoot: {
     padding: "2px 4px",
@@ -72,13 +72,13 @@ const useStyles = makeStyles(theme => ({
     border: "1px solid #dfe1e5",
     borderRadius: 10,
     "&:hover": {
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1) !important"
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1) !important",
     },
     [theme.breakpoints.down("xs")]: {
       marginBottom: 16,
-      width: "90%"
-    }
-  }
+      width: "90%",
+    },
+  },
 }));
 
 interface School {
@@ -103,15 +103,15 @@ const DepartmentList: React.FC = () => {
       const awesomeApi = await getApi("Awesome");
       const [, fetchedSchools] = await to(awesomeApi.getSchools());
       if (fetchedSchools) {
-        const schoolEntries = fetchedSchools.map<School>(s => ({
+        const schoolEntries = fetchedSchools.map<School>((s) => ({
           name: s,
-          normalizedName: normalizeSchoolName(s)
+          normalizedName: normalizeSchoolName(s),
         }));
         const options: Fuse.FuseOptions<School> = {
           shouldSort: true,
           tokenize: true,
           matchAllTokens: true,
-          keys: ["normalizedName"]
+          keys: ["normalizedName"],
         };
         setFuse(new Fuse(schoolEntries, options));
         setSchools(schoolEntries);
@@ -125,9 +125,9 @@ const DepartmentList: React.FC = () => {
     const getDepartments = async (schoolName: string) => {
       const awesomeApi = await getApi("Awesome");
       const fetchedDepartments = await awesomeApi.getDepartmentsBySchoolName({
-        schoolName
+        schoolName,
       });
-      setDepartments(prev => ({ ...prev, [schoolName]: fetchedDepartments }));
+      setDepartments((prev) => ({ ...prev, [schoolName]: fetchedDepartments }));
     };
 
     if (
@@ -152,7 +152,7 @@ const DepartmentList: React.FC = () => {
         <div className={classes.searchRoot}>
           <InputBase
             value={query}
-            onChange={e => {
+            onChange={(e) => {
               setQuery(e.target.value);
             }}
             className={classes.input}
@@ -183,14 +183,14 @@ const DepartmentList: React.FC = () => {
           </List>
           <List
             style={{
-              marginTop: 41 * (selectedSchoolIndex || 0)
+              marginTop: 41 * (selectedSchoolIndex || 0),
             }}
             className={classes.departmentContainer}
             component="nav"
           >
             {selectedSchool &&
               departments[selectedSchool] &&
-              departments[selectedSchool].map(d => (
+              departments[selectedSchool].map((d) => (
                 <Link
                   key={d.name + d.school}
                   className={classes.Link}

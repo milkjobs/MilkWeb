@@ -43,12 +43,12 @@ const Jobs: React.FC<Props> = ({ team }) => {
         breadcrumbs={[
           {
             name: team.name,
-            url: urljoin(webConfig.basePath, "team", team.uuid)
+            url: urljoin(webConfig.basePath, "team", team.uuid),
           },
           {
             name: "工作機會",
-            url: urljoin(webConfig.basePath, "team", team.uuid, "jobs")
-          }
+            url: urljoin(webConfig.basePath, "team", team.uuid, "jobs"),
+          },
         ]}
       />
       <div style={{ flex: 1 }}>

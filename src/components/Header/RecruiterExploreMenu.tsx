@@ -13,7 +13,7 @@ interface Props {
   anchorElement: null | HTMLElement;
 }
 
-const RecruiterExploreMenu: React.FC<Props> = props => {
+const RecruiterExploreMenu: React.FC<Props> = (props) => {
   const { isOpen, anchorElement, close } = props;
 
   return (
@@ -23,7 +23,7 @@ const RecruiterExploreMenu: React.FC<Props> = props => {
           {...TransitionProps}
           style={{
             transformOrigin:
-              placement === "bottom" ? "center top" : "center bottom"
+              placement === "bottom" ? "center top" : "center bottom",
           }}
         >
           <Paper square={true}>

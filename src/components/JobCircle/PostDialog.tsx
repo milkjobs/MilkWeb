@@ -14,10 +14,10 @@ import { ImageMimeType } from "helpers";
 import { toast } from "react-toastify";
 import to from "await-to-js";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   input: {
     marginLeft: 8,
-    flex: 1
+    flex: 1,
   },
   textArea: {
     borderWidth: 0,
@@ -25,11 +25,11 @@ const useStyles = makeStyles(theme => ({
     fontSize: 16,
     resize: "none",
     "&:focus": {
-      outline: "none !important"
-    }
+      outline: "none !important",
+    },
   },
   textAreaError: {
-    color: theme.palette.secondary.main
+    color: theme.palette.secondary.main,
   },
   imagePlus: {
     color: "#ffffff",
@@ -41,30 +41,30 @@ const useStyles = makeStyles(theme => ({
     minWidth: 100,
     height: 100,
     marginRight: 8,
-    borderRadius: 8
+    borderRadius: 8,
   },
   postImage: {
     width: 100,
     height: 100,
     objectFit: "cover",
     marginRight: 8,
-    borderRadius: 8
+    borderRadius: 8,
   },
   imageContainer: {
-    position: "relative"
+    position: "relative",
   },
   deleteIcon: {
     position: "absolute",
     padding: 0,
     top: 0,
-    right: 8
+    right: 8,
   },
   imagesContainer: {
     width: "100%",
     display: "flex",
     overflow: "scroll",
-    flexWrap: "nowrap"
-  }
+    flexWrap: "nowrap",
+  },
 }));
 
 interface PostDialogProps {
@@ -82,7 +82,7 @@ const PostDialog: React.FC<PostDialogProps> = ({
   finish,
   delete: deletePost,
   theme,
-  post
+  post,
 }) => {
   const classes = useStyles();
   const { user, getApi } = useAuth();
@@ -134,7 +134,7 @@ const PostDialog: React.FC<PostDialogProps> = ({
         const [err, url] = await to(
           postApi.uploadPostImage({
             file,
-            filename: file.name
+            filename: file.name,
           })
         );
         if (err) {
@@ -171,13 +171,13 @@ const PostDialog: React.FC<PostDialogProps> = ({
           />
           <div className={classes.textAreaError}>{textErrorMessage}</div>
           <div className={classes.imagesContainer}>
-            {imageUrls.map(i => (
+            {imageUrls.map((i) => (
               <div key={i} className={classes.imageContainer}>
                 <img src={i} alt="照片" className={classes.postImage}></img>
                 <IconButton
                   className={classes.deleteIcon}
                   onClick={() => {
-                    setImageUrls(imageUrls.filter(url => url !== i));
+                    setImageUrls(imageUrls.filter((url) => url !== i));
                   }}
                 >
                   <ClearIcon color={"primary"} />
@@ -190,7 +190,7 @@ const PostDialog: React.FC<PostDialogProps> = ({
                   hidden
                   accept={ImageMimeType}
                   multiple
-                  onChange={e => {
+                  onChange={(e) => {
                     e.target.files && uploadPostImage(e.target.files);
                   }}
                   type="file"

@@ -11,10 +11,10 @@ import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "stores";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   container: {
     display: "flex",
@@ -27,9 +27,9 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 24,
     paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: "960px"
-    }
-  }
+      width: "960px",
+    },
+  },
 }));
 
 const Verification: React.FC = () => {
@@ -58,7 +58,7 @@ const Verification: React.FC = () => {
         teamApi.uploadTeamCertificate({
           teamId: user.recruiterInfo.team.uuid,
           file,
-          filename: file.name
+          filename: file.name,
         })
       );
       if (err) {
@@ -86,21 +86,20 @@ const Verification: React.FC = () => {
         <VerificationStateBanner
           containerStyle={{
             marginBottom: 24,
-            textAlign: "left"
+            textAlign: "left",
           }}
         />
         <Title
           text="公司驗證"
           customButtonComponent={
-            team?.certificateVerified === VerificationState.Processing ? (
-              undefined
-            ) : (
+            team?.certificateVerified ===
+            VerificationState.Processing ? undefined : (
               <div>
                 <label>
                   <input
                     hidden
                     accept={ImagePdfMimeType}
-                    onChange={e => {
+                    onChange={(e) => {
                       e.target.files && upload(e.target.files);
                     }}
                     type="file"

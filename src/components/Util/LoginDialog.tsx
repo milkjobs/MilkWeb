@@ -7,7 +7,7 @@ import {
   makeStyles,
   TextField,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from "@material-ui/core";
 import { Smartphone } from "@material-ui/icons";
 import to from "await-to-js";
@@ -21,43 +21,43 @@ import Countdown from "react-countdown-now";
 import { Link } from "react-router-dom";
 import { useAuth } from "stores";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
     flexDirection: "column",
     marginTop: 24,
     marginLeft: 24,
     marginRight: 24,
-    marginBottom: 36
+    marginBottom: 36,
   },
   footer: {
     color: "grey",
     flex: 1,
     marginTop: 24,
     [theme.breakpoints.up("sm")]: {
-      display: "flex"
-    }
+      display: "flex",
+    },
   },
   row: {
     flex: 1,
     [theme.breakpoints.up("sm")]: {
-      display: "flex"
-    }
+      display: "flex",
+    },
   },
   textColumn: {
-    flex: 2
+    flex: 2,
   },
   buttonColumn: {
     flex: 1,
     height: 40,
     marginTop: 8,
     [theme.breakpoints.up("sm")]: {
-      marginLeft: 12
-    }
+      marginLeft: 12,
+    },
   },
   registerButton: {
-    marginTop: 8
-  }
+    marginTop: 8,
+  },
 }));
 
 interface Props {
@@ -133,7 +133,7 @@ const LoginDialog: React.FC<Props> = ({ isOpen, close }) => {
     setVerifier(result);
     setCodeSent(true);
     setCountdown(Date.now() + 59000);
-    setCountdownKey(k => k + 1);
+    setCountdownKey((k) => k + 1);
     setCountdownCompleted(false);
   };
 
@@ -176,7 +176,7 @@ const LoginDialog: React.FC<Props> = ({ isOpen, close }) => {
     }
   };
 
-  const recaptchaButton = useCallback(async node => {
+  const recaptchaButton = useCallback(async (node) => {
     if (node) {
       const recaptchaVerifier = new firebase.auth.RecaptchaVerifier(node, {
         size: "invisible",
@@ -187,7 +187,7 @@ const LoginDialog: React.FC<Props> = ({ isOpen, close }) => {
         "expired-callback": () => {
           // Response expired. Ask user to solve reCAPTCHA again.
           // ...
-        }
+        },
       });
       await recaptchaVerifier.render();
       setRecaptcha(recaptchaVerifier);
@@ -208,7 +208,7 @@ const LoginDialog: React.FC<Props> = ({ isOpen, close }) => {
           noValidate
           autoComplete="on"
           className={classes.container}
-          onSubmit={e => {
+          onSubmit={(e) => {
             e.preventDefault();
           }}
         >
@@ -236,9 +236,9 @@ const LoginDialog: React.FC<Props> = ({ isOpen, close }) => {
                   <InputAdornment position="end">
                     <Smartphone />
                   </InputAdornment>
-                )
+                ),
               }}
-              onChange={e => {
+              onChange={(e) => {
                 setPhoneNumber(`+8869${e.target.value}`);
                 setPhoneNumberHelperText(undefined);
                 setCodeSent(false);
@@ -286,7 +286,7 @@ const LoginDialog: React.FC<Props> = ({ isOpen, close }) => {
                 type="number"
                 value={code || ""}
                 variant="outlined"
-                onChange={e => {
+                onChange={(e) => {
                   setCode(e.target.value);
                   setCodeHelperText(undefined);
                 }}

@@ -10,17 +10,17 @@ interface Props {
   resumeUrl?: string;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   dialogContent: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
   },
   pdfDocument: {
-    flex: 1
+    flex: 1,
   },
   pdfPage: {
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.2)"
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.2)",
   },
   downloadButton: {
     backgroundColor: theme.palette.secondary.main,
@@ -28,11 +28,11 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 4,
     textDecoration: "none",
     padding: 16,
-    marginTop: 32
-  }
+    marginTop: 32,
+  },
 }));
 
-const ResumeDialog: React.FC<Props> = props => {
+const ResumeDialog: React.FC<Props> = (props) => {
   const { isOpen, close, resumeUrl } = props;
   const classes = useStyles();
   const [numPages, setNumPages] = useState<number>();
@@ -47,12 +47,12 @@ const ResumeDialog: React.FC<Props> = props => {
               file={resumeUrl}
               loading="載入中"
               noData="無法載入履歷"
-              onLoadSuccess={doc => {
+              onLoadSuccess={(doc) => {
                 setNumPages(doc.numPages);
               }}
             >
               {numPages &&
-                Array.from({ length: numPages }, (v, k) => k).map(x => (
+                Array.from({ length: numPages }, (v, k) => k).map((x) => (
                   <Page
                     key={x}
                     pageIndex={x}

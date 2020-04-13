@@ -3,7 +3,7 @@ import {
   useTheme,
   Avatar,
   TextField,
-  Button
+  Button,
 } from "@material-ui/core";
 import React, { useState } from "react";
 import IconButton from "@material-ui/core/IconButton";
@@ -16,7 +16,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   postContainer: {
     margin: 8,
     borderRadius: 8,
@@ -34,22 +34,22 @@ const useStyles = makeStyles(theme => ({
       borderColor: theme.palette.divider,
       borderStyle: "solid",
       borderWidth: 0,
-      borderBottomWidth: 1
-    }
+      borderBottomWidth: 1,
+    },
   },
   text: {
     textAlign: "left",
     fontSize: 16,
     lineHeight: 2,
-    color: "black"
+    color: "black",
   },
   iconButton: {
-    padding: 10
+    padding: 10,
   },
   postIcons: {
     display: "flex",
     flexDirection: "row",
-    marginLeft: "auto"
+    marginLeft: "auto",
   },
   postIconButton: { padding: 0, marginLeft: 8 },
   postHeader: {
@@ -57,17 +57,17 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "row",
     marginBottom: 8,
     width: "100%",
-    textDecoration: "none"
+    textDecoration: "none",
   },
   postAvatar: {
     width: 20,
     height: 20,
-    marginRight: 8
+    marginRight: 8,
   },
   name: {
     textDecoration: "none",
-    color: theme.palette.text.primary
-  }
+    color: theme.palette.text.primary,
+  },
 }));
 
 interface EditAnswerDialogProps {
@@ -83,7 +83,7 @@ const EditAnswerDialog: React.FC<EditAnswerDialogProps> = ({
   close,
   answer,
   updateAnswer,
-  deleteAnswer
+  deleteAnswer,
 }) => {
   const [text, setText] = useState(answer.text);
 
@@ -103,7 +103,7 @@ const EditAnswerDialog: React.FC<EditAnswerDialogProps> = ({
           rows={20}
           fullWidth
           value={text}
-          onChange={e => setText(e.target.value)}
+          onChange={(e) => setText(e.target.value)}
         />
       </DialogContent>
       <DialogActions>
@@ -143,7 +143,7 @@ interface AnswerCardProps {
 const AnswerCard: React.FC<AnswerCardProps> = ({
   answer,
   updateAnswer,
-  deleteAnswer
+  deleteAnswer,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -159,7 +159,7 @@ const AnswerCard: React.FC<AnswerCardProps> = ({
             style={{
               display: "flex",
               flexDirection: "row",
-              textDecoration: "none"
+              textDecoration: "none",
             }}
           >
             <Avatar

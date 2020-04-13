@@ -3,19 +3,19 @@ import { Header } from "components/Header";
 import { SampleMessageBox } from "components/Message";
 import React from "react";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
     flex: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   container: {
     backgroundColor: theme.palette.background.paper,
     display: "flex",
     flex: 1,
     flexDirection: "row",
-    width: "100%"
+    width: "100%",
   },
   title: {
     display: "flex",
@@ -25,20 +25,20 @@ const useStyles = makeStyles(theme => ({
     fontSize: 24,
     fontWeight: 400,
     [theme.breakpoints.down("xs")]: {
-      fontSize: 18
-    }
+      fontSize: 18,
+    },
   },
   contacts: {
     border: "1px solid #EBEBEB",
     flex: 1,
     [theme.breakpoints.down("xs")]: {
-      display: "none"
-    }
+      display: "none",
+    },
   },
   buttonGroup: {
     marginTop: 16,
-    marginBottom: 16
-  }
+    marginBottom: 16,
+  },
 }));
 
 const SampleMessage: React.FC = () => {
@@ -52,7 +52,7 @@ const SampleMessage: React.FC = () => {
           style={{
             display: "flex",
             flex: 3,
-            position: "relative"
+            position: "relative",
           }}
         >
           <SampleMessageBox />

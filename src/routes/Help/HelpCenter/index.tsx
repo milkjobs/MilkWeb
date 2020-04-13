@@ -4,7 +4,7 @@ import {
   GridList,
   GridListTile,
   makeStyles,
-  useMediaQuery
+  useMediaQuery,
 } from "@material-ui/core";
 import { Header } from "components/Header";
 import { Title } from "components/Util";
@@ -13,10 +13,10 @@ import React from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import { useTheme } from "stores";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.default,
   },
   container: {
     display: "flex",
@@ -29,20 +29,20 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 24,
     paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: "960px"
-    }
+      width: "960px",
+    },
   },
   link: {
     color: theme.palette.text.primary,
-    textDecoration: "none"
+    textDecoration: "none",
   },
   card: {
     display: "flex",
-    height: "100%"
+    height: "100%",
   },
   cardHeader: {
-    flex: 1
-  }
+    flex: 1,
+  },
 }));
 
 const HelpCenter: React.FC = () => {

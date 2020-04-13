@@ -5,16 +5,16 @@ import {
   ExperienceLevelFilterButton,
   EducationLevelFilterButton,
   TeamFieldFilterButton,
-  SalaryFilterButton
+  SalaryFilterButton,
 } from ".";
 import { makeStyles } from "@material-ui/core";
 import { JobType, SalaryType } from "@frankyjuang/milkapi-client";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
-    flexDirection: "row"
-  }
+    flexDirection: "row",
+  },
 }));
 
 const FilterHeader: React.FC = () => {

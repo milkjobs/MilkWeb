@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Icon from "@mdi/react";
 import { mdiEyeCheckOutline } from "@mdi/js";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   costCard: {
     display: "flex",
     flexDirection: "row",
@@ -13,52 +13,52 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     borderBottomColor: theme.palette.divider,
     borderBottomWidth: 1,
-    borderBottomStyle: "solid"
+    borderBottomStyle: "solid",
   },
   costNameContainer: {
     flex: 2,
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   costName: {
     fontSize: 18,
     color: theme.palette.text.primary,
-    textAlign: "left"
+    textAlign: "left",
   },
   time: {
     fontSize: 16,
     color: theme.palette.text.primary,
     marginTop: 4,
-    textAlign: "left"
+    textAlign: "left",
   },
   costNumberContainer: {
     display: "flex",
     flex: 1,
     flexDirection: "column",
     marginLeft: "auto",
-    alignItems: "flex-end"
+    alignItems: "flex-end",
   },
   viewNumber: {
     fontSize: 18,
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   },
   costNumber: {
     fontSize: 16,
     marginTop: 4,
-    color: theme.palette.text.hint
+    color: theme.palette.text.hint,
   },
   eyeCheckIcon: {
     marginLeft: 4,
     marginRight: 4,
-    color: theme.palette.text.primary
-  }
+    color: theme.palette.text.primary,
+  },
 }));
 
 interface OrderProps {
   order: Order;
 }
 
-const OrderEntry: React.FC<OrderProps> = props => {
+const OrderEntry: React.FC<OrderProps> = (props) => {
   const { order } = props;
   const classes = useStyles();
   return (
@@ -70,7 +70,7 @@ const OrderEntry: React.FC<OrderProps> = props => {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         >
           <Icon

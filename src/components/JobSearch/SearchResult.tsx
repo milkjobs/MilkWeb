@@ -3,10 +3,10 @@ import { CircularProgress, makeStyles } from "@material-ui/core";
 import React from "react";
 import {
   connectStateResults,
-  StateResultsProvided
+  StateResultsProvided,
 } from "react-instantsearch-core";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: theme.palette.background.paper,
     color: theme.palette.text.hint,
@@ -15,13 +15,13 @@ const useStyles = makeStyles(theme => ({
     fontSize: 18,
     justifyContent: "center",
     marginBottom: 24,
-    marginTop: 24
-  }
+    marginTop: 24,
+  },
 }));
 
 const SearchResult: React.FC<StateResultsProvided<JobRecord>> = ({
   isSearchStalled,
-  searchResults
+  searchResults,
 }) => {
   const classes = useStyles();
   const { nbHits, page, hitsPerPage, nbPages } = searchResults || {};

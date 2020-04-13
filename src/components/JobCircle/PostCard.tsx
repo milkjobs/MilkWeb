@@ -21,13 +21,13 @@ import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   actionButtonsContainer: {
     width: "100%",
     display: "flex",
     flexDirection: "row",
     paddingTop: 16,
-    paddingBottom: 16
+    paddingBottom: 16,
   },
   actionButton: {
     flex: 1,
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     alignItems: "center",
     cursor: "pointer",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   actionButtonLike: {
     flex: 1,
@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     alignItems: "center",
     cursor: "pointer",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   postContainer: {
     margin: 8,
@@ -63,43 +63,43 @@ const useStyles = makeStyles(theme => ({
       borderColor: theme.palette.divider,
       borderStyle: "solid",
       borderWidth: 0,
-      borderBottomWidth: 1
-    }
+      borderBottomWidth: 1,
+    },
   },
   text: {
     textAlign: "left",
     fontSize: 16,
     lineHeight: 2,
-    color: "black"
+    color: "black",
   },
   iconButton: {
-    padding: 10
+    padding: 10,
   },
   postIcons: {
     display: "flex",
     flexDirection: "row",
-    marginLeft: "auto"
+    marginLeft: "auto",
   },
   postIconButton: { padding: 0, marginLeft: 8 },
   input: {
     marginLeft: 8,
-    flex: 1
+    flex: 1,
   },
   avatar: {
     width: 40,
     height: 40,
     marginLeft: 16,
-    marginRight: 16
+    marginRight: 16,
   },
   postButtonContainer: {
     width: 650,
     [theme.breakpoints.down("xs")]: {
-      width: "90%"
+      width: "90%",
     },
     marginLeft: "auto",
     marginRight: "auto",
     marginBottom: 8,
-    display: "flex"
+    display: "flex",
   },
   postButton: {
     flex: 1,
@@ -108,27 +108,27 @@ const useStyles = makeStyles(theme => ({
     borderColor: theme.palette.divider,
     borderStyle: "solid",
     borderWidth: 1,
-    borderRadius: 8
+    borderRadius: 8,
   },
   date: {
     color: theme.palette.text.hint,
-    marginTop: 4
+    marginTop: 4,
   },
   more: {
     cursor: "pointer",
-    color: theme.palette.secondary.main
+    color: theme.palette.secondary.main,
   },
   postHeader: {
     display: "flex",
     flexDirection: "row",
     marginBottom: 8,
     width: "100%",
-    textDecoration: "none"
+    textDecoration: "none",
   },
   postAvatar: {
     width: 20,
     height: 20,
-    marginRight: 8
+    marginRight: 8,
   },
   postImage: {
     minWidth: 200,
@@ -139,33 +139,33 @@ const useStyles = makeStyles(theme => ({
     marginRight: 8,
     borderRadius: 8,
     "&:hover": {
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   },
   imagesContainer: {
     width: "100%",
     display: "flex",
     overflow: "scroll",
-    flexWrap: "nowrap"
+    flexWrap: "nowrap",
   },
   commentInputContainer: {
     width: "100%",
     display: "flex",
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   commentInput: {
     flex: 1,
     borderRadius: 12,
-    marginLeft: 16
+    marginLeft: 16,
   },
   commentAvatar: {
     width: 30,
-    height: 30
+    height: 30,
   },
   name: {
     textDecoration: "none",
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   },
   replyContainer: {
     width: "100%",
@@ -174,11 +174,11 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 8,
     flexDirection: "row",
     alignItems: "center",
-    textDecoration: "none"
+    textDecoration: "none",
   },
   replyAvatar: {
     width: 30,
-    height: 30
+    height: 30,
   },
   replyTextContainer: {
     marginLeft: 16,
@@ -186,20 +186,20 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     textAlign: "left",
     alignItems: "start",
-    justifyContent: "start"
+    justifyContent: "start",
   },
   replyName: {
     fontWeight: "bold",
     textDecoration: "none",
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   },
   hashTag: {
     color: theme.palette.secondary.main,
-    textDecoration: "none"
+    textDecoration: "none",
   },
   replyText: {
-    color: theme.palette.text.primary
-  }
+    color: theme.palette.text.primary,
+  },
 }));
 
 interface ReplyProps {
@@ -248,7 +248,7 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({
   post,
   updatePost,
-  deletePost
+  deletePost,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -267,7 +267,7 @@ const PostCard: React.FC<PostCardProps> = ({
   const deleteReply = async (replyId: string, postId: string) => {
     const postApi = await getApi("Post");
     const [err] = await to(postApi.removePostReply({ replyId, postId }));
-    !err && setPostReplies(postReplies.filter(r => r.uuid !== replyId));
+    !err && setPostReplies(postReplies.filter((r) => r.uuid !== replyId));
   };
 
   const replyPost = async () => {
@@ -276,7 +276,7 @@ const PostCard: React.FC<PostCardProps> = ({
       const [err, newPostReply] = await to(
         postApi.addPostReply({
           postId: post.uuid,
-          newPostReply: { text: replyText, replierId: user?.uuid }
+          newPostReply: { text: replyText, replierId: user?.uuid },
         })
       );
       if (newPostReply) {
@@ -295,7 +295,7 @@ const PostCard: React.FC<PostCardProps> = ({
       postApi.getPostReplies({
         postId: post.uuid,
         pageNo: postReplyPageNo,
-        pageSize: postReplyPageSize
+        pageSize: postReplyPageSize,
       })
     );
     setPostReplies([...postReplies, ...fetchedPostReplies]);
@@ -318,10 +318,10 @@ const PostCard: React.FC<PostCardProps> = ({
           $android_url: url,
           $og_title: post.text.split("\n")[0],
           $og_description: post.text,
-          $og_image_url: post.imageUrls ? post.imageUrls[0] : undefined
-        }
+          $og_image_url: post.imageUrls ? post.imageUrls[0] : undefined,
+        },
       },
-      function(err, link) {
+      function (err, link) {
         err
           ? toast.error("獲取連結失敗，可能是廣告阻擋插件造成的影響。")
           : toast.success("已複製分享連結到剪貼簿");
@@ -337,7 +337,7 @@ const PostCard: React.FC<PostCardProps> = ({
         const [err] = await to(
           userApi.likePost({
             userId: user?.uuid,
-            postId: post.uuid
+            postId: post.uuid,
           })
         );
         setLiked(true);
@@ -346,7 +346,7 @@ const PostCard: React.FC<PostCardProps> = ({
         const [err] = await to(
           userApi.unlikePost({
             userId: user?.uuid,
-            postId: post.uuid
+            postId: post.uuid,
           })
         );
         setLiked(false);
@@ -366,7 +366,7 @@ const PostCard: React.FC<PostCardProps> = ({
             style={{
               display: "flex",
               flexDirection: "row",
-              textDecoration: "none"
+              textDecoration: "none",
             }}
           >
             <Avatar
@@ -483,17 +483,17 @@ const PostCard: React.FC<PostCardProps> = ({
           size={"small"}
           placeholder={"我來說幾句"}
           value={replyText}
-          onChange={e =>
+          onChange={(e) =>
             e.target.value !== "\n" && setReplyText(e.target.value)
           }
-          onKeyDown={e => !e.shiftKey && e.keyCode == 13 && replyPost()}
+          onKeyDown={(e) => !e.shiftKey && e.keyCode == 13 && replyPost()}
         />
       </div>
-      {postReplies.map(r => (
+      {postReplies.map((r) => (
         <Reply
           key={r.uuid}
           reply={r}
-          deleteReply={replyId => deleteReply(replyId, post.uuid)}
+          deleteReply={(replyId) => deleteReply(replyId, post.uuid)}
         />
       ))}
       <LoginDialog

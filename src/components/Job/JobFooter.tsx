@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { DownloadApp } from "components/Util";
 import React, { useState } from "react";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     position: "fixed",
     bottom: 0,
@@ -20,41 +20,41 @@ const useStyles = makeStyles(theme => ({
       display: "flex",
       width: "100%",
       justifyContent: "space-between",
-      alignItems: "center"
-    }
+      alignItems: "center",
+    },
   },
   button: {
     backgroundColor: theme.palette.secondary.main,
     color: theme.palette.common.white,
     marginLeft: "auto",
     borderRadius: 4,
-    boxShadow: "none"
+    boxShadow: "none",
   },
   recruiterContainer: {
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
   },
   recruiterName: {
     display: "flex",
     alignItems: "center",
     fontSize: 16,
     fontWeight: 800,
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   },
   recruiterTitle: {
     display: "flex",
     alignItems: "center",
     fontSize: 14,
     fontWeight: 400,
-    color: theme.palette.text.secondary
-  }
+    color: theme.palette.text.secondary,
+  },
 }));
 
 interface Props {
   recruiter: PublicUser;
 }
 
-const JobFooter: React.FC<Props> = props => {
+const JobFooter: React.FC<Props> = (props) => {
   const { recruiter } = props;
   const classes = useStyles();
   const [isDialogOpen, setIsDialogOpen] = useState(false);

@@ -1,7 +1,7 @@
 /* eslint-disable */
-const render = function() {
-  !(function(t, e) {
-    var i = function() {
+const render = function () {
+  !(function (t, e) {
+    var i = function () {
         var t = e.getElementById("tlkio"),
           i = t.getAttribute("data-env") || "production",
           n = t.getAttribute("data-channel"),
@@ -29,7 +29,7 @@ const render = function() {
           (t.textContent = ""),
           t.appendChild(l);
       },
-      n = function() {
+      n = function () {
         var n = e.getElementById("tlkio"),
           a = e.createElement("style"),
           o = e.createElement("img");

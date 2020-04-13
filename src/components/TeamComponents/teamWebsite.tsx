@@ -2,7 +2,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from "@material-ui/core/styles";
 import { openInNewTab } from "helpers";
 import React from "react";
@@ -18,8 +18,8 @@ const styles = (theme: Theme) =>
       flexDirection: "column",
       [theme.breakpoints.down("xs")]: {
         marginTop: 0,
-        paddingBottom: 0
-      }
+        paddingBottom: 0,
+      },
     },
     title: {
       display: "flex",
@@ -30,8 +30,8 @@ const styles = (theme: Theme) =>
       color: theme.palette.text.primary,
       [theme.breakpoints.down("xs")]: {
         fontSize: 16,
-        marginBottom: 4
-      }
+        marginBottom: 4,
+      },
     },
     description: {
       display: "flex",
@@ -40,23 +40,23 @@ const styles = (theme: Theme) =>
       color: theme.palette.text.primary,
       textAlign: "left",
       [theme.breakpoints.down("xs")]: {
-        fontSize: 14
-      }
+        fontSize: 14,
+      },
     },
     line: {
       marginTop: 4,
       marginBottom: 4,
       [theme.breakpoints.down("xs")]: {
         marginTop: 2,
-        marginBottom: 2
-      }
-    }
+        marginBottom: 2,
+      },
+    },
   });
 interface Props extends WithStyles<typeof styles> {
   website: string;
 }
 
-const TeamWebsite: React.FC<Props> = props => {
+const TeamWebsite: React.FC<Props> = (props) => {
   const { classes, website } = props;
   const checkUrl = (url: string) => {
     if (url.startsWith("http://") || url.startsWith("https://")) {

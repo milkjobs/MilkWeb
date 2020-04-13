@@ -4,7 +4,7 @@ import {
   branchConfig,
   environment,
   firebaseConfig,
-  sentryConfig
+  sentryConfig,
 } from "config";
 import firebase from "firebase/app";
 import React from "react";
@@ -20,7 +20,7 @@ firebase.initializeApp(firebaseConfig);
 Sentry.init({
   dsn: sentryConfig.dsn,
   environment: environment,
-  enabled: environment !== "local"
+  enabled: environment !== "local",
 });
 
 ReactDOM.render(<App />, document.getElementById("root"));

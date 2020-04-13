@@ -2,7 +2,7 @@ import {
   makeStyles,
   Button,
   Avatar,
-  CircularProgress
+  CircularProgress,
 } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { Header } from "components/Header";
@@ -15,7 +15,7 @@ import {
   PostCard,
   PostDialog,
   QuestionCard,
-  QuestionDialog
+  QuestionDialog,
 } from "components/JobCircle";
 import { Post, NewPost } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
@@ -25,16 +25,16 @@ import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
 import { Slide, ToastContainer, ToastPosition } from "react-toastify";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   avatar: {
     width: 40,
     height: 40,
     marginLeft: 16,
-    marginRight: 16
+    marginRight: 16,
   },
   postButton: {
     flex: 1,
@@ -50,18 +50,18 @@ const useStyles = makeStyles(theme => ({
     textAlign: "left",
     cursor: "pointer",
     alignItems: "center",
-    display: "flex"
+    display: "flex",
   },
   postButtonContainer: {
     width: 650,
     [theme.breakpoints.down("xs")]: {
-      width: "90%"
+      width: "90%",
     },
     marginLeft: "auto",
     marginRight: "auto",
     marginBottom: 8,
     alignItems: "center",
-    display: "flex"
+    display: "flex",
   },
   container: {
     marginTop: 40,
@@ -80,8 +80,8 @@ const useStyles = makeStyles(theme => ({
       marginTop: 8,
       marginBottom: 8,
       paddingLeft: 0,
-      paddingRight: 0
-    }
+      paddingRight: 0,
+    },
   },
   searchRoot: {
     padding: "2px 4px",
@@ -95,25 +95,25 @@ const useStyles = makeStyles(theme => ({
     border: "1px solid #dfe1e5",
     borderRadius: 10,
     "&:hover": {
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1) !important"
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1) !important",
     },
     [theme.breakpoints.down("xs")]: {
       marginBottom: 16,
-      width: "90%"
-    }
+      width: "90%",
+    },
   },
   iconButton: {
-    padding: 10
+    padding: 10,
   },
   input: {
     marginLeft: 8,
-    flex: 1
+    flex: 1,
   },
   themeContainer: {
     width: "100%",
     display: "flex",
     flexDirection: "row",
-    overflow: "scroll"
+    overflow: "scroll",
   },
   themeTag: {
     color: theme.palette.text.primary,
@@ -122,14 +122,14 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 8,
     margin: 8,
     padding: 8,
-    background: theme.palette.divider
+    background: theme.palette.divider,
   },
   loading: {
     flex: 1,
     marginTop: 200,
     marginLeft: "auto",
-    marginRight: "auto"
-  }
+    marginRight: "auto",
+  },
 }));
 
 const JobCircle: React.FC = () => {
@@ -151,7 +151,7 @@ const JobCircle: React.FC = () => {
       const postApi = await getApi("Post");
       const [err] = await to(postApi.removePost({ postId }));
       if (!err) {
-        setPosts(posts.filter(p => p.uuid !== postId));
+        setPosts(posts.filter((p) => p.uuid !== postId));
       }
     }
   };
@@ -165,7 +165,7 @@ const JobCircle: React.FC = () => {
       if (updatedPost) {
         updatedPost.creator = user;
         setPosts(
-          posts.map(p => (updatedPost.uuid === p.uuid ? updatedPost : p))
+          posts.map((p) => (updatedPost.uuid === p.uuid ? updatedPost : p))
         );
       }
     }
@@ -207,10 +207,10 @@ const JobCircle: React.FC = () => {
         <div className={classes.searchRoot}>
           <InputBase
             value={query}
-            onChange={e => {
+            onChange={(e) => {
               setQuery(e.target.value);
             }}
-            onKeyPress={e => {
+            onKeyPress={(e) => {
               if (e.key === "Enter" && query !== text) {
                 setPageNo(1);
                 setText(query);
@@ -262,7 +262,7 @@ const JobCircle: React.FC = () => {
         <div className={classes.themeContainer}>
           {Object.keys(themeSubTitles)
             .sort(() => Math.random() - 0.5)
-            .map(t => (
+            .map((t) => (
               <Link
                 to={
                   (isRecruiter ? "/recruiter" : "") +
@@ -279,7 +279,7 @@ const JobCircle: React.FC = () => {
         {loading ? (
           <CircularProgress className={classes.loading} />
         ) : (
-          posts.map(p =>
+          posts.map((p) =>
             p.text.includes("#提問") ? (
               <QuestionCard
                 key={p.uuid}

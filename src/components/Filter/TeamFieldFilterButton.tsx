@@ -11,9 +11,9 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import { EducationLevel } from "@frankyjuang/milkapi-client";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
-    marginHorizontal: 4
+    marginHorizontal: 4,
   },
   filterButton: {
     minWidth: 60,
@@ -24,12 +24,12 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     paddingHorizontal: 12,
     marginBottom: 8,
-    marginRight: 8
+    marginRight: 8,
   },
   filterText: {
     color: theme.palette.text.secondary,
-    fontSize: 14
-  }
+    fontSize: 14,
+  },
 }));
 
 export interface TeamFieldDialogProps {
@@ -80,7 +80,7 @@ function TeamFieldDialog(props: TeamFieldDialogProps) {
             control={<Radio />}
             label={"不限"}
           />
-          {items.map(i => (
+          {items.map((i) => (
             <FormControlLabel
               key={i.objectID}
               value={i.label}
@@ -96,7 +96,7 @@ function TeamFieldDialog(props: TeamFieldDialogProps) {
 
 const TeamFieldFilterButton: React.FC<RefinementListProvided> = ({
   refine,
-  items
+  items,
 }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -110,7 +110,7 @@ const TeamFieldFilterButton: React.FC<RefinementListProvided> = ({
       <TeamFieldDialog
         open={open}
         items={items}
-        onClose={value => {
+        onClose={(value) => {
           refine(value ? [value] : []);
           setOpen(false);
           setSelectedValue(value);

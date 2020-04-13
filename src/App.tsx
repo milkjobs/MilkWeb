@@ -13,11 +13,11 @@ import {
   ChannelProvider,
   SearchProvider,
   ThemeProvider,
-  useAuth
+  useAuth,
 } from "stores";
 import "./App.css";
 
-const LoadingRoute: React.FC<RouteProps> = props => {
+const LoadingRoute: React.FC<RouteProps> = (props) => {
   const { loading } = useAuth();
 
   return loading ? null : <Route {...props} />;

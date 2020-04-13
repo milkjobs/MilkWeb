@@ -19,7 +19,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Tooltip
+  Tooltip,
 } from "@material-ui/core";
 import { Edit } from "@material-ui/icons";
 import logo from "assets/milk.png";
@@ -32,10 +32,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useAuth } from "stores";
 import urljoin from "url-join";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.default,
   },
   container: {
     display: "flex",
@@ -47,35 +47,35 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 24,
     paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: "900px"
-    }
+      width: "900px",
+    },
   },
   avatarCell: {
     width: 72,
-    padding: 16
+    padding: 16,
   },
   editCell: {
     width: 80,
-    padding: 16
+    padding: 16,
   },
   qrcode: {
     marginTop: 16,
     marginBottom: 16,
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   permissionCard: {
     flex: 1,
     margin: 16,
-    borderWidth: 2
+    borderWidth: 2,
   },
   selectedPermissionCard: {
     flex: 1,
     margin: 16,
     borderWidth: 2,
-    borderColor: theme.palette.secondary.main
-  }
+    borderColor: theme.palette.secondary.main,
+  },
 }));
 
 const Member: React.FC = () => {
@@ -98,12 +98,12 @@ const Member: React.FC = () => {
 
     const teamApi = await getApi("Team");
     const invitation = await teamApi.generateInvitation({
-      teamId: team.uuid
+      teamId: team.uuid,
     });
     const data = {
       teamId: team.uuid,
       code: invitation.code,
-      expiresTime: invitation.expiresAt.getTime()
+      expiresTime: invitation.expiresAt.getTime(),
     };
     const url = urljoin(webConfig.basePath, "join", `?${qs.stringify(data)}`);
 
@@ -116,7 +116,7 @@ const Member: React.FC = () => {
     if (teamId) {
       const teamApi = await getApi("Team");
       const fetchedRecruiters = await teamApi.getTeamRecruiters({
-        teamId
+        teamId,
       });
       fetchedRecruiters && setRecruiters(fetchedRecruiters);
     }
@@ -135,7 +135,7 @@ const Member: React.FC = () => {
     await teamApi.updateRecruiterPermission({
       teamId,
       recruiterInfoId: editingRecruiter.uuid,
-      isAdmin: editingIsAdmin
+      isAdmin: editingIsAdmin,
     });
 
     if (editingRecruiter.uuid === user?.recruiterInfo?.uuid) {
@@ -149,7 +149,7 @@ const Member: React.FC = () => {
     getApi,
     getTeamRecruiters,
     reloadUser,
-    user
+    user,
   ]);
 
   const removeRecruiter = useCallback(async () => {
@@ -162,7 +162,7 @@ const Member: React.FC = () => {
     const teamApi = await getApi("Team");
     await teamApi.removeRecruiterFromTeam({
       teamId,
-      recruiterInfoId: editingRecruiter.uuid
+      recruiterInfoId: editingRecruiter.uuid,
     });
     await getTeamRecruiters();
     setDeleteLoading(false);
@@ -197,7 +197,7 @@ const Member: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {recruiters.map(r => (
+              {recruiters.map((r) => (
                 <TableRow key={r.uuid}>
                   <TableCell className={classes.avatarCell}>
                     <Avatar
@@ -210,27 +210,29 @@ const Member: React.FC = () => {
                   <TableCell>{r.isAdmin ? "管理員" : "人資"}</TableCell>
                   {user?.recruiterInfo?.isAdmin && (
                     <TableCell className={classes.editCell}>
-                      {// Only one admin is not editable.
-                      r.isAdmin &&
-                      recruiters.filter(x => x.isAdmin).length === 1 ? (
-                        <Tooltip title="不可編輯公司唯一的管理員">
-                          <span>
-                            <IconButton disabled>
-                              <Edit />
-                            </IconButton>
-                          </span>
-                        </Tooltip>
-                      ) : (
-                        <IconButton
-                          onClick={() => {
-                            setEditingRecruiter(r);
-                            setEditingIsAdmin(r.isAdmin);
-                            setEditDialogOpen(true);
-                          }}
-                        >
-                          <Edit />
-                        </IconButton>
-                      )}
+                      {
+                        // Only one admin is not editable.
+                        r.isAdmin &&
+                        recruiters.filter((x) => x.isAdmin).length === 1 ? (
+                          <Tooltip title="不可編輯公司唯一的管理員">
+                            <span>
+                              <IconButton disabled>
+                                <Edit />
+                              </IconButton>
+                            </span>
+                          </Tooltip>
+                        ) : (
+                          <IconButton
+                            onClick={() => {
+                              setEditingRecruiter(r);
+                              setEditingIsAdmin(r.isAdmin);
+                              setEditDialogOpen(true);
+                            }}
+                          >
+                            <Edit />
+                          </IconButton>
+                        )
+                      }
                     </TableCell>
                   )}
                 </TableRow>
@@ -354,7 +356,7 @@ const Member: React.FC = () => {
                   width: 20,
                   height: 20,
                   marginLeft: 20,
-                  marginRight: 20
+                  marginRight: 20,
                 }}
               />
             ) : (

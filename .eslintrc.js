@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: "./tsconfig.json"
+    project: "./tsconfig.json",
   },
   plugins: ["react-hooks"],
   extends: [
@@ -13,7 +13,7 @@ module.exports = {
     "plugin:react/recommended",
     "prettier",
     "prettier/@typescript-eslint",
-    "prettier/react"
+    "prettier/react",
   ],
   rules: {
     "react-hooks/rules-of-hooks": "error",
@@ -24,9 +24,9 @@ module.exports = {
       {
         allowExpressions: true,
         allowTypedFunctionExpressions: true,
-        allowHigherOrderFunctions: true
-      }
+        allowHigherOrderFunctions: true,
+      },
     ],
-    "@typescript-eslint/explicit-function-return-type": "off"
-  }
+    "@typescript-eslint/explicit-function-return-type": "off",
+  },
 };

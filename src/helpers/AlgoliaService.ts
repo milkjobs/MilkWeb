@@ -1,7 +1,7 @@
 import {
   AlgoliaCredentialFromJSON,
   AlgoliaCredentialToJSON,
-  UserApi
+  UserApi,
 } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
 import { TokenExpiredBufferTime } from "config";

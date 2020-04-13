@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     marginTop: 24,
     paddingLeft: 24,
@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
     paddingTop: 16,
     paddingBottom: 16,
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   title: {
     display: "flex",
@@ -18,8 +18,8 @@ const useStyles = makeStyles(theme => ({
     fontSize: 18,
     fontWeight: 600,
     marginBottom: 8,
-    color: "#484848"
-  }
+    color: "#484848",
+  },
 }));
 
 const TeamPhotos: React.FC = () => {
@@ -32,7 +32,7 @@ const TeamPhotos: React.FC = () => {
         style={{
           display: "flex",
           flexDirection: "row",
-          justifyContent: "space-between"
+          justifyContent: "space-between",
         }}
       >
         <div style={{ flex: 1, padding: 5 }}>

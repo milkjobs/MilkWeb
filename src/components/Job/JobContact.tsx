@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     paddingLeft: 24,
     paddingRight: 24,
@@ -11,8 +11,8 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       marginTop: 8,
       paddingLeft: 0,
-      paddingRight: 0
-    }
+      paddingRight: 0,
+    },
   },
   title: {
     flex: 1,
@@ -23,8 +23,8 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 8,
     [theme.breakpoints.down("xs")]: {
       fontSize: 16,
-      marginBottom: 4
-    }
+      marginBottom: 4,
+    },
   },
   description: {
     alignItems: "center",
@@ -38,9 +38,9 @@ const useStyles = makeStyles(theme => ({
     wordBreak: "break-all",
     textAlign: "left",
     [theme.breakpoints.down("xs")]: {
-      fontSize: 14
-    }
-  }
+      fontSize: 14,
+    },
+  },
 }));
 
 interface Props {

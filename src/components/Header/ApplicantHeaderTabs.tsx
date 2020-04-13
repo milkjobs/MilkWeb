@@ -6,11 +6,11 @@ import React, { MouseEvent, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth, useChannel } from "stores";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: "none",
     color: "#484848",
-    display: "flex"
+    display: "flex",
   },
   tab: {
     marginLeft: 30,
@@ -21,21 +21,21 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     cursor: "pointer",
     "&:hover": {
-      color: theme.palette.secondary.main
-    }
+      color: theme.palette.secondary.main,
+    },
   },
   sectionDesktop: {
     display: "none",
     [theme.breakpoints.up("sm")]: {
       display: "flex",
-      alignSelf: "stretch"
-    }
+      alignSelf: "stretch",
+    },
   },
   avatar: {
     width: 30,
     height: 30,
-    boxShadow: "0 4px 4px rgba(0,0,0,0.1) !important"
-  }
+    boxShadow: "0 4px 4px rgba(0,0,0,0.1) !important",
+  },
 }));
 
 interface Props {
@@ -43,7 +43,7 @@ interface Props {
   openProfileMenu: (event: MouseEvent<HTMLElement>) => void;
 }
 
-const ApplicantHeaderTabs: React.FC<Props> = props => {
+const ApplicantHeaderTabs: React.FC<Props> = (props) => {
   const { openProfileMenu, openExploreMenu } = props;
   const classes = useStyles();
   const location = useLocation();

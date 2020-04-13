@@ -16,39 +16,39 @@ const videoList: Video[] = [
   {
     name: "Garena 儲備幹部菁英計畫 3/8截止",
     website: "https://map.career.garena.tw/",
-    youtubeId: "mxL3rECKoZg"
+    youtubeId: "mxL3rECKoZg",
   },
   {
     name: "91App",
     website: "https://www.91app.com/careers/",
-    youtubeId: "lZAagF7Sbp0"
+    youtubeId: "lZAagF7Sbp0",
   },
   {
     name: "Gogoro",
     website: "https://www.gogoro.com/tw/career/",
-    youtubeId: "NeJb1dzIqEk"
+    youtubeId: "NeJb1dzIqEk",
   },
   {
     name: "星宇航空",
     website: "https://careers.starlux-airlines.com/",
-    youtubeId: "ZDP2Nj6wHxE"
+    youtubeId: "ZDP2Nj6wHxE",
   },
   {
     name: "遠傳電信",
     website: "https://www.fetnet.net/corporate/hr/index.html",
-    youtubeId: "SFjSEi9MkXM"
+    youtubeId: "SFjSEi9MkXM",
   },
   {
     name: "Cutaway",
     website: "https://www.cakeresume.com/companies/cutawaytw",
-    youtubeId: "LA5VnFHFB2E"
-  }
+    youtubeId: "LA5VnFHFB2E",
+  },
 ];
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   container: {
     display: "flex",
@@ -61,8 +61,8 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 24,
     paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: "960px"
-    }
+      width: "960px",
+    },
   },
   cardContainer: {
     display: "flex",
@@ -71,12 +71,12 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 32,
     marginTop: 16,
     [theme.breakpoints.up("md")]: {
-      width: 640
+      width: 640,
     },
     [theme.breakpoints.down("xs")]: {
       marginBottom: 16,
-      marginTop: 0
-    }
+      marginTop: 0,
+    },
   },
   nameContainer: {
     paddingTop: 16,
@@ -89,28 +89,28 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "space-between",
     borderBottomWidth: 1,
     borderBottomStyle: "solid",
-    borderBottomColor: theme.palette.divider
+    borderBottomColor: theme.palette.divider,
   },
   title: {
     fontSize: 20,
     [theme.breakpoints.down("xs")]: {
-      fontSize: 16
+      fontSize: 16,
     },
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   video: {
-    width: "100%"
-  }
+    width: "100%",
+  },
 }));
 
-const VideoCard: React.FC<Video> = props => {
+const VideoCard: React.FC<Video> = (props) => {
   const classes = useStyles();
   const matched = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
   const opts = matched
     ? {}
     : {
         height: "360",
-        width: "640"
+        width: "640",
       };
 
   return (
@@ -145,7 +145,7 @@ const Stories: React.FC = () => {
       <Header />
       <div className={classes.container}>
         <Title text="故事" />
-        {videoList.map(v => (
+        {videoList.map((v) => (
           <VideoCard {...v} key={v.youtubeId} />
         ))}
       </div>

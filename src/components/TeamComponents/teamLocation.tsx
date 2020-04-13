@@ -3,7 +3,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from "@material-ui/core/styles";
 import { openInNewTab } from "helpers";
 import React from "react";
@@ -17,8 +17,8 @@ const styles = (theme: Theme) =>
       display: "flex",
       flexDirection: "column",
       [theme.breakpoints.down("xs")]: {
-        marginTop: 0
-      }
+        marginTop: 0,
+      },
     },
     title: {
       flex: 1,
@@ -29,8 +29,8 @@ const styles = (theme: Theme) =>
       marginBottom: 8,
       [theme.breakpoints.down("xs")]: {
         fontSize: 16,
-        marginBottom: 4
-      }
+        marginBottom: 4,
+      },
     },
     location: {
       alignItems: "center",
@@ -44,8 +44,8 @@ const styles = (theme: Theme) =>
       wordBreak: "break-all",
       textAlign: "left",
       [theme.breakpoints.down("xs")]: {
-        fontSize: 14
-      }
+        fontSize: 14,
+      },
     },
     mapLink: {
       marginLeft: 16,
@@ -53,16 +53,16 @@ const styles = (theme: Theme) =>
       cursor: "pointer",
       wordBreak: "keep-all",
       [theme.breakpoints.down("xs")]: {
-        fontSize: 14
-      }
-    }
+        fontSize: 14,
+      },
+    },
   });
 
 interface Props extends WithStyles<typeof styles> {
   address: DetailedAddress;
 }
 
-const TeamLocation: React.FC<Props> = props => {
+const TeamLocation: React.FC<Props> = (props) => {
   const { classes, address } = props;
   return (
     <div className={classes.container}>
@@ -73,9 +73,9 @@ const TeamLocation: React.FC<Props> = props => {
           className={classes.mapLink}
           onClick={() => {
             openInNewTab(
-              `https://www.google.com.tw/maps/search/${address.area +
-                address.subArea +
-                address.street}/`
+              `https://www.google.com.tw/maps/search/${
+                address.area + address.subArea + address.street
+              }/`
             );
           }}
         >

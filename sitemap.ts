@@ -59,7 +59,7 @@ const staticPaths = [
   "/awesome/成大都市計畫學系",
   "/awesome/政大政治",
   "/awesome/東海建築",
-  "/awesome/逢甲建築"
+  "/awesome/逢甲建築",
 ];
 
 // Use mysqlx for new authentication protocol introduced in mysql 8.0.
@@ -69,7 +69,7 @@ const getPathsX = async () => {
     host: "localhost",
     port: 33060,
     user: "root",
-    password: DB_PASSWORD
+    password: DB_PASSWORD,
   });
 
   let paths: string[] = [];
@@ -80,7 +80,7 @@ const getPathsX = async () => {
       .sql("SELECT `Name`, `School` FROM `Departments`")
       .execute();
     const awesomeLists: string[][] = await awesomeResult.fetchAll();
-    paths.push(...awesomeLists.map(l => `/awesome/${l[1]}${l[0]}`));
+    paths.push(...awesomeLists.map((l) => `/awesome/${l[1]}${l[0]}`));
 
     const teamResult = await session
       .sql(
@@ -88,7 +88,7 @@ const getPathsX = async () => {
       )
       .execute();
     const teams: string[][] = await teamResult.fetchAll();
-    paths.push(...teams.map(t => `/team/${t[0]}`));
+    paths.push(...teams.map((t) => `/team/${t[0]}`));
 
     const jobResult = await session
       .sql(
@@ -96,7 +96,7 @@ const getPathsX = async () => {
       )
       .execute();
     const jobs: string[][] = await jobResult.fetchAll();
-    paths.push(...jobs.map(j => `/job/${j[0]}`));
+    paths.push(...jobs.map((j) => `/job/${j[0]}`));
   } catch (err) {
     console.error(err);
   } finally {
@@ -113,7 +113,7 @@ const getPaths = async () => {
     port: 3307,
     user: "root",
     password: DB_PASSWORD,
-    database: "milk"
+    database: "milk",
   });
 
   connection.connect();
@@ -127,32 +127,32 @@ const getPaths = async () => {
         (error, results) => {
           error
             ? reject(error)
-            : resolve(results.map(r => `${r.School}${r.Name}`));
+            : resolve(results.map((r) => `${r.School}${r.Name}`));
         }
       )
     );
-    paths.push(...awesomeLists.map(listName => `/awesome/${listName}`));
+    paths.push(...awesomeLists.map((listName) => `/awesome/${listName}`));
 
     const teamUuids: string[] = await new Promise((resolve, reject) =>
       connection.query(
         "SELECT `Uuid` FROM `Teams` WHERE `CertificateVerified` = 'passed' AND `RemovedAt` IS NULL",
         (error, results) => {
-          error ? reject(error) : resolve(results.map(r => r.Uuid));
+          error ? reject(error) : resolve(results.map((r) => r.Uuid));
         }
       )
     );
-    paths.push(...teamUuids.map(uuid => `/team/${uuid}`));
-    paths.push(...teamUuids.map(uuid => `/team/${uuid}/jobs`));
+    paths.push(...teamUuids.map((uuid) => `/team/${uuid}`));
+    paths.push(...teamUuids.map((uuid) => `/team/${uuid}/jobs`));
 
     const jobUuids: string[] = await new Promise((resolve, reject) =>
       connection.query(
         "SELECT `Uuid` FROM `Jobs` WHERE `Published` AND `RemovedAt` IS NULL",
         (error, results) => {
-          error ? reject(error) : resolve(results.map(r => r.Uuid));
+          error ? reject(error) : resolve(results.map((r) => r.Uuid));
         }
       )
     );
-    paths.push(...jobUuids.map(uuid => `/job/${uuid}`));
+    paths.push(...jobUuids.map((uuid) => `/job/${uuid}`));
   } catch (err) {
     console.error(err);
   } finally {
@@ -169,20 +169,20 @@ const generateUrlNode = (url: string) => {
   return {
     url: {
       loc: {
-        "#text": url
+        "#text": url,
       },
       "xhtml:link": {
         "@rel": "alternate",
         "@hreflang": "zh",
-        "@href": url
+        "@href": url,
       },
       lastmod: {
-        "#text": new Date().toISOString().slice(0, 10)
+        "#text": new Date().toISOString().slice(0, 10),
       },
       changefreq: {
-        "#text": "daily"
-      }
-    }
+        "#text": "daily",
+      },
+    },
   };
 };
 
@@ -192,11 +192,11 @@ const generateSitemap = async () => {
     .declaration({ encoding: "UTF-8" })
     .ele("urlset", {
       xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9",
-      "xmlns:xhtml": "http://www.w3.org/1999/xhtml"
+      "xmlns:xhtml": "http://www.w3.org/1999/xhtml",
     });
 
   const allPaths = [...staticPaths, ...(await getPaths())];
-  allPaths.forEach(path => {
+  allPaths.forEach((path) => {
     const url = urljoin("https://milk.jobs", path);
     const urlNode = generateUrlNode(url);
     root.ele(urlNode);

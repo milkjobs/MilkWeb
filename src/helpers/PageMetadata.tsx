@@ -15,7 +15,7 @@ interface Props {
   Twitter debug: https://cards-dev.twitter.com/validator
   Linkedin debug: https://www.linkedin.com/post-inspector/inspect/
 */
-const PageMetadata: React.FC<Props> = props => {
+const PageMetadata: React.FC<Props> = (props) => {
   const { title, description, image } = props;
   const location = window.location;
 

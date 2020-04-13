@@ -8,10 +8,10 @@ import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import urljoin from "url-join";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.default,
   },
   container: {
     display: "flex",
@@ -24,12 +24,12 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 24,
     paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: "960px"
-    }
+      width: "960px",
+    },
   },
   markdownContainer: {
-    textAlign: "left"
-  }
+    textAlign: "left",
+  },
 }));
 
 const PrivacyPolicy: React.FC = () => {
@@ -52,8 +52,8 @@ const PrivacyPolicy: React.FC = () => {
           { name: "幫助中心", url: urljoin(webConfig.basePath, "help") },
           {
             name: "隱私權政策",
-            url: urljoin(webConfig.basePath, "help", "privacy")
-          }
+            url: urljoin(webConfig.basePath, "help", "privacy"),
+          },
         ]}
       />
       <Header />

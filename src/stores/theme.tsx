@@ -1,7 +1,7 @@
 import {
   createMuiTheme,
   MuiThemeProvider,
-  Theme
+  Theme,
 } from "@material-ui/core/styles";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 import React, { createContext, useContext, useState } from "react";
@@ -13,7 +13,7 @@ export interface ThemeContextProps {
 
 export const ThemeContext = createContext<ThemeContextProps>({
   changeTheme: () => {},
-  theme: createMuiTheme()
+  theme: createMuiTheme(),
 });
 
 export const useTheme = (): ThemeContextProps => useContext(ThemeContext);
@@ -25,7 +25,7 @@ export const ThemeProvider = ({ children }) => {
     sm: 600,
     md: 960,
     lg: 1280,
-    xl: 1920
+    xl: 1920,
   };
   const [type, setType] = useState<PaletteOptions["type"]>("light");
   const [theme, setTheme] = useState(
@@ -35,18 +35,18 @@ export const ThemeProvider = ({ children }) => {
         secondary: { main: "#fa6c71", contrastText: "#ffffff" },
         background: { default: "#ffffff" },
         text: { primary: "#484848" },
-        type
+        type,
       },
       breakpoints: {
-        values: breakpointValues
+        values: breakpointValues,
       },
       overrides: {
         MuiTooltip: {
           tooltip: {
-            fontSize: "1em"
-          }
-        }
-      }
+            fontSize: "1em",
+          },
+        },
+      },
     })
   );
 
@@ -57,9 +57,9 @@ export const ThemeProvider = ({ children }) => {
           palette: {
             primary: { main: "#484848", light: "#666666" },
             secondary: { main: "#fa6c71" },
-            type: "dark"
+            type: "dark",
           },
-          breakpoints: { values: breakpointValues }
+          breakpoints: { values: breakpointValues },
         })
       );
       setType("dark");
@@ -71,9 +71,9 @@ export const ThemeProvider = ({ children }) => {
             secondary: { main: "#fa6c71" },
             background: { default: "#ffffff" },
             text: { primary: "#484848" },
-            type: "light"
+            type: "light",
           },
-          breakpoints: { values: breakpointValues }
+          breakpoints: { values: breakpointValues },
         })
       );
       setType("light");
@@ -84,7 +84,7 @@ export const ThemeProvider = ({ children }) => {
     <ThemeContext.Provider
       value={{
         changeTheme,
-        theme
+        theme,
       }}
     >
       <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>

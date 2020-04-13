@@ -25,7 +25,7 @@ interface Props {
   https://developers.google.com/search/docs/data-types/job-posting#job-posting-definition
   https://search.google.com/structured-data/testing-tool
 */
-const JobPostingStructuredData: React.FC<Props> = props => {
+const JobPostingStructuredData: React.FC<Props> = (props) => {
   const {
     uuid,
     name,
@@ -41,7 +41,7 @@ const JobPostingStructuredData: React.FC<Props> = props => {
     salaryType,
     minSalary,
     maxSalary,
-    type
+    type,
   } = props;
 
   const toSalaryUnitText = (type: SalaryType) => {
@@ -80,7 +80,7 @@ const JobPostingStructuredData: React.FC<Props> = props => {
       "@type": "Organization",
       name: teamName,
       logo: teamLogoUrl,
-      ...(teamWebsite && { sameAs: teamWebsite })
+      ...(teamWebsite && { sameAs: teamWebsite }),
     },
     jobLocation: {
       "@type": "Place",
@@ -90,8 +90,8 @@ const JobPostingStructuredData: React.FC<Props> = props => {
         addressLocality: subArea,
         addressRegion: area,
         ...(postCode && { postalCode: postCode }),
-        streetAddress: street
-      }
+        streetAddress: street,
+      },
     },
     title: name,
     baseSalary: {
@@ -101,15 +101,15 @@ const JobPostingStructuredData: React.FC<Props> = props => {
         "@type": "QuantitativeValue",
         minValue: minSalary,
         maxValue: maxSalary,
-        unitText: toSalaryUnitText(salaryType)
-      }
+        unitText: toSalaryUnitText(salaryType),
+      },
     },
     employmentType: toEmploymentType(type),
     identifier: {
       "@type": "PropertyValue",
       name: teamName,
-      value: uuid
-    }
+      value: uuid,
+    },
   };
 
   return (

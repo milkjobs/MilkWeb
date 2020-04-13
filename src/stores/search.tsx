@@ -1,7 +1,7 @@
 import {
   AlgoliaCredential,
   AlgoliaCredentialFromJSON,
-  AlgoliaCredentialToJSON
+  AlgoliaCredentialToJSON,
 } from "@frankyjuang/milkapi-client";
 import algoliasearch, { SearchClient } from "algoliasearch";
 import to from "await-to-js";
@@ -11,7 +11,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useState
+  useState,
 } from "react";
 import { useAuth } from "./auth";
 
@@ -26,7 +26,7 @@ interface SearchContextProps {
 }
 
 const sleep = (time: number) => {
-  return new Promise(resolve => setTimeout(resolve, time));
+  return new Promise((resolve) => setTimeout(resolve, time));
 };
 
 const SearchContext = createContext<SearchContextProps>({
@@ -36,7 +36,7 @@ const SearchContext = createContext<SearchContextProps>({
   searchClient: undefined,
   searchState: {},
   setRefresh: () => {},
-  setSearchState: () => {}
+  setSearchState: () => {},
 });
 
 export const SearchProvider = ({ children }: any) => {
@@ -142,7 +142,7 @@ export const SearchProvider = ({ children }: any) => {
         searchClient,
         searchState,
         setRefresh,
-        setSearchState
+        setSearchState,
       }}
     >
       {children}

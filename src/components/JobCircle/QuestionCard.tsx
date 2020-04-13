@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Post } from "@frankyjuang/milkapi-client";
 import { Link, useLocation } from "react-router-dom";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   postContainer: {
     margin: 8,
     borderRadius: 8,
@@ -23,19 +23,19 @@ const useStyles = makeStyles(theme => ({
       borderColor: theme.palette.divider,
       borderStyle: "solid",
       borderWidth: 0,
-      borderBottomWidth: 1
-    }
+      borderBottomWidth: 1,
+    },
   },
   text: {
     textAlign: "left",
     fontSize: 18,
     color: "black",
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   replyHint: {
     color: theme.palette.text.hint,
-    marginTop: 8
-  }
+    marginTop: 8,
+  },
 }));
 
 interface QuestionCardProps {
@@ -47,10 +47,10 @@ interface QuestionCardProps {
 const QuestionCard: React.FC<QuestionCardProps> = ({
   question,
   updatePost,
-  deletePost
+  deletePost,
 }) => {
   const classes = useStyles();
-  const lines = question.text.split("\n").filter(l => !l.includes("#提問"));
+  const lines = question.text.split("\n").filter((l) => !l.includes("#提問"));
   const location = useLocation();
   const isRecruiter = location.pathname.startsWith("/recruiter");
 

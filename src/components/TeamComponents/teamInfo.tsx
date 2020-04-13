@@ -3,20 +3,20 @@ import { makeStyles } from "@material-ui/core/styles";
 import { TeamSizeConvertor } from "helpers";
 import React from "react";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     paddingLeft: 24,
     paddingRight: 24,
     paddingTop: 16,
     paddingBottom: 8,
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   nameContainer: {
     display: "flex",
     flexDirection: "column",
     marginLeft: 16,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   name: {
     display: "flex",
@@ -27,8 +27,8 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.primary,
     marginRight: "auto",
     [theme.breakpoints.down("xs")]: {
-      fontSize: 16
-    }
+      fontSize: 16,
+    },
   },
   detail: {
     display: "flex",
@@ -40,14 +40,14 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     textAlign: "left",
     [theme.breakpoints.down("xs")]: {
-      fontSize: 14
-    }
+      fontSize: 14,
+    },
   },
   description: {
     display: "flex",
     fontSize: 14,
     color: "#9B9B9B",
-    textAlign: "left"
+    textAlign: "left",
   },
   logoContainer: {
     objectFit: "contain",
@@ -58,19 +58,19 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
     [theme.breakpoints.down("xs")]: {
       width: 40,
-      height: 40
-    }
-  }
+      height: 40,
+    },
+  },
 }));
 
-const TeamInfo: React.FC<Team> = props => {
+const TeamInfo: React.FC<Team> = (props) => {
   const {
     nickname,
     size,
     address,
     primaryField,
     secondaryField,
-    logoUrl
+    logoUrl,
   } = props;
   const classes = useStyles();
 

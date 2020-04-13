@@ -8,8 +8,8 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       flex: 1,
-      backgroundColor: theme.palette.background.default
-    }
+      backgroundColor: theme.palette.background.default,
+    },
   });
 
 interface States {
@@ -26,7 +26,7 @@ class ErrorCatcher extends Component<WithStyles<typeof styles>, States> {
   }
 
   componentDidCatch = (error: Error, errorInfo: ErrorInfo) => {
-    Sentry.withScope(scope => {
+    Sentry.withScope((scope) => {
       scope.setExtras(errorInfo);
       const eventId = Sentry.captureException(error);
       this.setState({ error, errorInfo, eventId });

@@ -9,10 +9,10 @@ import ReactMarkdown from "react-markdown";
 import { useLocation } from "react-router-dom";
 import urljoin from "url-join";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.default,
   },
   container: {
     display: "flex",
@@ -25,12 +25,12 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 24,
     paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: "960px"
-    }
+      width: "960px",
+    },
   },
   markdownContainer: {
-    textAlign: "left"
-  }
+    textAlign: "left",
+  },
 }));
 
 const flatten = (text, child) => {
@@ -40,7 +40,7 @@ const flatten = (text, child) => {
 };
 
 // https://github.com/rexxars/react-markdown/issues/69#issuecomment-289860367
-const HeadingRenderer: ReactType = props => {
+const HeadingRenderer: ReactType = (props) => {
   const children = React.Children.toArray(props.children);
   const text = children.reduce(flatten, "");
   const slug = text.toLowerCase().replace(/\s/g, "-");
@@ -83,7 +83,7 @@ const Faq: React.FC = () => {
       <BreadcrumbListStructuredData
         breadcrumbs={[
           { name: "幫助中心", url: urljoin(webConfig.basePath, "help") },
-          { name: "常見問題", url: urljoin(webConfig.basePath, "help", "faq") }
+          { name: "常見問題", url: urljoin(webConfig.basePath, "help", "faq") },
         ]}
       />
       <Header />
@@ -93,7 +93,7 @@ const Faq: React.FC = () => {
           className={classes.markdownContainer}
           linkTarget="_blank"
           renderers={{
-            heading: HeadingRenderer
+            heading: HeadingRenderer,
           }}
         />
       </div>

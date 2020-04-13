@@ -4,7 +4,7 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import { checkUrl, openInNewTab } from "helpers";
 import React from "react";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     alignItems: "center",
     backgroundColor: theme.palette.background.paper,
@@ -14,64 +14,64 @@ const useStyles = makeStyles(theme => ({
     marginTop: 8,
     marginBottom: 8,
     [theme.breakpoints.down("xs")]: {
-      padding: 12
+      padding: 12,
     },
     "&:hover": {
       cursor: "pointer",
-      boxShadow: "0 2px 4px rgba(0,0,0,0.2) !important"
-    }
+      boxShadow: "0 2px 4px rgba(0,0,0,0.2) !important",
+    },
   },
   nameContainer: {
     display: "flex",
     marginLeft: 16,
     [theme.breakpoints.down("xs")]: {
-      marginLeft: 0
+      marginLeft: 0,
     },
     flexDirection: "column",
-    flex: 1
+    flex: 1,
   },
   logo: {
     width: 100,
     maxHeight: 100,
     [theme.breakpoints.down("xs")]: {
       maxWidth: 40,
-      height: 40
+      height: 40,
     },
     margin: 16,
-    objectFit: "contain"
+    objectFit: "contain",
   },
   title: {
     fontSize: 24,
     textAlign: "left",
     [theme.breakpoints.down("xs")]: {
-      marginLeft: 8
-    }
+      marginLeft: 8,
+    },
   },
   info: {
     fontSize: 16,
     color: theme.palette.text.hint,
     textAlign: "left",
     [theme.breakpoints.down("xs")]: {
-      marginLeft: 8
-    }
+      marginLeft: 8,
+    },
   },
   description: {
     marginTop: 16,
     fontSize: 18,
     [theme.breakpoints.down("xs")]: {
       fontSize: 16,
-      marginTop: 0
+      marginTop: 0,
     },
-    textAlign: "left"
+    textAlign: "left",
   },
   iconContainer: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 }));
 
-const CompanyCard: React.FC<AwesomeTeam> = props => {
+const CompanyCard: React.FC<AwesomeTeam> = (props) => {
   const classes = useStyles();
   const matched = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
 

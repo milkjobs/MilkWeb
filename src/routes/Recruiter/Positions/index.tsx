@@ -10,10 +10,10 @@ import { DownloadApp } from "components/Util";
 import TextField from "@material-ui/core/TextField";
 import { Link } from "react-router-dom";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   container: {
     display: "flex",
@@ -26,29 +26,29 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 24,
     paddingRight: 24,
     [theme.breakpoints.up("md")]: {
-      width: "960px"
-    }
+      width: "960px",
+    },
   },
   emailContainer: {
     marginLeft: "auto",
     marginRight: "auto",
     marginBottom: 60,
     [theme.breakpoints.up("md")]: {
-      width: "600px"
+      width: "600px",
     },
     padding: 24,
     borderRadius: 8,
-    backgroundColor: theme.palette.action.hover
+    backgroundColor: theme.palette.action.hover,
   },
   emailHint: {
-    fontSize: 16
+    fontSize: 16,
   },
   emailForm: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 }));
 
 const Positions: React.FC = () => {
@@ -73,13 +73,13 @@ const Positions: React.FC = () => {
         recruiterInfoId: user.recruiterInfo.uuid,
         recruiterInfo: {
           ...user.recruiterInfo,
-          email
-        }
+          email,
+        },
       });
     }
     user?.recruiterInfo?.uuid &&
       (await recruiterInfoApi.resendEmailConfirmation({
-        recruiterInfoId: user?.recruiterInfo?.uuid
+        recruiterInfoId: user?.recruiterInfo?.uuid,
       }));
     await reloadUser();
   };
@@ -95,8 +95,8 @@ const Positions: React.FC = () => {
         recruiterInfoId: user.recruiterInfo.uuid,
         recruiterInfo: {
           ...user.recruiterInfo,
-          email
-        }
+          email,
+        },
       });
     }
     await reloadUser();
@@ -116,7 +116,7 @@ const Positions: React.FC = () => {
         <VerificationStateBanner
           containerStyle={{
             marginBottom: 24,
-            textAlign: "left"
+            textAlign: "left",
           }}
           showAction
         />
