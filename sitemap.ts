@@ -9,12 +9,16 @@ const DB_PASSWORD = "PASSWORD";
 const staticPaths = [
   "/",
   "/about",
+  "/awesome",
+  "/bottle",
+  "/circle",
   "/departments",
   "/help",
   "/help/faq",
   "/help/pricing",
   "/help/privacy",
   "/help/tos",
+  "/qna",
   "/stories",
 
   // Legacy awesome lists.
@@ -153,6 +157,24 @@ const getPaths = async () => {
       )
     );
     paths.push(...jobUuids.map((uuid) => `/job/${uuid}`));
+    // paths.push(...jobUuids.map((uuid) => `/job/${uuid}/stat`));
+
+    // const bottleUuids: string[] = await new Promise((resolve, reject) =>
+    //   connection.query("SELECT `Uuid` FROM `Bottles`", (error, results) => {
+    //     error ? reject(error) : resolve(results.map((r) => r.Uuid));
+    //   })
+    // );
+    // paths.push(...bottleUuids.map((uuid) => `/bottle/${uuid}`));
+
+    const postUuids: string[] = await new Promise((resolve, reject) =>
+      connection.query(
+        "SELECT `Uuid` FROM `Posts` WHERE `RemovedAt` IS NULL",
+        (error, results) => {
+          error ? reject(error) : resolve(results.map((r) => r.Uuid));
+        }
+      )
+    );
+    paths.push(...postUuids.map((uuid) => `/circle/${uuid}`));
   } catch (err) {
     console.error(err);
   } finally {
