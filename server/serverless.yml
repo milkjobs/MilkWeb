@@ -4,6 +4,9 @@ plugins:
   - serverless-plugin-git-variables
   - serverless-plugin-typescript
 custom:
+  # domain manager doesn't support multiple custom domains.
+  # milk.jobs is manually configured thru aws api gateway console.
+  # https://github.com/amplify-education/serverless-domain-manager/issues/88
   customDomain:
     domainName: web.production.milk.jobs
     stage: production

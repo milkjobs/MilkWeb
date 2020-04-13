@@ -1,6 +1,7 @@
 {
   "name": "milk-web-server",
   "version": "0.1.0",
+  "private": true,
   "scripts": {
     "start": "ts-node-dev app.local.ts",
     "invoke:local": "SLS_DEBUG=* serverless invoke local --function main",
