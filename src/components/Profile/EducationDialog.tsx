@@ -19,6 +19,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import ChipInput from "material-ui-chip-input";
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -53,6 +54,7 @@ const EducationDialog: React.FC<EducationDialogProps> = (props) => {
   const [startTime, setStartTime] = React.useState<Date | null>(new Date());
   const [current, setCurrent] = React.useState<boolean>(true);
   const [endTime, setEndTime] = React.useState<Date | null>(null);
+  const [skillTags, setSkillTags] = useState<string[]>([]);
   const [description, setDescription] = useState<string>();
   const [schoolNameErrorMessage, setSchoolNameErrorMessage] = useState<
     string
@@ -66,9 +68,11 @@ const EducationDialog: React.FC<EducationDialogProps> = (props) => {
   useEffect(() => {
     setSchoolName(education ? education.schoolName : undefined);
     setDegree(education ? education.degree : undefined);
+    setMajorName(education ? education.majorName : undefined);
     setStartTime(education ? education.startTime : new Date());
     setEndTime(education ? education.endTime || null : null);
     setDescription(education ? education.description : undefined);
+    setSkillTags(education ? education.skillTags : []);
     education && !education.endTime && setCurrent(true);
     !education && setCurrent(true);
   }, [education]);
@@ -241,6 +245,14 @@ const EducationDialog: React.FC<EducationDialogProps> = (props) => {
           rows="8"
           value={description}
         />
+        <ChipInput
+          fullWidth
+          value={skillTags}
+          onChange={(chips) => setSkillTags(chips)}
+          onDelete={(chip) => setSkillTags(skillTags.filter((t) => t !== chip))}
+          margin="normal"
+          label={"技能標籤"}
+        />
       </DialogContent>
       <DialogActions>
         {!create && (
@@ -265,6 +277,7 @@ const EducationDialog: React.FC<EducationDialogProps> = (props) => {
               degree &&
               majorName &&
               startTime &&
+              skillTags &&
               update({
                 uuid: education?.uuid,
                 schoolName,
@@ -273,7 +286,7 @@ const EducationDialog: React.FC<EducationDialogProps> = (props) => {
                 startTime,
                 endTime,
                 description,
-                skillTags: [],
+                skillTags,
               });
             close();
           }}

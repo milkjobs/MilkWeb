@@ -15,6 +15,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
+import ChipInput from "material-ui-chip-input";
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -49,6 +50,7 @@ const ExperienceDialog: React.FC<ExperienceDialogProps> = (props) => {
   const [current, setCurrent] = React.useState<boolean>(true);
   const [endTime, setEndTime] = React.useState<Date | null>(null);
   const [description, setDescription] = useState<string>();
+  const [skillTags, setSkillTags] = useState<string[]>([]);
   const [jobNameErrorMessage, setJobNameErrorMessage] = useState<string>();
   const [teamNameErrorMessage, setTeamNameErrorMessage] = useState<string>();
   const [descriptionErrorMessage, setDescriptionErrorMessage] = useState<
@@ -61,6 +63,7 @@ const ExperienceDialog: React.FC<ExperienceDialogProps> = (props) => {
     setStartTime(experience ? experience.startTime : new Date());
     setEndTime(experience ? experience.endTime || null : null);
     setDescription(experience ? experience.description : undefined);
+    setSkillTags(experience ? experience.skillTags : []);
     experience && !experience.endTime && setCurrent(true);
     !experience && setCurrent(true);
   }, [experience]);
@@ -209,6 +212,14 @@ const ExperienceDialog: React.FC<ExperienceDialogProps> = (props) => {
           rows="8"
           value={description}
         />
+        <ChipInput
+          fullWidth
+          value={skillTags}
+          onChange={(chips) => setSkillTags(chips)}
+          onDelete={(chip) => setSkillTags(skillTags.filter((t) => t !== chip))}
+          margin="normal"
+          label={"技能標籤"}
+        />
       </DialogContent>
       <DialogActions>
         {!create && (
@@ -241,7 +252,7 @@ const ExperienceDialog: React.FC<ExperienceDialogProps> = (props) => {
                 startTime,
                 endTime,
                 description,
-                skillTags: [],
+                skillTags,
               });
             close();
           }}

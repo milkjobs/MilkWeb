@@ -6,10 +6,11 @@ import {
   Avatar,
 } from "@material-ui/core";
 import React, { useState, useEffect, useCallback } from "react";
-import { useParams, Link, useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "stores";
 import { Post, PostReply } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
+import { useInView } from "react-intersection-observer";
 import { AnswerCard } from "components/JobCircle";
 import { LoginDialog } from "components/Util";
 import TextField from "@material-ui/core/TextField";
@@ -193,8 +194,9 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
   console.warn(themeTag);
   const [answerDialogOpen, setAnswerDialogOpen] = useState(false);
   const [answers, setAnswers] = useState<PostReply[]>([]);
-  const [answerPageNo, setAnswerPageNo] = useState<number>(1);
+  const [answerPageNo, setAnswerPageNo] = useState<number>(0);
   const answerPageSize = 10;
+  const [ref, inView] = useInView();
 
   const updateAnswer = async (answer: PostReply) => {
     if (user) {
@@ -296,7 +298,12 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
   };
 
   useEffect(() => {
-    if (!loading && question && question.replyCount) getPostReplies();
+    inView && setAnswerPageNo(answerPageNo + 1);
+  }, [inView]);
+
+  useEffect(() => {
+    if (!loading && question && answerPageNo && question.replyCount)
+      getPostReplies();
   }, [answerPageNo, question, loading]);
 
   return (
@@ -408,6 +415,7 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
                 deleteAnswer={deleteAnswer}
               />
             ))}
+            <div ref={ref}></div>
           </div>
         </>
       )}

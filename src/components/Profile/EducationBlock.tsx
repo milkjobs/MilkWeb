@@ -34,6 +34,20 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
     whiteSpace: "pre-line",
   },
+  tagContainer: {
+    display: "flex",
+    flexDirection: "row",
+    marginTop: 16,
+  },
+  tag: {
+    backgroundColor: theme.palette.divider,
+    borderRadius: 16,
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 8,
+    paddingRight: 8,
+    marginRight: 8,
+  },
 }));
 
 const EducationBlock: React.FC<Education> = (props) => {
@@ -44,6 +58,7 @@ const EducationBlock: React.FC<Education> = (props) => {
     startTime,
     endTime,
     description,
+    skillTags,
   } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -88,6 +103,13 @@ const EducationBlock: React.FC<Education> = (props) => {
         >
           {description}
         </Linkify>
+      </div>
+      <div className={classes.tagContainer}>
+        {skillTags.map((tag) => (
+          <div key={tag} className={classes.tag}>
+            {tag}
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -15,6 +15,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
+import ChipInput from "material-ui-chip-input";
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -48,6 +49,7 @@ const ProjectDialog: React.FC<ProjectDialogProps> = (props) => {
   const [current, setCurrent] = React.useState<boolean>(true);
   const [endTime, setEndTime] = React.useState<Date | null>(null);
   const [description, setDescription] = useState<string>();
+  const [skillTags, setSkillTags] = useState<string[]>([]);
   const [nameErrorMessage, setNameErrorMessage] = useState<string>();
   const [descriptionErrorMessage, setDescriptionErrorMessage] = useState<
     string
@@ -58,6 +60,7 @@ const ProjectDialog: React.FC<ProjectDialogProps> = (props) => {
     setStartTime(project ? project.startTime : new Date());
     setEndTime(project ? project.endTime || null : null);
     setDescription(project ? project.description : undefined);
+    setSkillTags(project ? project.skillTags : []);
     project && !project.endTime && setCurrent(true);
     !project && setCurrent(true);
   }, [project]);
@@ -178,6 +181,14 @@ const ProjectDialog: React.FC<ProjectDialogProps> = (props) => {
           rows="8"
           value={description}
         />
+        <ChipInput
+          fullWidth
+          value={skillTags}
+          onChange={(chips) => setSkillTags(chips)}
+          onDelete={(chip) => setSkillTags(skillTags.filter((t) => t !== chip))}
+          margin="normal"
+          label={"技能標籤"}
+        />
       </DialogContent>
       <DialogActions>
         {!create && (
@@ -200,13 +211,14 @@ const ProjectDialog: React.FC<ProjectDialogProps> = (props) => {
           onClick={() => {
             name &&
               startTime &&
+              skillTags &&
               update({
                 uuid: project?.uuid,
                 name,
                 startTime,
                 endTime,
                 description,
-                skillTags: [],
+                skillTags,
               });
             close();
           }}
