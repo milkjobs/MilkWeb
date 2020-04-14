@@ -353,11 +353,11 @@ const JobSideCard: React.FC<Props> = ({ job }) => {
           {job.contact && (
             <div className={classes.contact}>聯絡方式・{job.contact}</div>
           )}
-          {/* {!loading && recruiter && recruiter.uuid !== user?.uuid && (
+          {!loading && recruiter && recruiter.uuid !== user?.uuid && (
             <Button className={classes.button} onClick={chat}>
               {channel ? "繼續詢問" : "詢問"}
             </Button>
-          )} */}
+          )}
         </div>
         {searchClient && (
           <div className={classes.similarJobsContainer}>
