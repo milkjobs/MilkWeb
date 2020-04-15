@@ -18,6 +18,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import to from "await-to-js";
+import { LoginDialog } from "components/Util";
 
 const useStyles = makeStyles((theme) => ({
   actionButton: {
@@ -253,6 +254,10 @@ const AnswerCard: React.FC<AnswerCardProps> = ({
         close={() => setEditAnswerOpen(false)}
         deleteAnswer={deleteAnswer}
         updateAnswer={updateAnswer}
+      />
+      <LoginDialog
+        isOpen={loginDialogOpen}
+        close={() => setLoginDialogOpen(false)}
       />
     </div>
   );

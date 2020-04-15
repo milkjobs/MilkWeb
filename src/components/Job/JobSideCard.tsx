@@ -34,10 +34,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 4,
   },
   button: {
-    backgroundColor: theme.palette.secondary.main,
     width: "100%",
     marginTop: 8,
-    color: theme.palette.common.white,
     paddingTop: 6,
     paddingBottom: 6,
     borderRadius: 4,
@@ -233,7 +231,7 @@ const JobSideCard: React.FC<Props> = ({ job }) => {
   };
 
   const apply = async () => {
-    if (user && recruiter && sb) {
+    if (user && recruiter && sb && !loading) {
       const members = [user.uuid, recruiter.uuid];
       // Check there is an application or not
       const filteredQuery = sb.GroupChannel.createMyGroupChannelListQuery();
@@ -350,11 +348,13 @@ const JobSideCard: React.FC<Props> = ({ job }) => {
               </div>
             </div>
           )}
-          {job.contact && (
-            <div className={classes.contact}>聯絡方式・{job.contact}</div>
-          )}
-          {!loading && recruiter && recruiter.uuid !== user?.uuid && (
-            <Button className={classes.button} onClick={chat}>
+          {recruiter && recruiter.uuid !== user?.uuid && (
+            <Button
+              className={classes.button}
+              onClick={chat}
+              color={"secondary"}
+              variant={"contained"}
+            >
               {channel ? "繼續詢問" : "詢問"}
             </Button>
           )}

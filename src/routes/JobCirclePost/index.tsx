@@ -6,6 +6,7 @@ import { useAuth } from "stores";
 import { Post as PostType } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
 import { Post, Question } from "components/JobCircle";
+import { Slide, ToastContainer, ToastPosition } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -77,6 +78,12 @@ const JobCircle: React.FC = () => {
       ) : (
         <Post post={post} />
       )}
+      <ToastContainer
+        draggable={false}
+        hideProgressBar
+        position={ToastPosition.BOTTOM_CENTER}
+        transition={Slide}
+      />
     </div>
   );
 };

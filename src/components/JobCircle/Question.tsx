@@ -20,7 +20,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import urljoin from "url-join";
 import branch from "branch-sdk";
 import { webConfig } from "config";
-import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
+import { toast } from "react-toastify";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 
@@ -84,6 +84,9 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
   },
   replyHint: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
     color: theme.palette.text.hint,
     paddingTop: 16,
   },
@@ -119,6 +122,12 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
     textDecoration: "none",
   },
+  noAnswerHint: {
+    fontSize: 20,
+    marginTop: 40,
+    marginBottom: 40,
+    color: theme.palette.text.hint,
+  },
 }));
 
 interface AnswerDialogProps {
@@ -135,6 +144,8 @@ const AnswerDialog: React.FC<AnswerDialogProps> = ({
   replyQuestion,
 }) => {
   const [text, setText] = useState("");
+  const { user } = useAuth();
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
 
   return (
     <Dialog
@@ -160,15 +171,30 @@ const AnswerDialog: React.FC<AnswerDialogProps> = ({
         <Button onClick={close} color="primary">
           取消
         </Button>
-        <Button
-          onClick={() => {
-            close();
-            replyQuestion(text);
-          }}
-          color="primary"
-        >
-          回答
-        </Button>
+        {user ? (
+          <Button
+            onClick={() => {
+              close();
+              replyQuestion(text);
+            }}
+            color="primary"
+          >
+            回答
+          </Button>
+        ) : (
+          <Button
+            onClick={() => {
+              setLoginDialogOpen(true);
+            }}
+            color="primary"
+          >
+            登入
+          </Button>
+        )}
+        <LoginDialog
+          isOpen={loginDialogOpen}
+          close={() => setLoginDialogOpen(false)}
+        />
       </DialogActions>
     </Dialog>
   );
@@ -191,7 +217,6 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
     .split("\n")
     .filter((l) => l.includes("#提問"))[0]
     .replace("#提問", "");
-  console.warn(themeTag);
   const [answerDialogOpen, setAnswerDialogOpen] = useState(false);
   const [answers, setAnswers] = useState<PostReply[]>([]);
   const [answerPageNo, setAnswerPageNo] = useState<number>(0);
@@ -239,7 +264,7 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
 
   const getShareUrl = useCallback(async () => {
     if (question) {
-      const url = urljoin(webConfig.basePath, "question", question.uuid);
+      const url = urljoin(webConfig.basePath, "circle", question.uuid);
       branch.link(
         {
           channel: "app",
@@ -321,7 +346,7 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
                   {l}
                 </div>
               ))}
-            {themeTag && (
+            {themeTag && themeTag !== "undefined" && (
               <Link
                 to={"/circle/theme/" + themeTag.replace("#", "")}
                 className={classes.themeTag}
@@ -407,14 +432,29 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
             </div>
           </div>
           <div>
-            {answers.map((a) => (
-              <AnswerCard
-                answer={a}
-                key={a.uuid}
-                updateAnswer={updateAnswer}
-                deleteAnswer={deleteAnswer}
-              />
-            ))}
+            {answers.length > 0 ? (
+              answers.map((a) => (
+                <AnswerCard
+                  answer={a}
+                  key={a.uuid}
+                  updateAnswer={updateAnswer}
+                  deleteAnswer={deleteAnswer}
+                />
+              ))
+            ) : (
+              <div className={classes.noAnswerHint}>
+                {"成為第一個回答問題的人"}
+              </div>
+            )}
+            <Button
+              variant={"contained"}
+              color={"secondary"}
+              className={classes.button}
+              style={{ marginTop: 16 }}
+              onClick={() => history.push("/qna")}
+            >
+              {"更多問答"}
+            </Button>
             <div ref={ref}></div>
           </div>
         </>
@@ -431,12 +471,6 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
       <LoginDialog
         isOpen={loginDialogOpen}
         close={() => setLoginDialogOpen(false)}
-      />
-      <ToastContainer
-        draggable={false}
-        hideProgressBar
-        position={ToastPosition.BOTTOM_CENTER}
-        transition={Slide}
       />
     </div>
   );

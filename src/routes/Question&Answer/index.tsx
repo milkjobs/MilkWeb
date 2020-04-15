@@ -6,17 +6,12 @@ import {
 } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { Header } from "components/Header";
-import { themeSubTitles } from "config";
-import IconButton from "@material-ui/core/IconButton";
-import InputBase from "@material-ui/core/InputBase";
-import SearchIcon from "@material-ui/icons/Search";
 import { useAuth } from "stores";
-import { QuestionCard, PostDialog } from "components/JobCircle";
+import { QuestionCard, QuestionDialog } from "components/JobCircle";
 import { Post, NewPost } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
 import { useInView } from "react-intersection-observer";
-import { Link, useLocation } from "react-router-dom";
-import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
+import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -128,13 +123,11 @@ const useStyles = makeStyles((theme) => ({
 const QuestionAnswer: React.FC = () => {
   const classes = useStyles();
   const { getApi, user, loading } = useAuth();
-  const location = useLocation();
   const [posts, setPosts] = useState<Post[]>([]);
-  const [createPostOpen, setCreatePostOpen] = useState(false);
   const [pageNo, setPageNo] = useState(0);
-  const pageSize = 5;
+  const pageSize = 20;
   const [ref, inView] = useInView();
-  const isRecruiter = location.pathname.startsWith("/recruiter");
+  const [createQuestionOpen, setCreateQuestionOpen] = useState(false);
 
   const deletePost = async (postId: string) => {
     if (user) {
@@ -194,6 +187,29 @@ const QuestionAnswer: React.FC = () => {
     <div className={classes.root}>
       <Header />
       <div className={classes.container}>
+        <div className={classes.postButtonContainer}>
+          <Avatar
+            alt="profile image"
+            className={classes.avatar}
+            src={
+              user
+                ? user.profileImageUrl
+                : "https://milk.jobs/static/media/milk.d3c5757d.png"
+            }
+          />
+          <div
+            className={classes.postButton}
+            onClick={() => setCreateQuestionOpen(true)}
+          >
+            <HelpOutlineOutlinedIcon />
+            <div style={{ marginLeft: 8 }}>{"想問什麼？"}</div>
+          </div>
+          <QuestionDialog
+            open={createQuestionOpen}
+            onClose={() => setCreateQuestionOpen(false)}
+            finish={createPost}
+          />
+        </div>
         {loading ? (
           <CircularProgress className={classes.loading} />
         ) : (

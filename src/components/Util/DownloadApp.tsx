@@ -1,6 +1,6 @@
 import { Dialog, makeStyles, useMediaQuery, useTheme } from "@material-ui/core";
 import { AppStore, GooglePlay } from "assets/icons";
-import { Dark, Home, Job, Manage } from "assets/mockup";
+import { Dark, Home, Job, Manage, Chat } from "assets/mockup";
 import { getMobileOS, MobileOS } from "helpers";
 import QRCode from "qrcode.react";
 import React, { useEffect, useState } from "react";
@@ -59,16 +59,16 @@ const DownloadApp: React.FC<Props> = ({
   const slides: Slide[] = recruiterMode
     ? [
         { title: "職缺管理，一目瞭然", image: Manage },
+        { title: "不漏接任何訊息", image: Chat },
         { title: "保護眼睛，更加專注", image: Dark },
         { title: "手機完成，輕鬆自在", image: Home },
         { title: "簡單直覺，切中要點", image: Job },
-        // { title: "不漏接任何訊息", image: Chat },
       ]
     : [
+        { title: "不漏接任何訊息", image: Chat },
         { title: "手機完成，輕鬆自在", image: Home },
         { title: "簡單直覺，切中要點", image: Job },
         { title: "職缺管理，一目瞭然", image: Manage },
-        // { title: "不漏接任何訊息", image: Chat },
         { title: "保護眼睛，更加專注", image: Dark },
       ];
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
