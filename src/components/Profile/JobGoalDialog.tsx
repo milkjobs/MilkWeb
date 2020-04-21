@@ -1,18 +1,18 @@
+import { JobGoal } from "@frankyjuang/milkapi-client";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import React, { useEffect, useState } from "react";
-import { JobGoal } from "@frankyjuang/milkapi-client";
+import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import { TaiwanAreaJSON } from "config";
+import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import { TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
+import React, { useEffect, useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
