@@ -315,8 +315,6 @@ const ApplicantBasicInfo: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<Project>();
 
   const [isJobGoalDialogOpen, setIsJobGoalDialogOpen] = useState(false);
-  const [jobGoalCreate, setJobGoalCreate] = useState(false);
-  const [selectedJobGoal, setSelectedJobGoal] = useState<JobGoal>();
 
   const showDialog = () => {
     setIsDialogOpen(true);
@@ -435,35 +433,20 @@ const ApplicantBasicInfo: React.FC = () => {
     setIsJobGoalDialogOpen(true);
   };
 
-  const updateJobGoal = async (updatedJobGoal: JobGoal) => {
-    if (user && user.profile) {
-      const jobGoalApi = await getApi("JobGoal");
-      if (jobGoalCreate)
-        await jobGoalApi.addJobGoal({
-          profileId: user.profile.uuid,
-          jobGoal: updatedJobGoal,
-        });
-      else {
-        updatedJobGoal.uuid &&
-          (await jobGoalApi.updateJobGoal({
-            jobGoalId: updatedJobGoal.uuid,
-            jobGoal: updatedJobGoal,
-          }));
-      }
-      await reloadUser();
-    }
-  };
-
-  const deleteJobGoal = async (jobGoalId: string) => {
-    if (user && user.profile) {
-      const jobGoalApi = await getApi("JobGoal");
-      await jobGoalApi.removeJobGoal({ jobGoalId });
-      await reloadUser();
-    }
-  };
-
   const closeJobGoalDialog = () => {
     setIsJobGoalDialogOpen(false);
+  };
+
+  const updateJobGoal = async (updatedJobGoal: JobGoal) => {
+    console.log(user?.profile, updateJobGoal);
+    if (user && user.profile && updatedJobGoal.uuid) {
+      const jobGoalApi = await getApi("JobGoal");
+      await jobGoalApi.updateJobGoal({
+        jobGoalId: updatedJobGoal.uuid,
+        jobGoal: updatedJobGoal,
+      });
+      await reloadUser();
+    }
   };
 
   if (!user) {
@@ -502,6 +485,14 @@ const ApplicantBasicInfo: React.FC = () => {
       </div>
       <div className={classes.description}>
         {user.profile?.introduction || "尚無自我介紹"}
+      </div>
+      <div className={classes.items}>
+        <div className={classes.title}>{"求職目標"}</div>
+        {user.profile?.jobGoal && (
+          <div onClick={() => showJobGoalDialog()}>
+            <JobGoalBlock {...user.profile.jobGoal} />
+          </div>
+        )}
       </div>
       <div className={classes.items}>
         <div className={classes.title}>{"經歷"}</div>
@@ -578,31 +569,6 @@ const ApplicantBasicInfo: React.FC = () => {
           {" + 新增作品"}
         </div>
       </div>
-      {/* <div className={classes.items}>
-        <div className={classes.title}>{"求職目標"}</div>
-        {(user.profile?.jobGoals || []).map((g) => (
-          <div
-            key={g.uuid}
-            onClick={() => {
-              setSelectedJobGoal(g);
-              setJobGoalCreate(false);
-              showJobGoalDialog();
-            }}
-          >
-            <JobGoalBlock {...g} />
-          </div>
-        ))}
-        <div
-          className={classes.blockAdd}
-          onClick={() => {
-            setSelectedJobGoal(undefined);
-            setJobGoalCreate(true);
-            showJobGoalDialog();
-          }}
-        >
-          {" + 新增求職目標"}
-        </div>
-      </div> */}
       <EditDialog isOpen={isDialogOpen} close={closeDialog} />
       <ExperienceDialog
         experience={selectedExperience}
@@ -629,12 +595,10 @@ const ApplicantBasicInfo: React.FC = () => {
         deleteProject={deleteProject}
       />
       <JobGoalDialog
-        jobGoal={selectedJobGoal}
-        create={jobGoalCreate}
+        jobGoal={user.profile?.jobGoal}
         isOpen={isJobGoalDialogOpen}
         close={closeJobGoalDialog}
         update={updateJobGoal}
-        deleteJobGoal={deleteJobGoal}
       />
     </div>
   );

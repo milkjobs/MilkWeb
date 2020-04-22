@@ -1,177 +1,388 @@
-import { JobGoal } from "@frankyjuang/milkapi-client";
+import {
+  JobGoal,
+  JobGoalSalaryTypeEnum,
+  JobGoalTypeEnum,
+} from "@frankyjuang/milkapi-client";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
+import { Autocomplete } from "@material-ui/lab";
+import { JobCatalogues } from "assets/jobs";
 import { TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
+import to from "await-to-js";
+import {
+  HourlySalaryOptions,
+  MonthlySalaryOptions,
+} from "components/Job/utils";
+import Fuse from "fuse.js";
+import { JobTypeOptions, SalaryTypeOptions } from "helpers";
 import React, { useEffect, useState } from "react";
-
-const useStyles = makeStyles((theme) => ({
-  formContainer: {
-    display: "flex",
-    flexWrap: "wrap",
-    marginTop: 8,
-  },
-  formControl: {
-    marginRight: theme.spacing(2),
-    minWidth: 115,
-  },
-  formTextInput: {
-    marginBottom: 12,
-  },
-}));
+import { useAuth } from "stores";
 
 interface JobGoalDialogProps {
   jobGoal?: JobGoal;
   isOpen: boolean;
-  create: boolean;
   close: () => void;
   update: (jobGoal: JobGoal) => void;
-  deleteJobGoal: (id: string) => void;
 }
 
 const JobGoalDialog: React.FC<JobGoalDialogProps> = (props) => {
-  const { isOpen, close, update, deleteJobGoal, create, jobGoal } = props;
-  const classes = useStyles();
-  const [name, setName] = useState<string>();
+  const { isOpen, close, update, jobGoal } = props;
+  const { getApi } = useAuth();
+  const [type, setType] = useState<JobGoalTypeEnum>();
+  const [salaryType, setSalaryType] = useState<JobGoalSalaryTypeEnum>();
+  const [minSalary, setMinSalary] = useState<number | null>();
+  const [maxSalary, setMaxSalary] = useState<number | null>();
   const [area, setArea] = useState<string>();
-  const [salary, setSalary] = useState<string>();
-  const [nameErrorMessage, setNameErrorMessage] = useState<string>();
-  const [areaErrorMessage, setAreaErrorMessage] = useState<string | undefined>(
-    "地點不得為空"
-  );
-  const [salaryErrorMessage, setSalaryErrorMessage] = useState<string>();
+  const [titleOptions, setTitleOptions] = useState<string[]>([]);
+  const [titles, setTitles] = useState<string[]>();
+  const [titleFuse, setTitleFuse] = useState<
+    Fuse<string, Fuse.FuseOptions<string>>
+  >();
+  const [fieldOptions, setFieldOptions] = useState<string[]>([]);
+  const [fields, setFields] = useState<string[]>();
+  const [fieldFuse, setFieldFuse] = useState<
+    Fuse<string, Fuse.FuseOptions<string>>
+  >();
+
+  const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (
+      event.target.value === JobGoalTypeEnum.Fulltime ||
+      event.target.value === JobGoalTypeEnum.Internship ||
+      event.target.value === JobGoalTypeEnum.Parttime
+    ) {
+      setType(event.target.value);
+    } else {
+      setType(undefined);
+    }
+  };
+
+  const handleSalaryTypeChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (
+      event.target.value === JobGoalSalaryTypeEnum.Hourly ||
+      event.target.value === JobGoalSalaryTypeEnum.Monthly
+    ) {
+      setSalaryType(event.target.value);
+    } else {
+      setSalaryType(undefined);
+    }
+  };
+
+  const handleAreaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value === "any") {
+      setArea(undefined);
+    } else {
+      setArea(event.target.value);
+    }
+  };
 
   useEffect(() => {
-    setName(jobGoal ? jobGoal.name : undefined);
-    setSalary(jobGoal ? jobGoal.salary : undefined);
+    const getTitleOptions = async () => {
+      const allTitles = JobCatalogues.reduce<string[]>((result, catalogue) => {
+        const subTitles = catalogue.subCatalogues.reduce<string[]>(
+          (subResult, subCatalogue) => {
+            subResult.push(...subCatalogue.jobs);
+            return subResult;
+          },
+          []
+        );
+        result.push(...subTitles);
+        return result;
+      }, []);
+      const titles = [...new Set(allTitles)];
+
+      const options: Fuse.FuseOptions<string> = {
+        shouldSort: true,
+        tokenize: true,
+        matchAllTokens: true,
+      };
+      setTitleFuse(new Fuse(titles, options));
+      setTitleOptions(titles);
+    };
+
+    getTitleOptions();
+  }, []);
+
+  useEffect(() => {
+    const getFieldOptions = async () => {
+      const teamApi = await getApi("Team");
+      const [, fields] = await to(teamApi.getFields());
+      if (!fields) {
+        return;
+      }
+
+      const options: Fuse.FuseOptions<string> = {
+        shouldSort: true,
+        tokenize: true,
+        matchAllTokens: true,
+      };
+      setFieldFuse(new Fuse(fields, options));
+      setFieldOptions(fields);
+    };
+
+    getFieldOptions();
+  }, [getApi]);
+
+  useEffect(() => {
+    if (!salaryType) {
+      setMinSalary(undefined);
+      setMaxSalary(undefined);
+      return;
+    }
+
+    if (jobGoal && salaryType === jobGoal.salaryType) {
+      setSalaryType(jobGoal.salaryType);
+      setMinSalary(jobGoal.minSalary);
+      setMaxSalary(jobGoal.maxSalary);
+    } else if (salaryType === JobGoalSalaryTypeEnum.Monthly) {
+      setMinSalary(40000);
+      setMaxSalary(60000);
+    } else if (salaryType === JobGoalSalaryTypeEnum.Hourly) {
+      setMinSalary(180);
+      setMaxSalary(200);
+    }
+  }, [jobGoal, salaryType]);
+
+  useEffect(() => {
+    setType(jobGoal?.type);
+    setTitles(jobGoal?.titles);
+    if (jobGoal?.salaryType && jobGoal.maxSalary && jobGoal.minSalary) {
+      setSalaryType(jobGoal.salaryType);
+      setMinSalary(jobGoal.minSalary);
+      setMaxSalary(jobGoal.maxSalary);
+    } else {
+      setSalaryType(undefined);
+      setMinSalary(undefined);
+      setMaxSalary(undefined);
+    }
+    setArea(jobGoal?.area);
+    setFields(jobGoal?.fields);
   }, [jobGoal]);
-
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value.length > 100) {
-      setNameErrorMessage("職位名稱不能超過 100 個字");
-      return;
-    }
-    setName(event.target.value);
-    setNameErrorMessage(undefined);
-  };
-
-  const handleSalaryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value.length > 100) {
-      setSalaryErrorMessage("期望薪水不能超過 2000 個字");
-      return;
-    }
-    setSalary(event.target.value);
-    setSalaryErrorMessage(undefined);
-  };
-
-  const handleAreaChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setArea(event.target.value as string);
-    setAreaErrorMessage(undefined);
-  };
-
-  const checkName = () => {
-    const helperText = !name ? "職缺名稱不得為空" : undefined;
-    setNameErrorMessage(helperText);
-
-    return !helperText;
-  };
-
-  const checkArea = () => {
-    const helperText = !area ? "地點不得為空" : undefined;
-    setAreaErrorMessage(helperText);
-
-    return !helperText;
-  };
 
   return (
     <Dialog open={isOpen} onClose={close} fullWidth={true}>
-      <DialogTitle>{create ? "新增求職目標" : "編輯求職目標"}</DialogTitle>
+      <DialogTitle>編輯求職目標</DialogTitle>
       <DialogContent>
         <TextField
-          autoFocus
-          className={classes.formTextInput}
-          error={!!nameErrorMessage}
           fullWidth
-          helperText={nameErrorMessage || ""}
-          id="name"
-          label="職缺名稱"
+          id="job-type"
+          label="類型"
           margin="normal"
-          onBlur={checkName}
-          onChange={handleNameChange}
-          value={name}
-        />
-        <FormControl className={classes.formControl} error={!!areaErrorMessage}>
-          <InputLabel id="demo-simple-select-label">地點</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={area}
-            onChange={handleAreaChange}
+          onChange={handleTypeChange}
+          select
+          value={type || "any"}
+        >
+          <MenuItem value="any">不限</MenuItem>
+          {JobTypeOptions.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          fullWidth
+          id="area"
+          label="縣市"
+          margin="normal"
+          style={{ marginRight: 4 }}
+          onChange={handleAreaChange}
+          select
+          value={area || "any"}
+        >
+          <MenuItem value="any">不限</MenuItem>
+          {TaiwanAreaJSON.map((option) => (
+            <MenuItem key={option.name} value={option.name}>
+              {option.name}
+            </MenuItem>
+          ))}
+        </TextField>
+        <div style={{ display: "flex" }}>
+          <TextField
+            fullWidth
+            id="salary-type"
+            label="薪水"
+            margin="normal"
+            onChange={handleSalaryTypeChange}
+            select
+            value={salaryType || "any"}
           >
-            {TaiwanAreaJSON.map((a) => (
-              <MenuItem key={a.name} value={a.name}>
-                {a.name}
+            <MenuItem value="any">不限</MenuItem>
+            {SalaryTypeOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
               </MenuItem>
             ))}
-          </Select>
-          <FormHelperText>{areaErrorMessage}</FormHelperText>
-        </FormControl>
-        <TextField
-          error={!!salaryErrorMessage}
-          fullWidth
-          helperText={salaryErrorMessage || ""}
-          id="introduction"
-          label="期望薪水"
-          margin="normal"
-          onBlur={() => setSalaryErrorMessage(undefined)}
-          onChange={handleSalaryChange}
-          value={salary}
+          </TextField>
+          <TextField
+            disabled={!salaryType}
+            fullWidth
+            id="min-salary"
+            label={
+              salaryType === JobGoalSalaryTypeEnum.Monthly
+                ? "最低月薪"
+                : salaryType === JobGoalSalaryTypeEnum.Hourly
+                ? "最低時薪"
+                : "最低薪資"
+            }
+            margin="normal"
+            style={{ marginLeft: 4, marginRight: 4 }}
+            value={minSalary || 0}
+            onChange={(e) => {
+              if (/^\d+$/.test(e.target.value)) {
+                setMinSalary(parseInt(e.target.value));
+              }
+            }}
+            onBlur={() => {
+              if (!minSalary || !maxSalary || !salaryType) {
+                return;
+              }
+
+              const options =
+                salaryType === JobGoalSalaryTypeEnum.Monthly
+                  ? MonthlySalaryOptions
+                  : HourlySalaryOptions;
+              let salary = minSalary;
+              // Round to hundreds.
+              if (salaryType === JobGoalSalaryTypeEnum.Monthly) {
+                salary = Math.round(salary / 100) * 100;
+              }
+              if (salary < options[0]) {
+                salary = options[0];
+              } else if (salary > options[options.length - 1]) {
+                salary = options[options.length - 1];
+              }
+
+              setMinSalary(salary);
+              if (salary > maxSalary) {
+                setMaxSalary(salary);
+              }
+            }}
+          />
+          <TextField
+            disabled={!salaryType}
+            fullWidth
+            id="max-salary"
+            label={
+              salaryType === JobGoalSalaryTypeEnum.Monthly
+                ? "最高月薪"
+                : salaryType === JobGoalSalaryTypeEnum.Hourly
+                ? "最高時薪"
+                : "最高薪資"
+            }
+            margin="normal"
+            style={{ marginLeft: 4 }}
+            value={maxSalary || 0}
+            onChange={(e) => {
+              if (/^\d+$/.test(e.target.value)) {
+                setMaxSalary(parseInt(e.target.value));
+              }
+            }}
+            onBlur={() => {
+              if (!minSalary || !maxSalary || !salaryType) {
+                return;
+              }
+
+              const options =
+                salaryType === JobGoalSalaryTypeEnum.Monthly
+                  ? MonthlySalaryOptions
+                  : HourlySalaryOptions;
+              let salary = maxSalary;
+              // Round to hundreds.
+              if (salaryType === JobGoalSalaryTypeEnum.Monthly) {
+                salary = Math.round(salary / 100) * 100;
+              }
+              if (salary < options[0]) {
+                salary = options[0];
+              } else if (salary > options[options.length - 1]) {
+                salary = options[options.length - 1];
+              }
+
+              setMaxSalary(salary);
+              if (salary < minSalary) {
+                setMinSalary(salary);
+              }
+            }}
+          />
+        </div>
+        <Autocomplete
+          clearText="清除職位"
+          closeText="收起清單"
+          defaultValue={[]}
+          getOptionLabel={(option) => option}
+          id="titles"
+          multiple
+          noOptionsText="找不到職位"
+          openText="展開清單"
+          options={titleOptions}
+          value={titles}
+          onChange={(_event, newValue) => {
+            setTitles(newValue);
+          }}
+          filterOptions={(_options, { inputValue }) =>
+            inputValue && titleFuse
+              ? titleFuse
+                  .search<string, false, false>(inputValue)
+                  .map((i) => titleOptions[i])
+              : titleOptions
+          }
+          renderInput={(params) => (
+            <TextField {...params} margin="normal" label="職位" />
+          )}
+        />
+        <Autocomplete
+          clearText="清除產業領域"
+          closeText="收起清單"
+          defaultValue={[]}
+          getOptionLabel={(option) => option}
+          id="fields"
+          multiple
+          noOptionsText="找不到產業領域"
+          openText="展開清單"
+          options={fieldOptions}
+          value={fields}
+          onChange={(_event, newValue) => {
+            setFields(newValue);
+          }}
+          filterOptions={(_options, { inputValue }) =>
+            inputValue && fieldFuse
+              ? fieldFuse
+                  .search<string, false, false>(inputValue)
+                  .map((i) => fieldOptions[i])
+              : fieldOptions
+          }
+          renderInput={(params) => (
+            <TextField {...params} margin="normal" label="產業領域" />
+          )}
         />
       </DialogContent>
       <DialogActions>
-        {!create && (
-          <Button
-            style={{ marginRight: "auto" }}
-            onClick={() => {
-              jobGoal && jobGoal.uuid && deleteJobGoal(jobGoal.uuid);
-              close();
-            }}
-            color="secondary"
-            variant="text"
-          >
-            刪除
-          </Button>
-        )}
         <Button onClick={close} color="primary" variant="text">
           取消
         </Button>
         <Button
+          color="primary"
+          variant="contained"
           onClick={() => {
-            name &&
-              area &&
-              salary &&
-              update({
-                uuid: jobGoal?.uuid,
-                address: { area, subArea: "不限" },
-                name,
-                salary,
-              });
+            update({
+              ...jobGoal,
+              type,
+              salaryType,
+              minSalary,
+              maxSalary,
+              fields,
+              titles,
+              area,
+            });
             close();
           }}
-          color="primary"
-          disabled={!name || !area || !salary}
-          variant="text"
         >
-          {create ? "新增" : "儲存"}
+          儲存
         </Button>
       </DialogActions>
     </Dialog>

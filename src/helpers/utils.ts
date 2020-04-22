@@ -4,6 +4,8 @@ import {
   JobType,
   SalaryType,
   TeamSize,
+  JobGoalSalaryTypeEnum,
+  JobGoalTypeEnum,
 } from "@frankyjuang/milkapi-client";
 import { MobileOS } from "helpers";
 import { useState } from "react";
@@ -43,6 +45,20 @@ const JobTypeConvertor = (jobType: JobType | undefined) => {
   return "";
 };
 
+const jobGoalTypeToJobType = (type: JobGoalTypeEnum) => {
+  if (type.toString() === JobType.Fulltime) {
+    return JobType.Fulltime;
+  }
+  if (type.toString() === JobType.Parttime) {
+    return JobType.Parttime;
+  }
+  if (type.toString() === JobType.Internship) {
+    return JobType.Internship;
+  }
+
+  throw new Error(`Unknown job type ${type}`);
+};
+
 const EducationLevelOptions = [
   { value: EducationLevel.Any, label: "不限" },
   { value: EducationLevel.HighSchool, label: "高中／高職" },
@@ -80,6 +96,30 @@ const ExperienceLevelConvertor = (
     return filterValue[0].label;
   }
   return "";
+};
+
+const SalaryTypeOptions = [
+  { value: SalaryType.Hourly, label: "時薪" },
+  { value: SalaryType.Monthly, label: "月薪" },
+];
+
+const SalaryTypeConvertor = (salaryType: SalaryType | undefined) => {
+  const filterValue = SalaryTypeOptions.filter((o) => o.value === salaryType);
+  if (filterValue.length) {
+    return filterValue[0].label;
+  }
+  return "";
+};
+
+const jobGoalSalaryTypeToSalaryType = (type: JobGoalSalaryTypeEnum) => {
+  if (type.toString() === SalaryType.Hourly) {
+    return SalaryType.Hourly;
+  }
+  if (type.toString() === SalaryType.Monthly) {
+    return SalaryType.Monthly;
+  }
+
+  throw new Error(`Unknown salary type ${type}`);
 };
 
 const SalaryTypeToWordInJobCard = (salaryType: SalaryType) => {
@@ -216,20 +256,24 @@ export {
   EducationLevelOptions,
   ExperienceLevelConvertor,
   ExperienceLevelOptions,
-  getMobileOS,
   FileMimeType,
+  getMobileOS,
   ImageMimeType,
   ImagePdfMimeType,
   isIntlPhoneNumber,
   isLocalPhoneNumber,
   isValidPassword,
   isValidVerificationCode,
+  jobGoalSalaryTypeToSalaryType,
+  jobGoalTypeToJobType,
   JobTypeConvertor,
   JobTypeOptions,
   normalizeSchoolName,
   openInNewTab,
   PdfMimeType,
   salaryToString,
+  SalaryTypeConvertor,
+  SalaryTypeOptions,
   TeamSizeConvertor,
   TeamSizeOptions,
   useLocalStorage,

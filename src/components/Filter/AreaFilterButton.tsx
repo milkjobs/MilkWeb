@@ -3,7 +3,7 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import CheckIcon from "@material-ui/icons/Check";
-import { TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
+import { MainArea, TaiwanAreaJSON } from "assets/TaiwanAreaJSON";
 import React, { useEffect, useState } from "react";
 import { RefinementListProvided } from "react-instantsearch-core";
 import { connectRefinementList } from "react-instantsearch-dom";
