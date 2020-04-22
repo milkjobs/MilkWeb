@@ -1,4 +1,4 @@
-import { TaiwanAreaJSON } from "config";
+import { TaiwanAreaJSON, MainArea } from "config";
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import { RefinementListProvided } from "react-instantsearch-core";
@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 12,
     paddingBottom: 12,
     fontSize: 16,
+    width: 200,
     backgroundColor: "#f5f5f5",
     "&:hover": {
       cursor: "pointer",
@@ -46,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 12,
     paddingBottom: 12,
     fontSize: 16,
+    width: 200,
     cursor: "pointer",
     backgroundColor: theme.palette.background.default,
     color: theme.palette.secondary.main,
@@ -56,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 12,
     paddingBottom: 12,
     fontSize: 16,
+    width: 200,
     "&:hover": {
       cursor: "pointer",
       backgroundColor: theme.palette.background.default,
@@ -68,12 +71,18 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 12,
     paddingBottom: 12,
     fontSize: 16,
+    width: 200,
     color: theme.palette.secondary.main,
     "&:hover": {
       cursor: "pointer",
       backgroundColor: theme.palette.background.default,
       color: theme.palette.secondary.main,
     },
+  },
+  selectedHint: {
+    color: theme.palette.text.hint,
+    marginLeft: 16,
+    marginRight: 16,
   },
 }));
 
@@ -105,6 +114,22 @@ function AreaFilterDialog(props: AreaFilterDialogProps) {
     onClose(selectedAreaFilters);
   };
 
+  const isAllSubAreasSelected = (
+    mainArea: MainArea | undefined,
+    filterList: AreaFilter[]
+  ) => {
+    if (!mainArea) return false;
+    for (const dist of mainArea.districts) {
+      const found = filterList.find(
+        (f) => f.area === mainArea.name && f.subArea === dist.name
+      );
+      if (!found) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   return (
     <Dialog
       onClose={handleClose}
@@ -112,8 +137,15 @@ function AreaFilterDialog(props: AreaFilterDialogProps) {
       open={open}
       fullWidth
     >
-      <div style={{ display: "flex" }}>
-        <div style={{ display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", height: 1000 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            height: 800,
+            overflow: "scroll",
+          }}
+        >
           {TaiwanAreaJSON.map((a) => (
             <div
               key={a.name}
@@ -128,7 +160,68 @@ function AreaFilterDialog(props: AreaFilterDialogProps) {
             </div>
           ))}
         </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            height: 800,
+            overflow: "scroll",
+          }}
+        >
+          <div
+            className={
+              selectedMainArea &&
+              isAllSubAreasSelected(
+                TaiwanAreaJSON.find((a) => a.name === selectedMainArea),
+                selectedAreaFilters
+              )
+                ? classes.selectedSubArea
+                : classes.subArea
+            }
+            onClick={() => {
+              if (
+                selectedMainArea &&
+                isAllSubAreasSelected(
+                  TaiwanAreaJSON.find((a) => a.name === selectedMainArea),
+                  selectedAreaFilters
+                )
+              ) {
+                setSelectedAreaFilters(
+                  selectedAreaFilters.filter((f) => f.area !== selectedMainArea)
+                );
+              } else {
+                const appendDistricts = TaiwanAreaJSON.find(
+                  (a) => a.name === selectedMainArea
+                )?.districts.filter(
+                  (d) =>
+                    !selectedAreaFilters.find(
+                      (f) => f.subArea === d.name && f.area === selectedMainArea
+                    )
+                );
+                selectedMainArea &&
+                  appendDistricts &&
+                  setSelectedAreaFilters([
+                    ...appendDistricts.map((d) => {
+                      return { area: selectedMainArea, subArea: d.name };
+                    }),
+                    ...selectedAreaFilters,
+                  ]);
+              }
+            }}
+          >
+            {"全部"}
+            {selectedMainArea &&
+              isAllSubAreasSelected(
+                TaiwanAreaJSON.find((a) => a.name === selectedMainArea),
+                selectedAreaFilters
+              ) && (
+                <CheckIcon
+                  color="secondary"
+                  fontSize="small"
+                  style={{ marginLeft: 16, marginTop: 4 }}
+                />
+              )}
+          </div>
           {TaiwanAreaJSON.find(
             (a) => a.name === selectedMainArea
           )?.districts.map((d) => (
@@ -177,9 +270,16 @@ function AreaFilterDialog(props: AreaFilterDialogProps) {
         </div>
       </div>
       <DialogActions>
-        <Button onClick={() => setSelectedAreaFilters([])} color="primary">
-          清除
-        </Button>
+        <div
+          style={{ marginRight: "auto", display: "flex", alignItems: "center" }}
+        >
+          <div
+            className={classes.selectedHint}
+          >{`已選 ${selectedAreaFilters.length} 個地區`}</div>
+          <Button onClick={() => setSelectedAreaFilters([])} color="secondary">
+            清除已選的地區
+          </Button>
+        </div>
         <Button onClick={handleClose} color="primary" autoFocus>
           確定
         </Button>

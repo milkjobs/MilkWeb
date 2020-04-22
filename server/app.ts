@@ -147,6 +147,23 @@ app.get("/awesome/:name", async (request, response) => {
   response.send(body);
 });
 
+app.get("/qna", async (request, response) => {
+  let body: string;
+
+  try {
+    const name = request.params.name;
+    body = await getBody({
+      url: request.url,
+      title: `職場問答－牛奶找工作`,
+      description: `提出你的疑惑，回答別人的問題，在求職的路上一起加油！`,
+    });
+  } catch {
+    body = await getDefaultBody(request.url);
+  }
+
+  response.send(body);
+});
+
 app.get("*", async (request, response) => {
   const body = await getDefaultBody(request.url);
   response.send(body);

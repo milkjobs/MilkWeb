@@ -47,9 +47,12 @@ const useStyles = makeStyles((theme) => ({
   textColumn: {
     flex: 2,
   },
+  textInput: {
+    height: 40,
+  },
   buttonColumn: {
     flex: 1,
-    height: 40,
+    height: 60,
     marginTop: 8,
     [theme.breakpoints.up("sm")]: {
       marginLeft: 12,
@@ -229,6 +232,7 @@ const LoginDialog: React.FC<Props> = ({ isOpen, close }) => {
               variant="outlined"
               InputProps={{
                 readOnly: !countdownCompleted,
+                classes: { input: classes.textInput },
                 startAdornment: (
                   <InputAdornment position="start">09</InputAdornment>
                 ),
@@ -286,6 +290,9 @@ const LoginDialog: React.FC<Props> = ({ isOpen, close }) => {
                 type="number"
                 value={code || ""}
                 variant="outlined"
+                InputProps={{
+                  classes: { input: classes.textInput },
+                }}
                 onChange={(e) => {
                   setCode(e.target.value);
                   setCodeHelperText(undefined);

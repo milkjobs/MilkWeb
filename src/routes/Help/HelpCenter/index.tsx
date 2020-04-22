@@ -92,6 +92,9 @@ const HelpCenter: React.FC = () => {
               </Link>
             </GridListTile>
           </GridList>
+          <div style={{ marginTop: 30, fontSize: 18 }}>
+            {"牛奶網路有限公司為北市就服字 第 0330 號"}
+          </div>
           <div style={{ display: "flex" }}></div>
         </div>
       </div>

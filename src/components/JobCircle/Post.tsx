@@ -4,12 +4,13 @@ import { useParams, Link, useHistory } from "react-router-dom";
 import { useAuth } from "stores";
 import { AppStore, GooglePlay } from "assets/icons";
 import { Dark, Home, Job, Manage, Chat } from "assets/mockup";
-import { getMobileOS, MobileOS } from "helpers";
+import { getMobileOS, MobileOS, openInNewTab } from "helpers";
 import QRCode from "qrcode.react";
 import { Post as PostType } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
 import { PostCard } from "components/JobCircle";
-import { DownloadApp } from "components/Util";
+import { TeamCreateForm } from "components/TeamComponents";
+import { LoginDialog } from "components/Util";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,7 +93,8 @@ const Post: React.FC<PostProps> = ({ post: p }) => {
   const { getApi, user } = useAuth();
   const history = useHistory();
   const theme = useTheme();
-  const [downloadAppOpen, setDownloadAppOpen] = useState(false);
+  const [createTeamFormOpen, setCreateTeamFormOpen] = useState(false);
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [post, setPost] = useState<PostType>(p);
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const slides: Slide[] = [
@@ -137,12 +139,60 @@ const Post: React.FC<PostProps> = ({ post: p }) => {
 
   return (
     <div className={classes.container}>
-      <PostCard post={post} updatePost={updatePost} deletePost={deletePost} />
-      {params.id && (
-        <Link to={"/circle"} className={classes.circleLink}>
-          {"看所有的工作圈"}
+      <PostCard
+        post={post}
+        updatePost={updatePost}
+        deletePost={deletePost}
+        expand={true}
+      />
+      <div style={{ marginTop: 80, marginBottom: 80 }}>
+        <Link to={"/"} className={classes.circleLink}>
+          <Button variant={"contained"} color={"primary"}>
+            看更多工作
+          </Button>
         </Link>
-      )}
+        {user ? (
+          !user.recruiterInfo ? (
+            <Button
+              variant={"contained"}
+              color={"secondary"}
+              onClick={() =>
+                isMobile
+                  ? openInNewTab("https://to.milk.jobs/app")
+                  : setCreateTeamFormOpen(true)
+              }
+            >
+              免費刊登職缺
+            </Button>
+          ) : (
+            <Link to="/recruiter" className={classes.circleLink}>
+              <Button variant={"contained"} color={"secondary"}>
+                切換成招募模式
+              </Button>
+            </Link>
+          )
+        ) : (
+          <Button
+            variant={"contained"}
+            color={"secondary"}
+            onClick={() =>
+              isMobile
+                ? openInNewTab("https://to.milk.jobs/app")
+                : setLoginDialogOpen(true)
+            }
+          >
+            免費刊登職缺
+          </Button>
+        )}
+        <TeamCreateForm
+          handleClose={() => setCreateTeamFormOpen(false)}
+          open={createTeamFormOpen}
+        />
+        <LoginDialog
+          isOpen={loginDialogOpen}
+          close={() => setLoginDialogOpen(false)}
+        />
+      </div>
       <div
         style={{
           display: "flex",
@@ -240,11 +290,21 @@ const Post: React.FC<PostProps> = ({ post: p }) => {
               style={{
                 fontSize: 24,
                 fontWeight: 700,
-                marginBottom: 24,
+                marginBottom: 12,
                 marginTop: isMobile ? 12 : 0,
               }}
             >
               下載牛奶找工作 App
+            </div>
+            <div
+              style={{
+                fontSize: 24,
+                fontWeight: 700,
+                marginBottom: 24,
+                marginTop: isMobile ? 12 : 0,
+              }}
+            >
+              免費刊登職缺
             </div>
           </div>
         </div>

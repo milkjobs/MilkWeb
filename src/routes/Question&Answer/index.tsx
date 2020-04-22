@@ -1,9 +1,4 @@
-import {
-  makeStyles,
-  Button,
-  Avatar,
-  CircularProgress,
-} from "@material-ui/core";
+import { makeStyles, Avatar, CircularProgress } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { Header } from "components/Header";
 import { useAuth } from "stores";
@@ -12,6 +7,7 @@ import { Post, NewPost } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
 import { useInView } from "react-intersection-observer";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
+import { PageMetadata } from "helpers";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -185,6 +181,10 @@ const QuestionAnswer: React.FC = () => {
 
   return (
     <div className={classes.root}>
+      <PageMetadata
+        title={`職場問答－牛奶找工作`}
+        description={`提出你的疑惑，回答別人的問題，在求職的路上一起加油！`}
+      />
       <Header />
       <div className={classes.container}>
         <div className={classes.postButtonContainer}>

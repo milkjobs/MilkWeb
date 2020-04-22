@@ -1,4 +1,4 @@
-import { UserApi } from "@frankyjuang/milkapi-client";
+import { UserApi, SalaryType } from "@frankyjuang/milkapi-client";
 import { IconButton, InputBase, makeStyles } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 import algoliasearch, { SearchClient } from "algoliasearch/lite";
@@ -144,7 +144,11 @@ const JobSearch: React.FC = () => {
           >
             <Configure
               hitsPerPage={20}
-              optionalWords={[...searchHistoryConfig.split(" "), "正職"]}
+              optionalWords={[
+                ...searchHistoryConfig.split(" "),
+                SalaryType.Monthly,
+                SalaryType.Hourly,
+              ]}
             />
             <div ref={ref}>
               <SearchBar />

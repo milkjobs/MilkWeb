@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 import { SearchBoxProvided } from "react-instantsearch-core";
 import { connectSearchBox } from "react-instantsearch-dom";
 import { useHistory, useLocation } from "react-router-dom";
+import { SalaryType } from "@frankyjuang/milkapi-client";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,12 +56,21 @@ const SearchBar: React.FC<SearchBoxProvided> = (props) => {
         : params.job;
       // If not query, use searchHistory as default
       console.warn(searchHistory);
-      refine(jobQuery || (searchHistory ? searchHistory + " 正職" : ""));
+      refine(
+        jobQuery ||
+          (searchHistory
+            ? searchHistory + ` ${SalaryType.Monthly} ${SalaryType.Hourly}`
+            : "")
+      );
       setQuery(jobQuery || "");
       // eslint-disable-next-line @typescript-eslint/camelcase
       firebase.analytics().logEvent("search", { search_term: jobQuery || "" });
     } else {
-      refine(searchHistory ? searchHistory + " 正職" : "");
+      refine(
+        searchHistory
+          ? searchHistory + ` ${SalaryType.Monthly} ${SalaryType.Hourly}`
+          : ""
+      );
     }
   }, [location.search, refine]);
 

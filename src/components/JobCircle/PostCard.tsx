@@ -243,12 +243,14 @@ interface PostCardProps {
   post: Post;
   updatePost: (post: Post) => void;
   deletePost: (postId: string) => void;
+  expand?: boolean;
 }
 
 const PostCard: React.FC<PostCardProps> = ({
   post,
   updatePost,
   deletePost,
+  expand,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -399,7 +401,7 @@ const PostCard: React.FC<PostCardProps> = ({
           </div>
         </div>
       )}
-      <ParsedText text={post.text} showLine={5} />
+      <ParsedText text={post.text} showLine={5} expand={expand} />
       <div className={classes.imagesContainer}>
         {post.imageUrls?.map((i, index) => (
           <img

@@ -55,7 +55,8 @@ interface Props {
   lastMessage:
     | SendBird.UserMessage
     | SendBird.FileMessage
-    | SendBird.AdminMessage;
+    | SendBird.AdminMessage
+    | null;
 }
 
 const ChannelListCard: React.FC<Props> = (props) => {
@@ -113,7 +114,8 @@ const ChannelListCard: React.FC<Props> = (props) => {
           </div>
         </div>
         <div className={classes.recentMessage}>
-          {"message" in lastMessage ? lastMessage.message : lastMessage.name}
+          {lastMessage &&
+            ("message" in lastMessage ? lastMessage.message : lastMessage.name)}
         </div>
       </div>
     </div>

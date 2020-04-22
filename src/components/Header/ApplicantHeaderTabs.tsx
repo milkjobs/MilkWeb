@@ -81,11 +81,13 @@ const ApplicantHeaderTabs: React.FC<Props> = (props) => {
       {(isHome || isAbout || isCircle) &&
         (user && !user.recruiterInfo ? (
           <div onClick={showCreateTeamForm} className={classes.link}>
-            <span className={classes.tab}>刊登職缺</span>
+            <span className={classes.tab}>免費刊登職缺</span>
           </div>
         ) : (
           <Link to="/recruiter" className={classes.link}>
-            <span className={classes.tab}>刊登職缺</span>
+            <span className={classes.tab}>
+              {user ? "切換成招募模式" : "免費刊登職缺"}
+            </span>
           </Link>
         ))}
 

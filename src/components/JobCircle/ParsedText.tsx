@@ -24,14 +24,17 @@ const useStyles = makeStyles((theme) => ({
 interface ParseTextProps {
   text: string;
   showLine: number;
+  expand?: boolean;
 }
 
-const ParsedText: React.FC<ParseTextProps> = ({ text, showLine }) => {
+const ParsedText: React.FC<ParseTextProps> = ({ text, showLine, expand }) => {
   const classes = useStyles();
   const theme = useTheme();
   const lines = text.split("\n");
   const lineNumber = showLine - 1;
-  const [hideText, setHideText] = useState(lines.length > lineNumber);
+  const [hideText, setHideText] = useState(
+    lines.length > lineNumber && !expand
+  );
 
   return (
     <>
