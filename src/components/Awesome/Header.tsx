@@ -7,6 +7,7 @@ import SchoolIcon from "@material-ui/icons/School";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import LiveHelpIcon from "@material-ui/icons/LiveHelp";
 import BugReportIcon from "@material-ui/icons/BugReport";
+import ListAltIcon from "@material-ui/icons/ListAlt";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -89,11 +90,15 @@ const AwesomeHeader: React.FC<Props> = ({ containerStyle }) => {
         <MenuBookIcon />
         <div style={{ marginLeft: 8, fontSize: 16 }}>{"實習資訊"}</div>
       </Link>
+      <Link to={{ pathname: "/qna" }} className={classes.link}>
+        <LiveHelpIcon />
+        <div style={{ marginLeft: 8, fontSize: 16 }}>{"職場問答"}</div>
+      </Link>
       {!isMobile && (
         <>
-          <Link to={{ pathname: "/qna" }} className={classes.link}>
-            <LiveHelpIcon />
-            <div style={{ marginLeft: 8, fontSize: 16 }}>{"職場問答"}</div>
+          <Link to={{ pathname: "/departments" }} className={classes.link}>
+            <ListAltIcon />
+            <div style={{ marginLeft: 8, fontSize: 16 }}>{"就業精選"}</div>
           </Link>
           <a href={"https://covid19.milk.jobs/"} className={classes.link}>
             <BugReportIcon />
