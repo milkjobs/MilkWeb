@@ -74,6 +74,12 @@ const TextMessage: React.FC<Props> = (props) => {
     );
   };
 
+  const deleteMessage = () => {
+    channel?.deleteMessage(message, (res, err) => {
+      !err && setText("訊息已被刪除");
+    });
+  };
+
   return !fromMe ? (
     <div className={classes.message}>
       <img alt="" src={profileUrl} width={40} height={40} />
@@ -113,6 +119,12 @@ const TextMessage: React.FC<Props> = (props) => {
                 >
                   編輯
                 </Typography>
+                <Typography
+                  className={classes.typography}
+                  onClick={deleteMessage}
+                >
+                  刪除
+                </Typography>
               </Paper>
             </Fade>
           </ClickAwayListener>
@@ -128,7 +140,7 @@ const TextMessage: React.FC<Props> = (props) => {
             autoFocus
             margin="dense"
             id="name"
-            type="email"
+            multiline
             value={text}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               e.target.value !== "" && setText(e.target.value)

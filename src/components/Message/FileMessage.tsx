@@ -46,9 +46,14 @@ const FileMessage: React.FC<Props> = ({ profileUrl, message, fromMe }) => {
   const classes = useStyles();
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
 
-  const checkImage = (url: string) => {
+  const checkImage = (name: string) => {
     return (
-      url.endsWith(".jpg") || url.endsWith(".png") || url.endsWith(".jpeg")
+      name.endsWith(".jpg") ||
+      name.endsWith(".png") ||
+      name.endsWith(".jpeg") ||
+      name.endsWith(".PNG") ||
+      name.endsWith(".JPG") ||
+      name.endsWith(".JPEG")
     );
   };
 
@@ -57,7 +62,7 @@ const FileMessage: React.FC<Props> = ({ profileUrl, message, fromMe }) => {
       {!fromMe ? (
         <div className={classes.message}>
           <img alt="" src={profileUrl} width={40} height={40} />
-          {checkImage(message.url) ? (
+          {checkImage(message.name) ? (
             <img
               src={message.url}
               className={classes.imageMessage}
@@ -79,7 +84,7 @@ const FileMessage: React.FC<Props> = ({ profileUrl, message, fromMe }) => {
           }}
           className={classes.message}
         >
-          {checkImage(message.url) ? (
+          {checkImage(message.name) ? (
             <img
               src={message.url}
               className={classes.imageMessage}

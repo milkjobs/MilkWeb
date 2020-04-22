@@ -8,6 +8,7 @@ import MenuBookIcon from "@material-ui/icons/MenuBook";
 import LiveHelpIcon from "@material-ui/icons/LiveHelp";
 import BugReportIcon from "@material-ui/icons/BugReport";
 import ListAltIcon from "@material-ui/icons/ListAlt";
+import WidgetsIcon from "@material-ui/icons/Widgets";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -104,9 +105,13 @@ const AwesomeHeader: React.FC<Props> = ({ containerStyle }) => {
             <BugReportIcon />
             <div style={{ marginLeft: 8, fontSize: 16 }}>
               <div>疫情期間</div>
-              <div>公司招募情</div>
+              <div>公司招募回報</div>
             </div>
           </a>
+          <Link to={{ pathname: "/circle" }} className={classes.link}>
+            <WidgetsIcon />
+            <div style={{ marginLeft: 8, fontSize: 16 }}>{"經驗交流"}</div>
+          </Link>
         </>
       )}
       {/* {lists.map((list) => (
