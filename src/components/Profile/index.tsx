@@ -3,6 +3,7 @@ export * from "./ExperienceBlock";
 export * from "./ExperienceDialog";
 export * from "./EducationBlock";
 export * from "./EducationDialog";
+export * from "./EmailForm";
 export * from "./ProjectBlock";
 export * from "./ProjectDialog";
 export * from "./JobGoalBlock";

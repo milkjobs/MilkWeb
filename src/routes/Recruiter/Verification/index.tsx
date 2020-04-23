@@ -10,6 +10,7 @@ import { useHistory } from "react-router-dom";
 import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "stores";
+import { EmailForm } from "components/Profile";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -108,17 +109,6 @@ const Verification: React.FC = () => {
                     上傳
                   </Button>
                 </label>
-                <Tooltip title="審核通過後，App 內直接通知">
-                  <Button
-                    style={{ marginLeft: 16 }}
-                    color="primary"
-                    component="span"
-                    variant="outlined"
-                    onClick={() => setIsDownloadAppOpen(true)}
-                  >
-                    接收審核結果通知
-                  </Button>
-                </Tooltip>
               </div>
             )
           }
@@ -153,6 +143,7 @@ const Verification: React.FC = () => {
           {"若無法提供以上文件，可以上傳身分證正面照。身分證字號須清楚拍攝。"}
         </div>
       </div>
+      <EmailForm />
       <DownloadApp
         isOpen={isDownloadAppOpen}
         close={() => setIsDownloadAppOpen(false)}

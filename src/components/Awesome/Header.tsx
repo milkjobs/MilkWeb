@@ -1,4 +1,4 @@
-import { Button, makeStyles, useMediaQuery, useTheme } from "@material-ui/core";
+import { makeStyles, useMediaQuery, useTheme } from "@material-ui/core";
 import _ from "lodash";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
@@ -8,7 +8,7 @@ import MenuBookIcon from "@material-ui/icons/MenuBook";
 import LiveHelpIcon from "@material-ui/icons/LiveHelp";
 import BugReportIcon from "@material-ui/icons/BugReport";
 import ListAltIcon from "@material-ui/icons/ListAlt";
-import WidgetsIcon from "@material-ui/icons/Widgets";
+import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -78,6 +78,13 @@ const AwesomeHeader: React.FC<Props> = ({ containerStyle }) => {
   return (
     <div className={classes.container} style={containerStyle}>
       <Link
+        to={{ pathname: "/circle/760ab9a67eef4187aa0bc8d9b07a5c84" }}
+        className={classes.link}
+      >
+        <MonetizationOnIcon />
+        <div style={{ marginLeft: 8, fontSize: 16 }}>{"錢途找工作"}</div>
+      </Link>
+      <Link
         to={{ pathname: "/circle/988101058c344b3696ce00665bfa5e14" }}
         className={classes.link}
       >
@@ -91,12 +98,12 @@ const AwesomeHeader: React.FC<Props> = ({ containerStyle }) => {
         <MenuBookIcon />
         <div style={{ marginLeft: 8, fontSize: 16 }}>{"實習資訊"}</div>
       </Link>
-      <Link to={{ pathname: "/qna" }} className={classes.link}>
-        <LiveHelpIcon />
-        <div style={{ marginLeft: 8, fontSize: 16 }}>{"職場問答"}</div>
-      </Link>
       {!isMobile && (
         <>
+          <Link to={{ pathname: "/qna" }} className={classes.link}>
+            <LiveHelpIcon />
+            <div style={{ marginLeft: 8, fontSize: 16 }}>{"職場問答"}</div>
+          </Link>
           <Link to={{ pathname: "/departments" }} className={classes.link}>
             <ListAltIcon />
             <div style={{ marginLeft: 8, fontSize: 16 }}>{"就業精選"}</div>
@@ -108,10 +115,6 @@ const AwesomeHeader: React.FC<Props> = ({ containerStyle }) => {
               <div>公司招募回報</div>
             </div>
           </a>
-          <Link to={{ pathname: "/circle" }} className={classes.link}>
-            <WidgetsIcon />
-            <div style={{ marginLeft: 8, fontSize: 16 }}>{"經驗交流"}</div>
-          </Link>
         </>
       )}
       {/* {lists.map((list) => (

@@ -3,6 +3,7 @@ import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import { DownloadApp } from "components/Util";
 import React, { useState } from "react";
+import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -73,9 +74,9 @@ const JobFooter: React.FC<Props> = (props) => {
         </div>
       </div>
       <div></div>
-      {/* <Button className={classes.button} onClick={() => setIsDialogOpen(true)}>
-        立即詢問
-      </Button> */}
+      <Button className={classes.button} onClick={() => setIsDialogOpen(true)}>
+        下載App，立即詢問
+      </Button>
       <DownloadApp isOpen={isDialogOpen} close={() => setIsDialogOpen(false)} />
     </div>
   );

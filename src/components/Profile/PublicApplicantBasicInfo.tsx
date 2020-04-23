@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "stores";
 import { PublicUser, Role } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
-import { ExperienceBlock, EducationBlock, ProjectBlock } from ".";
+import { ExperienceBlock, EducationBlock, ProjectBlock, JobGoalBlock } from ".";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -168,6 +168,14 @@ const PublicApplicantBasicInfo: React.FC<Props> = ({ userId }) => {
           </div>
           <div className={classes.description}>
             {user.profile?.introduction || "尚無自我介紹"}
+          </div>
+          <div className={classes.items}>
+            <div className={classes.title}>{"求職目標"}</div>
+            {user.profile?.jobGoal && (
+              <div>
+                <JobGoalBlock {...user.profile.jobGoal} />
+              </div>
+            )}
           </div>
           <div className={classes.items}>
             <div className={classes.title}>{"經歷"}</div>
