@@ -68,6 +68,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16,
     fontWeight: 800,
     alignItems: "center",
+    maxWidth: 80,
     overflow: "hidden",
     [theme.breakpoints.down("xs")]: {
       fontSize: 14,
