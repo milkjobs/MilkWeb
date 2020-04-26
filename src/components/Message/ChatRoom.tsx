@@ -233,6 +233,17 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
                   selected={c.url === currentChannelUrl}
                   unreadMessageCount={c.unreadMessageCount}
                   lastMessage={c.lastMessage}
+                  leaveChannel={() => {
+                    c.leave(() => {
+                      channels.current = channels.current.filter(
+                        (ch) => ch.url !== c.url
+                      );
+                      forceUpdate();
+                      history.push(
+                        isRecruiter ? "/recruiter/message" : "/message"
+                      );
+                    });
+                  }}
                 />
               </div>
             );

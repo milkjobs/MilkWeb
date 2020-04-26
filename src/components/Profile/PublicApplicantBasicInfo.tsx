@@ -1,10 +1,15 @@
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
-import React, { useEffect, useState } from "react";
-import { useAuth } from "stores";
+import React, { useEffect, useState, useCallback } from "react";
+import { useAuth, useChannel } from "stores";
 import { PublicUser, Role } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
 import { ExperienceBlock, EducationBlock, ProjectBlock, JobGoalBlock } from ".";
+import { Button } from "@material-ui/core";
+import { JobCard } from "components/Job";
+import { LoginDialog } from "components/Util";
+import { useHistory, useLocation } from "react-router-dom";
+import SendBird from "sendbird";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -16,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     [theme.breakpoints.up("sm")]: {
-      width: "600px",
+      width: "720px",
     },
   },
   info: {
@@ -123,15 +128,68 @@ interface Props {
 
 const PublicApplicantBasicInfo: React.FC<Props> = ({ userId }) => {
   const classes = useStyles();
-  const { getApi } = useAuth();
-  const [user, setUser] = useState<PublicUser>();
+  const { getApi, user } = useAuth();
+  const { sb } = useChannel();
+  const location = useLocation();
+  const [applicant, setApplicant] = useState<PublicUser>();
+  const [recruiter, setRecruiter] = useState<PublicUser>();
+  const [recruiterMode, setRecruiterMode] = useState(false);
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
+  const history = useHistory();
+  const isRecruiter = location.pathname.startsWith("/recruiter");
+
+  const createChannel = async (
+    members: string[]
+  ): Promise<SendBird.GroupChannel> => {
+    return new Promise((resolve, reject) => {
+      const sb = SendBird.getInstance();
+      sb.GroupChannel.createChannelWithUserIds(
+        members,
+        false,
+        members.join("_"),
+        "",
+        "",
+        (channel, error) => {
+          error ? reject(error) : resolve(channel);
+        }
+      );
+    });
+  };
+
+  const getOrCreateChannel = useCallback(async () => {
+    if (user && sb) {
+      const members = [user.uuid, userId];
+      // Check there is an application or not
+      const filteredQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+      filteredQuery.userIdsIncludeFilter = members;
+      filteredQuery.next(async (groupChannels) => {
+        let channel = groupChannels.find(
+          (c) =>
+            (c.name === members.join("_") ||
+              c.name === members.reverse().join("_")) &&
+            c.members.some((m) => m.userId === user.uuid) &&
+            c.members.some((m) => m.userId === userId)
+        );
+        if (!channel) {
+          channel = await createChannel(members);
+        }
+
+        if (isRecruiter) history.push("/recruiter/message" + channel.url);
+        else history.push("/message/" + channel.url);
+      });
+    }
+  }, [user, sb]);
 
   const getPublicUser = async () => {
     const userApi = await getApi("User");
     const [err, publicUser] = await to(
       userApi.getPublicUser({ userId, role: Role.Applicant })
     );
-    publicUser && setUser(publicUser);
+    publicUser && setApplicant(publicUser);
+    const [errR, publicRecruiter] = await to(
+      userApi.getPublicUser({ userId, role: Role.Recruiter })
+    );
+    publicRecruiter && setRecruiter(publicRecruiter);
   };
 
   useEffect(() => {
@@ -140,7 +198,7 @@ const PublicApplicantBasicInfo: React.FC<Props> = ({ userId }) => {
 
   return (
     <div className={classes.container}>
-      {user && (
+      {applicant && (
         <>
           <div
             style={{
@@ -151,7 +209,7 @@ const PublicApplicantBasicInfo: React.FC<Props> = ({ userId }) => {
           >
             <Avatar
               alt="profile image"
-              src={user.profileImageUrl}
+              src={applicant.profileImageUrl}
               style={{ width: 60, height: 60 }}
             />
             <div className={classes.info}>
@@ -159,50 +217,102 @@ const PublicApplicantBasicInfo: React.FC<Props> = ({ userId }) => {
                 style={{
                   display: "flex",
                   flexDirection: "row",
-                  marginBottom: 8,
+                  alignItems: "center",
                 }}
               >
-                <div className={classes.name}>{user.name}</div>
+                <div className={classes.name}>{applicant.name}</div>
               </div>
             </div>
+            <div style={{ marginLeft: "auto", display: "flex" }}>
+              {user && user.uuid !== userId && (
+                <Button
+                  variant={"outlined"}
+                  style={{ marginRight: 8 }}
+                  onClick={async () => {
+                    if (!user) {
+                      setLoginDialogOpen(true);
+                      return;
+                    }
+
+                    await getOrCreateChannel();
+                  }}
+                >
+                  {"發訊息"}
+                </Button>
+              )}
+              {recruiter &&
+                !recruiterMode &&
+                recruiter.jobs?.length &&
+                recruiter.jobs?.length !== 0 && (
+                  <Button
+                    variant={"outlined"}
+                    onClick={() => setRecruiterMode(true)}
+                  >{`職缺 ( ${recruiter.jobs?.length} ) `}</Button>
+                )}
+              {recruiterMode && (
+                <Button
+                  variant={"outlined"}
+                  onClick={() => setRecruiterMode(false)}
+                >{`個人主頁`}</Button>
+              )}
+            </div>
           </div>
-          <div className={classes.description}>
-            {user.profile?.introduction || "尚無自我介紹"}
-          </div>
-          <div className={classes.items}>
-            <div className={classes.title}>{"求職目標"}</div>
-            {user.profile?.jobGoal && (
-              <div>
-                <JobGoalBlock {...user.profile.jobGoal} />
+          {recruiterMode ? (
+            <div style={{ marginTop: 32 }}>
+              {recruiter?.jobs?.map((j) => (
+                <JobCard
+                  {...j}
+                  key={j.uuid}
+                  targetPath={`/job/${j.uuid}`}
+                  team={recruiter.team}
+                />
+              ))}
+            </div>
+          ) : (
+            <>
+              <div className={classes.description}>
+                {applicant.profile?.introduction || "尚無自我介紹"}
               </div>
-            )}
-          </div>
-          <div className={classes.items}>
-            <div className={classes.title}>{"經歷"}</div>
-            {(user.profile?.experiences || []).map((e) => (
-              <div key={e.uuid}>
-                <ExperienceBlock {...e} />
+              <div className={classes.items}>
+                <div className={classes.title}>{"經歷"}</div>
+                {(applicant.profile?.experiences || []).map((e) => (
+                  <div key={e.uuid}>
+                    <ExperienceBlock {...e} />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <div className={classes.items}>
-            <div className={classes.title}>{"學歷"}</div>
-            {(user.profile?.educations || []).map((e) => (
-              <div key={e.uuid}>
-                <EducationBlock {...e} />
+              <div className={classes.items}>
+                <div className={classes.title}>{"學歷"}</div>
+                {(applicant.profile?.educations || []).map((e) => (
+                  <div key={e.uuid}>
+                    <EducationBlock {...e} />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <div className={classes.items}>
-            <div className={classes.title}>{"作品"}</div>
-            {(user.profile?.projects || []).map((e) => (
-              <div key={e.uuid}>
-                <ProjectBlock {...e} />
+              <div className={classes.items}>
+                <div className={classes.title}>{"作品"}</div>
+                {(applicant.profile?.projects || []).map((e) => (
+                  <div key={e.uuid}>
+                    <ProjectBlock {...e} />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+              <div className={classes.items}>
+                <div className={classes.title}>{"求職目標"}</div>
+                {applicant.profile?.jobGoal && (
+                  <div>
+                    <JobGoalBlock {...applicant.profile.jobGoal} />
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </>
       )}
+      <LoginDialog
+        isOpen={loginDialogOpen}
+        close={() => setLoginDialogOpen(false)}
+      />
     </div>
   );
 };

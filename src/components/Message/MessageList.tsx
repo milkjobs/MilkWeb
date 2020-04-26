@@ -48,6 +48,7 @@ const MessageList: React.FC<Props> = ({
           />
         ))}
       {theirLastSeenTime.current !== undefined &&
+        messages.length > 0 &&
         theirLastSeenTime.current >= messages[0].createdAt &&
         messages[0].sender.userId === userId && (
           <div className={classes.read}>{"已讀"}</div>

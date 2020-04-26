@@ -56,12 +56,14 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     marginBottom: 12,
+    textDecoration: "none",
   },
   recruiterName: {
     display: "flex",
     alignItems: "center",
     fontSize: 18,
     fontWeight: 800,
+    textDecoration: "none",
     color: theme.palette.text.primary,
   },
   recruiterTitle: {
@@ -69,6 +71,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     fontSize: 14,
     fontWeight: 400,
+    textDecoration: "none",
     color: theme.palette.text.secondary,
   },
   similarJobsContainer: {
@@ -334,7 +337,11 @@ const JobSideCard: React.FC<Props> = ({ job }) => {
       <Sticky top={32}>
         <div className={classes.card}>
           {recruiter && (
-            <div className={classes.recruiterContainer}>
+            <Link
+              to={"/public-profile/" + recruiter.uuid}
+              target="_blank"
+              className={classes.recruiterContainer}
+            >
               <Avatar
                 alt="recruiter profile image"
                 src={recruiter.profileImageUrl}
@@ -346,7 +353,7 @@ const JobSideCard: React.FC<Props> = ({ job }) => {
                   {recruiter.title || "招募員"}
                 </div>
               </div>
-            </div>
+            </Link>
           )}
           {recruiter && recruiter.uuid !== user?.uuid && (
             <Button

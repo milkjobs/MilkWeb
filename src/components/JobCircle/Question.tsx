@@ -6,7 +6,7 @@ import {
   Avatar,
 } from "@material-ui/core";
 import React, { useState, useEffect, useCallback } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { useAuth } from "stores";
 import { Post, PostReply } from "@frankyjuang/milkapi-client";
 import to from "await-to-js";
@@ -222,6 +222,8 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
   const [answerPageNo, setAnswerPageNo] = useState<number>(0);
   const answerPageSize = 10;
   const [ref, inView] = useInView();
+  const location = useLocation();
+  const isRecruiter = location.pathname.startsWith("/recruiter");
 
   const updateAnswer = async (answer: PostReply) => {
     if (user) {
@@ -357,7 +359,12 @@ const Question: React.FC<QuestionProps> = ({ question: q }) => {
             {question && question.creator && (
               <div className={classes.postHeader}>
                 <Link
-                  to={"/public-profile/" + question.creator.uuid}
+                  to={
+                    (isRecruiter
+                      ? "/recruiter/public-profile/"
+                      : "/public-profile/") + question.creator.uuid
+                  }
+                  target={"_blank"}
                   style={{
                     display: "flex",
                     flexDirection: "row",

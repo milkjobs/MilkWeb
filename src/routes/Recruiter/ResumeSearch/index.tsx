@@ -2,24 +2,17 @@ import { UserApi, SalaryType } from "@frankyjuang/milkapi-client";
 import { IconButton, InputBase, makeStyles } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 import algoliasearch, { SearchClient } from "algoliasearch/lite";
-import { AwesomeHeader } from "components/Awesome";
 import { Header } from "components/Header";
-import { JobList, SearchBar } from "components/JobSearch";
+import { ApplicantList, ApplicantSearchBar } from "components/ApplicantSearch";
 import { SearchResult } from "components/JobSearch/SearchResult";
-import { algoliaConfig } from "config";
+import { algoliaApplicantConfig } from "config";
 import "firebase/analytics";
 import { AlgoliaService, SitelinksSearchboxStructuredData } from "helpers";
 import React, { useEffect, useState } from "react";
-import {
-  Configure,
-  InstantSearch,
-  connectRefinementList,
-  connectRange,
-} from "react-instantsearch-dom";
+import { Configure, InstantSearch } from "react-instantsearch-dom";
 import { useInView } from "react-intersection-observer";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "stores";
-import { FilterHeader } from "components/Filter";
 import { useSearch } from "stores";
 
 const useStyles = makeStyles((theme) => ({
@@ -80,15 +73,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface News {
-  name: string;
-  website: string;
-}
-
-const VirtualRefinementList = connectRefinementList(() => null);
-const VirtualRange = connectRange(() => null);
-
-const JobSearch: React.FC = () => {
+const ResumeSearch: React.FC = () => {
   const classes = useStyles();
   const location = useLocation();
   const { searchState } = useSearch();
@@ -110,19 +95,16 @@ const JobSearch: React.FC = () => {
 
   useEffect(() => {
     const getApiKey = async () => {
-      // if (user) {
-      //   const userApi = (await getApi("User")) as UserApi;
-      //   const algoliaService = new AlgoliaService(user.uuid, userApi);
-      //   return await algoliaService.getApiKey();
-      // }
-      const miscApi = await getApi("Misc");
-      const algoliaCredential = await miscApi.getAnonymousAlgoliaCredential();
-      return algoliaCredential.apiKey;
+      if (user) {
+        const userApi = (await getApi("User")) as UserApi;
+        const algoliaService = new AlgoliaService(user.uuid, userApi);
+        return await algoliaService.getApiKey();
+      } else return "";
     };
 
     const setClient = async () => {
       const apiKey = await getApiKey();
-      const algoliaClient = algoliasearch(algoliaConfig.appId, apiKey);
+      const algoliaClient = algoliasearch(algoliaApplicantConfig.appId, apiKey);
       setAlgoliaClient(algoliaClient);
     };
     setClient();
@@ -133,42 +115,21 @@ const JobSearch: React.FC = () => {
       <SitelinksSearchboxStructuredData />
       <Header hideSearchBar={hideHeaderSearchBar} />
       <div className={classes.container}>
-        <div style={{ padding: 16 }}>
-          <AwesomeHeader />
-        </div>
         {algoliaClient ? (
           <InstantSearch
-            indexName={algoliaConfig.index}
+            indexName={algoliaApplicantConfig.index}
             searchClient={algoliaClient}
           >
-            <Configure
-              hitsPerPage={20}
-              optionalWords={[
-                ...searchHistoryConfig.split(" "),
-                SalaryType.Monthly,
-                SalaryType.Hourly,
-              ]}
-            />
+            <Configure hitsPerPage={20} />
             <div ref={ref}>
-              <SearchBar />
+              <ApplicantSearchBar />
             </div>
-            <VirtualRefinementList attribute="area.level2" />
-            <VirtualRefinementList attribute="type" />
-            <VirtualRefinementList attribute="team.primaryField" />
-            <VirtualRefinementList attribute="educationNeed" />
-            <VirtualRefinementList attribute="experienceNeed" />
-            <VirtualRange attribute="minSalary" />
-            <VirtualRange attribute="maxSalary" />
-            <FilterHeader />
-            <JobList />
-            <SearchResult />
+            <ApplicantList />
+            <SearchResult searchApplicant />
           </InstantSearch>
         ) : (
           <div className={classes.searchBarRoot}>
-            <InputBase
-              className={classes.input}
-              placeholder="搜尋工作、地區、公司"
-            />
+            <InputBase className={classes.input} placeholder="搜尋人才、履歷" />
             <IconButton className={classes.iconButton}>
               <Search />
             </IconButton>
@@ -179,4 +140,4 @@ const JobSearch: React.FC = () => {
   );
 };
 
-export default JobSearch;
+export default ResumeSearch;

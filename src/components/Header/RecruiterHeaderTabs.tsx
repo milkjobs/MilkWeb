@@ -68,6 +68,16 @@ const RecruiterHeaderTabs: React.FC<Props> = (props) => {
           <span className={classes.tab}>職缺管理</span>
         </Link>
       )}
+      <Link
+        to="/recruiter/search"
+        style={{
+          textDecoration: "none",
+          color: "#484848",
+          display: "flex",
+        }}
+      >
+        <span className={classes.tab}>人才搜尋</span>
+      </Link>
       {!isRecruiterMessage && (
         <Link to="/recruiter/message" className={classes.link}>
           <span className={classes.tab}>

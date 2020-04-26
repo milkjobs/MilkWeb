@@ -16,7 +16,7 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import urljoin from "url-join";
 import to from "await-to-js";
 import { LoginDialog } from "components/Util";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -210,6 +210,8 @@ interface ReplyProps {
 const Reply: React.FC<ReplyProps> = ({ reply, deleteReply }) => {
   const classes = useStyles();
   const { user } = useAuth();
+  const location = useLocation();
+  const isRecruiter = location.pathname.startsWith("/recruiter");
 
   return (
     <div className={classes.replyContainer}>
@@ -220,7 +222,11 @@ const Reply: React.FC<ReplyProps> = ({ reply, deleteReply }) => {
       />
       <div className={classes.replyTextContainer}>
         <Link
-          to={"/public-profile/" + reply.replier?.uuid}
+          to={
+            (isRecruiter ? "/recruiter/public-profile/" : "/public-profile/") +
+            reply.replier?.uuid
+          }
+          target={"_blank"}
           className={classes.replyName}
         >
           {reply.replier?.name}
@@ -253,7 +259,6 @@ const PostCard: React.FC<PostCardProps> = ({
   expand,
 }) => {
   const classes = useStyles();
-  const theme = useTheme();
   const { user, getApi } = useAuth();
   const [liked, setLiked] = useState(post.liked);
   const [likeCount, setLikeCount] = useState(post.likeCount || 0);
@@ -265,6 +270,8 @@ const PostCard: React.FC<PostCardProps> = ({
   const [postReplyPageNo, setPostReplyPageNo] = useState<number>(1);
   const [replyText, setReplyText] = useState("");
   const postReplyPageSize = 10;
+  const location = useLocation();
+  const isRecruiter = location.pathname.startsWith("/recruiter");
 
   const deleteReply = async (replyId: string, postId: string) => {
     const postApi = await getApi("Post");
@@ -364,7 +371,12 @@ const PostCard: React.FC<PostCardProps> = ({
       {post.creator && (
         <div className={classes.postHeader}>
           <Link
-            to={"/public-profile/" + post.creator.uuid}
+            to={
+              (isRecruiter
+                ? "/recruiter/public-profile/"
+                : "/public-profile/") + post.creator.uuid
+            }
+            target={"_blank"}
             style={{
               display: "flex",
               flexDirection: "row",

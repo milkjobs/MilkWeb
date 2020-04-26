@@ -51,6 +51,21 @@ const algoliaConfigs: Config<{ appId: string; index: string }> = {
   },
 };
 
+const algoliaApplicantConfigs: Config<{ appId: string; index: string }> = {
+  local: {
+    appId: "690O6NIOLW",
+    index: "applicants_staging",
+  },
+  staging: {
+    appId: "690O6NIOLW",
+    index: "applicants_staging",
+  },
+  production: {
+    appId: "690O6NIOLW",
+    index: "applicants_production",
+  },
+};
+
 const sendbirdConfigs: Config<{ appId: string }> = {
   local: {
     appId: "8B32F1A9-78F6-424B-9034-8CDCC7553198",
@@ -136,6 +151,7 @@ export const paymentUrl = paymentUrls[environment];
 export const webConfig = webConfigs[environment];
 export const apiServiceConfig = apiServiceConfigs[environment];
 export const algoliaConfig = algoliaConfigs[environment];
+export const algoliaApplicantConfig = algoliaApplicantConfigs[environment];
 export const sentryConfig = sentryConfigs[environment];
 export const branchConfig = branchConfigs[environment];
 export const firebaseConfig = firebaseConfigs[environment];

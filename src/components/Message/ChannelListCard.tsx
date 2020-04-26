@@ -3,7 +3,16 @@ import Badge from "@material-ui/core/Badge";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import moment from "moment";
 import "moment/locale/zh-tw";
-import React from "react";
+import React, { useState } from "react";
+import Popper from "@material-ui/core/Popper";
+import Typography from "@material-ui/core/Typography";
+import Fade from "@material-ui/core/Fade";
+import Paper from "@material-ui/core/Paper";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import { ClickAwayListener, Button } from "@material-ui/core";
+import { useChannel } from "stores";
 moment.locale("zh-tw");
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -43,6 +52,10 @@ const useStyles = makeStyles((theme: Theme) =>
       overflow: "hidden",
       textOverflow: "ellipsis",
     },
+    typography: {
+      padding: theme.spacing(2),
+      cursor: "pointer",
+    },
   })
 );
 
@@ -57,6 +70,7 @@ interface Props {
     | SendBird.FileMessage
     | SendBird.AdminMessage
     | null;
+  leaveChannel: () => void;
 }
 
 const ChannelListCard: React.FC<Props> = (props) => {
@@ -68,11 +82,22 @@ const ChannelListCard: React.FC<Props> = (props) => {
     selected,
     unreadMessageCount,
     lastMessage,
+    leaveChannel,
   } = props;
+  const { sb } = useChannel();
+  const [popperOpen, setPopperOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
+
   return (
     <div
       className={classes.container}
       style={{ backgroundColor: selected ? "#eeeeee" : "white" }}
+      onContextMenu={(e) => {
+        setAnchorEl(e.currentTarget);
+        setPopperOpen(true);
+        e.preventDefault();
+      }}
     >
       <Badge
         className={classes.badge}
@@ -118,6 +143,48 @@ const ChannelListCard: React.FC<Props> = (props) => {
             ("message" in lastMessage ? lastMessage.message : lastMessage.name)}
         </div>
       </div>
+      <Popper
+        open={popperOpen}
+        anchorEl={anchorEl}
+        placement={"bottom-end"}
+        transition
+      >
+        {({ TransitionProps }) => (
+          <ClickAwayListener onClickAway={() => setPopperOpen(false)}>
+            <Fade {...TransitionProps} timeout={350}>
+              <Paper>
+                <Typography
+                  className={classes.typography}
+                  onClick={() => setDialogOpen(true)}
+                >
+                  離開
+                </Typography>
+              </Paper>
+            </Fade>
+          </ClickAwayListener>
+        )}
+      </Popper>
+      <Dialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle>{"確定要離開對話框？"}</DialogTitle>
+        <DialogActions>
+          <Button onClick={() => setDialogOpen(false)} color="primary">
+            取消
+          </Button>
+          <Button
+            onClick={() => {
+              setDialogOpen(false);
+              leaveChannel();
+            }}
+            color="primary"
+          >
+            確定
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
