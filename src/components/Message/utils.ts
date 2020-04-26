@@ -54,7 +54,7 @@ export const getMetadata = (m: SendBirdMessage) => {
 
 export const parseChannel = (channel: GroupChannel) => {
   const memberIds = channel.name.split("_");
-  if (channel.members.length !== 2 || memberIds.length !== 2) {
+  if (channel.members.length > 2 || memberIds.length !== 2) {
     return [undefined, undefined];
   }
 

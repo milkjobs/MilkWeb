@@ -87,16 +87,20 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
         }
 
         const [applicantMember, recruiterMember] = parseChannel(c);
-        if (!applicantMember || !recruiterMember) {
-          return result;
-        }
+        // if (!applicantMember || !recruiterMember) {
+        //   return result;
+        // }
 
         if (c.customType === ChannelCustomType.Bottle && !isRecruiter) {
           result.push(c);
         } else if (isRecruiter) {
-          user.uuid === recruiterMember.userId && result.push(c);
+          recruiterMember &&
+            user.uuid === recruiterMember.userId &&
+            result.push(c);
         } else {
-          user.uuid === applicantMember.userId && result.push(c);
+          applicantMember &&
+            user.uuid === applicantMember.userId &&
+            result.push(c);
         }
 
         return result;
@@ -211,7 +215,9 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
           )}
           {channels.current.map((c) => {
             const myId = user?.uuid;
-            const they = c.members.filter((m) => m.userId !== myId)[0];
+            const they: SendBird.Member | undefined = c.members.filter(
+              (m) => m.userId !== myId
+            )[0];
 
             return (
               <div
@@ -225,8 +231,8 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
                 }}
               >
                 <ChannelListCard
-                  name={they.nickname}
-                  profileImageUrl={they.profileUrl}
+                  name={they ? they.nickname : "對方已離開對話框"}
+                  profileImageUrl={they ? they.profileUrl : ""}
                   teamName={
                     isRecruiter ? "" : c.data ? JSON.parse(c.data).teamName : ""
                   }
