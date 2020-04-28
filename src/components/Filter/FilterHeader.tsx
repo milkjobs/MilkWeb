@@ -5,7 +5,7 @@ import {
   ExperienceLevelFilterButton,
   EducationLevelFilterButton,
   TeamFieldFilterButton,
-  SalaryFilterButton,
+  SortButton,
 } from ".";
 import { makeStyles } from "@material-ui/core";
 import { JobType, SalaryType } from "@frankyjuang/milkapi-client";
@@ -23,6 +23,13 @@ const FilterHeader: React.FC = () => {
 
   return (
     <div className={classes.container}>
+      {/* <SortButton
+        defaultRefinement={"jobs_staging"}
+        items={[
+          { value: "jobs_staging", label: "最新" },
+          { value: "jobs_staging_hot", label: "熱門" },
+        ]}
+      /> */}
       <AreaFilterButton attribute="area.level2" />
       <JobTypeFilterButton
         attribute="type"
@@ -39,7 +46,7 @@ const FilterHeader: React.FC = () => {
       )} */}
       <ExperienceLevelFilterButton attribute="experienceNeed" />
       <EducationLevelFilterButton attribute="educationNeed" />
-      <TeamFieldFilterButton attribute="team.primaryField" />
+      <TeamFieldFilterButton attribute="team.primaryField" limit={50} />
     </div>
   );
 };

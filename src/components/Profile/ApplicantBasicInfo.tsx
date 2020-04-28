@@ -38,7 +38,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     [theme.breakpoints.up("sm")]: {
-      width: "600px",
+      width: "100%",
+      maxWidth: "900px",
     },
   },
   info: {
@@ -78,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: "pre-line",
     textAlign: "left",
     flex: 1,
-    fontSize: 20,
+    fontSize: 18,
     color: theme.palette.text.primary,
   },
   blockAdd: {

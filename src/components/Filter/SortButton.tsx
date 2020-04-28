@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import { RefinementListProvided, Hit } from "react-instantsearch-core";
-import { connectRefinementList } from "react-instantsearch-dom";
+import { connectSortBy } from "react-instantsearch-dom";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export interface TeamFieldDialogProps {
+export interface SortItemsDialogProps {
   open: boolean;
   items: Hit<{
     count: number;
@@ -44,7 +44,7 @@ export interface TeamFieldDialogProps {
   onClose: (value: string | undefined) => void;
 }
 
-function TeamFieldDialog(props: TeamFieldDialogProps) {
+function SortItemsDialog(props: SortItemsDialogProps) {
   const { onClose, selectedValue, open, items } = props;
   const [value, setValue] = React.useState<string | undefined>(selectedValue);
 
@@ -64,7 +64,7 @@ function TeamFieldDialog(props: TeamFieldDialogProps) {
       open={open}
       fullWidth
     >
-      <DialogTitle>{"產業"}</DialogTitle>
+      <DialogTitle>{"排序"}</DialogTitle>
       <FormControl
         component="fieldset"
         style={{ paddingLeft: 32, paddingBottom: 16 }}
@@ -75,15 +75,10 @@ function TeamFieldDialog(props: TeamFieldDialogProps) {
           value={value}
           onChange={handleChange}
         >
-          <FormControlLabel
-            value={undefined}
-            control={<Radio />}
-            label={"不限"}
-          />
           {items.map((i) => (
             <FormControlLabel
               key={i.objectID}
-              value={i.label}
+              value={i.value}
               control={<Radio />}
               label={i.label}
             />
@@ -94,10 +89,7 @@ function TeamFieldDialog(props: TeamFieldDialogProps) {
   );
 }
 
-const TeamFieldFilterButton: React.FC<RefinementListProvided> = ({
-  refine,
-  items,
-}) => {
+const SortButton: React.FC<any> = ({ refine, items }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState<string>();
@@ -105,13 +97,14 @@ const TeamFieldFilterButton: React.FC<RefinementListProvided> = ({
   return (
     <>
       <Button className={classes.filterButton} onClick={() => setOpen(true)}>
-        <div className={classes.filterText}>{selectedValue || "產業"}</div>
+        <div className={classes.filterText}>{selectedValue || "排序"}</div>
       </Button>
-      <TeamFieldDialog
+      <SortItemsDialog
         open={open}
         items={items}
         onClose={(value) => {
-          refine(value ? [value] : []);
+          console.warn(value);
+          refine(value ? value : "");
           setOpen(false);
           setSelectedValue(value);
         }}
@@ -121,8 +114,6 @@ const TeamFieldFilterButton: React.FC<RefinementListProvided> = ({
   );
 };
 
-const ConnectedTeamFieldFilterButton = connectRefinementList(
-  TeamFieldFilterButton
-);
+const ConnectedSortButton = connectSortBy(SortButton);
 
-export { ConnectedTeamFieldFilterButton as TeamFieldFilterButton };
+export { ConnectedSortButton as SortButton };

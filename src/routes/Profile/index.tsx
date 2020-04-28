@@ -11,8 +11,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     flexGrow: 1,
     marginBottom: 30,
-    marginLeft: 48,
-    marginRight: 24,
     marginTop: 40,
   },
   root: {

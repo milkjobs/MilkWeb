@@ -6,7 +6,6 @@ import Linkify from "react-linkify";
 
 const useStyles = makeStyles((theme) => ({
   block: {
-    marginTop: 16,
     padding: 16,
     borderBottomWidth: 1,
     borderBottomStyle: "solid",
@@ -17,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   blockTitle: {
-    fontSize: 18,
+    fontSize: 16,
     color: theme.palette.text.secondary,
   },
   blockRow: {
@@ -25,12 +24,12 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
   },
   blockPeriod: {
-    fontSize: 18,
+    fontSize: 16,
     color: theme.palette.text.secondary,
   },
   blockDescription: {
     marginTop: 8,
-    fontSize: 18,
+    fontSize: 16,
     color: theme.palette.text.secondary,
     whiteSpace: "pre-line",
   },

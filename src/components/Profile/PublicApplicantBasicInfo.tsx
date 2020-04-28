@@ -21,7 +21,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     [theme.breakpoints.up("sm")]: {
-      width: "720px",
+      width: "100%",
+      maxWidth: "900px",
     },
   },
   info: {
@@ -61,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: "pre-line",
     textAlign: "left",
     flex: 1,
-    fontSize: 20,
+    fontSize: 18,
     color: theme.palette.text.primary,
   },
   block: {
@@ -216,11 +217,15 @@ const PublicApplicantBasicInfo: React.FC<Props> = ({ userId }) => {
               <div
                 style={{
                   display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
+                  flexDirection: "column",
                 }}
               >
                 <div className={classes.name}>{applicant.name}</div>
+                {recruiterMode && (
+                  <div style={{ textAlign: "left", fontSize: 16 }}>
+                    {recruiter?.title}
+                  </div>
+                )}
               </div>
             </div>
             <div style={{ marginLeft: "auto", display: "flex" }}>
@@ -242,7 +247,7 @@ const PublicApplicantBasicInfo: React.FC<Props> = ({ userId }) => {
               )}
               {recruiter &&
                 !recruiterMode &&
-                recruiter.jobs?.length &&
+                recruiter.jobs?.length !== undefined &&
                 recruiter.jobs?.length !== 0 && (
                   <Button
                     variant={"outlined"}
