@@ -335,7 +335,7 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
           )}
         />
         {Boolean(titlesErrorMessage) && (
-          <div style={{ color: "red" }}>{titlesErrorMessage}</div>
+          <div style={{ color: "#fa6c71" }}>{titlesErrorMessage}</div>
         )}
         <Autocomplete
           clearText="清除產業領域"

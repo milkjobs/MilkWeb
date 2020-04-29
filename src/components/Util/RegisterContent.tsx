@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
   selectButton: {
     width: "100%",
-    height: 80,
+    height: 60,
     fontSize: 24,
   },
 }));
@@ -63,7 +63,6 @@ const RegisterContent: React.FC<Props> = ({ close }) => {
         education: updatedEducation,
       });
       await reloadUser();
-      close();
     }
   };
 
@@ -83,13 +82,13 @@ const RegisterContent: React.FC<Props> = ({ close }) => {
           <Button
             onClick={async () => {
               if (user && name) {
+                setStep(step + 1);
                 const userApi = await getApi("User");
                 await userApi.updateUser({
                   userId: user?.uuid,
                   user: { ...user, name },
                 });
                 await reloadUser();
-                setStep(step + 1);
               }
             }}
             variant="contained"
@@ -154,7 +153,7 @@ const RegisterContent: React.FC<Props> = ({ close }) => {
       <>
         <DialogTitle>{"學歷"}</DialogTitle>
         <EducationDialogContent
-          close={() => {}}
+          close={close}
           update={updateEducation}
           create
           disableCancel
