@@ -8,5 +8,7 @@ export * from "./ProjectBlock";
 export * from "./ProjectDialog";
 export * from "./JobGoalBlock";
 export * from "./JobGoalDialog";
+export * from "./JobGoalDialogContent";
 export * from "./PublicApplicantBasicInfo";
 export * from "./RecruiterBasicInfo";
+export * from "./UserCard";

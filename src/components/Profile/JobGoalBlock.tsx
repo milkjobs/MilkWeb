@@ -71,9 +71,10 @@ const JobGoalBlock: React.FC<JobGoal> = ({
             {type ? JobTypeConvertor(jobGoalTypeToJobType(type)) : "不限"}
           </div>
         </div>
-        <div className={classes.blockDivider}>{" | "}</div>
+        <div className={classes.blockDivider} style={{ margin: 0 }}>
+          {"・"}
+        </div>
         <div className={classes.blockPeriod}>
-          <WorkOutlineIcon className={classes.blockIcon} />
           <div>{titles && titles.length > 0 ? titles.join(" ") : "不限"}</div>
         </div>
       </div>

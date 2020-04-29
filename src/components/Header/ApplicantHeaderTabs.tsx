@@ -2,9 +2,10 @@ import { Avatar, makeStyles, Badge } from "@material-ui/core";
 import { Apps } from "@material-ui/icons";
 import { TeamCreateForm } from "components/TeamComponents";
 import { LoginDialog } from "components/Util";
-import React, { MouseEvent, useState } from "react";
+import React, { MouseEvent, useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth, useChannel } from "stores";
+import qs from "qs";
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -71,6 +72,12 @@ const ApplicantHeaderTabs: React.FC<Props> = (props) => {
   const hideLoginDialog = () => {
     setIsLoginDialogOpen(false);
   };
+
+  useEffect(() => {
+    const values = qs.parse(location.search, { ignoreQueryPrefix: true });
+    const createTeam = values.createTeam;
+    if (createTeam === "true") showCreateTeamForm();
+  }, [location]);
 
   return (
     <div className={classes.sectionDesktop}>

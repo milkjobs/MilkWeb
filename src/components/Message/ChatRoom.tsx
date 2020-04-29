@@ -239,6 +239,7 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
                   selected={c.url === currentChannelUrl}
                   unreadMessageCount={c.unreadMessageCount}
                   lastMessage={c.lastMessage}
+                  systemChannel={c.customType === ChannelCustomType.System}
                   leaveChannel={() => {
                     c.leave(() => {
                       channels.current = channels.current.filter(

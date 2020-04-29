@@ -124,8 +124,6 @@ const ProjectDialog: React.FC<ProjectDialogProps> = (props) => {
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid container>
             <KeyboardDatePicker
-              disableToolbar
-              variant="inline"
               format="MM/dd/yyyy"
               margin="normal"
               id="date-picker-inline"
@@ -153,8 +151,6 @@ const ProjectDialog: React.FC<ProjectDialogProps> = (props) => {
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={zhTW}>
             <Grid container justify="space-between">
               <KeyboardDatePicker
-                disableToolbar
-                variant="inline"
                 format="MM/dd/yyyy"
                 margin="normal"
                 id="date-picker-inline"

@@ -215,6 +215,22 @@ const JobSideCard: React.FC<Props> = ({ job }) => {
     });
   };
 
+  const sendMessage = async (
+    channel: SendBird.GroupChannel,
+    message: string
+  ): Promise<
+    SendBird.UserMessage | SendBird.FileMessage | SendBird.AdminMessage
+  > => {
+    const sb = SendBird.getInstance();
+    const params = new sb.UserMessageParams();
+    params.message = message;
+    return new Promise((resolve, reject) => {
+      channel.sendUserMessage(params, (message, error) => {
+        error ? reject(error) : resolve(message);
+      });
+    });
+  };
+
   const sendApplicationMessage = async (
     channel: SendBird.GroupChannel,
     newApplication: ApplicationMetaData
@@ -281,6 +297,13 @@ const JobSideCard: React.FC<Props> = ({ job }) => {
             jobId,
             applicantId: user.uuid,
           })
+        );
+
+        await to(
+          sendMessage(
+            applicationChannel,
+            `你好，我有信心勝任${job.name}職位，希望你能看看我的資料。`
+          )
         );
 
         history.push("/message/" + applicationChannel.url);

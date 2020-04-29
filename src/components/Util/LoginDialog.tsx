@@ -20,6 +20,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import Countdown from "react-countdown-now";
 import { Link } from "react-router-dom";
 import { useAuth } from "stores";
+import { RegisterContent } from "./";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -77,6 +78,7 @@ const LoginDialog: React.FC<Props> = ({ isOpen, close }) => {
   const [loading, setLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>();
   const [phoneNumberHelperText, setPhoneNumberHelperText] = useState<string>();
+  const [isNewUser, setIsNewUser] = useState(false);
 
   const [codeSent, setCodeSent] = useState(false);
   const [codeHelperText, setCodeHelperText] = useState<string>();
@@ -168,6 +170,7 @@ const LoginDialog: React.FC<Props> = ({ isOpen, close }) => {
       console.error(err.code);
       throw err;
     }
+    if (credential?.additionalUserInfo?.isNewUser) setIsNewUser(true);
 
     // Send app download text to new users.
     if (
@@ -198,133 +201,146 @@ const LoginDialog: React.FC<Props> = ({ isOpen, close }) => {
   }, []);
 
   useEffect(() => {
-    if (user) {
+    if (user && !isNewUser) {
       close();
       reset();
     }
-  }, [close, user]);
+  }, [close, user, isNewUser]);
 
   return (
-    <Dialog open={isOpen} onClose={close}>
-      <DialogContent>
-        <form
-          noValidate
-          autoComplete="on"
-          className={classes.container}
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <div ref={recaptchaButton}></div>
-          <div className={classes.row}>
-            <TextField
-              autoComplete="tel"
-              autoFocus
-              className={classes.textColumn}
-              error={!!phoneNumberHelperText}
-              fullWidth={isMobile}
-              helperText={phoneNumberHelperText || ""}
-              id="phone-number-input"
-              margin="dense"
-              placeholder="手機號碼"
-              type="tel"
-              value={phoneNumber ? phoneNumber.replace("+8869", "") : ""}
-              variant="outlined"
-              InputProps={{
-                readOnly: !countdownCompleted,
-                classes: { input: classes.textInput },
-                startAdornment: (
-                  <InputAdornment position="start">09</InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Smartphone />
-                  </InputAdornment>
-                ),
-              }}
-              onChange={(e) => {
-                setPhoneNumber(`+8869${e.target.value}`);
-                setPhoneNumberHelperText(undefined);
-                setCodeSent(false);
-              }}
-              onBlur={checkPhoneNumber}
-            />
-            <Button
-              className={classes.buttonColumn}
-              color="primary"
-              disabled={!countdownCompleted}
-              fullWidth={isMobile}
-              onClick={sendCode}
-              type={!codeSent ? "submit" : "button"}
-              variant="contained"
-            >
-              {!codeSent ? (
-                "發送簡訊驗證碼"
-              ) : (
-                <Countdown
-                  key={countdownKey}
-                  date={countdown}
-                  renderer={({ seconds, completed }) => {
-                    if (completed) {
-                      setCountdownCompleted(true);
-                      return "再次發送驗證碼";
-                    } else {
-                      return `${seconds} 秒後再次發送`;
-                    }
-                  }}
-                />
-              )}
-            </Button>
-          </div>
-          {codeSent && (
+    <Dialog
+      open={isOpen}
+      onClose={close}
+      disableBackdropClick={isNewUser}
+      fullWidth={isNewUser}
+    >
+      {isNewUser ? (
+        <RegisterContent close={close} />
+      ) : (
+        <DialogContent>
+          <form
+            noValidate
+            autoComplete="on"
+            className={classes.container}
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <div ref={recaptchaButton}></div>
             <div className={classes.row}>
               <TextField
+                autoComplete="tel"
                 autoFocus
                 className={classes.textColumn}
-                error={!!codeHelperText}
+                error={!!phoneNumberHelperText}
                 fullWidth={isMobile}
-                helperText={codeHelperText || ""}
-                id="phone-number-verification-code-input"
+                helperText={phoneNumberHelperText || ""}
+                id="phone-number-input"
                 margin="dense"
-                placeholder="驗證碼"
-                type="number"
-                value={code || ""}
+                placeholder="手機號碼"
+                type="tel"
+                value={phoneNumber ? phoneNumber.replace("+8869", "") : ""}
                 variant="outlined"
                 InputProps={{
+                  readOnly: !countdownCompleted,
                   classes: { input: classes.textInput },
+                  startAdornment: (
+                    <InputAdornment position="start">09</InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Smartphone />
+                    </InputAdornment>
+                  ),
                 }}
                 onChange={(e) => {
-                  setCode(e.target.value);
-                  setCodeHelperText(undefined);
+                  setPhoneNumber(`+8869${e.target.value}`);
+                  setPhoneNumberHelperText(undefined);
+                  setCodeSent(false);
                 }}
-                onBlur={checkCode}
+                onBlur={checkPhoneNumber}
               />
               <Button
                 className={classes.buttonColumn}
                 color="primary"
+                disabled={!countdownCompleted}
                 fullWidth={isMobile}
-                onClick={login}
+                onClick={sendCode}
+                type={!codeSent ? "submit" : "button"}
                 variant="contained"
-                startIcon={
-                  loading && <CircularProgress color="inherit" size={16} />
-                }
               >
-                登入
+                {!codeSent ? (
+                  "發送簡訊驗證碼"
+                ) : (
+                  <Countdown
+                    key={countdownKey}
+                    date={countdown}
+                    renderer={({ seconds, completed }) => {
+                      if (completed) {
+                        setCountdownCompleted(true);
+                        return "再次發送驗證碼";
+                      } else {
+                        return `${seconds} 秒後再次發送`;
+                      }
+                    }}
+                  />
+                )}
               </Button>
             </div>
-          )}
-          <div className={classes.footer}>
-            發送驗證碼即表示你同意
-            <Link to="/help/privacy" target="_blank" style={{ color: "grey" }}>
-              隱私權政策
-            </Link>
-            、
-            <Link to="/help/tos" target="_blank" style={{ color: "grey" }}>
-              服務條款
-            </Link>
-          </div>
-        </form>
-      </DialogContent>
+            {codeSent && (
+              <div className={classes.row}>
+                <TextField
+                  autoFocus
+                  className={classes.textColumn}
+                  error={!!codeHelperText}
+                  fullWidth={isMobile}
+                  helperText={codeHelperText || ""}
+                  id="phone-number-verification-code-input"
+                  margin="dense"
+                  placeholder="驗證碼"
+                  type="number"
+                  value={code || ""}
+                  variant="outlined"
+                  InputProps={{
+                    classes: { input: classes.textInput },
+                  }}
+                  onChange={(e) => {
+                    setCode(e.target.value);
+                    setCodeHelperText(undefined);
+                  }}
+                  onBlur={checkCode}
+                />
+                <Button
+                  className={classes.buttonColumn}
+                  color="primary"
+                  fullWidth={isMobile}
+                  onClick={login}
+                  variant="contained"
+                  startIcon={
+                    loading && <CircularProgress color="inherit" size={16} />
+                  }
+                >
+                  登入
+                </Button>
+              </div>
+            )}
+            <div className={classes.footer}>
+              發送驗證碼即表示你同意
+              <Link
+                to="/help/privacy"
+                target="_blank"
+                style={{ color: "grey" }}
+              >
+                隱私權政策
+              </Link>
+              、
+              <Link to="/help/tos" target="_blank" style={{ color: "grey" }}>
+                服務條款
+              </Link>
+            </div>
+          </form>
+        </DialogContent>
+      )}
     </Dialog>
   );
 };

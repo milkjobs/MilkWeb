@@ -64,6 +64,7 @@ interface Props {
   profileImageUrl: string;
   teamName: string;
   selected: boolean;
+  systemChannel?: boolean;
   unreadMessageCount: number;
   lastMessage:
     | SendBird.UserMessage
@@ -80,6 +81,7 @@ const ChannelListCard: React.FC<Props> = (props) => {
     profileImageUrl,
     teamName,
     selected,
+    systemChannel,
     unreadMessageCount,
     lastMessage,
     leaveChannel,
@@ -94,9 +96,11 @@ const ChannelListCard: React.FC<Props> = (props) => {
       className={classes.container}
       style={{ backgroundColor: selected ? "#eeeeee" : "white" }}
       onContextMenu={(e) => {
-        setAnchorEl(e.currentTarget);
-        setPopperOpen(true);
-        e.preventDefault();
+        if (!systemChannel) {
+          setAnchorEl(e.currentTarget);
+          setPopperOpen(true);
+          e.preventDefault();
+        }
       }}
     >
       <Badge

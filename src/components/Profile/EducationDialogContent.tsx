@@ -1,13 +1,11 @@
 import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import React, { useEffect, useState } from "react";
 import Checkbox from "@material-ui/core/Checkbox";
-import { Experience } from "@frankyjuang/milkapi-client";
+import { Education } from "@frankyjuang/milkapi-client";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
 import { zhTW } from "date-fns/locale";
@@ -15,6 +13,10 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 import ChipInput from "material-ui-chip-input";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,58 +34,81 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface ExperienceDialogProps {
-  experience?: Experience;
-  isOpen: boolean;
+interface EducationDialogContentProps {
+  education?: Education;
+  disableCancel?: boolean;
   create: boolean;
   close: () => void;
-  update: (Experience: Experience) => void;
-  deleteExperience: (id: string) => void;
+  update: (Education: Education) => void;
+  deleteEducation: (id: string) => void;
 }
 
-const ExperienceDialog: React.FC<ExperienceDialogProps> = (props) => {
-  const { isOpen, close, update, deleteExperience, create, experience } = props;
+const EducationDialogContent: React.FC<EducationDialogContentProps> = (
+  props
+) => {
+  const {
+    close,
+    update,
+    deleteEducation,
+    create,
+    education,
+    disableCancel,
+  } = props;
   const classes = useStyles();
-  const [jobName, setJobName] = useState<string>();
-  const [teamName, setTeamName] = useState<string>();
+  const [schoolName, setSchoolName] = useState<string>();
+  const [degree, setDegree] = useState<string>();
+  const [majorName, setMajorName] = useState<string>();
   const [startTime, setStartTime] = React.useState<Date | null>(new Date());
   const [current, setCurrent] = React.useState<boolean>(true);
   const [endTime, setEndTime] = React.useState<Date | null>(null);
-  const [description, setDescription] = useState<string>();
   const [skillTags, setSkillTags] = useState<string[]>([]);
-  const [jobNameErrorMessage, setJobNameErrorMessage] = useState<string>();
-  const [teamNameErrorMessage, setTeamNameErrorMessage] = useState<string>();
+  const [description, setDescription] = useState<string>();
+  const [schoolNameErrorMessage, setSchoolNameErrorMessage] = useState<
+    string
+  >();
+  const [degreeErrorMessage, setDegreeErrorMessage] = useState<string>();
+  const [majorNameErrorMessage, setMajorNameErrorMessage] = useState<string>();
   const [descriptionErrorMessage, setDescriptionErrorMessage] = useState<
     string
   >();
 
   useEffect(() => {
-    setJobName(experience ? experience.jobName : undefined);
-    setTeamName(experience ? experience.teamName : undefined);
-    setStartTime(experience ? experience.startTime : new Date());
-    setEndTime(experience ? experience.endTime || null : null);
-    setDescription(experience ? experience.description : undefined);
-    setSkillTags(experience ? experience.skillTags : []);
-    experience && !experience.endTime && setCurrent(true);
-    !experience && setCurrent(true);
-  }, [experience]);
+    setSchoolName(education ? education.schoolName : undefined);
+    setDegree(education ? education.degree : undefined);
+    setMajorName(education ? education.majorName : undefined);
+    setStartTime(education ? education.startTime : new Date());
+    setEndTime(education ? education.endTime || null : null);
+    setDescription(education ? education.description : undefined);
+    setSkillTags(education ? education.skillTags : []);
+    education && !education.endTime && setCurrent(true);
+    !education && setCurrent(true);
+  }, [education]);
 
-  const handleJobNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSchoolNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (event.target.value.length > 100) {
-      setJobNameErrorMessage("職位名稱不能超過 100 個字");
+      setSchoolNameErrorMessage("職位名稱不能超過 100 個字");
       return;
     }
-    setJobName(event.target.value);
-    setJobNameErrorMessage(undefined);
+    setSchoolName(event.target.value);
+    setSchoolNameErrorMessage(undefined);
   };
 
-  const handleTeamNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDegreeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setDegree(event.target.value as string);
+    setDegreeErrorMessage(undefined);
+  };
+
+  const handleMajorNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (event.target.value.length > 100) {
-      setTeamNameErrorMessage("公司名稱不能超過 100 個字");
+      setMajorNameErrorMessage("科系不能超過 100 個字");
       return;
     }
-    setTeamName(event.target.value);
-    setTeamNameErrorMessage(undefined);
+    setMajorName(event.target.value);
+    setMajorNameErrorMessage(undefined);
   };
 
   const handleDescriptionChange = (
@@ -109,48 +134,62 @@ const ExperienceDialog: React.FC<ExperienceDialogProps> = (props) => {
     setEndTime(date);
   };
 
-  const checkJobName = () => {
-    const helperText = !jobName ? "職位名稱不得為空" : undefined;
-    setJobNameErrorMessage(helperText);
+  const checkSchoolName = () => {
+    const helperText = !schoolName ? "學校名稱不得為空" : undefined;
+    setSchoolNameErrorMessage(helperText);
 
     return !helperText;
   };
 
-  const checkTeamName = () => {
-    const helperText = !teamName ? "公司名稱不得為空" : undefined;
-    setTeamNameErrorMessage(helperText);
+  const checkMajor = () => {
+    const helperText = !majorName ? "科系不得為空" : undefined;
+    setMajorNameErrorMessage(helperText);
 
     return !helperText;
   };
 
   return (
-    <Dialog open={isOpen} onClose={close} fullWidth={true}>
-      <DialogTitle>{create ? "新增經驗" : "編輯經驗"}</DialogTitle>
+    <>
       <DialogContent>
         <TextField
           autoFocus
           className={classes.formTextInput}
-          error={!!jobNameErrorMessage}
+          error={!!schoolNameErrorMessage}
           fullWidth
-          helperText={jobNameErrorMessage || ""}
+          helperText={schoolNameErrorMessage || ""}
           id="name"
-          label="職位名稱"
+          label="學校名稱"
           margin="normal"
-          onBlur={checkJobName}
-          onChange={handleJobNameChange}
-          value={jobName}
+          onBlur={checkSchoolName}
+          onChange={handleSchoolNameChange}
+          value={schoolName}
         />
+        <FormControl className={classes.formControl}>
+          <InputLabel id="demo-simple-select-label">學位</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={degree}
+            onChange={handleDegreeChange}
+          >
+            <MenuItem value={"高中"}>高中</MenuItem>
+            <MenuItem value={"大學"}>大學</MenuItem>
+            <MenuItem value={"大專"}>大專</MenuItem>
+            <MenuItem value={"碩士"}>碩士</MenuItem>
+            <MenuItem value={"博士"}>博士</MenuItem>
+          </Select>
+        </FormControl>
         <TextField
           className={classes.formTextInput}
-          error={!!teamNameErrorMessage}
+          error={!!majorNameErrorMessage}
           fullWidth
-          helperText={teamNameErrorMessage || ""}
+          helperText={majorNameErrorMessage || ""}
           id="name"
-          label="公司名稱"
+          label="科系"
           margin="normal"
-          onBlur={checkTeamName}
-          onChange={handleTeamNameChange}
-          value={teamName}
+          onBlur={checkMajor}
+          onChange={handleMajorNameChange}
+          value={majorName}
         />
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid container>
@@ -222,9 +261,7 @@ const ExperienceDialog: React.FC<ExperienceDialogProps> = (props) => {
           <Button
             style={{ marginRight: "auto" }}
             onClick={() => {
-              experience &&
-                experience.uuid &&
-                deleteExperience(experience.uuid);
+              education && education.uuid && deleteEducation(education.uuid);
               close();
             }}
             color="secondary"
@@ -233,18 +270,23 @@ const ExperienceDialog: React.FC<ExperienceDialogProps> = (props) => {
             刪除
           </Button>
         )}
-        <Button onClick={close} color="primary" variant="text">
-          取消
-        </Button>
+        {!disableCancel && (
+          <Button onClick={close} color="primary" variant="text">
+            取消
+          </Button>
+        )}
         <Button
           onClick={() => {
-            jobName &&
-              teamName &&
+            schoolName &&
+              degree &&
+              majorName &&
               startTime &&
+              skillTags &&
               update({
-                uuid: experience?.uuid,
-                jobName,
-                teamName,
+                uuid: education?.uuid,
+                schoolName,
+                degree,
+                majorName,
                 startTime,
                 endTime,
                 description,
@@ -253,14 +295,14 @@ const ExperienceDialog: React.FC<ExperienceDialogProps> = (props) => {
             close();
           }}
           color="primary"
-          disabled={!jobName || !teamName || !startTime}
+          disabled={!schoolName || !majorName || !startTime || !degree}
           variant="text"
         >
           {create ? "新增" : "儲存"}
         </Button>
       </DialogActions>
-    </Dialog>
+    </>
   );
 };
 
-export { ExperienceDialog };
+export { EducationDialogContent };

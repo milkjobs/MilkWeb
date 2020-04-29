@@ -3,6 +3,7 @@ import {
   SendbirdCredential,
   SendbirdCredentialFromJSON,
   SendbirdCredentialToJSON,
+  SystemMessageCustomType,
 } from "@frankyjuang/milkapi-client";
 import logo from "assets/milk.png";
 import to from "await-to-js";

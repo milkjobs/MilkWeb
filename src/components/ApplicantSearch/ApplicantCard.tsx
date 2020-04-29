@@ -158,7 +158,6 @@ const ApplicantCard: React.FC<Props> = (props) => {
             trimRight
             basedOn="letters"
           />
-          {/* <div className={classes.introduction}>{introduction || "尚無"}</div> */}
         </div>
         <div className={classes.introductionContainer}>
           <div className={classes.label}>經驗</div>
@@ -233,7 +232,7 @@ const ApplicantCard: React.FC<Props> = (props) => {
           variant={"contained"}
           color={"secondary"}
         >
-          {"聊一聊"}
+          {"發訊息"}
         </Button>
       </div>
     </Link>

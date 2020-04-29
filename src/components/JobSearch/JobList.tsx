@@ -8,7 +8,6 @@ import { useInView } from "react-intersection-observer";
 const useStyles = makeStyles({
   jobsContainer: {
     display: "flex",
-    flex: 4,
     flexDirection: "column",
     boxSizing: "border-box",
   },

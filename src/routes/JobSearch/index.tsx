@@ -21,6 +21,7 @@ import { useLocation } from "react-router-dom";
 import { useAuth } from "stores";
 import { FilterHeader } from "components/Filter";
 import { useSearch } from "stores";
+import { UserCard } from "components/Profile";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,16 +35,47 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     marginRight: "auto",
     marginLeft: "auto",
+    flexDirection: "row",
+    backgroundColor: theme.palette.background.paper,
+    [theme.breakpoints.up("lg")]: {
+      marginRight: "auto",
+      marginLeft: "auto",
+    },
+    [theme.breakpoints.only("md")]: {
+      width: "100%",
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+      marginTop: 8,
+      marginBottom: 8,
+    },
+  },
+  jobSearchContainer: {
+    display: "flex",
+    justifyContent: "center",
     paddingRight: 24,
     paddingLeft: 24,
     flexDirection: "column",
     backgroundColor: theme.palette.background.paper,
-    [theme.breakpoints.up("md")]: {
+    [theme.breakpoints.up("lg")]: {
       width: "960px",
     },
-    [theme.breakpoints.down("xs")]: {
-      marginTop: 8,
-      marginBottom: 8,
+    [theme.breakpoints.only("md")]: {
+      flex: 3,
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
+  userCardContainer: {
+    [theme.breakpoints.up("lg")]: {
+      minWidth: "250px",
+    },
+    [theme.breakpoints.only("md")]: {
+      flex: 1,
+    },
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
     },
   },
   searchBarRoot: {
@@ -51,6 +83,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     flex: 1,
+    maxHeight: 50,
     marginBottom: 36,
     border: "1px solid #dfe1e5",
     borderRadius: 10,
@@ -133,47 +166,52 @@ const JobSearch: React.FC = () => {
       <SitelinksSearchboxStructuredData />
       <Header hideSearchBar={hideHeaderSearchBar} />
       <div className={classes.container}>
-        <div style={{ padding: 16 }}>
-          <AwesomeHeader />
-        </div>
-        {algoliaClient ? (
-          <InstantSearch
-            indexName={algoliaConfig.index}
-            searchClient={algoliaClient}
-          >
-            <Configure
-              hitsPerPage={20}
-              optionalWords={[
-                ...searchHistoryConfig.split(" "),
-                SalaryType.Monthly,
-                SalaryType.Hourly,
-              ]}
-            />
-            <div ref={ref}>
-              <SearchBar />
-            </div>
-            <VirtualRefinementList attribute="area.level2" />
-            <VirtualRefinementList attribute="type" />
-            <VirtualRefinementList attribute="team.primaryField" />
-            <VirtualRefinementList attribute="educationNeed" />
-            <VirtualRefinementList attribute="experienceNeed" />
-            <VirtualRange attribute="minSalary" />
-            <VirtualRange attribute="maxSalary" />
-            <FilterHeader />
-            <JobList />
-            <SearchResult />
-          </InstantSearch>
-        ) : (
-          <div className={classes.searchBarRoot}>
-            <InputBase
-              className={classes.input}
-              placeholder="搜尋工作、地區、公司"
-            />
-            <IconButton className={classes.iconButton}>
-              <Search />
-            </IconButton>
+        <div className={classes.jobSearchContainer}>
+          <div style={{ padding: 16 }}>
+            <AwesomeHeader />
           </div>
-        )}
+          {algoliaClient ? (
+            <InstantSearch
+              indexName={algoliaConfig.index}
+              searchClient={algoliaClient}
+            >
+              <Configure
+                hitsPerPage={20}
+                optionalWords={[
+                  ...searchHistoryConfig.split(" "),
+                  SalaryType.Monthly,
+                  SalaryType.Hourly,
+                ]}
+              />
+              <div ref={ref}>
+                <SearchBar />
+              </div>
+              <VirtualRefinementList attribute="area.level2" />
+              <VirtualRefinementList attribute="type" />
+              <VirtualRefinementList attribute="team.primaryField" />
+              <VirtualRefinementList attribute="educationNeed" />
+              <VirtualRefinementList attribute="experienceNeed" />
+              <VirtualRange attribute="minSalary" />
+              <VirtualRange attribute="maxSalary" />
+              <FilterHeader />
+              <JobList />
+              <SearchResult />
+            </InstantSearch>
+          ) : (
+            <div className={classes.searchBarRoot}>
+              <InputBase
+                className={classes.input}
+                placeholder="搜尋工作、地區、公司"
+              />
+              <IconButton className={classes.iconButton}>
+                <Search />
+              </IconButton>
+            </div>
+          )}
+        </div>
+        <div className={classes.userCardContainer}>
+          <UserCard />
+        </div>
       </div>
     </div>
   );

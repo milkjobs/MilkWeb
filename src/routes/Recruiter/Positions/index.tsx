@@ -9,6 +9,7 @@ import { useAuth } from "stores";
 import { DownloadApp } from "components/Util";
 import TextField from "@material-ui/core/TextField";
 import { EmailForm } from "components/Profile";
+import { TeamCard } from "components/TeamComponents";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,16 +18,51 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     display: "flex",
-    flexDirection: "column",
     justifyContent: "center",
     marginBottom: 100,
-    marginLeft: "auto",
-    marginRight: "auto",
     marginTop: 40,
     paddingLeft: 24,
     paddingRight: 24,
-    [theme.breakpoints.up("md")]: {
+    backgroundColor: theme.palette.background.paper,
+    [theme.breakpoints.up("lg")]: {
+      marginRight: "auto",
+      marginLeft: "auto",
+    },
+    [theme.breakpoints.only("md")]: {
+      width: "100%",
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+      marginTop: 8,
+      marginBottom: 8,
+    },
+  },
+  positionsContainer: {
+    display: "flex",
+    justifyContent: "center",
+    paddingRight: 24,
+    paddingLeft: 24,
+    flexDirection: "column",
+    backgroundColor: theme.palette.background.paper,
+    [theme.breakpoints.up("lg")]: {
       width: "960px",
+    },
+    [theme.breakpoints.only("md")]: {
+      flex: 3,
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
+  teamCardContainer: {
+    [theme.breakpoints.up("lg")]: {
+      minWidth: "250px",
+    },
+    [theme.breakpoints.only("md")]: {
+      flex: 1,
+    },
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
     },
   },
   emailContainer: {
@@ -57,50 +93,6 @@ const Positions: React.FC = () => {
   const [positions, setPositions] = useState<Job[]>([]);
   const [formOpen, setFormOpen] = useState(false);
   const [downloadAppOpen, setDownloadAppOpen] = useState(false);
-  const [email, setEmail] = useState<string | undefined>(
-    user?.recruiterInfo?.email
-  );
-  const [emailErrorMessage, setEmailErrorMessage] = useState<string>();
-
-  const resendVerificationEmail = async () => {
-    if (emailErrorMessage) {
-      return;
-    }
-    const recruiterInfoApi = await getApi("RecruiterInfo");
-
-    if (user?.recruiterInfo?.uuid && email !== user.recruiterInfo.email) {
-      await recruiterInfoApi.updateRecruiterInfo({
-        recruiterInfoId: user.recruiterInfo.uuid,
-        recruiterInfo: {
-          ...user.recruiterInfo,
-          email,
-        },
-      });
-    }
-    user?.recruiterInfo?.uuid &&
-      (await recruiterInfoApi.resendEmailConfirmation({
-        recruiterInfoId: user?.recruiterInfo?.uuid,
-      }));
-    await reloadUser();
-  };
-
-  const saveEmail = async () => {
-    if (emailErrorMessage) {
-      return;
-    }
-
-    if (user?.recruiterInfo?.uuid && email) {
-      const recruiterInfoApi = await getApi("RecruiterInfo");
-      await recruiterInfoApi.updateRecruiterInfo({
-        recruiterInfoId: user.recruiterInfo.uuid,
-        recruiterInfo: {
-          ...user.recruiterInfo,
-          email,
-        },
-      });
-    }
-    await reloadUser();
-  };
 
   useEffect(() => {
     if (user?.recruiterInfo?.jobs) {
@@ -113,34 +105,39 @@ const Positions: React.FC = () => {
       <Header />
       <JobCreateForm open={formOpen} handleClose={() => setFormOpen(false)} />
       <div className={classes.container}>
-        <VerificationStateBanner
-          containerStyle={{
-            marginBottom: 24,
-            textAlign: "left",
-          }}
-          showAction
-        />
-        <Title
-          text="職缺"
-          buttonText="刊登職缺"
-          buttonOnClick={() => setFormOpen(true)}
-        />
-        <div>
-          {positions.length !== 0 ? (
-            positions.map((value, index) => {
-              if (user && user.recruiterInfo && user.recruiterInfo.team)
-                value.team = user.recruiterInfo.team;
-              return (
-                <PositionCard
-                  {...value}
-                  key={index}
-                  targetPath={`/recruiter/job/${value.uuid}`}
-                />
-              );
-            })
-          ) : (
-            <div>目前沒有職缺</div>
-          )}
+        <div className={classes.positionsContainer}>
+          <VerificationStateBanner
+            containerStyle={{
+              marginBottom: 24,
+              textAlign: "left",
+            }}
+            showAction
+          />
+          <Title
+            text="職缺"
+            buttonText="刊登職缺"
+            buttonOnClick={() => setFormOpen(true)}
+          />
+          <div>
+            {positions.length !== 0 ? (
+              positions.map((value, index) => {
+                if (user && user.recruiterInfo && user.recruiterInfo.team)
+                  value.team = user.recruiterInfo.team;
+                return (
+                  <PositionCard
+                    {...value}
+                    key={index}
+                    targetPath={`/recruiter/job/${value.uuid}`}
+                  />
+                );
+              })
+            ) : (
+              <div>目前沒有職缺</div>
+            )}
+          </div>
+        </div>
+        <div className={classes.teamCardContainer}>
+          <TeamCard />
         </div>
       </div>
       <EmailForm />

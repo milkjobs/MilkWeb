@@ -439,7 +439,6 @@ const ApplicantBasicInfo: React.FC = () => {
   };
 
   const updateJobGoal = async (updatedJobGoal: JobGoal) => {
-    console.log(user?.profile, updateJobGoal);
     if (user && user.profile && updatedJobGoal.uuid) {
       const jobGoalApi = await getApi("JobGoal");
       await jobGoalApi.updateJobGoal({

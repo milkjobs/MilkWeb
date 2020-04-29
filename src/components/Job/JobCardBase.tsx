@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 16,
     paddingBottom: 12,
     display: "flex",
+    width: "100%",
     flexDirection: "row",
     borderBottomWidth: 1,
     borderBottomStyle: "solid",
@@ -119,14 +120,12 @@ const useStyles = makeStyles((theme) => ({
       width: 55,
       height: 55,
     },
-    [theme.breakpoints.only("sm")]: {
-      display: "none",
-    },
   },
   truncate: {
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
+    maxWidth: 250,
   },
 }));
 
