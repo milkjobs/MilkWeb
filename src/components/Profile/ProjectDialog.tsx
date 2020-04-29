@@ -180,10 +180,12 @@ const ProjectDialog: React.FC<ProjectDialogProps> = (props) => {
         <ChipInput
           fullWidth
           value={skillTags}
-          onChange={(chips) => setSkillTags(chips)}
-          onDelete={(chip) => setSkillTags(skillTags.filter((t) => t !== chip))}
+          onAdd={(chip) => setSkillTags((prev) => [...prev, chip])}
+          onDelete={(chip) =>
+            setSkillTags((prev) => prev.filter((t) => t !== chip))
+          }
           margin="normal"
-          label={"技能標籤"}
+          label="技能標籤"
         />
       </DialogContent>
       <DialogActions>
