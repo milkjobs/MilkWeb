@@ -24,6 +24,7 @@ import { Link, useLocation } from "react-router-dom";
 import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
 import { Slide, ToastContainer, ToastPosition } from "react-toastify";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
+import { UserCard } from "components/Profile";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,22 +71,47 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     marginRight: "auto",
     marginLeft: "auto",
-    paddingRight: 24,
-    paddingLeft: 24,
-    flexDirection: "column",
+    flexDirection: "row",
     backgroundColor: theme.palette.background.paper,
-    width: "720px",
+    [theme.breakpoints.up("lg")]: {
+      marginRight: "auto",
+      marginLeft: "auto",
+    },
+    [theme.breakpoints.only("md")]: {
+      width: "100%",
+    },
     [theme.breakpoints.down("xs")]: {
       width: "100%",
       marginTop: 8,
       marginBottom: 8,
-      paddingLeft: 0,
-      paddingRight: 0,
+    },
+  },
+  circlesContainer: {
+    display: "flex",
+    justifyContent: "center",
+    paddingRight: 24,
+    paddingLeft: 24,
+    flexDirection: "column",
+    backgroundColor: theme.palette.background.paper,
+    [theme.breakpoints.up("sm")]: {
+      width: "720px",
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
+  },
+  userCardContainer: {
+    [theme.breakpoints.up("md")]: {
+      minWidth: "250px",
+    },
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
     },
   },
   searchRoot: {
     padding: "2px 4px",
     width: 650,
+    maxHeight: 50,
     marginLeft: "auto",
     marginRight: "auto",
     display: "flex",
@@ -204,100 +230,105 @@ const JobCircle: React.FC = () => {
     <div className={classes.root}>
       <Header />
       <div className={classes.container}>
-        <div className={classes.searchRoot}>
-          <InputBase
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-            }}
-            onKeyPress={(e) => {
-              if (e.key === "Enter" && query !== text) {
-                setPageNo(1);
-                setText(query);
-              }
-            }}
-            className={classes.input}
-            placeholder="搜尋"
-          />
-          <IconButton className={classes.iconButton}>
-            <SearchIcon />
-          </IconButton>
-        </div>
-        <div className={classes.postButtonContainer}>
-          <Avatar
-            alt="profile image"
-            className={classes.avatar}
-            src={
-              user
-                ? user.profileImageUrl
-                : "https://milk.jobs/static/media/milk.d3c5757d.png"
-            }
-          />
-          <div
-            className={classes.postButton}
-            style={{ marginRight: 8 }}
-            onClick={() => setCreatePostOpen(true)}
-          >
-            <CreateOutlinedIcon />
-            <div style={{ marginLeft: 8 }}>{"在想什麼？"}</div>
-          </div>
-          <div
-            className={classes.postButton}
-            onClick={() => setCreateQuestionOpen(true)}
-          >
-            <HelpOutlineOutlinedIcon />
-            <div style={{ marginLeft: 8 }}>{"想問什麼？"}</div>
-          </div>
-          <QuestionDialog
-            open={createQuestionOpen}
-            onClose={() => setCreateQuestionOpen(false)}
-            finish={createPost}
-          />
-          <PostDialog
-            open={createPostOpen}
-            onClose={() => setCreatePostOpen(false)}
-            finish={createPost}
-          />
-        </div>
-        <div className={classes.themeContainer}>
-          {Object.keys(themeSubTitles)
-            .sort(() => Math.random() - 0.5)
-            .map((t) => (
-              <Link
-                to={
-                  (isRecruiter ? "/recruiter" : "") +
-                  "/circle/theme/" +
-                  t.substr(1)
+        <div className={classes.circlesContainer}>
+          <div className={classes.searchRoot}>
+            <InputBase
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+              }}
+              onKeyPress={(e) => {
+                if (e.key === "Enter" && query !== text) {
+                  setPageNo(1);
+                  setText(query);
                 }
-                key={t}
-                className={classes.themeTag}
-              >
-                {t}
-              </Link>
-            ))}
-        </div>
-        {loading ? (
-          <CircularProgress className={classes.loading} />
-        ) : (
-          posts.map((p) =>
-            p.text.includes("#提問") ? (
-              <QuestionCard
-                key={p.uuid}
-                question={p}
-                updatePost={updatePost}
-                deletePost={deletePost}
-              />
-            ) : (
-              <PostCard
-                key={p.uuid}
-                post={p}
-                updatePost={updatePost}
-                deletePost={deletePost}
-              />
+              }}
+              className={classes.input}
+              placeholder="搜尋"
+            />
+            <IconButton className={classes.iconButton}>
+              <SearchIcon />
+            </IconButton>
+          </div>
+          <div className={classes.postButtonContainer}>
+            <Avatar
+              alt="profile image"
+              className={classes.avatar}
+              src={
+                user
+                  ? user.profileImageUrl
+                  : "https://milk.jobs/static/media/milk.d3c5757d.png"
+              }
+            />
+            <div
+              className={classes.postButton}
+              style={{ marginRight: 8 }}
+              onClick={() => setCreatePostOpen(true)}
+            >
+              <CreateOutlinedIcon />
+              <div style={{ marginLeft: 8 }}>{"在想什麼？"}</div>
+            </div>
+            <div
+              className={classes.postButton}
+              onClick={() => setCreateQuestionOpen(true)}
+            >
+              <HelpOutlineOutlinedIcon />
+              <div style={{ marginLeft: 8 }}>{"想問什麼？"}</div>
+            </div>
+            <QuestionDialog
+              open={createQuestionOpen}
+              onClose={() => setCreateQuestionOpen(false)}
+              finish={createPost}
+            />
+            <PostDialog
+              open={createPostOpen}
+              onClose={() => setCreatePostOpen(false)}
+              finish={createPost}
+            />
+          </div>
+          <div className={classes.themeContainer}>
+            {Object.keys(themeSubTitles)
+              .sort(() => Math.random() - 0.5)
+              .map((t) => (
+                <Link
+                  to={
+                    (isRecruiter ? "/recruiter" : "") +
+                    "/circle/theme/" +
+                    t.substr(1)
+                  }
+                  key={t}
+                  className={classes.themeTag}
+                >
+                  {t}
+                </Link>
+              ))}
+          </div>
+          {loading ? (
+            <CircularProgress className={classes.loading} />
+          ) : (
+            posts.map((p) =>
+              p.text.includes("#提問") ? (
+                <QuestionCard
+                  key={p.uuid}
+                  question={p}
+                  updatePost={updatePost}
+                  deletePost={deletePost}
+                />
+              ) : (
+                <PostCard
+                  key={p.uuid}
+                  post={p}
+                  updatePost={updatePost}
+                  deletePost={deletePost}
+                />
+              )
             )
-          )
-        )}
-        <div ref={ref}></div>
+          )}
+          <div ref={ref}></div>
+        </div>
+        <div className={classes.userCardContainer}>
+          <UserCard />
+        </div>
       </div>
       <ToastContainer
         draggable={false}

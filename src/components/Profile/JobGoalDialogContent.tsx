@@ -46,7 +46,7 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
   const [fieldFuse, setFieldFuse] = useState<
     Fuse<string, Fuse.FuseOptions<string>>
   >();
-  const [titlesErrorMessage, setTitlesErrorMessage] = useState<string>();
+  const [areaErrorMessage, setAreaErrorMessage] = useState<string>();
 
   const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (
@@ -74,11 +74,8 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
   };
 
   const handleAreaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value === "any") {
-      setArea(undefined);
-    } else {
-      setArea(event.target.value);
-    }
+    setArea(event.target.value);
+    setAreaErrorMessage("");
   };
 
   useEffect(() => {
@@ -193,13 +190,15 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
           select
           value={area || "any"}
         >
-          <MenuItem value="any">不限</MenuItem>
           {TaiwanAreaJSON.map((option) => (
             <MenuItem key={option.name} value={option.name}>
               {option.name}
             </MenuItem>
           ))}
         </TextField>
+        {Boolean(areaErrorMessage) && (
+          <div style={{ color: "#fa6c71" }}>{areaErrorMessage}</div>
+        )}
         <div style={{ display: "flex" }}>
           <TextField
             fullWidth
@@ -320,7 +319,6 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
           options={titleOptions}
           value={titles}
           onChange={(_event, newValue) => {
-            setTitlesErrorMessage("");
             setTitles(newValue);
           }}
           filterOptions={(_options, { inputValue }) =>
@@ -334,9 +332,6 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
             <TextField {...params} margin="normal" label="職位" />
           )}
         />
-        {Boolean(titlesErrorMessage) && (
-          <div style={{ color: "#fa6c71" }}>{titlesErrorMessage}</div>
-        )}
         <Autocomplete
           clearText="清除產業領域"
           closeText="收起清單"
@@ -373,8 +368,7 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
           color="primary"
           variant="contained"
           onClick={() => {
-            if (titles === undefined || titles.length === 0)
-              setTitlesErrorMessage("職位不能為空");
+            if (area === undefined) setAreaErrorMessage("縣市不能為空");
             else {
               update({
                 ...jobGoal,

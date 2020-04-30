@@ -11,6 +11,7 @@ import to from "await-to-js";
 import { PostCard } from "components/JobCircle";
 import { TeamCreateForm } from "components/TeamComponents";
 import { LoginDialog } from "components/Util";
+import { UserCard } from "components/Profile";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,6 +25,12 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     marginRight: "auto",
     marginLeft: "auto",
+    flexDirection: "row",
+    backgroundColor: theme.palette.background.paper,
+  },
+  circlesContainer: {
+    display: "flex",
+    justifyContent: "center",
     paddingRight: 24,
     paddingLeft: 24,
     flexDirection: "column",
@@ -37,6 +44,34 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 0,
     },
   },
+  userCardContainer: {
+    [theme.breakpoints.up("md")]: {
+      minWidth: "250px",
+    },
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
+  },
+  // container: {
+  //   marginTop: 40,
+  //   marginBottom: 40,
+  //   display: "flex",
+  //   justifyContent: "center",
+  //   marginRight: "auto",
+  //   marginLeft: "auto",
+  //   paddingRight: 24,
+  //   paddingLeft: 24,
+  //   flexDirection: "column",
+  //   backgroundColor: theme.palette.background.paper,
+  //   width: "720px",
+  //   [theme.breakpoints.down("xs")]: {
+  //     width: "100%",
+  //     marginTop: 8,
+  //     marginBottom: 8,
+  //     paddingLeft: 0,
+  //     paddingRight: 0,
+  //   },
+  // },
   circleLink: {
     padding: 32,
     textDecoration: "none",
@@ -139,177 +174,187 @@ const Post: React.FC<PostProps> = ({ post: p }) => {
 
   return (
     <div className={classes.container}>
-      <PostCard
-        post={post}
-        updatePost={updatePost}
-        deletePost={deletePost}
-        expand={true}
-      />
-      <div style={{ marginTop: 80, marginBottom: 80 }}>
-        <Link to={"/"} className={classes.circleLink}>
-          <Button variant={"contained"} color={"primary"}>
-            看更多工作
-          </Button>
-        </Link>
-        {user ? (
-          !user.recruiterInfo ? (
+      <div className={classes.circlesContainer}>
+        <PostCard
+          post={post}
+          updatePost={updatePost}
+          deletePost={deletePost}
+          expand={true}
+        />
+        <div style={{ marginTop: 80, marginBottom: 80 }}>
+          <Link to={"/"} className={classes.circleLink}>
+            <Button variant={"contained"} color={"primary"}>
+              看更多工作
+            </Button>
+          </Link>
+          {user ? (
+            !user.recruiterInfo ? (
+              <Button
+                variant={"contained"}
+                color={"secondary"}
+                onClick={() =>
+                  isMobile
+                    ? openInNewTab("https://to.milk.jobs/app")
+                    : setCreateTeamFormOpen(true)
+                }
+              >
+                免費刊登職缺
+              </Button>
+            ) : (
+              <Link to="/recruiter" className={classes.circleLink}>
+                <Button variant={"contained"} color={"secondary"}>
+                  切換成招募模式
+                </Button>
+              </Link>
+            )
+          ) : (
             <Button
               variant={"contained"}
               color={"secondary"}
               onClick={() =>
                 isMobile
                   ? openInNewTab("https://to.milk.jobs/app")
-                  : setCreateTeamFormOpen(true)
+                  : setLoginDialogOpen(true)
               }
             >
               免費刊登職缺
             </Button>
-          ) : (
-            <Link to="/recruiter" className={classes.circleLink}>
-              <Button variant={"contained"} color={"secondary"}>
-                切換成招募模式
-              </Button>
-            </Link>
-          )
-        ) : (
-          <Button
-            variant={"contained"}
-            color={"secondary"}
-            onClick={() =>
-              isMobile
-                ? openInNewTab("https://to.milk.jobs/app")
-                : setLoginDialogOpen(true)
-            }
-          >
-            免費刊登職缺
-          </Button>
-        )}
-        <TeamCreateForm
-          handleClose={() => setCreateTeamFormOpen(false)}
-          open={createTeamFormOpen}
-        />
-        <LoginDialog
-          isOpen={loginDialogOpen}
-          close={() => setLoginDialogOpen(false)}
-        />
-      </div>
-      <div
-        style={{
-          display: "flex",
-          width: "100%",
-          minHeight: "72%",
-          padding: 32,
-        }}
-      >
-        {!isMobile && (
+          )}
+          <TeamCreateForm
+            handleClose={() => setCreateTeamFormOpen(false)}
+            open={createTeamFormOpen}
+          />
+          <LoginDialog
+            isOpen={loginDialogOpen}
+            close={() => setLoginDialogOpen(false)}
+          />
+        </div>
+        {/* <div
+          style={{
+            display: "flex",
+            width: "720px",
+            minHeight: "72%",
+            padding: 32,
+          }}
+        >
+          {!isMobile && (
+            <div
+              className={classes.appContainer}
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              <div style={{ position: "relative" }}>
+                {slides.map((item, index) => (
+                  <img
+                    key={index}
+                    alt="screenshot"
+                    src={item.image}
+                    className={classes.image}
+                    style={
+                      currentSlideIndex === index ? { opacity: 1 } : undefined
+                    }
+                  />
+                ))}
+              </div>
+            </div>
+          )}
           <div
             className={classes.appContainer}
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-            }}
-          >
-            <div style={{ position: "relative" }}>
-              {slides.map((item, index) => (
-                <img
-                  key={index}
-                  alt="screenshot"
-                  src={item.image}
-                  className={classes.image}
-                  style={
-                    currentSlideIndex === index ? { opacity: 1 } : undefined
+            style={
+              isMobile
+                ? {
+                    marginTop: "auto",
+                    marginBottom: "auto",
+                    padding: 0,
                   }
-                />
-              ))}
-            </div>
-          </div>
-        )}
-        <div
-          className={classes.appContainer}
-          style={
-            isMobile
-              ? {
-                  marginTop: "auto",
-                  marginBottom: "auto",
-                  padding: 0,
-                }
-              : {
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                }
-          }
-        >
-          <div>
-            {isMobile && (
-              <div
-                style={{ position: "relative", height: 500, marginBottom: 32 }}
-              >
-                <img
-                  alt="screenshot"
-                  src={slides[currentSlideIndex].image}
-                  className={classes.mobileImage}
-                  style={{ opacity: 1 }}
-                />
+                : {
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                  }
+            }
+          >
+            <div>
+              {isMobile && (
+                <div
+                  style={{
+                    position: "relative",
+                    height: 500,
+                    marginBottom: 32,
+                  }}
+                >
+                  <img
+                    alt="screenshot"
+                    src={slides[currentSlideIndex].image}
+                    className={classes.mobileImage}
+                    style={{ opacity: 1 }}
+                  />
+                </div>
+              )}
+              <div style={{ fontSize: 30, fontWeight: 700, marginBottom: 24 }}>
+                找人才，直接聊
               </div>
-            )}
-            <div style={{ fontSize: 30, fontWeight: 700, marginBottom: 24 }}>
-              找人才，直接聊
-            </div>
-            <div className={classes.title}>
-              {slides[currentSlideIndex].title}
-            </div>
-            {isMobile ? (
+              <div className={classes.title}>
+                {slides[currentSlideIndex].title}
+              </div>
+              {isMobile ? (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {getMobileOS() !== MobileOS.Android && (
+                    <a href="https://to.milk.jobs/app">
+                      <img alt="app store" src={AppStore} width="200" />
+                    </a>
+                  )}
+                  {getMobileOS() !== MobileOS.Ios && (
+                    <a href="https://to.milk.jobs/app">
+                      <img alt="google play" src={GooglePlay} width="230" />
+                    </a>
+                  )}
+                </div>
+              ) : (
+                <QRCode
+                  size={240}
+                  level="Q"
+                  value="https://to.milk.jobs/app"
+                  includeMargin
+                />
+              )}
               <div
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  fontSize: 24,
+                  fontWeight: 700,
+                  marginBottom: 12,
+                  marginTop: isMobile ? 12 : 0,
                 }}
               >
-                {getMobileOS() !== MobileOS.Android && (
-                  <a href="https://to.milk.jobs/app">
-                    <img alt="app store" src={AppStore} width="200" />
-                  </a>
-                )}
-                {getMobileOS() !== MobileOS.Ios && (
-                  <a href="https://to.milk.jobs/app">
-                    <img alt="google play" src={GooglePlay} width="230" />
-                  </a>
-                )}
+                下載牛奶找工作 App
               </div>
-            ) : (
-              <QRCode
-                size={240}
-                level="Q"
-                value="https://to.milk.jobs/app"
-                includeMargin
-              />
-            )}
-            <div
-              style={{
-                fontSize: 24,
-                fontWeight: 700,
-                marginBottom: 12,
-                marginTop: isMobile ? 12 : 0,
-              }}
-            >
-              下載牛奶找工作 App
+              <div
+                style={{
+                  fontSize: 24,
+                  fontWeight: 700,
+                  marginBottom: 24,
+                  marginTop: isMobile ? 12 : 0,
+                }}
+              >
+                免費刊登職缺
+              </div>
             </div>
-            <div
-              style={{
-                fontSize: 24,
-                fontWeight: 700,
-                marginBottom: 24,
-                marginTop: isMobile ? 12 : 0,
-              }}
-            >
-              免費刊登職缺
-            </div>
-          </div>
-        </div>
+          </div> */}
+        {/* </div> */}
+      </div>
+      <div className={classes.userCardContainer}>
+        <UserCard />
       </div>
     </div>
+    // </div>
   );
 };
 
