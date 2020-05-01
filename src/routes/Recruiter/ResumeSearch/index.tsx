@@ -1,5 +1,9 @@
-import { UserApi, SalaryType } from "@frankyjuang/milkapi-client";
-import { IconButton, InputBase, makeStyles } from "@material-ui/core";
+import {
+  UserApi,
+  SalaryType,
+  VerificationState,
+} from "@frankyjuang/milkapi-client";
+import { IconButton, InputBase, makeStyles, Button } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 import algoliasearch, { SearchClient } from "algoliasearch/lite";
 import { Header } from "components/Header";
@@ -11,7 +15,7 @@ import { AlgoliaService, SitelinksSearchboxStructuredData } from "helpers";
 import React, { useEffect, useState } from "react";
 import { Configure, InstantSearch } from "react-instantsearch-dom";
 import { useInView } from "react-intersection-observer";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useAuth } from "stores";
 import { useSearch } from "stores";
 
@@ -115,7 +119,17 @@ const ResumeSearch: React.FC = () => {
       <SitelinksSearchboxStructuredData />
       <Header hideSearchBar={hideHeaderSearchBar} />
       <div className={classes.container}>
-        {algoliaClient ? (
+        {user?.recruiterInfo?.team?.certificateVerified !==
+        VerificationState.Passed ? (
+          <Link
+            to={"/recruiter/verification"}
+            style={{ textDecoration: "none", fontSize: 24 }}
+          >
+            <Button style={{ textDecoration: "none", fontSize: 24 }}>
+              {"公司驗證通過後才能使用人才搜索的功能"}
+            </Button>
+          </Link>
+        ) : algoliaClient ? (
           <InstantSearch
             indexName={algoliaApplicantConfig.index}
             searchClient={algoliaClient}

@@ -74,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
   },
   blockPeriod: {
     display: "flex",
+    textAlign: "left",
     alignItems: "center",
     whiteSpace: "pre",
     fontSize: 14,
@@ -119,7 +120,7 @@ const JobGoalRow: React.FC<JobGoal> = ({
           {"・"}
         </div>
         <div className={classes.blockPeriod}>
-          <div>{titles && titles.length > 0 ? titles.join("\n") : "不限"}</div>
+          {titles && titles.length > 0 ? titles.join("\n") : "不限"}
         </div>
       </div>
       <div className={classes.row}>

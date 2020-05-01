@@ -85,7 +85,7 @@ const ApplicantHeaderTabs: React.FC<Props> = (props) => {
         handleClose={hideCreateTeamForm}
         open={isCreateTeamFormOpen}
       />
-      {(isHome || isAbout || isCircle) &&
+      {(isHome || isAbout || isCircle || isMessage) &&
         (user && !user.recruiterInfo ? (
           <div onClick={showCreateTeamForm} className={classes.link}>
             <span className={classes.tab}>免費刊登職缺</span>

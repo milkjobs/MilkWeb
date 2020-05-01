@@ -1,16 +1,15 @@
 import {
   DialogContent,
-  InputAdornment,
   makeStyles,
   TextField,
-  useMediaQuery,
-  useTheme,
   DialogTitle,
 } from "@material-ui/core";
 import "firebase/auth";
+import Recruitement from "assets/recruitement.png";
+import Work from "assets/work.png";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "stores";
 import { useHistory } from "react-router-dom";
 import { JobGoalDialogContent } from "components/Profile";
@@ -30,6 +29,14 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: 60,
     fontSize: 24,
+    borderRadius: 16,
+    marginBottom: 8,
+  },
+  icon: {
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginBottom: 32,
+    marginTop: 32,
   },
 }));
 
@@ -105,13 +112,13 @@ const RegisterContent: React.FC<Props> = ({ close }) => {
       <>
         <DialogContent
           style={{
-            height: 300,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "space-around",
           }}
         >
+          <img src={Work} className={classes.icon} width={100} height={100} />
           <Button
             variant={"contained"}
             color={"secondary"}
@@ -120,6 +127,12 @@ const RegisterContent: React.FC<Props> = ({ close }) => {
           >
             {"我要找工作"}
           </Button>
+          <img
+            src={Recruitement}
+            className={classes.icon}
+            width={100}
+            height={100}
+          />
           <Button
             variant={"contained"}
             color={"secondary"}

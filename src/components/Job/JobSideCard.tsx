@@ -302,7 +302,7 @@ const JobSideCard: React.FC<Props> = ({ job }) => {
         await to(
           sendMessage(
             applicationChannel,
-            `你好，我有信心勝任${job.name}職位，希望你能看看我的資料。`
+            `你好，我有信心勝任${job.name}職位，希望您能看看我的資料。`
           )
         );
 

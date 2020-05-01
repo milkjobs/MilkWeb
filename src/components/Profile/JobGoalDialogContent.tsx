@@ -37,15 +37,16 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
   const [maxSalary, setMaxSalary] = useState<number | null>();
   const [area, setArea] = useState<string>();
   const [titleOptions, setTitleOptions] = useState<string[]>([]);
-  const [titles, setTitles] = useState<string[]>();
+  const [titles, setTitles] = useState<string[]>([]);
   const [titleFuse, setTitleFuse] = useState<
     Fuse<string, Fuse.FuseOptions<string>>
   >();
   const [fieldOptions, setFieldOptions] = useState<string[]>([]);
-  const [fields, setFields] = useState<string[]>();
+  const [fields, setFields] = useState<string[]>([]);
   const [fieldFuse, setFieldFuse] = useState<
     Fuse<string, Fuse.FuseOptions<string>>
   >();
+  const [titlesErrorMessage, setTitlesErrorMessage] = useState<string>();
   const [areaErrorMessage, setAreaErrorMessage] = useState<string>();
 
   const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -147,7 +148,7 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
 
   useEffect(() => {
     setType(jobGoal?.type);
-    setTitles(jobGoal?.titles);
+    setTitles(jobGoal?.titles || []);
     if (jobGoal?.salaryType && jobGoal.maxSalary && jobGoal.minSalary) {
       setSalaryType(jobGoal.salaryType);
       setMinSalary(jobGoal.minSalary);
@@ -158,28 +159,12 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
       setMaxSalary(undefined);
     }
     setArea(jobGoal?.area);
-    setFields(jobGoal?.fields);
+    setFields(jobGoal?.fields || []);
   }, [jobGoal]);
 
   return (
     <>
       <DialogContent>
-        <TextField
-          fullWidth
-          id="job-type"
-          label="類型"
-          margin="normal"
-          onChange={handleTypeChange}
-          select
-          value={type || "any"}
-        >
-          <MenuItem value="any">不限</MenuItem>
-          {JobTypeOptions.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
         <TextField
           fullWidth
           id="area"
@@ -199,6 +184,75 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
         {Boolean(areaErrorMessage) && (
           <div style={{ color: "#fa6c71" }}>{areaErrorMessage}</div>
         )}
+        <Autocomplete
+          clearText="清除職位"
+          closeText="收起清單"
+          defaultValue={[]}
+          getOptionLabel={(option) => option}
+          id="titles"
+          multiple
+          noOptionsText="找不到職位"
+          openText="展開清單"
+          options={titleOptions}
+          value={titles}
+          onChange={(_event, newValue) => {
+            setTitles(newValue);
+          }}
+          filterOptions={(_options, { inputValue }) =>
+            inputValue && titleFuse
+              ? titleFuse
+                  .search<string, false, false>(inputValue)
+                  .map((i) => titleOptions[i])
+              : titleOptions
+          }
+          renderInput={(params) => (
+            <TextField {...params} margin="normal" label="職位" />
+          )}
+        />
+        {Boolean(titlesErrorMessage) && (
+          <div style={{ color: "#fa6c71" }}>{titlesErrorMessage}</div>
+        )}
+        <Autocomplete
+          clearText="清除產業領域"
+          closeText="收起清單"
+          defaultValue={[]}
+          getOptionLabel={(option) => option}
+          id="fields"
+          multiple
+          noOptionsText="找不到產業領域"
+          openText="展開清單"
+          options={fieldOptions}
+          value={fields}
+          onChange={(_event, newValue) => {
+            setFields(newValue);
+          }}
+          filterOptions={(_options, { inputValue }) =>
+            inputValue && fieldFuse
+              ? fieldFuse
+                  .search<string, false, false>(inputValue)
+                  .map((i) => fieldOptions[i])
+              : fieldOptions
+          }
+          renderInput={(params) => (
+            <TextField {...params} margin="normal" label="產業領域" />
+          )}
+        />
+        <TextField
+          fullWidth
+          id="job-type"
+          label="類型"
+          margin="normal"
+          onChange={handleTypeChange}
+          select
+          value={type || "any"}
+        >
+          <MenuItem value="any">不限</MenuItem>
+          {JobTypeOptions.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
         <div style={{ display: "flex" }}>
           <TextField
             fullWidth
@@ -307,56 +361,6 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
             }}
           />
         </div>
-        <Autocomplete
-          clearText="清除職位"
-          closeText="收起清單"
-          defaultValue={[]}
-          getOptionLabel={(option) => option}
-          id="titles"
-          multiple
-          noOptionsText="找不到職位"
-          openText="展開清單"
-          options={titleOptions}
-          value={titles}
-          onChange={(_event, newValue) => {
-            setTitles(newValue);
-          }}
-          filterOptions={(_options, { inputValue }) =>
-            inputValue && titleFuse
-              ? titleFuse
-                  .search<string, false, false>(inputValue)
-                  .map((i) => titleOptions[i])
-              : titleOptions
-          }
-          renderInput={(params) => (
-            <TextField {...params} margin="normal" label="職位" />
-          )}
-        />
-        <Autocomplete
-          clearText="清除產業領域"
-          closeText="收起清單"
-          defaultValue={[]}
-          getOptionLabel={(option) => option}
-          id="fields"
-          multiple
-          noOptionsText="找不到產業領域"
-          openText="展開清單"
-          options={fieldOptions}
-          value={fields}
-          onChange={(_event, newValue) => {
-            setFields(newValue);
-          }}
-          filterOptions={(_options, { inputValue }) =>
-            inputValue && fieldFuse
-              ? fieldFuse
-                  .search<string, false, false>(inputValue)
-                  .map((i) => fieldOptions[i])
-              : fieldOptions
-          }
-          renderInput={(params) => (
-            <TextField {...params} margin="normal" label="產業領域" />
-          )}
-        />
       </DialogContent>
       <DialogActions>
         {!disableCancel && (
@@ -369,6 +373,8 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
           variant="contained"
           onClick={() => {
             if (area === undefined) setAreaErrorMessage("縣市不能為空");
+            else if (titles?.length === 0)
+              setTitlesErrorMessage("職位不能為空");
             else {
               update({
                 ...jobGoal,
