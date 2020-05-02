@@ -16,7 +16,7 @@ import { apiServiceConfig, webConfig } from "config";
 import { BreadcrumbListStructuredData, PageMetadata } from "helpers";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
+import { toast } from "react-toastify";
 import { useAuth } from "stores";
 import urljoin from "url-join";
 
@@ -273,12 +273,6 @@ const Pricing: React.FC = () => {
         >
           送出
         </Button>
-        <ToastContainer
-          position={ToastPosition.BOTTOM_CENTER}
-          draggable={false}
-          hideProgressBar
-          transition={Slide}
-        />
       </div>
     );
   };

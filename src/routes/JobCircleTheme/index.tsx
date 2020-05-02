@@ -14,7 +14,6 @@ import to from "await-to-js";
 import { useInView } from "react-intersection-observer";
 import { useParams } from "react-router-dom";
 import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
-import { Slide, ToastContainer, ToastPosition } from "react-toastify";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 
 const useStyles = makeStyles((theme) => ({
@@ -268,12 +267,6 @@ const JobCircleTheme: React.FC = () => {
         )}
         <div ref={ref}></div>
       </div>
-      <ToastContainer
-        draggable={false}
-        hideProgressBar
-        position={ToastPosition.BOTTOM_CENTER}
-        transition={Slide}
-      />
     </div>
   );
 };

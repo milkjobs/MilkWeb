@@ -22,7 +22,6 @@ import to from "await-to-js";
 import { useInView } from "react-intersection-observer";
 import { Link, useLocation } from "react-router-dom";
 import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
-import { Slide, ToastContainer, ToastPosition } from "react-toastify";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 import { UserCard } from "components/Profile";
 
@@ -330,12 +329,6 @@ const JobCircle: React.FC = () => {
           <UserCard />
         </div>
       </div>
-      <ToastContainer
-        draggable={false}
-        hideProgressBar
-        position={ToastPosition.BOTTOM_CENTER}
-        transition={Slide}
-      />
     </div>
   );
 };

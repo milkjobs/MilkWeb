@@ -14,7 +14,7 @@ import { PdfMimeType } from "helpers";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Document, Page, pdfjs } from "react-pdf";
-import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "stores";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -249,12 +249,6 @@ const Resume: React.FC = () => {
             </div>
           )}
         </div>
-        <ToastContainer
-          position={ToastPosition.BOTTOM_CENTER}
-          draggable={false}
-          hideProgressBar
-          transition={Slide}
-        />
         <Dialog
           open={deleteDialogOpen}
           onClose={() => setDeleteDialogOpen(false)}

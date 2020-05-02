@@ -14,7 +14,7 @@ import to from "await-to-js";
 import { ImageMimeType, TeamSizeOptions } from "helpers";
 import React, { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
+import { toast } from "react-toastify";
 import { useAuth } from "stores";
 
 const useStyles = makeStyles(() =>
@@ -276,12 +276,6 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
                 上傳 Logo
               </Button>
             </label>
-            <ToastContainer
-              draggable={false}
-              hideProgressBar
-              position={ToastPosition.BOTTOM_CENTER}
-              transition={Slide}
-            />
           </div>
           <TextField
             disabled
@@ -463,7 +457,7 @@ const TeamEditForm: React.FC<Props> = ({ open, handleClose, team }) => {
       </Dialog>
       <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
         <DialogContent style={{ marginTop: 16, marginBottom: 16 }}>
-          確定要刪除{team.nickname}？可使用的點閱人數也會一併刪除。
+          確定要刪除{team.nickname}？
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteDialogClose} color="primary">

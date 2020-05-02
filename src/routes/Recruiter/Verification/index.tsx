@@ -7,7 +7,7 @@ import { VerificationStateBanner } from "components/Verification";
 import { ImagePdfMimeType } from "helpers";
 import React, { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "stores";
 import { EmailForm } from "components/Profile";
@@ -147,12 +147,6 @@ const Verification: React.FC = () => {
       <DownloadApp
         isOpen={isDownloadAppOpen}
         close={() => setIsDownloadAppOpen(false)}
-      />
-      <ToastContainer
-        position={ToastPosition.BOTTOM_CENTER}
-        draggable={false}
-        hideProgressBar
-        transition={Slide}
       />
     </div>
   );

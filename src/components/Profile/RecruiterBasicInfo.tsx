@@ -9,7 +9,7 @@ import TextField from "@material-ui/core/TextField";
 import to from "await-to-js";
 import { ImageMimeType } from "helpers";
 import React, { useCallback, useEffect, useState } from "react";
-import { Slide, toast, ToastContainer, ToastPosition } from "react-toastify";
+import { toast } from "react-toastify";
 import { useAuth } from "stores";
 
 const useStyles = makeStyles((theme) => ({
@@ -225,12 +225,6 @@ const EditDialog: React.FC<DialogProps> = (props) => {
                 上傳大頭貼
               </Button>
             </label>
-            <ToastContainer
-              draggable={false}
-              hideProgressBar
-              position={ToastPosition.BOTTOM_CENTER}
-              transition={Slide}
-            />
           </div>
         )}
         <TextField

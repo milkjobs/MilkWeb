@@ -15,6 +15,7 @@ import {
   ThemeProvider,
   useAuth,
 } from "stores";
+import { Slide, ToastContainer, ToastPosition } from "react-toastify";
 import "./App.css";
 
 const LoadingRoute: React.FC<RouteProps> = (props) => {
@@ -47,6 +48,12 @@ const AppRouter: React.FC<{}> = () => {
           </Switch>
         </ErrorCatcher>
       </BrowserRouter>
+      <ToastContainer
+        draggable={false}
+        hideProgressBar
+        position={ToastPosition.BOTTOM_CENTER}
+        transition={Slide}
+      />
     </div>
   );
 };

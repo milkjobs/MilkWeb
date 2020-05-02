@@ -1,5 +1,5 @@
 import { TeamSize, Role } from "@frankyjuang/milkapi-client";
-import { InputAdornment } from "@material-ui/core";
+import { InputAdornment, makeStyles } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
@@ -15,6 +15,33 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "stores";
 import firebase from "firebase";
+import { toast } from "react-toastify";
+
+const useStyles = makeStyles((theme) => ({
+  selectButton: {
+    width: "60%",
+    height: 40,
+    fontSize: 18,
+    borderRadius: 16,
+    marginBottom: 16,
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
+  hintTitle: {
+    fontSize: 20,
+    color: theme.palette.text.secondary,
+    padding: 32,
+  },
+  hint: {
+    fontSize: 16,
+    color: theme.palette.text.primary,
+    padding: 32,
+    paddingTop: 0,
+    borderBottomColor: theme.palette.divider,
+    borderBottomWidth: 0.5,
+    borderBottomStyle: "solid",
+  },
+}));
 
 interface Props {
   open: boolean;
@@ -22,6 +49,7 @@ interface Props {
 }
 
 const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
+  const classes = useStyles();
   const history = useHistory();
   const { getApi, user, reloadUser } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -48,6 +76,7 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
     string
   >();
   const [secondaryField, setSecondaryField] = useState<string>();
+  const [newCreate, setNewCreate] = useState(false);
 
   const isValidEmail = (email) => {
     let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -116,6 +145,7 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
             email,
           },
         });
+        toast.success("寄出驗證信，記得開信箱驗證 Email");
       }
     }
     await reloadUser();
@@ -265,183 +295,226 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
   return (
     <div>
       <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose}>
-        <DialogTitle id="create-team">創建公司</DialogTitle>
-        <DialogContent>
-          <TextField
-            error={Boolean(unifiedNumberErrorMessage)}
-            fullWidth
-            helperText={unifiedNumberErrorMessage}
-            id="unified-number"
-            label="統一編號"
-            margin="normal"
-            onChange={handleUnifiedNumberChange}
-            value={unifiedNumber || ""}
-            onBlur={() => {
-              if (unifiedNumber && !isValidUnifiedNumber(unifiedNumber)) {
-                setUnifiedNumberErrorMessage("請輸入正確的統一編號");
-              }
+        {!newCreate ? (
+          <DialogContent
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "space-around",
             }}
-          />
-          <TextField
-            error={Boolean(nicknameErrorMessage)}
-            fullWidth
-            id="name"
-            label="名稱"
-            margin="normal"
-            onChange={handleNameChange}
-            value={nickname || ""}
-            helperText={
-              nicknameErrorMessage ||
-              "讓人才快速找到你，公司名稱可以是全名簡寫、知名產品名稱或品牌名稱，提交後不能修改。例：【牛奶找工作】是【牛奶網路有限公司】的簡稱"
-            }
-          />
-          <div style={{ display: "flex" }}>
-            <TextField
-              error={Boolean(areaErrorMessage)}
-              fullWidth
-              helperText={areaErrorMessage}
-              id="area"
-              label="縣市"
-              margin="normal"
-              onChange={handleAreaChange}
-              select
-              style={{ marginRight: 4 }}
-              value={area || ""}
+          >
+            <div className={classes.hintTitle}>已有同事使用過</div>
+            <div className={classes.hint}>
+              請同事在公司成員管理後台，出示邀請 QRCode。
+              <br />
+              下載牛奶找工作App，掃描 QRCode 便可以加入公司
+            </div>
+            <div className={classes.hintTitle}>公司第一次使用</div>
+            <Button
+              variant={"contained"}
+              color={"secondary"}
+              className={classes.selectButton}
+              onClick={() => {
+                setNewCreate(true);
+              }}
             >
-              {TaiwanAreaJSON.map((option) => (
-                <MenuItem key={option.name} value={option.name}>
-                  {option.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              disabled={subAreaOptions.length === 0}
-              error={Boolean(subAreaErrorMessage)}
-              fullWidth
-              helperText={subAreaErrorMessage}
-              id="sub-area"
-              label="地區"
-              margin="normal"
-              onChange={handleSubAreaChange}
-              select
-              style={{ marginLeft: 4 }}
-              value={subArea || ""}
-            >
-              {subAreaOptions.map((option) => (
-                <MenuItem key={option.name} value={option.name}>
-                  {option.name}
-                </MenuItem>
-              ))}
-            </TextField>
-          </div>
-          <TextField
-            error={Boolean(streetErrorMessage)}
-            fullWidth
-            helperText={streetErrorMessage}
-            id="street"
-            label="地址"
-            margin="normal"
-            onChange={handleAddressChange}
-            value={street || ""}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment
-                  style={{
-                    width: "25%",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                  position="start"
-                >
-                  {(area || "縣市") + (subArea || "地區")}
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            error={Boolean(sizeErrorMessage)}
-            fullWidth
-            helperText={sizeErrorMessage}
-            id="size"
-            label="人數"
-            margin="normal"
-            onChange={handleSizeChange}
-            select
-            value={size || ""}
-          >
-            {TeamSizeOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            disabled={fieldTagOptions.length === 0}
-            error={Boolean(primaryFieldErrorMessage)}
-            fullWidth
-            helperText={primaryFieldErrorMessage}
-            id="primary-field"
-            label="產業領域"
-            margin="normal"
-            onChange={handlePrimaryFieldChange}
-            select
-            value={primaryField || ""}
-          >
-            {fieldTagOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            disabled={fieldTagOptions.length === 0}
-            fullWidth
-            id="secondary-field"
-            label="產業次要領域（選填）"
-            margin="normal"
-            onChange={handleSecondaryFieldChange}
-            select
-            value={secondaryField || ""}
-          >
-            {secondaryField && <MenuItem value="無">無</MenuItem>}
-            {fieldTagOptions
-              .filter((o) => o !== primaryField)
-              .map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-          </TextField>
-          <TextField
-            error={Boolean(emailErrorMessage)}
-            fullWidth
-            helperText={emailErrorMessage}
-            id="unified-number"
-            label="聯絡 Email"
-            margin="normal"
-            onChange={handleEmailChange}
-            value={email || ""}
-            onBlur={() => {
-              if (email && !isValidEmail(email)) {
-                setEmailErrorMessage("請輸入正確的 Email");
-              }
-            }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            取消
-          </Button>
-          {loading ? (
-            <CircularProgress
-              style={{ width: 20, height: 20, marginLeft: 20, marginRight: 20 }}
-            />
-          ) : (
-            <Button onClick={create} color="primary" variant="contained">
-              創建
+              {"創建公司"}
             </Button>
-          )}
-        </DialogActions>
+          </DialogContent>
+        ) : (
+          <>
+            <DialogTitle id="create-team">創建公司</DialogTitle>
+            <DialogContent>
+              <TextField
+                error={Boolean(unifiedNumberErrorMessage)}
+                fullWidth
+                helperText={unifiedNumberErrorMessage}
+                id="unified-number"
+                label="統一編號"
+                margin="normal"
+                onChange={handleUnifiedNumberChange}
+                value={unifiedNumber || ""}
+                onBlur={() => {
+                  if (unifiedNumber && !isValidUnifiedNumber(unifiedNumber)) {
+                    setUnifiedNumberErrorMessage("請輸入正確的統一編號");
+                  }
+                }}
+              />
+              <TextField
+                error={Boolean(nicknameErrorMessage)}
+                fullWidth
+                id="name"
+                label="名稱"
+                margin="normal"
+                onChange={handleNameChange}
+                value={nickname || ""}
+                helperText={
+                  nicknameErrorMessage ||
+                  "讓人才快速找到你，公司名稱可以是全名簡寫、知名產品名稱或品牌名稱，提交後不能修改。例：【牛奶找工作】是【牛奶網路有限公司】的簡稱"
+                }
+              />
+              <div style={{ display: "flex" }}>
+                <TextField
+                  error={Boolean(areaErrorMessage)}
+                  fullWidth
+                  helperText={areaErrorMessage}
+                  id="area"
+                  label="縣市"
+                  margin="normal"
+                  onChange={handleAreaChange}
+                  select
+                  style={{ marginRight: 4 }}
+                  value={area || ""}
+                >
+                  {TaiwanAreaJSON.map((option) => (
+                    <MenuItem key={option.name} value={option.name}>
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  disabled={subAreaOptions.length === 0}
+                  error={Boolean(subAreaErrorMessage)}
+                  fullWidth
+                  helperText={subAreaErrorMessage}
+                  id="sub-area"
+                  label="地區"
+                  margin="normal"
+                  onChange={handleSubAreaChange}
+                  select
+                  style={{ marginLeft: 4 }}
+                  value={subArea || ""}
+                >
+                  {subAreaOptions.map((option) => (
+                    <MenuItem key={option.name} value={option.name}>
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </div>
+              <TextField
+                error={Boolean(streetErrorMessage)}
+                fullWidth
+                helperText={streetErrorMessage}
+                id="street"
+                label="地址"
+                margin="normal"
+                onChange={handleAddressChange}
+                value={street || ""}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment
+                      style={{
+                        width: "25%",
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                      position="start"
+                    >
+                      {(area || "縣市") + (subArea || "地區")}
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+                error={Boolean(sizeErrorMessage)}
+                fullWidth
+                helperText={sizeErrorMessage}
+                id="size"
+                label="人數"
+                margin="normal"
+                onChange={handleSizeChange}
+                select
+                value={size || ""}
+              >
+                {TeamSizeOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                disabled={fieldTagOptions.length === 0}
+                error={Boolean(primaryFieldErrorMessage)}
+                fullWidth
+                helperText={primaryFieldErrorMessage}
+                id="primary-field"
+                label="產業領域"
+                margin="normal"
+                onChange={handlePrimaryFieldChange}
+                select
+                value={primaryField || ""}
+              >
+                {fieldTagOptions.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                disabled={fieldTagOptions.length === 0}
+                fullWidth
+                id="secondary-field"
+                label="產業次要領域（選填）"
+                margin="normal"
+                onChange={handleSecondaryFieldChange}
+                select
+                value={secondaryField || ""}
+              >
+                {secondaryField && <MenuItem value="無">無</MenuItem>}
+                {fieldTagOptions
+                  .filter((o) => o !== primaryField)
+                  .map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+              </TextField>
+              <TextField
+                error={Boolean(emailErrorMessage)}
+                fullWidth
+                helperText={emailErrorMessage}
+                id="unified-number"
+                label="聯絡 Email"
+                margin="normal"
+                onChange={handleEmailChange}
+                value={email || ""}
+                onBlur={() => {
+                  if (email && !isValidEmail(email)) {
+                    setEmailErrorMessage("請輸入正確的 Email");
+                  }
+                }}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={() => setNewCreate(false)}
+                color="primary"
+                style={{ marginRight: "auto" }}
+              >
+                上一步
+              </Button>
+              <Button onClick={handleClose} color="primary">
+                取消
+              </Button>
+              {loading ? (
+                <CircularProgress
+                  style={{
+                    width: 20,
+                    height: 20,
+                    marginLeft: 20,
+                    marginRight: 20,
+                  }}
+                />
+              ) : (
+                <Button onClick={create} color="primary" variant="contained">
+                  創建
+                </Button>
+              )}
+            </DialogActions>
+          </>
+        )}
       </Dialog>
     </div>
   );
