@@ -31,6 +31,8 @@ import qs from "qs";
 import React, { useCallback, useEffect, useState } from "react";
 import { useAuth } from "stores";
 import urljoin from "url-join";
+import FileCopyIcon from "@material-ui/icons/FileCopy";
+import { toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -75,6 +77,30 @@ const useStyles = makeStyles((theme) => ({
     margin: 16,
     borderWidth: 2,
     borderColor: theme.palette.secondary.main,
+  },
+  title: {
+    fontWeight: "bold",
+    fontSize: 20,
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  shareLink: {
+    display: "flex",
+    justifyContent: "space-bewteen",
+    padding: 16,
+    backgroundColor: theme.palette.divider,
+    overflow: "hidden",
+    borderRadius: 8,
+    maxWidth: "100%",
+    marginTop: 8,
+    marginBottom: 16,
+    cursor: "pointer",
+  },
+  truncate: {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    maxWidth: 450,
   },
 }));
 
@@ -243,9 +269,27 @@ const Member: React.FC = () => {
         <Dialog
           open={invitationDialogOpen}
           onClose={() => setInvitationDialogOpen(false)}
+          fullWidth
         >
-          <DialogTitle>邀請公司成員</DialogTitle>
+          <DialogTitle>新增公司成員</DialogTitle>
           <DialogContent>
+            {invitationUrl && (
+              <>
+                <div className={classes.title}>邀請連結</div>
+                <div>將以下連結分享給同事，同事點選後，便可以加入公司</div>
+                <div
+                  className={classes.shareLink}
+                  onClick={() => {
+                    toast.success("已複製邀請連結到剪貼簿");
+                    navigator.clipboard.writeText(invitationUrl);
+                  }}
+                >
+                  <div className={classes.truncate}>{invitationUrl}</div>
+                  <FileCopyIcon style={{ marginLeft: "auto" }} />
+                </div>
+              </>
+            )}
+            <div className={classes.title}>邀請 QRCode</div>
             <div>1. 安裝【牛奶找工作】App</div>
             <div>2. 掃描下方 QR Code 加入</div>
             {invitationUrl && (

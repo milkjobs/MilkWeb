@@ -5,6 +5,7 @@ import qs from "qs";
 import React, { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useAuth } from "stores";
+import { toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,7 +36,7 @@ const JoinTeam: React.FC = () => {
         ignoreQueryPrefix: true,
       });
       if (!data.expiresTime || !data.code || !data.teamId) {
-        alert("錯誤的邀請");
+        toast.error("錯誤的邀請");
         history.push("/");
         return;
       }
@@ -43,9 +44,11 @@ const JoinTeam: React.FC = () => {
       if (user.recruiterInfo) {
         if (user.recruiterInfo.team) {
           if (user.recruiterInfo.team.uuid === data.teamId) {
-            alert(`成功加入${user.recruiterInfo.team.nickname}`);
+            toast.success(`成功加入${user.recruiterInfo.team.nickname}`);
           } else {
-            alert(`加入失敗，已經是${user.recruiterInfo.team.nickname}的成員`);
+            toast.error(
+              `加入失敗，已經是${user.recruiterInfo.team.nickname}的成員。\n可以退出或刪除原本的公司，再重新點此連結。\n若有任何問題，可以在訊息私訊牛奶找工作官方帳號。`
+            );
           }
         }
         history.push("/recruiter");
@@ -53,7 +56,7 @@ const JoinTeam: React.FC = () => {
       }
 
       if (data.expiresTime < new Date().getTime()) {
-        alert("邀請已過期");
+        toast.error("邀請已過期");
         history.push("/");
         return;
       }
@@ -67,7 +70,7 @@ const JoinTeam: React.FC = () => {
         })
       );
       if (err) {
-        alert("錯誤的邀請");
+        toast.error("錯誤的邀請");
         history.push("/");
       } else {
         await reloadUser();

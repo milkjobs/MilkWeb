@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     height: 40,
     fontSize: 18,
     borderRadius: 16,
-    marginBottom: 16,
+    marginBottom: 32,
     marginLeft: "auto",
     marginRight: "auto",
   },
@@ -306,6 +306,13 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
           >
             <div className={classes.hintTitle}>已有同事使用過</div>
             <div className={classes.hint}>
+              <div style={{ fontWeight: "bold" }}>邀請連結</div>
+              請同事在網頁版公司成員管理後台，分享邀請連結給你。
+              <br />
+              點選連結後，便可以加入公司
+              <br />
+              <br />
+              <div style={{ fontWeight: "bold" }}>邀請 QRcode</div>
               請同事在公司成員管理後台，出示邀請 QRCode。
               <br />
               下載牛奶找工作App，掃描 QRCode 便可以加入公司
