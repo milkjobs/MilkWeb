@@ -76,28 +76,16 @@ const EmailForm: React.FC = () => {
     await reloadUser();
   };
 
-  if (user?.recruiterInfo?.email && user.recruiterInfo.emailConfirmed)
-    return <div />;
+  if (user?.recruiterInfo?.email) return <div />;
 
   return (
     <div className={classes.emailContainer}>
-      {user?.recruiterInfo?.email ? (
-        <>
-          <div className={classes.emailHint}>{"等待 email 驗證中"}</div>
-          <div className={classes.emailHint}>
-            {"記得到信箱查看點選驗證 email"}
-          </div>
-        </>
-      ) : (
-        <>
-          <div className={classes.emailHint}>
-            {"告訴我們你的 email 或下載我們的 App"}
-          </div>
-          <div className={classes.emailHint}>
-            {"有求職者應徵、審核通過或其他問題時，讓我們可以第一時間通知你"}
-          </div>
-        </>
-      )}
+      <div className={classes.emailHint}>
+        {"告訴我們你的 email 或下載我們的 App"}
+      </div>
+      <div className={classes.emailHint}>
+        {"有求職者應徵、審核通過或其他問題時，讓我們可以第一時間通知你"}
+      </div>
       <div className={classes.emailForm}>
         <TextField
           style={{ width: 200 }}

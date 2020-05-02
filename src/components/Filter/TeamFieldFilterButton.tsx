@@ -82,7 +82,7 @@ function TeamFieldDialog(props: TeamFieldDialogProps) {
           />
           {items.map((i) => (
             <FormControlLabel
-              key={i.objectID}
+              key={i.label}
               value={i.label}
               control={<Radio />}
               label={i.label}

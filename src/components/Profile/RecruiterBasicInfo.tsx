@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
       width: "600px",
     },
   },
+  warn: {
+    color: theme.palette.secondary.main,
+  },
   info: {
     display: "flex",
     flexDirection: "column",
@@ -43,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     display: "flex",
+    alignItems: "center",
     whiteSpace: "pre-line",
     textAlign: "left",
     flex: 1,
@@ -282,7 +286,7 @@ const EditDialog: React.FC<DialogProps> = (props) => {
 };
 
 const RecruiterBasicInfo: React.FC = () => {
-  const { user } = useAuth();
+  const { user, getApi, reloadUser } = useAuth();
   const classes = useStyles();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -297,6 +301,25 @@ const RecruiterBasicInfo: React.FC = () => {
   if (!user) {
     return null;
   }
+
+  const resendVerificationEmail = async () => {
+    const recruiterInfoApi = await getApi("RecruiterInfo");
+
+    if (user?.recruiterInfo?.uuid && user.recruiterInfo.email) {
+      await recruiterInfoApi.updateRecruiterInfo({
+        recruiterInfoId: user.recruiterInfo.uuid,
+        recruiterInfo: {
+          ...user.recruiterInfo,
+          email: user.recruiterInfo.email,
+        },
+      });
+    }
+    user?.recruiterInfo?.uuid &&
+      (await recruiterInfoApi.resendEmailConfirmation({
+        recruiterInfoId: user?.recruiterInfo?.uuid,
+      }));
+    await reloadUser();
+  };
 
   return (
     <div className={classes.container}>
@@ -330,6 +353,26 @@ const RecruiterBasicInfo: React.FC = () => {
       </div>
       <div className={classes.description}>
         {user.recruiterInfo?.email || "尚無email"}
+        {!user.recruiterInfo?.emailConfirmed && (
+          <div
+            style={{
+              marginLeft: "auto",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <div className={classes.warn}>{"Email 尚未驗證"}</div>
+
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ marginRight: 16, marginLeft: 16 }}
+              onClick={resendVerificationEmail}
+            >
+              {"重寄驗證信"}
+            </Button>
+          </div>
+        )}
       </div>
       <div className={classes.description}>
         {user.recruiterInfo?.title || "尚無職位"}

@@ -1,4 +1,4 @@
-import { TeamSize } from "@frankyjuang/milkapi-client";
+import { TeamSize, Role } from "@frankyjuang/milkapi-client";
 import { InputAdornment } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -14,6 +14,7 @@ import { TeamSizeOptions } from "helpers";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "stores";
+import firebase from "firebase";
 
 interface Props {
   open: boolean;
@@ -28,6 +29,8 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
   const [unifiedNumberErrorMessage, setUnifiedNumberErrorMessage] = useState<
     string
   >();
+  const [email, setEmail] = useState<string>();
+  const [emailErrorMessage, setEmailErrorMessage] = useState<string>();
   const [nickname, setNickname] = useState<string>();
   const [nicknameErrorMessage, setNicknameErrorMessage] = useState<string>();
   const [area, setArea] = useState<string>();
@@ -45,6 +48,11 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
     string
   >();
   const [secondaryField, setSecondaryField] = useState<string>();
+
+  const isValidEmail = (email) => {
+    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
 
   const isValidUnifiedNumber = (unifiedNumber: string) => {
     const invalidList = "00000000,11111111";
@@ -91,6 +99,28 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
     getFieldTagOptions();
   }, [unifiedNumber, getApi]);
 
+  const saveEmail = async () => {
+    const firebaseUser = firebase.auth().currentUser;
+    if (firebaseUser) {
+      const userId = firebaseUser.uid;
+      const userApi = await getApi("User");
+      const [recruiter] = await Promise.all([
+        userApi.getUser({ userId, role: Role.Recruiter }),
+      ]);
+      if (recruiter?.recruiterInfo?.uuid && email) {
+        const recruiterInfoApi = await getApi("RecruiterInfo");
+        await recruiterInfoApi.updateRecruiterInfo({
+          recruiterInfoId: recruiter.recruiterInfo.uuid,
+          recruiterInfo: {
+            ...recruiter.recruiterInfo,
+            email,
+          },
+        });
+      }
+    }
+    await reloadUser();
+  };
+
   const create = async () => {
     const teamApi = await getApi("Team");
     if (!unifiedNumber) {
@@ -99,6 +129,14 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
     }
     if (!isValidUnifiedNumber(unifiedNumber)) {
       setUnifiedNumberErrorMessage("請輸入正確的統一編號");
+      return;
+    }
+    if (!email) {
+      setEmailErrorMessage("請輸入聯絡 Email");
+      return;
+    }
+    if (!isValidEmail(email)) {
+      setEmailErrorMessage("請輸入正確的 Email");
       return;
     }
     if (!nickname) {
@@ -138,7 +176,7 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
           secondaryField,
         },
       });
-      await reloadUser();
+      await saveEmail();
       setLoading(false);
     }
     handleClose();
@@ -150,6 +188,11 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
   ) => {
     setUnifiedNumber(event.target.value);
     setUnifiedNumberErrorMessage("");
+  };
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+    setEmailErrorMessage("");
   };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -369,6 +412,21 @@ const TeamCreateForm: React.FC<Props> = ({ open, handleClose }) => {
                 </MenuItem>
               ))}
           </TextField>
+          <TextField
+            error={Boolean(emailErrorMessage)}
+            fullWidth
+            helperText={emailErrorMessage}
+            id="unified-number"
+            label="聯絡 Email"
+            margin="normal"
+            onChange={handleEmailChange}
+            value={email || ""}
+            onBlur={() => {
+              if (email && !isValidEmail(email)) {
+                setEmailErrorMessage("請輸入正確的 Email");
+              }
+            }}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

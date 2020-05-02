@@ -6,8 +6,6 @@ import { Title } from "components/Util";
 import { VerificationStateBanner } from "components/Verification";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "stores";
-import { DownloadApp } from "components/Util";
-import TextField from "@material-ui/core/TextField";
 import { EmailForm } from "components/Profile";
 import { TeamCard } from "components/TeamComponents";
 
@@ -19,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
     justifyContent: "center",
+    alignItems: "flex-start",
     marginBottom: 100,
     marginTop: 40,
     paddingLeft: 24,
