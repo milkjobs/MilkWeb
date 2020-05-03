@@ -8,9 +8,10 @@ import qs from "qs";
 import { useLocalStorage } from "helpers";
 import React, { useEffect, useState } from "react";
 import { SearchBoxProvided } from "react-instantsearch-core";
-import { connectSearchBox } from "react-instantsearch-dom";
+import { connectSearchBox, Configure } from "react-instantsearch-dom";
 import { useHistory, useLocation } from "react-router-dom";
 import { SalaryType } from "@frankyjuang/milkapi-client";
+import { useSearch, useAuth } from "stores";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +42,8 @@ const SearchBar: React.FC<SearchBoxProvided> = (props) => {
   const location = useLocation();
   const history = useHistory();
   const classes = useStyles();
+  const { jobRecommend } = useSearch();
+  const { user } = useAuth();
   const { refine, currentRefinement } = props;
   const [query, setQuery] = useState<string>(currentRefinement);
   const [searchHistory, setSearchHistory] = useLocalStorage(
@@ -50,29 +53,22 @@ const SearchBar: React.FC<SearchBoxProvided> = (props) => {
 
   useEffect(() => {
     const params = qs.parse(location.search, { ignoreQueryPrefix: true });
+    const recommendationWords = `${searchHistory} ${user?.profile?.jobGoal?.titles?.join(
+      " "
+    )} ${SalaryType.Monthly} ${SalaryType.Hourly}`;
     if ("job" in params) {
       const jobQuery = Array.isArray(params.job)
         ? params.job.join(" ")
         : params.job;
       // If not query, use searchHistory as default
-      console.warn(searchHistory);
-      refine(
-        jobQuery ||
-          (searchHistory
-            ? searchHistory + ` ${SalaryType.Monthly} ${SalaryType.Hourly}`
-            : "")
-      );
+      refine(jobQuery || (jobRecommend ? recommendationWords : ""));
       setQuery(jobQuery || "");
       // eslint-disable-next-line @typescript-eslint/camelcase
       firebase.analytics().logEvent("search", { search_term: jobQuery || "" });
     } else {
-      refine(
-        searchHistory
-          ? searchHistory + ` ${SalaryType.Monthly} ${SalaryType.Hourly}`
-          : ""
-      );
+      refine(jobRecommend ? recommendationWords : "");
     }
-  }, [location.search, refine]);
+  }, [location.search, refine, jobRecommend, searchHistory, user]);
 
   const search = () => {
     const params = qs.parse(location.search, { ignoreQueryPrefix: true });
@@ -86,6 +82,11 @@ const SearchBar: React.FC<SearchBoxProvided> = (props) => {
 
   return (
     <div className={classes.root}>
+      <Configure
+        optionalWords={`${searchHistory} ${user?.profile?.jobGoal?.titles?.join(
+          " "
+        )} ${SalaryType.Monthly} ${SalaryType.Hourly}`.split(" ")}
+      />
       <InputBase
         value={query}
         onChange={(e) => {

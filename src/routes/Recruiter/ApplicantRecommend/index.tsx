@@ -1,14 +1,9 @@
-import {
-  UserApi,
-  SalaryType,
-  VerificationState,
-} from "@frankyjuang/milkapi-client";
-import { IconButton, InputBase, makeStyles, Button } from "@material-ui/core";
-import { Search } from "@material-ui/icons";
+import { UserApi, VerificationState, Job } from "@frankyjuang/milkapi-client";
+import { makeStyles, Button } from "@material-ui/core";
 import algoliasearch, { SearchClient } from "algoliasearch/lite";
 import { Header } from "components/Header";
-import { ApplicantList, ApplicantSearchBar } from "components/ApplicantSearch";
-import { SearchResult } from "components/JobSearch/SearchResult";
+import { ApplicantList } from "components/ApplicantSearch";
+import { SearchResult } from "components/ApplicantSearch/SearchResult";
 import { algoliaApplicantConfig } from "config";
 import "firebase/analytics";
 import { AlgoliaService, SitelinksSearchboxStructuredData } from "helpers";
@@ -17,12 +12,14 @@ import {
   Configure,
   InstantSearch,
   connectRefinementList,
+  connectSearchBox,
 } from "react-instantsearch-dom";
 import { useInView } from "react-intersection-observer";
 import { useLocation, Link } from "react-router-dom";
 import { useAuth } from "stores";
 import { useSearch } from "stores";
-import { FilterHeader } from "components/ApplicantFilter";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -82,9 +79,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function a11yProps(index: any) {
+  return {
+    id: `scrollable-auto-tab-${index}`,
+    "aria-controls": `scrollable-auto-tabpanel-${index}`,
+  };
+}
+
+const VirtualSearchBox = connectSearchBox(() => null);
 const VirtualRefinementList = connectRefinementList(() => null);
 
-const ResumeSearch: React.FC = () => {
+const ApplicantRecommend: React.FC = () => {
   const classes = useStyles();
   const location = useLocation();
   const { searchState } = useSearch();
@@ -94,6 +99,18 @@ const ResumeSearch: React.FC = () => {
   const [hideHeaderSearchBar, setHideHeaderSearchBar] = useState(true);
   const [loading, setLoading] = useState(true);
   const [searchHistoryConfig, setSearchHistoryConfig] = useState<string>("");
+  const [value, setValue] = React.useState(0);
+  const [positions, setPositions] = useState<Job[]>([]);
+
+  useEffect(() => {
+    if (user?.recruiterInfo?.jobs) {
+      setPositions(user.recruiterInfo.jobs);
+    }
+  }, [user]);
+
+  function handleChange(event: React.ChangeEvent<{}>, newValue: number) {
+    setValue(newValue);
+  }
 
   useEffect(() => {
     setSearchHistoryConfig(localStorage.getItem("searchHistory") || "");
@@ -126,6 +143,20 @@ const ResumeSearch: React.FC = () => {
       <SitelinksSearchboxStructuredData />
       <Header hideSearchBar={hideHeaderSearchBar} />
       <div className={classes.container}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          indicatorColor="secondary"
+          textColor="secondary"
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs example"
+          style={{ marginBottom: 16 }}
+        >
+          {positions.map((p, i) => (
+            <Tab label={p.name} key={i} {...a11yProps(i)} />
+          ))}
+        </Tabs>
         {user?.recruiterInfo?.team?.certificateVerified !==
         VerificationState.Passed ? (
           <Link
@@ -133,7 +164,7 @@ const ResumeSearch: React.FC = () => {
             style={{ textDecoration: "none", fontSize: 24 }}
           >
             <Button style={{ textDecoration: "none", fontSize: 24 }}>
-              {"公司驗證通過後才能使用人才搜索的功能"}
+              {"公司驗證通過後才能使用人才推薦的功能"}
             </Button>
           </Link>
         ) : algoliaClient ? (
@@ -141,26 +172,29 @@ const ResumeSearch: React.FC = () => {
             indexName={algoliaApplicantConfig.index}
             searchClient={algoliaClient}
           >
-            <Configure hitsPerPage={20} />
-            <div ref={ref}>
-              <ApplicantSearchBar />
-            </div>
-            <VirtualRefinementList attribute="jobGoal.areas" />
-            <FilterHeader />
+            <Configure
+              hitsPerPage={20}
+              optionalWords={[positions[value].title || positions[value].name]}
+            />
+            <VirtualSearchBox
+              defaultRefinement={
+                positions[value].title || positions[value].name
+              }
+            />
+            <VirtualRefinementList
+              attribute="jobGoal.areas"
+              operator={"or"}
+              defaultRefinement={[positions[value].address.area]}
+            />
             <ApplicantList />
-            <SearchResult searchApplicant />
+            <SearchResult recommend />
           </InstantSearch>
         ) : (
-          <div className={classes.searchBarRoot}>
-            <InputBase className={classes.input} placeholder="搜尋人才、履歷" />
-            <IconButton className={classes.iconButton}>
-              <Search />
-            </IconButton>
-          </div>
+          <div className={classes.searchBarRoot}></div>
         )}
       </div>
     </div>
   );
 };
 
-export default ResumeSearch;
+export default ApplicantRecommend;

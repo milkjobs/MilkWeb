@@ -16,6 +16,9 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import ChipInput from "material-ui-chip-input";
+import { JobCatalogues } from "assets/jobs";
+import Fuse from "fuse.js";
+import { Autocomplete } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -56,6 +59,12 @@ const ExperienceDialog: React.FC<ExperienceDialogProps> = (props) => {
   const [descriptionErrorMessage, setDescriptionErrorMessage] = useState<
     string
   >();
+  const [titleOptions, setTitleOptions] = useState<string[]>([]);
+  const [title, setTitle] = useState<string>();
+  const [titleFuse, setTitleFuse] = useState<
+    Fuse<string, Fuse.FuseOptions<string>>
+  >();
+  const [titleErrorMessage, setTitleErrorMessage] = useState<string>();
 
   useEffect(() => {
     setJobName(experience ? experience.jobName : undefined);
@@ -67,6 +76,33 @@ const ExperienceDialog: React.FC<ExperienceDialogProps> = (props) => {
     experience && !experience.endTime && setCurrent(true);
     !experience && setCurrent(true);
   }, [experience]);
+
+  useEffect(() => {
+    const getTitleOptions = async () => {
+      const allTitles = JobCatalogues.reduce<string[]>((result, catalogue) => {
+        const subTitles = catalogue.subCatalogues.reduce<string[]>(
+          (subResult, subCatalogue) => {
+            subResult.push(...subCatalogue.jobs);
+            return subResult;
+          },
+          []
+        );
+        result.push(...subTitles);
+        return result;
+      }, []);
+      const titles = [...new Set(allTitles)];
+
+      const options: Fuse.FuseOptions<string> = {
+        shouldSort: true,
+        tokenize: true,
+        matchAllTokens: true,
+      };
+      setTitleFuse(new Fuse(titles, options));
+      setTitleOptions(titles);
+    };
+
+    getTitleOptions();
+  }, []);
 
   const handleJobNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.length > 100) {
@@ -140,6 +176,37 @@ const ExperienceDialog: React.FC<ExperienceDialogProps> = (props) => {
           onChange={handleJobNameChange}
           value={jobName}
         />
+        <Autocomplete
+          clearText="清除職位"
+          closeText="收起清單"
+          defaultValue={""}
+          getOptionLabel={(option) => option}
+          id="titles"
+          multiple={false}
+          noOptionsText="找不到分類"
+          openText="展開清單"
+          options={titleOptions}
+          value={title}
+          onChange={(_event, newValue) => {
+            if (newValue) {
+              setTitle(newValue);
+              setTitleErrorMessage("");
+            }
+          }}
+          filterOptions={(_options, { inputValue }) =>
+            inputValue && titleFuse
+              ? titleFuse
+                  .search<string, false, false>(inputValue)
+                  .map((i) => titleOptions[i])
+              : titleOptions
+          }
+          renderInput={(params) => (
+            <TextField {...params} margin="normal" label="職位分類" />
+          )}
+        />
+        {Boolean(titleErrorMessage) && (
+          <div style={{ color: "#fa6c71" }}>{titleErrorMessage}</div>
+        )}
         <TextField
           className={classes.formTextInput}
           error={!!teamNameErrorMessage}
@@ -240,12 +307,18 @@ const ExperienceDialog: React.FC<ExperienceDialogProps> = (props) => {
         </Button>
         <Button
           onClick={() => {
+            if (!title) {
+              setTitleErrorMessage("職位不能為空");
+              return;
+            }
             jobName &&
+              title &&
               teamName &&
               startTime &&
               update({
                 uuid: experience?.uuid,
                 jobName,
+                title,
                 teamName,
                 startTime,
                 endTime,

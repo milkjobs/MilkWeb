@@ -10,6 +10,7 @@ import LinesEllipsis from "react-lines-ellipsis";
 import { Link } from "react-router-dom";
 import { Avatar, Button } from "@material-ui/core";
 import moment from "moment";
+import { salaryToString, jobGoalSalaryTypeToSalaryType } from "helpers";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 8,
   },
   introduction: {
-    color: theme.palette.text.primary,
+    color: theme.palette.text.secondary,
     textAlign: "left",
     fontSize: 14,
   },
@@ -101,6 +102,17 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: "pre-line",
     textAlign: "left",
   },
+  salary: {
+    marginTop: 8,
+    backgroundColor: theme.palette.secondary.main,
+    borderRadius: 16,
+    fontSize: 14,
+    paddingRight: 8,
+    paddingLeft: 8,
+    paddingTop: 4,
+    paddingBottom: 4,
+    color: theme.palette.secondary.contrastText,
+  },
 }));
 
 interface Props {
@@ -139,6 +151,15 @@ const ApplicantCard: React.FC<Props> = (props) => {
           <div className={classes.applicantName}>
             <div className={classes.truncate}>{name}</div>
           </div>
+          <div className={classes.salary}>
+            {jobGoal.salaryType && jobGoal.minSalary && jobGoal.maxSalary
+              ? salaryToString(
+                  jobGoal.minSalary,
+                  jobGoal.maxSalary,
+                  jobGoalSalaryTypeToSalaryType(jobGoal.salaryType)
+                )
+              : "面議"}
+          </div>
         </div>
         <div className={classes.introductionContainer}>
           {Boolean(jobGoal.titles?.length) && (
@@ -149,7 +170,6 @@ const ApplicantCard: React.FC<Props> = (props) => {
               </div>
             </>
           )}
-          <div className={classes.label}>自我介紹</div>
           <LinesEllipsis
             className={classes.introduction}
             text={introduction || "尚無"}

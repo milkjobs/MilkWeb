@@ -10,6 +10,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import Button from "@material-ui/core/Button";
 import { ClickAwayListener } from "@material-ui/core";
+import moment from "moment";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,6 +44,9 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       cursor: "pointer",
     },
+    timeHint: {
+      color: theme.palette.text.hint,
+    },
   })
 );
 
@@ -61,6 +65,7 @@ const TextMessage: React.FC<Props> = (props) => {
   const [editOpen, setEditOpen] = useState(false);
   const [text, setText] = useState(message.message);
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
+  const [hover, setHover] = useState(false);
 
   const updateMessage = () => {
     channel?.updateUserMessage(
@@ -83,7 +88,18 @@ const TextMessage: React.FC<Props> = (props) => {
   return !fromMe ? (
     <div className={classes.message}>
       <img alt="" src={profileUrl} width={40} height={40} />
-      <div className={classes.messageBody}>{message.message}</div>
+      <div
+        className={classes.messageBody}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+      >
+        {message.message}
+      </div>
+      {hover && (
+        <div className={classes.timeHint}>
+          {moment(new Date(message.createdAt)).calendar()}
+        </div>
+      )}
     </div>
   ) : (
     <div
@@ -92,8 +108,15 @@ const TextMessage: React.FC<Props> = (props) => {
       }}
       className={classes.message}
     >
+      {hover && (
+        <div className={classes.timeHint}>
+          {moment(new Date(message.createdAt)).calendar()}
+        </div>
+      )}
       <div
         className={classes.messageBody}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
         style={{ textAlign: "right" }}
         onContextMenu={(e) => {
           setAnchorEl(e.currentTarget);

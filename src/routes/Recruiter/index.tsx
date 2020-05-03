@@ -24,6 +24,7 @@ import JobCircleTheme from "routes/JobCircleTheme";
 import QuestionAnswer from "routes/Question&Answer";
 import PublicProfile from "routes/PublicProfile";
 import ResumeSearch from "./ResumeSearch";
+import ApplicantRecommend from "./ApplicantRecommend";
 
 interface PrivateRouteProps extends RouteProps {
   component:
@@ -77,6 +78,11 @@ const RecruiterRoute: React.FC = () => {
           path={`${match.path}/circle/`}
           exact
           component={JobCircle}
+        />
+        <PrivateRoute
+          path={`${match.path}/recommend/`}
+          exact
+          component={ApplicantRecommend}
         />
         <PrivateRoute
           path={`${match.path}/search/`}

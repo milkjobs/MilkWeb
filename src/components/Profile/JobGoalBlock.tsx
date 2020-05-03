@@ -59,6 +59,7 @@ const JobGoalBlock: React.FC<JobGoal> = ({
   maxSalary,
   fields,
   area,
+  areas,
 }) => {
   const classes = useStyles();
 
@@ -86,7 +87,7 @@ const JobGoalBlock: React.FC<JobGoal> = ({
         <div className={classes.blockDivider}>{" | "}</div>
         <div className={classes.blockPeriod}>
           <LocationOnIcon className={classes.blockIcon} />
-          <div>{area || "不限"}</div>
+          <div>{areas && areas.length > 0 ? areas.join(" ") : "不限"}</div>
         </div>
         <div className={classes.blockDivider}>{" | "}</div>
         <div className={classes.blockPeriod}>
@@ -98,7 +99,7 @@ const JobGoalBlock: React.FC<JobGoal> = ({
                   maxSalary,
                   jobGoalSalaryTypeToSalaryType(salaryType)
                 )
-              : "不限"}
+              : "面議"}
           </div>
         </div>
       </div>

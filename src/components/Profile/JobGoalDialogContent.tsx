@@ -35,7 +35,7 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
   const [salaryType, setSalaryType] = useState<JobGoalSalaryTypeEnum>();
   const [minSalary, setMinSalary] = useState<number | null>();
   const [maxSalary, setMaxSalary] = useState<number | null>();
-  const [area, setArea] = useState<string>();
+  const [areas, setAreas] = useState<string[]>([]);
   const [titleOptions, setTitleOptions] = useState<string[]>([]);
   const [titles, setTitles] = useState<string[]>([]);
   const [titleFuse, setTitleFuse] = useState<
@@ -47,7 +47,7 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
     Fuse<string, Fuse.FuseOptions<string>>
   >();
   const [titlesErrorMessage, setTitlesErrorMessage] = useState<string>();
-  const [areaErrorMessage, setAreaErrorMessage] = useState<string>();
+  const [areasErrorMessage, setAreasErrorMessage] = useState<string>();
 
   const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (
@@ -72,11 +72,6 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
     } else {
       setSalaryType(undefined);
     }
-  };
-
-  const handleAreaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setArea(event.target.value);
-    setAreaErrorMessage("");
   };
 
   useEffect(() => {
@@ -158,31 +153,38 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
       setMinSalary(undefined);
       setMaxSalary(undefined);
     }
-    setArea(jobGoal?.area);
+    setAreas(jobGoal?.areas || []);
     setFields(jobGoal?.fields || []);
   }, [jobGoal]);
 
   return (
     <>
       <DialogContent>
-        <TextField
-          fullWidth
-          id="area"
-          label="縣市"
-          margin="normal"
-          style={{ marginRight: 4 }}
-          onChange={handleAreaChange}
-          select
-          value={area || "any"}
-        >
-          {TaiwanAreaJSON.map((option) => (
-            <MenuItem key={option.name} value={option.name}>
-              {option.name}
-            </MenuItem>
-          ))}
-        </TextField>
-        {Boolean(areaErrorMessage) && (
-          <div style={{ color: "#fa6c71" }}>{areaErrorMessage}</div>
+        <Autocomplete
+          clearText="清除縣市"
+          closeText="收起清單"
+          defaultValue={[]}
+          getOptionLabel={(option) => option}
+          id="areas"
+          multiple
+          noOptionsText="找不到縣市"
+          openText="展開清單"
+          options={TaiwanAreaJSON.map((a) => a.name)}
+          value={areas}
+          onChange={(_event, newValue) => {
+            setAreas(newValue);
+          }}
+          filterOptions={(_options, { inputValue }) =>
+            TaiwanAreaJSON.map((a) => a.name).filter((a) =>
+              a.includes(inputValue)
+            )
+          }
+          renderInput={(params) => (
+            <TextField {...params} margin="normal" label="縣市" />
+          )}
+        />
+        {Boolean(areasErrorMessage) && (
+          <div style={{ color: "#fa6c71" }}>{areasErrorMessage}</div>
         )}
         <Autocomplete
           clearText="清除職位"
@@ -263,7 +265,7 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
             select
             value={salaryType || "any"}
           >
-            <MenuItem value="any">不限</MenuItem>
+            <MenuItem value="any">面議</MenuItem>
             {SalaryTypeOptions.map((option) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
@@ -372,7 +374,8 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
           color="primary"
           variant="contained"
           onClick={() => {
-            if (area === undefined) setAreaErrorMessage("縣市不能為空");
+            if (areas === undefined || areas.length === 0)
+              setAreasErrorMessage("縣市不能為空");
             else if (titles?.length === 0)
               setTitlesErrorMessage("職位不能為空");
             else {
@@ -384,7 +387,7 @@ const JobGoalDialogContent: React.FC<JobGoalDialogContentProps> = (props) => {
                 maxSalary,
                 fields,
                 titles,
-                area,
+                areas,
               });
               close();
             }

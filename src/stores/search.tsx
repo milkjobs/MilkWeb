@@ -18,6 +18,8 @@ import { useAuth } from "./auth";
 interface SearchContextProps {
   indexName: string;
   loadAlgoliaCredential: () => Promise<void>;
+  jobRecommend: boolean;
+  setJobRecommend: React.Dispatch<React.SetStateAction<boolean>>;
   refresh: boolean;
   searchClient?: SearchClient;
   searchState: any;
@@ -32,6 +34,8 @@ const sleep = (time: number) => {
 const SearchContext = createContext<SearchContextProps>({
   indexName: "",
   loadAlgoliaCredential: async () => {},
+  jobRecommend: true,
+  setJobRecommend: () => {},
   refresh: false,
   searchClient: undefined,
   searchState: {},
@@ -42,6 +46,7 @@ const SearchContext = createContext<SearchContextProps>({
 export const SearchProvider = ({ children }: any) => {
   const { getApi, user } = useAuth();
   const [refresh, setRefresh] = useState(false);
+  const [jobRecommend, setJobRecommend] = useState(true);
   const [searchClient, setSearchClient] = useState<SearchClient>();
   const [searchState, setSearchState] = useState({});
   const [algoliaCredential, setAlgoliaCredential] = useState<
@@ -138,6 +143,8 @@ export const SearchProvider = ({ children }: any) => {
       value={{
         indexName: algoliaConfig.index,
         loadAlgoliaCredential,
+        jobRecommend,
+        setJobRecommend,
         refresh,
         searchClient,
         searchState,

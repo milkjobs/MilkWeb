@@ -33,6 +33,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useAuth } from "stores";
 import { HourlySalaryOptions, MonthlySalaryOptions } from "./utils";
+import { JobCatalogues } from "assets/jobs";
 
 interface FuzzyTag {
   normalizedLabel: string;
@@ -82,9 +83,42 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
   const [fuse, setFuse] = useState<
     Fuse<FuzzyTag, Fuse.FuseOptions<FuzzyTag>>
   >();
+  const [titleOptions, setTitleOptions] = useState<string[]>([]);
+  const [title, setTitle] = useState<string>();
+  const [titleFuse, setTitleFuse] = useState<
+    Fuse<string, Fuse.FuseOptions<string>>
+  >();
+  const [titleErrorMessage, setTitleErrorMessage] = useState<string>();
 
   const showAlert = () => setAlertOpen(true);
   const hideAlert = () => setAlertOpen(false);
+
+  useEffect(() => {
+    const getTitleOptions = async () => {
+      const allTitles = JobCatalogues.reduce<string[]>((result, catalogue) => {
+        const subTitles = catalogue.subCatalogues.reduce<string[]>(
+          (subResult, subCatalogue) => {
+            subResult.push(...subCatalogue.jobs);
+            return subResult;
+          },
+          []
+        );
+        result.push(...subTitles);
+        return result;
+      }, []);
+      const titles = [...new Set(allTitles)];
+
+      const options: Fuse.FuseOptions<string> = {
+        shouldSort: true,
+        tokenize: true,
+        matchAllTokens: true,
+      };
+      setTitleFuse(new Fuse(titles, options));
+      setTitleOptions(titles);
+    };
+
+    getTitleOptions();
+  }, []);
 
   useEffect(() => {
     const getTags = async () => {
@@ -125,6 +159,10 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
       setNameErrorMessage("請輸入名稱");
       return;
     }
+    if (!title) {
+      setTitleErrorMessage("請選擇職位分類");
+      return;
+    }
     if (!area) {
       setAreaErrorMessage("請選擇縣市");
       return;
@@ -152,6 +190,7 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
         newJob: {
           type,
           name,
+          title,
           minSalary,
           maxSalary,
           salaryType,
@@ -320,6 +359,37 @@ const JobCreateForm: React.FC<Props> = ({ open, handleClose }) => {
             onChange={handleNameChange}
             value={name || ""}
           />
+          <Autocomplete
+            clearText="清除職位"
+            closeText="收起清單"
+            defaultValue={""}
+            getOptionLabel={(option) => option}
+            id="titles"
+            multiple={false}
+            noOptionsText="找不到分類"
+            openText="展開清單"
+            options={titleOptions}
+            value={title}
+            onChange={(_event, newValue) => {
+              if (newValue) {
+                setTitle(newValue);
+                setTitleErrorMessage("");
+              }
+            }}
+            filterOptions={(_options, { inputValue }) =>
+              inputValue && titleFuse
+                ? titleFuse
+                    .search<string, false, false>(inputValue)
+                    .map((i) => titleOptions[i])
+                : titleOptions
+            }
+            renderInput={(params) => (
+              <TextField {...params} margin="normal" label="職位分類" />
+            )}
+          />
+          {Boolean(titleErrorMessage) && (
+            <div style={{ color: "#fa6c71" }}>{titleErrorMessage}</div>
+          )}
           <div style={{ display: "flex" }}>
             <TextField
               error={Boolean(areaErrorMessage)}

@@ -176,14 +176,7 @@ const JobSearch: React.FC = () => {
               indexName={algoliaConfig.index}
               searchClient={algoliaClient}
             >
-              <Configure
-                hitsPerPage={20}
-                optionalWords={[
-                  ...searchHistoryConfig.split(" "),
-                  SalaryType.Monthly,
-                  SalaryType.Hourly,
-                ]}
-              />
+              <Configure hitsPerPage={20} />
               <div ref={ref}>
                 <SearchBar />
               </div>

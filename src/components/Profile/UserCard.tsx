@@ -120,7 +120,7 @@ const JobGoalRow: React.FC<JobGoal> = ({
           {"・"}
         </div>
         <div className={classes.blockPeriod}>
-          {titles && titles.length > 0 ? titles.join("\n") : "不限"}
+          {titles && titles.length > 0 ? titles.slice(0, 3).join("\n") : "不限"}
         </div>
       </div>
       <div className={classes.row}>
