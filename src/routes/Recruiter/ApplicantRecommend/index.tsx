@@ -93,7 +93,7 @@ const ApplicantRecommend: React.FC = () => {
   const classes = useStyles();
   const location = useLocation();
   const { searchState } = useSearch();
-  const { getApi, user } = useAuth();
+  const { getApi, user, reloadUser } = useAuth();
   const [ref, inView] = useInView({ threshold: 1 });
   const [algoliaClient, setAlgoliaClient] = useState<SearchClient>();
   const [hideHeaderSearchBar, setHideHeaderSearchBar] = useState(true);
@@ -138,6 +138,22 @@ const ApplicantRecommend: React.FC = () => {
     setClient();
   }, [user, getApi]);
 
+  const publish = async () => {
+    setPositions(
+      positions.map((p, i) => {
+        if (i === value) {
+          p.published = true;
+        }
+        return p;
+      })
+    );
+    const jobApi = await getApi("Job");
+    const updatedJob = await jobApi.updateJob({
+      jobId: positions[value].uuid,
+      job: { ...positions[value], published: true },
+    });
+  };
+
   return (
     <div className={classes.root}>
       <SitelinksSearchboxStructuredData />
@@ -168,27 +184,45 @@ const ApplicantRecommend: React.FC = () => {
             </Button>
           </Link>
         ) : algoliaClient ? (
-          <InstantSearch
-            indexName={algoliaApplicantConfig.index}
-            searchClient={algoliaClient}
-          >
-            <Configure
-              hitsPerPage={20}
-              optionalWords={[positions[value].title || positions[value].name]}
-            />
-            <VirtualSearchBox
-              defaultRefinement={
-                positions[value].title || positions[value].name
-              }
-            />
-            <VirtualRefinementList
-              attribute="jobGoal.areas"
-              operator={"or"}
-              defaultRefinement={[positions[value].address.area]}
-            />
-            <ApplicantList />
-            <SearchResult recommend />
-          </InstantSearch>
+          positions[value].published ? (
+            <InstantSearch
+              indexName={algoliaApplicantConfig.index}
+              searchClient={algoliaClient}
+            >
+              <Configure
+                hitsPerPage={20}
+                optionalWords={[
+                  positions[value].title || positions[value].name,
+                ]}
+              />
+              <VirtualSearchBox
+                defaultRefinement={
+                  positions[value].title || positions[value].name
+                }
+              />
+              <VirtualRefinementList
+                attribute="jobGoal.areas"
+                operator={"or"}
+                defaultRefinement={[positions[value].address.area]}
+              />
+              <ApplicantList />
+              <SearchResult recommend />
+            </InstantSearch>
+          ) : (
+            <Button
+              color={"secondary"}
+              variant={"contained"}
+              style={{
+                marginTop: 32,
+                width: 300,
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
+              onClick={publish}
+            >
+              {"發布職缺"}
+            </Button>
+          )
         ) : (
           <div className={classes.searchBarRoot}></div>
         )}
