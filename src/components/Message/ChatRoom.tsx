@@ -14,6 +14,7 @@ import { ChannelHandler, GroupChannel, GroupChannelListQuery } from "sendbird";
 import { useAuth, useChannel } from "stores";
 import { isGroupChannel, parseChannel } from "./utils";
 import { ChannelCustomType } from "@frankyjuang/milkapi-client";
+import { isMobile } from "react-device-detect";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -29,7 +30,8 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 320,
     maxWidth: 420,
     [theme.breakpoints.down("xs")]: {
-      display: "none",
+      minWidth: 120,
+      maxWidth: 220,
     },
   },
   chatContainer: {
@@ -197,7 +199,7 @@ const ChatRoom: React.FC<Props> = ({ isRecruiter }) => {
         }}
       >
         <div style={{ overflow: "auto", flex: 1 }}>
-          {Notification.permission === "default" && (
+          {!isMobile && Notification.permission === "default" && (
             <div
               className={classes.permissionButton}
               onClick={async () => {

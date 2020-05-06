@@ -3,7 +3,6 @@ import {
   SendbirdCredential,
   SendbirdCredentialFromJSON,
   SendbirdCredentialToJSON,
-  SystemMessageCustomType,
 } from "@frankyjuang/milkapi-client";
 import logo from "assets/milk.png";
 import to from "await-to-js";
@@ -26,6 +25,7 @@ import React, {
 import SendBird from "sendbird";
 import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "./auth";
+import { isMobile } from "react-device-detect";
 
 interface ChannelContextProps {
   addChannelHandler: (handler: SendBird.ChannelHandler) => string | undefined;
@@ -104,7 +104,7 @@ export const ChannelProvider = ({ children }) => {
         return;
       }
 
-      if (Notification.permission === "granted") {
+      if (!isMobile && Notification.permission === "granted") {
         const [, recruiterMember] = parseChannel(ch);
         const href =
           user.uuid === recruiterMember?.userId

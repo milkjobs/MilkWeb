@@ -53,7 +53,7 @@ const ApplicantSearchBar: React.FC<SearchBoxProvided> = (props) => {
           }
         }}
         className={classes.input}
-        placeholder={"搜尋人才、履歷"}
+        placeholder={"搜尋職位、公司、學校、技能、關鍵字"}
       />
       <IconButton className={classes.iconButton} onClick={search}>
         <SearchIcon />

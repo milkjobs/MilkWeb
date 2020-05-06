@@ -201,7 +201,7 @@ const ApplicantRecommend: React.FC = () => {
                 }
               />
               <VirtualRefinementList
-                attribute="jobGoal.areas"
+                attribute="jobGoal.area"
                 operator={"or"}
                 defaultRefinement={[positions[value].address.area]}
               />
@@ -220,7 +220,7 @@ const ApplicantRecommend: React.FC = () => {
               }}
               onClick={publish}
             >
-              {"發布職缺"}
+              {"發布職缺後，即可看到推薦人才"}
             </Button>
           )
         ) : (
