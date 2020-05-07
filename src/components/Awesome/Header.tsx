@@ -77,13 +77,13 @@ const AwesomeHeader: React.FC<Props> = ({ containerStyle }) => {
 
   return (
     <div className={classes.container} style={containerStyle}>
-      <Link
+      {/* <Link
         to={{ pathname: "/circle/760ab9a67eef4187aa0bc8d9b07a5c84" }}
         className={classes.link}
       >
         <MonetizationOnIcon />
         <div style={{ marginLeft: 8, fontSize: 16 }}>{"錢途找工作"}</div>
-      </Link>
+      </Link> */}
       <Link
         to={{ pathname: "/circle/988101058c344b3696ce00665bfa5e14" }}
         className={classes.link}

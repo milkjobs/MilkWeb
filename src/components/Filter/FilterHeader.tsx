@@ -6,7 +6,8 @@ import {
   EducationLevelFilterButton,
   TeamFieldFilterButton,
 } from ".";
-import { makeStyles } from "@material-ui/core";
+import { useMediaQuery } from "@material-ui/core";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import { JobType } from "@frankyjuang/milkapi-client";
 import { useSearch } from "stores";
 
@@ -38,6 +39,7 @@ const FilterHeader: React.FC = () => {
   const classes = useStyles();
   const { jobRecommend, setJobRecommend } = useSearch();
   const [jobType, setJobType] = useState<JobType>();
+  const matched = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
 
   return (
     <div className={classes.container}>
@@ -66,9 +68,13 @@ const FilterHeader: React.FC = () => {
           attribute="type"
           onChange={(type: JobType) => setJobType(type)}
         />
-        <ExperienceLevelFilterButton attribute="experienceNeed" />
-        <EducationLevelFilterButton attribute="educationNeed" />
-        <TeamFieldFilterButton attribute="team.primaryField" limit={50} />
+        {!matched && (
+          <>
+            <ExperienceLevelFilterButton attribute="experienceNeed" />
+            <EducationLevelFilterButton attribute="educationNeed" />
+            <TeamFieldFilterButton attribute="team.primaryField" limit={50} />
+          </>
+        )}
       </div>
     </div>
   );

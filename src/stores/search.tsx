@@ -120,7 +120,7 @@ export const SearchProvider = ({ children }: any) => {
   }, [refresh]);
 
   useEffect(() => {
-    if (algoliaCredential && isValidCredential(algoliaCredential)) {
+    if (algoliaCredential && isValidCredential(algoliaCredential) && user) {
       const rawCredential = JSON.stringify(
         AlgoliaCredentialToJSON(algoliaCredential)
       );

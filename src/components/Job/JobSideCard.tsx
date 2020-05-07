@@ -186,7 +186,6 @@ const JobSideCard: React.FC<Props> = ({ job }) => {
   const classes = useStyles();
   const { searchClient, loadAlgoliaCredential } = useSearch();
   useEffect(() => {
-    console.warn(searchClient);
     !searchClient && loadAlgoliaCredential();
   }, [searchClient]);
   const history = useHistory();
